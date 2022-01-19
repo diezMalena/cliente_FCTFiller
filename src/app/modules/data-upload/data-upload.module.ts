@@ -1,10 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { CsvUploadComponent } from './csv-upload/csv-upload.component';
 
 
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    CsvUploadComponent
+  ],
   imports: [
     CommonModule
   ]
