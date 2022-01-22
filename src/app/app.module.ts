@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 // import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+// import { NgxDropzoneModule } from 'ngx-dropzone';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { CoreModule } from './core/core.module';
     AppRoutingModule,
     CoreModule,
     // NgbModule,
+    // NgxDropzoneModule
   ],
   providers: [],
   bootstrap: [AppComponent]
