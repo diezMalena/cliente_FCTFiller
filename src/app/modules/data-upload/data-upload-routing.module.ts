@@ -6,8 +6,11 @@ const routes: Routes = [
   {
     path: 'csv-upload',
     component: CsvUploadComponent,
-    // pathMatch: 'full',
   },
+  // {
+  //   path: 'modal-info',
+  //   component: ModalInfoComponent,
+  // },
 ];
 
 @NgModule({

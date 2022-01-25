@@ -1,8 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/internal/Subscription';
-import { first } from 'rxjs/operators';
+import { catchError, first } from 'rxjs/operators';
 import { FileUploadModel } from 'src/app/models/file-upload.model';
 import { FileUploadService } from 'src/app/services/file-upload.service';
+import { environment } from 'src/environments/environment';
+import { throwError } from 'rxjs';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalInfoComponent } from '../modal-info/modal-info.component';
+
 
 @Component({
   selector: 'app-csv-upload',
@@ -17,6 +22,7 @@ export class CsvUploadComponent implements OnInit {
 
   constructor(
     private storageService:FileUploadService,
+    private modalService:NgbModal,
   ) {
 
   }
@@ -25,6 +31,8 @@ export class CsvUploadComponent implements OnInit {
   }
 
 
+
+  //filesAlumnos CSV-----------------------------------------------------
   filesAlumnos: File[] = [];
   onSelectAlumnos(event: any) {
     this.filesAlumnos.push(...event.addedFiles);
@@ -37,8 +45,8 @@ export class CsvUploadComponent implements OnInit {
       this.readFile(fileAlumno).then(fileContents => {
         // Put this string in a request body to upload it to an API.
         //console.log(fileContents)
-        this.submitFile(fileAlumno, fileContents);
-        console.log(fileContents);
+        this.submitFile(fileAlumno, fileContents, environment.alumnos);
+        // console.log(fileContents);
       })
     }
   }
@@ -48,9 +56,7 @@ export class CsvUploadComponent implements OnInit {
     this.filesAlumnos.splice(this.filesAlumnos.indexOf(event), 1);
   }
 
-
-
-
+  //filesMaterias CSV-----------------------------------------------------
   filesMaterias: File[] = [];
   onSelectMaterias(event: any) {
     this.filesMaterias.push(...event.addedFiles);
@@ -63,8 +69,8 @@ export class CsvUploadComponent implements OnInit {
       this.readFile(fileMateria).then(fileContents => {
         // Put this string in a request body to upload it to an API.
         //console.log(fileContents)
-        this.submitFile(fileMateria, fileContents);
-        console.log(fileContents);
+        this.submitFile(fileMateria, fileContents, environment.materias);
+        // console.log(fileContents);
       })
     }
   }
@@ -74,34 +80,133 @@ export class CsvUploadComponent implements OnInit {
     this.filesMaterias.splice(this.filesMaterias.indexOf(event), 1);
   }
 
+  //filesMatriculas CSV-----------------------------------------------------
+  filesMatriculas: File[] = [];
+  onSelectMatriculas(event: any) {
+    this.filesMatriculas.push(...event.addedFiles);
+    console.log(this.filesMatriculas)
+
+    for(let i= 0; i<this.filesMatriculas.length;i++){
+
+      const fileMatricula = this.filesMatriculas[i];
+
+      this.readFile(fileMatricula).then(fileContents => {
+        // Put this string in a request body to upload it to an API.
+        //console.log(fileContents)
+        this.submitFile(fileMatricula, fileContents, environment.matriculas);
+        // console.log(fileContents);
+      })
+    }
+  }
+  // Envío de fichero comprimido a base64
+  onRemoveMatriculas(event:any) {
+    console.log(event);
+    this.filesMatriculas.splice(this.filesMatriculas.indexOf(event), 1);
+  }
+
+  //filesNotas CSV-----------------------------------------------------
+  filesNotas: File[] = [];
+  onSelectNotas(event: any) {
+    this.filesNotas.push(...event.addedFiles);
+    console.log(this.filesNotas)
+
+    for(let i= 0; i<this.filesNotas.length;i++){
+
+      const fileNota = this.filesNotas[i];
+
+      this.readFile(fileNota).then(fileContents => {
+        // Put this string in a request body to upload it to an API.
+        //console.log(fileContents)
+        this.submitFile(fileNota, fileContents, environment.notas);
+        // console.log(fileContents);
+      })
+    }
+  }
+  // Envío de fichero comprimido a base64
+  onRemoveNotas(event:any) {
+    console.log(event);
+    this.filesNotas.splice(this.filesNotas.indexOf(event), 1);
+  }
+
+  //filesUnidades CSV-----------------------------------------------------
+  filesUnidades: File[] = [];
+  onSelectUnidades(event: any) {
+    this.filesMaterias.push(...event.addedFiles);
+    console.log(this.filesUnidades)
+
+    for(let i= 0; i<this.filesUnidades.length;i++){
+
+      const fileUnidad = this.filesUnidades[i];
+
+      this.readFile(fileUnidad).then(fileContents => {
+        // Put this string in a request body to upload it to an API.
+        //console.log(fileContents)
+        this.submitFile(fileUnidad, fileContents, environment.unidades);
+        // console.log(fileContents);
+      })
+    }
+  }
+  // Envío de fichero comprimido a base64
+  onRemoveUnidades(event:any) {
+    console.log(event);
+    this.filesUnidades.splice(this.filesUnidades.indexOf(event), 1);
+  }
+
+  //filesProfesores CSV-----------------------------------------------------
+  filesProfesores: File[] = [];
+  onSelectProfesores(event: any) {
+    this.filesProfesores.push(...event.addedFiles);
+    console.log(this.filesProfesores)
+
+    for(let i= 0; i<this.filesProfesores.length;i++){
+
+      const fileProfesor = this.filesProfesores[i];
+
+      this.readFile(fileProfesor).then(fileContents => {
+        // Put this string in a request body to upload it to an API.
+        //console.log(fileContents)
+        this.submitFile(fileProfesor, fileContents, environment.profesores);
+        // console.log(fileContents);
+      })
+    }
+  }
+  // Envío de fichero comprimido a base64
+  onRemoveProfesores(event:any) {
+    console.log(event);
+    this.filesProfesores.splice(this.filesProfesores.indexOf(event), 1);
+  }
 
 
 
-
-
-
-
-
-
-
-
-
-submitFile(file: File, content: any) {
+submitFile(file: File, content: any, box_name: string) {
 
   const newStorage = new FileUploadModel()
   newStorage.file_name = file.name
   newStorage.file_content = content
   newStorage.content_type = file.type
+  newStorage.box_file = box_name
   const storageSub = this.storageService.add(newStorage)
-    .pipe(first())
+    .pipe(first(),catchError((e) => {
+      console.log(e);
+      const modalRef = this.modalService.open(ModalInfoComponent);
+      modalRef.componentInstance.content="ERROR DE CONEXIÓN";
+      return throwError(new Error(e));
+    }))
     .subscribe((storage: FileUploadModel) => {
+      // console.log(storage)
       if (storage) {
         console.log(storage)
+        const modalRef = this.modalService.open(ModalInfoComponent);
+        modalRef.componentInstance.content="CONEXIÓN EXITOSA";
         //this.closeModalEvent.emit('closeModal');
       } else {
+        // console.log(storage)
         this.hasError = true;
+
       }
     })
+
+
   this.unsubscribe.push(storageSub);
 }
 

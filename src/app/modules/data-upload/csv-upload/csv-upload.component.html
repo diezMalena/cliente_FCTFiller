@@ -19,35 +19,73 @@
 	<!-- <script src="js/custom-file-input.js"></script> -->
 
 
-  <!-- <div class="row">
-    <div class="col-*-*"></div>
+  <div class="row my-4">
+    <div class="col-sm-4">
+      <ngx-dropzone (change)="onSelectAlumnos($event)">
+        <ngx-dropzone-label>Alumnos</ngx-dropzone-label>
+        <ngx-dropzone-preview *ngFor="let f of filesAlumnos" [removable]="true" (removed)="onRemoveAlumnos(f)">
+          <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+        </ngx-dropzone-preview>
+      </ngx-dropzone>
+    </div>
+
+    <div class="col-sm-4">
+      <ngx-dropzone (change)="onSelectMaterias($event)">
+        <ngx-dropzone-label>Materias</ngx-dropzone-label>
+        <ngx-dropzone-preview *ngFor="let f of filesMaterias" [removable]="true" (removed)="onRemoveMaterias(f)">
+          <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+        </ngx-dropzone-preview>
+      </ngx-dropzone>
+    </div>
+
+    <div class="col-sm-4">
+      <ngx-dropzone (change)="onSelectMatriculas($event)">
+        <ngx-dropzone-label>Matrículas</ngx-dropzone-label>
+        <ngx-dropzone-preview *ngFor="let f of filesMatriculas" [removable]="true" (removed)="onRemoveMatriculas(f)">
+          <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+        </ngx-dropzone-preview>
+      </ngx-dropzone>
+    </div>
   </div>
+
+
   <div class="row">
-    <div class="col-*-*"></div>
-    <div class="col-*-*"></div>
-    <div class="col-*-*"></div>
+    <div class="col-sm-4">
+      <ngx-dropzone (change)="onSelectNotas($event)">
+        <ngx-dropzone-label>Notas</ngx-dropzone-label>
+        <ngx-dropzone-preview *ngFor="let f of filesNotas" [removable]="true" (removed)="onRemoveNotas(f)">
+          <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+        </ngx-dropzone-preview>
+      </ngx-dropzone>
+    </div>
+
+    <div class="col-sm-4">
+      <ngx-dropzone (change)="onSelectUnidades($event)">
+        <ngx-dropzone-label>Unidades</ngx-dropzone-label>
+        <ngx-dropzone-preview *ngFor="let f of filesUnidades" [removable]="true" (removed)="onRemoveUnidades(f)">
+          <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+        </ngx-dropzone-preview>
+      </ngx-dropzone>
+    </div>
+
+    <div class="col-sm-4">
+      <ngx-dropzone (change)="onSelectProfesores($event)">
+        <ngx-dropzone-label>Profesores</ngx-dropzone-label>
+        <ngx-dropzone-preview *ngFor="let f of filesProfesores" [removable]="true" (removed)="onRemoveProfesores(f)">
+          <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+        </ngx-dropzone-preview>
+      </ngx-dropzone>
+    </div>
   </div>
-  <div class="row">
-    ...
-  </div> -->
 
 
-  <ngx-dropzone (change)="onSelectAlumnos($event)">
-    <ngx-dropzone-label>Alumnos</ngx-dropzone-label>
-    <ngx-dropzone-preview *ngFor="let f of filesAlumnos" [removable]="true" (removed)="onRemoveAlumnos(f)">
-      <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
-    </ngx-dropzone-preview>
-  </ngx-dropzone>
+  <ng-template #content let-modal></ng-template>
 
 
 
-  <ngx-dropzone (change)="onSelectMaterias($event)">
-    <ngx-dropzone-label>Materias</ngx-dropzone-label>
-    <ngx-dropzone-preview *ngFor="let f of filesMaterias" [removable]="true" (removed)="onRemoveMaterias(f)">
-      <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
-    </ngx-dropzone-preview>
-  </ngx-dropzone>
 
 
-  <!-- <button class="btn btn-primary btnData" onclick="subirFicheros()">Enviar Datos</button> -->
+
+  <button class="btn btn-primary btnData" onclick="subirFicheros()">Enviar Datos</button>
+
 

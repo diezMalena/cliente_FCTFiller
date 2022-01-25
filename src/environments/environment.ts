@@ -4,8 +4,17 @@
 
 export const environment = {
   production: false,
-  apiUrl: "http://localhost:5566",
+  apiUrl: "http://localhost:8000/api/jefatura/recibirCSV",
+  alumnos: "alumnos",
+  materias: "materias",
+  matriculas: "matriculas",
+  notas: "notas",
+  unidades: "unidades",
+  profesores: "profesores",
 };
+
+
+
 
 /*
  * For easier debugging in development mode, you can import the following file

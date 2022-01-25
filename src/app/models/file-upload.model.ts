@@ -1,5 +1,6 @@
 export class FileUploadModel {
 
+  box_file!: string;
   file_name!: string;
   content_type!: string;
   file_content!: string;
