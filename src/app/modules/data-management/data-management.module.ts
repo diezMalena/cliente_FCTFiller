@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RegistroEmpresaComponent } from './registro-empresa/registro-empresa.component';
 import { AsociarEmpAluComponent } from './asociar-emp-alu/asociar-emp-alu.component';
 import { FirmaDocComponent } from './firma-doc/firma-doc.component';
+import { RepresentanteComponent } from './registro-empresa/representante/representante.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -10,10 +12,13 @@ import { FirmaDocComponent } from './firma-doc/firma-doc.component';
   declarations: [
     RegistroEmpresaComponent,
     AsociarEmpAluComponent,
-    FirmaDocComponent
+    FirmaDocComponent,
+    RepresentanteComponent,
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
   ]
 })
 export class DataManagementModule { }
