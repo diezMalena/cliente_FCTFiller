@@ -8,7 +8,6 @@ import { throwError } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalInfoComponent } from '../modal-info/modal-info.component';
 
-
 @Component({
   selector: 'app-csv-upload',
   templateUrl: './csv-upload.component.html',
@@ -23,34 +22,18 @@ export class CsvUploadComponent implements OnInit {
   constructor(
     private storageService:FileUploadService,
     private modalService:NgbModal,
-  ) {
-
-  }
+  ) {}
 
   ngOnInit(): void {
   }
 
-
-
   //filesAlumnos CSV-----------------------------------------------------
   filesAlumnos: File[] = [];
   onSelectAlumnos(event: any) {
-    this.filesAlumnos.push(...event.addedFiles);
-    console.log(this.filesAlumnos)
-
-    for(let i= 0; i<this.filesAlumnos.length;i++){
-
-      const fileAlumno = this.filesAlumnos[i];
-
-      this.readFile(fileAlumno).then(fileContents => {
-        // Put this string in a request body to upload it to an API.
-        //console.log(fileContents)
-        this.submitFile(fileAlumno, fileContents, environment.alumnos);
-        // console.log(fileContents);
-      })
+    if (this.filesAlumnos.length == 0 ){
+      this.filesAlumnos.push(...event.addedFiles);
     }
   }
-  // Envío de fichero comprimido a base64
   onRemoveAlumnos(event:any) {
     console.log(event);
     this.filesAlumnos.splice(this.filesAlumnos.indexOf(event), 1);
@@ -59,22 +42,10 @@ export class CsvUploadComponent implements OnInit {
   //filesMaterias CSV-----------------------------------------------------
   filesMaterias: File[] = [];
   onSelectMaterias(event: any) {
-    this.filesMaterias.push(...event.addedFiles);
-    console.log(this.filesMaterias)
-
-    for(let i= 0; i<this.filesMaterias.length;i++){
-
-      const fileMateria = this.filesMaterias[i];
-
-      this.readFile(fileMateria).then(fileContents => {
-        // Put this string in a request body to upload it to an API.
-        //console.log(fileContents)
-        this.submitFile(fileMateria, fileContents, environment.materias);
-        // console.log(fileContents);
-      })
+    if (this.filesMaterias.length == 0 ){
+      this.filesMaterias.push(...event.addedFiles);
     }
   }
-  // Envío de fichero comprimido a base64
   onRemoveMaterias(event:any) {
     console.log(event);
     this.filesMaterias.splice(this.filesMaterias.indexOf(event), 1);
@@ -83,22 +54,10 @@ export class CsvUploadComponent implements OnInit {
   //filesMatriculas CSV-----------------------------------------------------
   filesMatriculas: File[] = [];
   onSelectMatriculas(event: any) {
-    this.filesMatriculas.push(...event.addedFiles);
-    console.log(this.filesMatriculas)
-
-    for(let i= 0; i<this.filesMatriculas.length;i++){
-
-      const fileMatricula = this.filesMatriculas[i];
-
-      this.readFile(fileMatricula).then(fileContents => {
-        // Put this string in a request body to upload it to an API.
-        //console.log(fileContents)
-        this.submitFile(fileMatricula, fileContents, environment.matriculas);
-        // console.log(fileContents);
-      })
+    if (this.filesMatriculas.length == 0 ){
+      this.filesMatriculas.push(...event.addedFiles);
     }
   }
-  // Envío de fichero comprimido a base64
   onRemoveMatriculas(event:any) {
     console.log(event);
     this.filesMatriculas.splice(this.filesMatriculas.indexOf(event), 1);
@@ -107,22 +66,10 @@ export class CsvUploadComponent implements OnInit {
   //filesNotas CSV-----------------------------------------------------
   filesNotas: File[] = [];
   onSelectNotas(event: any) {
-    this.filesNotas.push(...event.addedFiles);
-    console.log(this.filesNotas)
-
-    for(let i= 0; i<this.filesNotas.length;i++){
-
-      const fileNota = this.filesNotas[i];
-
-      this.readFile(fileNota).then(fileContents => {
-        // Put this string in a request body to upload it to an API.
-        //console.log(fileContents)
-        this.submitFile(fileNota, fileContents, environment.notas);
-        // console.log(fileContents);
-      })
+    if (this.filesNotas.length == 0 ){
+      this.filesNotas.push(...event.addedFiles);
     }
   }
-  // Envío de fichero comprimido a base64
   onRemoveNotas(event:any) {
     console.log(event);
     this.filesNotas.splice(this.filesNotas.indexOf(event), 1);
@@ -131,22 +78,10 @@ export class CsvUploadComponent implements OnInit {
   //filesUnidades CSV-----------------------------------------------------
   filesUnidades: File[] = [];
   onSelectUnidades(event: any) {
-    this.filesMaterias.push(...event.addedFiles);
-    console.log(this.filesUnidades)
-
-    for(let i= 0; i<this.filesUnidades.length;i++){
-
-      const fileUnidad = this.filesUnidades[i];
-
-      this.readFile(fileUnidad).then(fileContents => {
-        // Put this string in a request body to upload it to an API.
-        //console.log(fileContents)
-        this.submitFile(fileUnidad, fileContents, environment.unidades);
-        // console.log(fileContents);
-      })
+    if (this.filesUnidades.length == 0 ){
+      this.filesUnidades.push(...event.addedFiles);
     }
   }
-  // Envío de fichero comprimido a base64
   onRemoveUnidades(event:any) {
     console.log(event);
     this.filesUnidades.splice(this.filesUnidades.indexOf(event), 1);
@@ -155,44 +90,65 @@ export class CsvUploadComponent implements OnInit {
   //filesProfesores CSV-----------------------------------------------------
   filesProfesores: File[] = [];
   onSelectProfesores(event: any) {
-    this.filesProfesores.push(...event.addedFiles);
-    console.log(this.filesProfesores)
-
-    for(let i= 0; i<this.filesProfesores.length;i++){
-
-      const fileProfesor = this.filesProfesores[i];
-
-      this.readFile(fileProfesor).then(fileContents => {
-        // Put this string in a request body to upload it to an API.
-        //console.log(fileContents)
-        this.submitFile(fileProfesor, fileContents, environment.profesores);
-        // console.log(fileContents);
-      })
+    if (this.filesProfesores.length == 0 ){
+      this.filesProfesores.push(...event.addedFiles);
     }
   }
-  // Envío de fichero comprimido a base64
   onRemoveProfesores(event:any) {
     console.log(event);
     this.filesProfesores.splice(this.filesProfesores.indexOf(event), 1);
   }
 
 
+  async subirFicheros(){
+    let filesUploadList=[];
+    if (this.filesAlumnos.length>0){
+      let file = await this.readFile(this.filesAlumnos[0]).then(fileContents => {
+        return this.createFileUpload(this.filesAlumnos[0], fileContents, environment.alumnos);
+      });
+      filesUploadList.push(file);
+    }
+    if (this.filesMaterias.length>0){
+      let file = await this.readFile(this.filesMaterias[0]).then(fileContents => {
+        return this.createFileUpload(this.filesMaterias[0], fileContents, environment.materias);
+      });
+      filesUploadList.push(file);
+    }
+    if (this.filesMatriculas.length>0){
+      let file = await this.readFile(this.filesMatriculas[0]).then(fileContents => {
+        return this.createFileUpload(this.filesMatriculas[0], fileContents, environment.matriculas);
+      });
+      filesUploadList.push(file);
+    }
+    if (this.filesNotas.length>0){
+      let file = await this.readFile(this.filesNotas[0]).then(fileContents => {
+        return this.createFileUpload(this.filesNotas[0], fileContents, environment.notas);
+      });
+      filesUploadList.push(file);
+    }
+    if (this.filesUnidades.length>0){
+      let file = await this.readFile(this.filesUnidades[0]).then(fileContents => {
+        return this.createFileUpload(this.filesUnidades[0], fileContents, environment.unidades);
+      });
+      filesUploadList.push(file);
+    }
+    if (this.filesProfesores.length>0){
+      let file = await this.readFile(this.filesProfesores[0]).then(fileContents => {
+        return this.createFileUpload(this.filesProfesores[0], fileContents, environment.profesores);
+      });
+      filesUploadList.push(file);
+    }
 
-submitFile(file: File, content: any, box_name: string) {
+    // console.log(filesUploadList);
 
-  const newStorage = new FileUploadModel()
-  newStorage.file_name = file.name
-  newStorage.file_content = content
-  newStorage.content_type = file.type
-  newStorage.box_file = box_name
-  const storageSub = this.storageService.add(newStorage)
+    const storageSub = this.storageService.add(filesUploadList)
     .pipe(first(),catchError((e) => {
       console.log(e);
       const modalRef = this.modalService.open(ModalInfoComponent);
       modalRef.componentInstance.content="ERROR DE CONEXIÓN";
       return throwError(new Error(e));
     }))
-    .subscribe((storage: FileUploadModel) => {
+    .subscribe((storage: FileUploadModel[]) => {
       // console.log(storage)
       if (storage) {
         console.log(storage)
@@ -202,13 +158,19 @@ submitFile(file: File, content: any, box_name: string) {
       } else {
         // console.log(storage)
         this.hasError = true;
-
       }
     })
+    this.unsubscribe.push(storageSub);
+  }
 
-
-  this.unsubscribe.push(storageSub);
-}
+  createFileUpload(file: File, content: any, box_name: string){
+    const newStorage = new FileUploadModel()
+    newStorage.file_name = file.name
+    newStorage.file_content = content
+    newStorage.content_type = file.type
+    newStorage.box_file = box_name
+    return newStorage;
+  }
 
 private async readFile(file: File): Promise<string | ArrayBuffer> {
   return new Promise<string | ArrayBuffer>((resolve, reject) => {
@@ -228,17 +190,13 @@ private async readFile(file: File): Promise<string | ArrayBuffer> {
       console.error('No file to read.');
       return reject(null);
     }
-
     reader.readAsDataURL(file);
   });
 }
 
-
-
-
-
-
-
-
-
 }
+
+
+
+
+

@@ -5,7 +5,7 @@ import { Observable, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import {FileUploadModel} from "../models/file-upload.model";
 
-const API_STORAGE_URL = `${environment.apiUrl}/storage`;
+const API_STORAGE_URL = `${environment.apiUrl}`;
 //falta la url del servidor
 
 @Injectable({
@@ -15,9 +15,9 @@ export class FileUploadService {
 
   constructor(private http: HttpClient,) { }
 
-  add(storage: FileUploadModel): Observable<any> {
+  add(storage: FileUploadModel[]): Observable<any> {
     console.log(storage);
-    return this.http.post(`${API_STORAGE_URL}/file`, storage).pipe(
+    return this.http.post(`${API_STORAGE_URL}`, storage).pipe(
       map((res) => {
         return res || {};
       }),
