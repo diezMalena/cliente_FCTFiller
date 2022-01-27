@@ -151,9 +151,12 @@ export class CsvUploadComponent implements OnInit {
     .subscribe((storage: FileUploadModel[]) => {
       // console.log(storage)
       if (storage) {
-        console.log(storage)
+        //David Sánchez Barragán
+        //Cambio para incluir mensaje del servidor
+        //Es una ñapa, habría que hacerlo algo mejor
+        var o: any = storage;
         const modalRef = this.modalService.open(ModalInfoComponent);
-        modalRef.componentInstance.content="CONEXIÓN EXITOSA";
+        modalRef.componentInstance.content=o.mensaje;
         //this.closeModalEvent.emit('closeModal');
       } else {
         // console.log(storage)
