@@ -1,0 +1,243 @@
+<div class="row">
+
+  <body class="col-12">
+
+    <div class="row">
+
+      <div class="col-12 col-xl-2 p-2 bg-light text-dark border border-dark">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link active linkNegro fw-bold fst-italic" aria-current="page" href="#">Anexo 0</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link linkNegro fw-bold fst-italic" href="#">Anexo 1</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link linkNegro fw-bold fst-italic" href="#">Anexo 999</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link linkNegro fw-bold fst-italic">Anexo ∞</a>
+          </li>
+        </ul>
+      </div>
+      <div class=" col-12 col-xl-10 p-2 text-dark bg-opacity-50 bg-secondary">
+        <div class="row">
+          <div class="col-12">
+            <!-- <div class="container"> -->
+            <div class="breadcrumb">
+              <a routerLink="/data-management/registro-empresa/representante" class="item completed">
+                <!--class="item completed" para seleccionar que ya se ha completado ese paso-->
+                <span class="arrow"></span>
+                <span class="hide-mobile">Representante</span>
+                <span class="show-mobile">Repre...</span>
+              </a>
+              <a routerLink="/data-management/registro-empresa/empresa" class="item completed">
+                <!--class="item active" para determinar que estamos en ese paso-->
+                <span class="arrow"></span>
+                <span class="hide-mobile">Empresa</span>
+                <span class="show-mobile">Empresa</span>
+              </a>
+              <a routerLink="/data-management/registro-empresa/ubicacion" class="item completed">
+                <span class="arrow"></span>
+                <span class="hide-mobile">Ubicación</span>
+                <span class="show-mobile">Ubicación</span>
+              </a>
+              <a href="" class="item active">
+                <span class="hide-mobile">Resumen</span>
+                <span class="show-mobile">Resumen</span>
+              </a>
+            </div>
+            <!-- </div> -->
+          </div>
+        </div>
+
+
+        <form [formGroup]="resumen" (ngSubmit)="onSubmit()" class="row px-4 py-4 d-flex justify-content-center">
+          <div class="col-12 col-xl-12 border border-black py-3 px-3">
+
+            <!-- PARTE DE DATOS DEL REPRESENTANTE -->
+            <div class="row">
+
+
+              <div class="col-xl-4 col-12 border border-danger">
+                <div class="row">
+                  <div class="col-12 text-center">
+                    <h3>Representante:</h3>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <div class="row d-flex justify-content-center">
+                    <div class="col-12 col-xl-4">
+                      <label for="exampleInputEmail1" class="form-label fw-bold">E-mail:</label>
+                    </div>
+                    <div class="col-12 col-xl-8">
+                      <input type="text" class="form-control" formControlName="correoRep" [(ngModel)]="correoRep" readonly>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <div class="row d-flex justify-content-center">
+                    <div class="col-12 col-xl-4">
+                      <label for="exampleInputEmail1" class="form-label fw-bold">Nombre:</label>
+                    </div>
+                    <div class="col-12 col-xl-8">
+                      <input type="text" class="form-control" formControlName="nombreRep" [(ngModel)]="nombreRep" readonly>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="mb-3">
+                  <div class="row d-flex justify-content-center">
+                    <div class="col-12 col-xl-4">
+                      <label for="exampleInputEmail1" class="form-label fw-bold">Primer apellido:</label>
+                    </div>
+                    <div class="col-12 col-xl-8">
+                      <input type="text" class="form-control" formControlName="apellidosRep" [(ngModel)]="apellidosRep" readonly>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="mb-3">
+                  <div class="row d-flex justify-content-center">
+                    <div class="col-12 col-xl-4">
+                      <label for="exampleInputEmail1" class="form-label fw-bold">DNI:</label>
+                    </div>
+                    <div class="col-12 col-xl-8">
+                      <input type="text" class="form-control" formControlName="dniRep" [(ngModel)]="dniRep" readonly>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+
+
+              <!-- PARTE DE DATOS DE LA EMPRESA -->
+
+              <div class="col-xl-4 col-12 border border-danger">
+
+                <div class="row">
+                  <div class="col-12 text-center">
+                    <h3>Empresa:</h3>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <div class="row d-flex justify-content-center">
+                    <div class="col-12 col-xl-4">
+                      <label for="exampleInputEmail1" class="form-label fw-bold">Email:</label>
+                    </div>
+                    <div class="col-12 col-xl-8">
+                      <input type="text" class="form-control" formControlName="correoEmp" [(ngModel)]="correoEmp" readonly>
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <div class="row d-flex justify-content-center">
+                    <div class="col-12 col-xl-4">
+                      <label for="exampleInputEmail1" class="form-label fw-bold">Nombre:</label>
+                    </div>
+                    <div class="col-12 col-xl-8">
+                      <input type="text" class="form-control" formControlName="nombreEmp" [(ngModel)]="nombreEmp" readonly>
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <div class="row d-flex justify-content-center">
+                    <div class="col-12 col-xl-4">
+                      <label for="exampleInputEmail1" class="form-label fw-bold">Teléfono:</label>
+                    </div>
+                    <div class="col-12 col-xl-8">
+                      <input type="text" class="form-control" formControlName="telefonoEmp" [(ngModel)]="telefonoEmp" readonly>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <div class="row d-flex justify-content-center">
+                    <div class="col-12 col-xl-4">
+                      <label for="exampleInputEmail1" class="form-label fw-bold">CIF:</label>
+                    </div>
+                    <div class="col-12 col-xl-8">
+                      <input type="text" class="form-control" formControlName="cifEmp" [(ngModel)]="cifEmp" readonly>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+
+              <div class="col-xl-4 col-12 border border-danger">
+
+                <div class="row">
+                  <div class="col-12 text-center">
+                    <h3>Ubicación:</h3>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <div class="row d-flex justify-content-center">
+                    <div class="col-12 col-xl-4">
+                      <label for="exampleInputEmail1" class="form-label fw-bold">Localidad:</label>
+                    </div>
+                    <div class="col-12 col-xl-8">
+                      <input type="text" class="form-control" formControlName="localidad" [(ngModel)]="localidad" readonly>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <div class="row d-flex justify-content-center">
+                    <div class="col-12 col-xl-4">
+                      <label for="exampleInputEmail1" class="form-label fw-bold">Dirección:</label>
+                    </div>
+                    <div class="col-12 col-xl-8">
+                      <input type="text" class="form-control" formControlName="direccion" [(ngModel)]="direccion" readonly>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <div class="row d-flex justify-content-center">
+                    <div class="col-12 col-xl-4">
+                      <label for="exampleInputEmail1" class="form-label fw-bold">Provincia:</label>
+                    </div>
+                    <div class="col-12 col-xl-8">
+                      <input type="text" class="form-control" formControlName="provincia" [(ngModel)]="provincia" readonly>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <div class="row d-flex justify-content-center">
+                    <div class="col-12 col-xl-4">
+                      <label for="exampleInputEmail1" class="form-label fw-bold">CP:</label>
+                    </div>
+                    <div class="col-12 col-xl-8">
+                      <input type="text" class="form-control" formControlName="cp" [(ngModel)]="cp" readonly>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <div class="row py-2 d-flex justify-content-center">
+              <div class="col-6 col-xl-6 d-flex justify-content-center">
+                <input type="submit" value="Aceptar y continuar" class="btn btn-primary">
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="row">
+          <div class="col-12 col-xl-12">
+            <input type="button" value="Atrás" class="btn btn-danger" routerLink="/empresa">
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</div>
+
