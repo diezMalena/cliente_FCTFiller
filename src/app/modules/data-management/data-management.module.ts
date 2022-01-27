@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RegistroEmpresaComponent } from './registro-empresa/registro-empresa.component';
 import { AsociarEmpAluComponent } from './asociar-emp-alu/asociar-emp-alu.component';
 import { FirmaDocComponent } from './firma-doc/firma-doc.component';
+import { DataManagementRoutingModule } from './data-management-routing.module';
 
 
 
@@ -13,7 +14,8 @@ import { FirmaDocComponent } from './firma-doc/firma-doc.component';
     FirmaDocComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    DataManagementRoutingModule
   ]
 })
 export class DataManagementModule { }
