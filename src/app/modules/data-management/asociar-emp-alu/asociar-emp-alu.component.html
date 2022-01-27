@@ -1,72 +1,72 @@
 <div class="container-fluid">
-  <div class="row">
-    <div class="col-sm-3">
-      <div class="card">
-        <div class="card-body">
-          <div>lista</div>
-          <div>lista</div>
-          <div>lista</div>
-          <div>lista</div>
-          <div>lista</div>
-          <div>lista</div>
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-9">
-      <div class="row">
-        <div class="col-sm-12 text-center mt-3">
-          <h3>Grupo</h3>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-5 offset-md-1 col-sm-6 mt-1">
-          <div class="row">
-            <div class="col-12">
-              <p>Alumnos</p>
-              <div class="row">
-                <div class="col-sm-9">
-                  <div class="card tablero">
-                    <div class="card-body listaAlumnos">
-                      <div *ngFor="let alumno of alumnos" ngClass="alumno p-1 grab" attr.id="{{alumno.dni}}" draggable="true">
-                        {{alumno.nombre}}
-                      </div>
-                    </div>
-                  </div>
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="card">
+                <div class="card-body">
+                    <div>lista</div>
+                    <div>lista</div>
+                    <div>lista</div>
+                    <div>lista</div>
+                    <div>lista</div>
+                    <div>lista</div>
                 </div>
-              </div>
             </div>
-          </div>
         </div>
-        <div class="col-md-5 col-sm-6 mt-1">
-          <div class="row">
-            <div class="col-12">
-              <p>Empresas</p>
-              <div class="row">
-                <div class="col-sm-9">
-                  <div class="card">
-                    <div class="card-body tablero listaEmpresas">
-                      <div *ngFor="let empresa of empresas" ngClass="empresa fondo mb-2" attr.id="{{empresa.id}}">
-                        {{empresa.nombre}}
-                        <div *ngFor="let alumno of empresa.alumnos" ngClass="alumno p-1 grab" attr.id="{{alumno.dni}}" draggable="true">
-                          {{alumno.nombre}}
+        <div class="col-sm-9">
+            <div class="row">
+                <div class="col-sm-12 text-center mt-3">
+                    <h3>Grupo</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5 offset-md-1 col-sm-6 mt-1">
+                    <div class="row">
+                        <div class="col-12">
+                            <p>Alumnos</p>
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <div class="card tablero">
+                                        <div class="card-body listaAlumnos">
+                                            <div *ngFor="let alumno of alumnos" ngClass="alumno p-1 grab" attr.id="{{alumno.dni}}" draggable="true">
+                                                {{alumno.nombre}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                      </div>
                     </div>
-                  </div>
                 </div>
-              </div>
+                <div class="col-md-5 col-sm-6 mt-1">
+                    <div class="row">
+                        <div class="col-12">
+                            <p>Empresas</p>
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <div class="card">
+                                        <div class="card-body tablero listaEmpresas">
+                                            <div *ngFor="let empresa of empresas" ngClass="empresa fondo mb-2" attr.id="{{empresa.id}}">
+                                                {{empresa.nombre}}
+                                                <div *ngFor="let alumno of empresa.alumnos" ngClass="alumno p-1 grab" attr.id="{{alumno.dni}}" draggable="true">
+                                                    {{alumno.nombre}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-5 col-sm-6 mt-1">
+                    <input type="button" class="btn btn-primary" value="Asignar alumnos">
+                </div>
+                <div class="col-md-5 col-sm-6 mt-1">
+                    <input type="button" class="btn btn-primary" value="Generar Word" (click)="GenerarAnexos()">
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="row d-flex justify-content-center">
-        <div class="col-md-5 col-sm-6 mt-1">
-          <input type="button" class="btn btn-primary" value="Asignar alumnos">
-        </div>
-        <div class="col-md-5 col-sm-6 mt-1">
-          <input type="button" class="btn btn-primary" value="Generar PDF">
-        </div>
-      </div>
     </div>
-  </div>
 </div>

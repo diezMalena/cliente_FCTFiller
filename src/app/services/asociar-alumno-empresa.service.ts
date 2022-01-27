@@ -32,4 +32,16 @@ export class AsociarAlumnoEmpresaService {
     var datosString = JSON.stringify(datos);
     return this.http.post(url, datosString, {headers: headers});
   }
+
+
+
+  public generarAnexo(dni:string){
+    console.log(dni);
+    const url: string="http://127.0.0.1:8000/api/relleno";
+    let headers= new HttpHeaders({
+      'Content-Type' : 'application/json',
+    });
+    let dato= {dni_tutor:dni};
+    return this.http.post(url,dato,{headers: headers});
+  }
 }

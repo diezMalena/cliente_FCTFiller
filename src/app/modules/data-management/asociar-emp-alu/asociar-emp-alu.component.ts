@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Alumno } from '../../../models/alumno';
 import { Empresa } from '../../../models/empresa';
+import { Router } from '@angular/router';
 import { AsociarAlumnoEmpresaService } from '../../../services/asociar-alumno-empresa.service';
+import { ToastrService } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
   selector: 'app-asociar-emp-alu',
@@ -11,8 +14,13 @@ import { AsociarAlumnoEmpresaService } from '../../../services/asociar-alumno-em
 export class AsociarEmpAluComponent implements OnInit {
   alumnos: Alumno[] = [];
   empresas: Empresa[] = [];
+  respuesta: any =[];
 
-  constructor(private alumnosEmpresas: AsociarAlumnoEmpresaService) { }
+  constructor(
+    private alumnosEmpresas: AsociarAlumnoEmpresaService,
+    private router: Router,
+    private toastr: ToastrService,)
+     { }
 
   ngOnInit(): void {
     this.getAlumnos();
@@ -94,6 +102,23 @@ export class AsociarEmpAluComponent implements OnInit {
         });
     }
   }
+
+
+  GenerarAnexos(){
+    /* this.alumnosEmpresas.generarAnexo('451266566Y').subscribe((response)=>{
+       this.respuesta=response;
+     });*/
+
+     this.alumnosEmpresas.generarAnexo('451266566Y').subscribe({
+      next:(user)=>{
+        this.toastr.success('Anexo Generado', 'Título');
+      },
+      error: e =>{
+        this.toastr.error('El anexo no ha podido generarse', 'Título');
+      }
+    })
+     this.router.navigate(['/data-management/asig-alum-empresa']);
+   }
 
   // eventosFichas() {
 
