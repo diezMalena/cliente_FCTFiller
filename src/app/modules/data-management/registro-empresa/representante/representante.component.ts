@@ -14,8 +14,7 @@ export class RepresentanteComponent implements OnInit {
   submitted: boolean = false;
   correoRepresentante?;
   nombreRepresentante?;
-  ape1?;
-  ape2?;
+  ape?;
   dni?;
 
   constructor(
@@ -26,16 +25,14 @@ export class RepresentanteComponent implements OnInit {
     var representante:string = '';
     this.correoRepresentante = '';
     this.nombreRepresentante = '';
-    this.ape1 = '';
-    this.ape2 = '';
+    this.ape = '';
     this.dni = '';
     if (sessionStorage.getItem(RepresentanteComponent.representante) != null) {
       representante = sessionStorage.getItem(RepresentanteComponent.representante)!;
       var datosRepre = JSON.parse(representante);
       this.correoRepresentante = datosRepre["correo"] ? datosRepre["correo"] : '';
       this.nombreRepresentante = datosRepre["nombre"] ? datosRepre["nombre"] : '';
-      this.ape1 = datosRepre["apellido1"] ? datosRepre["apellido1"] : '';
-      this.ape2 = datosRepre["apellido2"] ? datosRepre["apellido2"] : '';
+      this.ape= datosRepre["apellido"] ? datosRepre["apellido"] : '';
       this.dni = datosRepre["dni"] ? datosRepre["dni"] : '';
 
   }
@@ -43,8 +40,7 @@ export class RepresentanteComponent implements OnInit {
   this.representante = this.formBuilder.group({
     email: [this.correoRepresentante, [Validators.required, Validators.email]],
     nombre: [this.nombreRepresentante, [Validators.required]],
-    apellido1: [this.ape1, [Validators.required]],
-    apellido2: [this.ape2, [Validators.required]],
+    apellido: [this.ape, [Validators.required]],
     dni: [this.dni, [Validators.required, Validators.minLength(9), Validators.maxLength(9)]]
   });
 
@@ -63,22 +59,20 @@ export class RepresentanteComponent implements OnInit {
 
     var correo = this.representante.value.email;
     var nombre = this.representante.value.nombre;
-    var ape1 = this.representante.value.apellido1;
-    var ape2 = this.representante.value.apellido2;
+    var ape = this.representante.value.apellido;
     var dni = this.representante.value.dni;
 
     var datosRepresentante = {
       'correo': correo,
       'nombre': nombre,
-      'apellido1':ape1,
-      'apellido2':ape2,
+      'apellido':ape,
       'dni': dni
     }
 
     sessionStorage.setItem(RepresentanteComponent.representante, JSON.stringify(datosRepresentante));
     //console.log(datosRepresentante);
 
-    this.router.navigateByUrl('empresa'); //Esto deberia ser registro-empresa/empresa.
+    this.router.navigateByUrl('data-management/registro-empresa/empresa');
 
     this.onReset();
   }
