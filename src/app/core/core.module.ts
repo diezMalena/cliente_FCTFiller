@@ -4,13 +4,15 @@ import { CoreRoutingModule } from './core-routing.module';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { DescriptionComponent } from './components/description/description.component';
+import { HeaderComponent } from './components/header/header.component';
 
 
 @NgModule({
   declarations: [
     NavbarComponent,
     FooterComponent,
-    DescriptionComponent
+    DescriptionComponent,
+    HeaderComponent
   ],
   imports: [
     SharedModule,
@@ -18,7 +20,8 @@ import { DescriptionComponent } from './components/description/description.compo
   ],
   exports: [
     NavbarComponent,
-    FooterComponent
+    FooterComponent,
+    HeaderComponent
   ]
 })
 export class CoreModule { }
