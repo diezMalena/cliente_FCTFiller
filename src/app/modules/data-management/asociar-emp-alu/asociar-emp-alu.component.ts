@@ -27,8 +27,21 @@ export class AsociarEmpAluComponent implements OnInit {
     this.getNombreCiclo();
     this.getAlumnos();
     this.getEmpresas();
-    this.eventosCasillas();
-    this.eventosFichas();
+  }
+
+  drop(event: CdkDragDrop<any>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
+    }
+    console.log(this.alumnos);
+    console.log(this.empresas);
   }
 
   getAlumnos(): void {
@@ -73,52 +86,4 @@ export class AsociarEmpAluComponent implements OnInit {
     this.router.navigate(['/data-management/asig-alum-empresa']);
   }
 
-
-
-  /**
-   * Cuando arrastramos una ficha recogemos su id en el evento
-   */
-  eventosFichas() {
-
-    var fichas = document.querySelectorAll(".arrastrables div");
-
-    for (let i = 0; i < fichas.length; i++) {
-      fichas[i].addEventListener("dragstart",
-        function (event: any) {
-          event.dataTransfer.setData("text", event.target.id);
-        });
-    }
-  }
-
-
-  /**
-   * Cuando una ficha caiga en una casilla, usando el id de la ficha que pasamos en el comienzo del arrastre
-   * buscamos el elemento y lo añadimos como hijo de la ficha.
-   */
-  eventosCasillas() {
-
-    var casillas = document.querySelectorAll(".tablero div");
-
-    for (let i = 0; i < casillas.length; i++) {
-
-      // Evitamos el comportamiento por defecto
-      casillas[i].addEventListener("dragover",
-        function (event) {
-          event.preventDefault();
-        }
-      );
-
-      casillas[i].addEventListener("drop",
-        function (event:any) {
-          event.preventDefault();
-
-          var ficha = document.getElementById(
-            event.dataTransfer.getData("text")
-          );
-
-          event.target.appendChild(ficha);
-
-        });
-    }
-  }
 }
