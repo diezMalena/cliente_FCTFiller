@@ -6,7 +6,6 @@ import { AsociarAlumnoEmpresaService } from '../../../services/asociar-alumno-em
 import { ToastrService } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
-
 @Component({
   selector: 'app-asociar-emp-alu',
   templateUrl: './asociar-emp-alu.component.html',

@@ -9,6 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EmpresaComponent } from './registro-empresa/empresa/empresa.component';
 import { UbicacionComponent } from './registro-empresa/ubicacion/ubicacion.component';
 import { ResumenComponent } from './registro-empresa/resumen/resumen.component';
+import { DragDropModule } from  '@angular/cdk/drag-drop';
 
 
 
@@ -26,7 +27,8 @@ import { ResumenComponent } from './registro-empresa/resumen/resumen.component';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    DataManagementRoutingModule
+    DataManagementRoutingModule,
+    DragDropModule,
   ]
 })
 export class DataManagementModule { }

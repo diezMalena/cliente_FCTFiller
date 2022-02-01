@@ -1,18 +1,6 @@
-<div class="container-fluid">
+<!-- <div class="container-fluid">
   <div class="row">
-    <div class="col-sm-3">
-      <div class="card">
-        <div class="card-body">
-          <div>lista</div>
-          <div>lista</div>
-          <div>lista</div>
-          <div>lista</div>
-          <div>lista</div>
-          <div>lista</div>
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-9">
+    <div class="col-sm-12">
       <div class="row">
         <div class="col-sm-12 text-center mt-3">
           <h3>{{nombreCiclo}}</h3>
@@ -26,7 +14,8 @@
               <div class="row">
                 <div class="col-sm-9">
                   <div class="card tablero">
-                    <div class="card-body" cdkDropList>
+                    <div class="card-body" cdkDropList #alumnos="cdkDropList" [cdkDropListData]="alumnos"
+                      [cdkDropListConnectedTo]="[empresa]" (cdkDropListDropped)="drop($event)">
                       <div *ngFor="let alumno of alumnos" ngClass="alumno p-1 grab" attr.id="{{alumno.dni}}" cdkDrag>
                         {{alumno.nombre}}
                       </div>
@@ -44,10 +33,13 @@
               <div class="row">
                 <div class="col-sm-9">
                   <div class="card">
-                    <div class="card-body tablero listaEmpresas">
-                      <div *ngFor="let empresa of empresas" ngClass="empresa fondo mb-2" attr.id="{{empresa.id}}">
+                    <div class="card-body tablero">
+                      <div *ngFor="let empresa of empresas" ngClass="empresa fondo mb-2" attr.id="{{empresa.id}}"
+                        cdkDropList #empresa="cdkDropList" [cdkDropListData]="empresa"
+                        [cdkDropListConnectedTo]="[alumnos]" (cdkDropListDropped)="drop($event)">
                         {{empresa.nombre}}
-                        <div *ngFor="let alumno of empresa.alumnos" ngClass="alumno p-1 grab" attr.id="{{alumno.dni}}" cdkDrag>
+                        <div *ngFor="let alumno of empresa.alumnos" ngClass="alumno p-1 grab" attr.id="{{alumno.dni}}"
+                          cdkDrag>
                           {{alumno.nombre}}
                         </div>
                       </div>
@@ -69,4 +61,4 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
