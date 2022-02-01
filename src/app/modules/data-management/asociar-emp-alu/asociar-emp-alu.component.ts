@@ -13,7 +13,9 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag
 })
 export class AsociarEmpAluComponent implements OnInit {
   alumnos: Alumno[] = [];
+  nombreAlumnos: string[] = [];
   empresas: Empresa[] = [];
+  nombreEmpresas: string[] = [];
   respuesta: any =[];
   nombreCiclo: string = '';
   dniTutor: string = '117372673';
@@ -28,11 +30,21 @@ export class AsociarEmpAluComponent implements OnInit {
     this.getNombreCiclo();
     this.getAlumnos();
     this.getEmpresas();
-    // this.eventosCasillas();
-    // this.eventosFichas();
+    this.extraerNombreAlumnos();
+  }
 
-    // this.eventosCasillas();
-    // this.eventosFichas();
+  extraerNombreAlumnos(): void{
+    let cont = 0;
+    this.alumnos.forEach(alumno => {
+      this.nombreAlumnos[cont] = alumno['nombre'];
+    });
+  }
+
+  extraerNombreEmpresas(): void{
+    let cont = 0;
+    this.empresas.forEach(empresa => {
+      this.nombreEmpresas[cont] = empresa['nombre'];
+    });
   }
 
   drop(event: CdkDragDrop<string[]>) {
@@ -65,66 +77,6 @@ export class AsociarEmpAluComponent implements OnInit {
     this.alumnosEmpresas.asignarAlumnos(this.dniTutor, this.empresas).subscribe(Empresa => console.log(Empresa));
   }
 
-  // drag(ev: any) {
-  //   console.log("entra");
-  //   ev.dataTransfer.setData("alumno", ev.target.id);
-  // }
-
-  // allowDrop(ev: any) {
-  //   ev.preventDefault();
-  // }
-
-  // drop(ev: any) {
-  //   var data = ev.dataTransfer.getData("alumno");
-  //   console.log(ev.target.className);
-  //   if (ev.target.className == "empresa" || ev.target.className == "listaAlumnos") {
-  //     data.parentNode.removeChild(data);
-  //     ev.target.appendChild(document.getElementById(data));
-  //   }
-  // }
-
-  /**
-   * Cuando arrastramos una ficha recogemos su id en el evento
-   */
-  // eventosFichas() {
-
-  //   var fichas = document.querySelectorAll(".listaAlumnos div");
-
-  //   for (let i = 0; i < fichas.length; i++) {
-  //     fichas[i].addEventListener("dragstart",
-  //       function (event: any) {
-  //         event.dataTransfer.setData("text", event.target.id);
-  //       });
-  //   }
-  // }
-
-  // eventosCasillas() {
-
-  //   var casillas = document.querySelectorAll(".empresa div");
-
-  //   for (let i = 0; i < casillas.length; i++) {
-
-  //     // Evitamos el comportamiento por defecto
-  //     casillas[i].addEventListener("dragover",
-  //       function (event) {
-  //         event.preventDefault();
-  //       }
-  //     );
-
-  //     casillas[i].addEventListener("drop",
-  //       function (event: any) {
-  //         event.preventDefault();
-  //         var data = event.dataTransfer.getData("alumno");
-  //         if (event.target.className == "empresa" || event.target.className == "listaAlumnos") {
-  //           data.parentNode.removeChild(data);
-  //           event.target.appendChild(document.getElementById(data));
-  //         }
-
-  //       });
-  //   }
-  // }
-
-
   GenerarAnexos(){
     /* this.alumnosEmpresas.generarAnexo('451266566Y').subscribe((response)=>{
        this.respuesta=response;
@@ -140,44 +92,4 @@ export class AsociarEmpAluComponent implements OnInit {
     })
      this.router.navigate(['/data-management/asig-alum-empresa']);
    }
-
-  // eventosFichas() {
-
-  //   var fichas = document.querySelectorAll(".arrastrables div");
-
-  //   for (let i = 0; i < fichas.length; i++) {
-  //     fichas[i].addEventListener("dragstart",
-  //       function (event: any) {
-  //         event.dataTransfer.setData("text", event.target.id);
-  //       });
-  //   }
-  // }
-
-  // eventosCasillas() {
-
-  //   var casillas = document.querySelectorAll(".tablero div") as NodeListOf <HTMLElement>;
-
-  //   for (let i = 0; i < casillas.length; i++) {
-
-  //     // Evitamos el comportamiento por defecto
-  //     casillas[i].addEventListener("dragover",
-  //       function (event: any) {
-  //         event.preventDefault();
-  //       }
-  //     );
-
-  //     casillas[i].addEventListener("drop",
-  //       function (event: any) {
-  //         event.preventDefault();
-
-  //         this.appendChild(
-  //           document.getElementById(
-  //             event.dataTransfer.getData("text")
-  //           )
-  //         );
-
-  //       });
-  //   }
-  // }
-
 }
