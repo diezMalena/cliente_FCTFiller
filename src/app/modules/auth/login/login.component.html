@@ -3,18 +3,26 @@
     <div class="col-12 col-md-9 col-lg-7 col-xl-6">
       <div class="card bg-primary text-white" style="border-radius: 1rem;">
         <div class="card-body p-5 text-center">
-          <form class="mb-md-2 mt-md-1 pb-2">
+          <form [formGroup]="login" (ngSubmit)="onSubmit()" class="mb-md-2 mt-md-1 pb-2">
             <h2 class="fw-bold mb-2 text-uppercase">Login</h2>
             <p class="mb-5">Introduce tu email y contraseña</p>
 
             <div class="form-outline form-white mb-4">
-              <input type="email" id="correo" class="form-control form-control-lg" />
               <label class="form-label" for="correo">Correo</label>
+              <input type="email" id="correo" formControlName="email" class="form-control form-control-lg" />
+              <div *ngIf="submitted && formulario['email'].errors">
+                <div *ngIf="formulario['email'].errors['required']">El email no puede estar vacío.</div>
+                <div *ngIf="formulario['email'].errors['email']">El email introducido no tiene un formato válido.</div>
+              </div>
             </div>
 
             <div class="form-outline form-white mb-4">
-              <input type="password" id="pass" class="form-control form-control-lg" />
               <label class="form-label" for="pass">Contraseña</label>
+              <input type="password" id="pass" formControlName="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z].{8,})" class="form-control form-control-lg" />
+              <div *ngIf="submitted && formulario['password'].errors">
+                <div *ngIf="formulario['password'].errors['required']">La contraseña no puede estar vacía.</div>
+                <div *ngIf="formulario['password'].errors['pattern']">La contraseña introducida no tiene un formato válido.</div>
+              </div>
             </div>
 
             <p class="small mb-5 pb-lg-2"><a class="text-secondary" href="#!">¿Contraseña olvidada?</a></p>
