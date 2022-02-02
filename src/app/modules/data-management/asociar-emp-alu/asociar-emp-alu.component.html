@@ -10,13 +10,13 @@
         <div class="col-md-5 offset-md-1 col-sm-6 mt-1">
           <div class="row">
             <div class="col-12">
-              <p>Alumnos</p>
+              <h6>Alumnos</h6>
               <div class="row">
                 <div class="col-sm-9">
-                  <div class="card tablero">
-                    <div class="card-body caja ps-3" cdkDropList [cdkDropListData]="alumnos"
+                  <div class="card">
+                    <div class="card-body ps-3" cdkDropList [cdkDropListData]="alumnos"
                       (cdkDropListDropped)="drop($event)">
-                      <div *ngFor="let alumno of alumnos" ngClass="alumno p-1 grab arrastrables"
+                      <div *ngFor="let alumno of alumnos" ngClass="alumnos bg-warning bg-opacity-50 border-bottom border-5 border-secondary"
                         attr.id="{{alumno.dni}}" cdkDrag>
                         {{alumno.nombre}}
                       </div>
@@ -30,17 +30,17 @@
         <div class="col-md-5 col-sm-6 mt-1">
           <div class="row">
             <div class="col-12">
-              <p>Empresas</p>
+              <h6>Empresas</h6>
               <div class="row">
                 <div class="col-sm-9">
                   <div class="card">
-                    <div class="card-body tablero">
-                      <div *ngFor="let empresa of empresas" ngClass="empresa fondo mb-2 arrastrables"
+                    <div class="card-body">
+                      <div *ngFor="let empresa of empresas" ngClass="mb-2 bg-primary bg-opacity-50"
                         attr.id="{{empresa.id}}">
-                        {{empresa.nombre}}
+                        <h6>{{empresa.nombre}}</h6>
                         <div cdkDropList [cdkDropListData]="empresa.alumnos" class="py-3"
                           (cdkDropListDropped)="drop($event)">
-                          <div *ngFor="let alumno2 of empresa.alumnos" ngClass="alumno p-1 grab"
+                          <div *ngFor="let alumno2 of empresa.alumnos" ngClass="alumnos bg-success bg-opacity-75 border-bottom border-5 border-success"
                             attr.id="{{alumno2.dni}}" cdkDrag>
                             {{alumno2.nombre}}
                           </div>
