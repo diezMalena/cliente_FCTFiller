@@ -127,14 +127,15 @@ export class AsociarEmpAluComponent implements OnInit {
   //   }
   // }
 
-
+/**
+ * @author laura y Pablo
+ */
   GenerarAnexos(){
      this.alumnosEmpresas.generarAnexo('451266566Y').subscribe({
       next:(res)=>{
-        //var time= new Date();
-        //console.log(time);
+        const current= new Date();
         const blob = new Blob([res], {type: 'application/octet-stream'});
-      FileSaver.saveAs(blob, 'backup.zip');
+      FileSaver.saveAs(blob,'backup_'+current.getTime()+'.zip');
         this.toastr.success('Anexo Generado', 'Título');
       },
       error: e =>{
