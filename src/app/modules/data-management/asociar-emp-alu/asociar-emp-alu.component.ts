@@ -4,7 +4,6 @@ import { Empresa } from '../../../models/empresa';
 import { Router } from '@angular/router';
 import { AsociarAlumnoEmpresaService } from '../../../services/asociar-alumno-empresa.service';
 import { ToastrService } from 'ngx-toastr';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import * as FileSaver from 'file-saver';
 
@@ -127,11 +126,9 @@ export class AsociarEmpAluComponent implements OnInit {
   //   }
   // }
 
-/**
- * @author laura y Pablo
- */
+
   GenerarAnexos(){
-     this.alumnosEmpresas.generarAnexo('451266566Y').subscribe({
+     this.alumnosEmpresas.generarAnexo('3c').subscribe({
       next:(res)=>{
         const current= new Date();
         const blob = new Blob([res], {type: 'application/octet-stream'});
