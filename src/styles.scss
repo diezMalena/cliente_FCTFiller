@@ -1,3 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
+html, body { height: 100%; }
 
-// @import "~bootstrap/scss/bootstrap";
+@import './styles/variables';
+@import "~bootstrap/scss/bootstrap";
+@import "./styles/colores";
+@import "./styles/tipografia";
+@import "./styles/botones";
+@import "./styles/formularios";
+@import "./styles/imagenes";
+@import "./styles/tablas";
+@import "./styles/componentes";
