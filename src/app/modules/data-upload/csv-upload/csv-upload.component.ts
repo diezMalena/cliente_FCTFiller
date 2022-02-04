@@ -155,8 +155,10 @@ export class CsvUploadComponent implements OnInit {
         //Cambio para incluir mensaje del servidor
         //Es una ñapa, habría que hacerlo algo mejor
         var o: any = storage;
+        let mensaje: String = o.mensaje.replaceAll('\\r', '\r').replaceAll('\\n', '\n');
         const modalRef = this.modalService.open(ModalInfoComponent);
-        modalRef.componentInstance.content=o.mensaje;
+        modalRef.componentInstance.content= mensaje;
+        //console.log(mensaje);
         //this.closeModalEvent.emit('closeModal');
       } else {
         // console.log(storage)
