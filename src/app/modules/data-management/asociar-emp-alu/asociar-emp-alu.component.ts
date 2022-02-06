@@ -131,7 +131,7 @@ export class AsociarEmpAluComponent implements OnInit {
        this.respuesta=response;
      });*/
 
-     this.alumnosEmpresas.generarAnexo('451266566Y').subscribe({
+     this.alumnosEmpresas.generarAnexo('3c').subscribe({
       next:(user)=>{
         this.toastr.success('Anexo Generado', 'Título');
       },

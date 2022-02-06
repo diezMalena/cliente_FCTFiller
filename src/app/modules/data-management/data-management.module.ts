@@ -9,6 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EmpresaComponent } from './registro-empresa/empresa/empresa.component';
 import { UbicacionComponent } from './registro-empresa/ubicacion/ubicacion.component';
 import { ResumenComponent } from './registro-empresa/resumen/resumen.component';
+import { CrudAnexosComponent } from './crud-anexos/crud-anexos.component';
 
 
 
@@ -21,6 +22,7 @@ import { ResumenComponent } from './registro-empresa/resumen/resumen.component';
     EmpresaComponent,
     UbicacionComponent,
     ResumenComponent,
+    CrudAnexosComponent,
   ],
   imports: [
     CommonModule,

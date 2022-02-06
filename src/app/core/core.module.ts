@@ -12,7 +12,7 @@ import { HeaderComponent } from './components/header/header.component';
     NavbarComponent,
     FooterComponent,
     DescriptionComponent,
-    HeaderComponent
+    HeaderComponent,
   ],
   imports: [
     SharedModule,
