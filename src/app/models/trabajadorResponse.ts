@@ -1,4 +1,4 @@
-export interface trabajadorResponse {
+export interface TrabajadorResponse {
   dni: string;
   email: string;
   nombre: string;

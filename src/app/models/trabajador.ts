@@ -1,14 +1,13 @@
-import { trabajadorResponse } from "./trabajadorResponse";
+import { TrabajadorResponse } from './trabajadorResponse';
 
 export class Trabajador {
-
-  static trabajadorJSON(obj: trabajadorResponse) {
+  static trabajadorJSON(obj: TrabajadorResponse) {
     return new Trabajador(
       obj['dni'],
       obj['email'],
       obj['nombre'],
       obj['apellidos'],
-      obj['id_empresa'],
+      obj['id_empresa']
     );
   }
 
@@ -17,8 +16,6 @@ export class Trabajador {
     public email: string,
     public nombre: string,
     public apellidos: string,
-    public id_empresa: string,
-
+    public id_empresa: string
   ) {}
-
 }

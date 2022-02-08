@@ -1,20 +1,19 @@
-import { Alumno } from "./alumno";
-import { empresaResponse } from "./empresaResponse";
-import { Trabajador } from "./trabajador";
+import { Alumno } from './alumno';
+import { EmpresaResponse } from './empresaResponse';
+import { Trabajador } from './trabajador';
 
 export class Empresa {
-
-  static empresaJSON(obj: empresaResponse) {
+  static empresaJSON(obj: EmpresaResponse) {
     return new Empresa(
       obj['id'],
       obj['cif'],
+      obj['nombre'],
       obj['email'],
       obj['telefono'],
       obj['localidad'],
       obj['provincia'],
       obj['direccion'],
       obj['cp'],
-      obj['nombre'],
       obj['representante'],
       obj['alumnos']
     );
@@ -32,5 +31,5 @@ export class Empresa {
     public cp: string,
     public representante?: Trabajador,
     public alumnos?: Alumno[]
-  ) { }
+  ) {}
 }

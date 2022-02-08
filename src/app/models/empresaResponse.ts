@@ -1,7 +1,7 @@
-import { Alumno } from "./alumno";
-import { Trabajador } from "./trabajador";
+import { Alumno } from './alumno';
+import { Trabajador } from './trabajador';
 
-export interface empresaResponse {
+export interface EmpresaResponse {
   id: string;
   cif: string;
   nombre: string;

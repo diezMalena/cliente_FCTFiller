@@ -10,6 +10,7 @@ import { EmpresaComponent } from './registro-empresa/empresa/empresa.component';
 import { UbicacionComponent } from './registro-empresa/ubicacion/ubicacion.component';
 import { ResumenComponent } from './registro-empresa/resumen/resumen.component';
 import { GestionEmpresasComponent } from './gestion-empresas/gestion-empresas.component';
+import { ModalEmpresaComponent } from './modal-empresa/modal-empresa.component';
 
 
 
@@ -23,6 +24,7 @@ import { GestionEmpresasComponent } from './gestion-empresas/gestion-empresas.co
     UbicacionComponent,
     ResumenComponent,
     GestionEmpresasComponent,
+    ModalEmpresaComponent,
   ],
   imports: [
     CommonModule,
