@@ -1,8 +1,104 @@
 <div class="card" *ngIf="empresa">
   <div class="modal-header">
-    <h1 class="modal-title">Detalles de {{empresa.nombre}} </h1>
+    <h1 class="modal-title fs-4">Detalles de {{empresa.nombre}} </h1>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
   </div>
   <div class="modal-body">
+    <form class="needs-validation" novalidate="" [formGroup]="datosEmpresa" (ngSubmit)="onSubmit()">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label for="cif" class="form-label">CIF</label>
+          <input type="text" class="form-control" id="cif" placeholder="00000000X" value={{empresa.cif}}
+            formControlName="cif" [attr.readonly]="editar ? null : true">
+          <div class="invalid-feedback">
+            Es obligatorio insertar un CIF válido
+          </div>
+        </div>
 
+        <div class="col-md-8">
+          <label for="nombre" class="form-label">Nombre</label>
+          <input type="text" class="form-control" id="nombre" placeholder="Nombre de la empresa"
+            formControlName="nombre" [attr.readonly]="editar ? null : true">
+          <div class="invalid-feedback">
+            Es obligatorio insertar un nombre
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <label for="telefono" class="form-label">Teléfono</label>
+          <input type="text" class="form-control" id="telefono" placeholder="+34666666666" value={{empresa.telefono}}
+            formControlName="telefono" [attr.readonly]="editar ? null : true">
+          <div class="invalid-feedback">
+            Es obligatorio insertar un teléfono
+          </div>
+        </div>
+
+        <div class="col-md-8">
+          <label for="email" class="form-label">e-mail</label>
+          <input type="email" class="form-control" id="email" placeholder="email@contacto.com" value={{empresa.email}}
+            formControlName="email" [attr.readonly]="editar ? null : true">
+          <div class="invalid-feedback">
+            Es obligatorio insertar un email válido
+          </div>
+        </div>
+
+      </div>
+
+      <hr class="my-3">
+
+      <div class="row g-3">
+        <!-- Los dos inputs siguientes ideal extraerlos de la base de datos y hacerlos con un select->option -->
+        <div class="col-md-4">
+          <label for="provincia" class="form-label">Provincia</label>
+          <input type="text" class="form-control" id="provincia" placeholder="Provincia" value={{empresa.provincia}}
+            formControlName="provincia" [attr.readonly]="editar ? null : true">
+          <div class="invalid-feedback">
+            Es obligatorio insertar una provincia
+          </div>
+        </div>
+
+        <div class="col-md-8">
+          <label for="localidad" class="form-label">Localidad</label>
+          <input type="text" class="form-control" id="localidad" placeholder="Localidad de la empresa"
+            value={{empresa.localidad}} formControlName="localidad" [attr.readonly]="editar ? null : true">
+          <div class="invalid-feedback">
+            Es obligatorio insertar una localidad
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <label for="cp" class="form-label">CP</label>
+          <input type="text" class="form-control" id="cp" placeholder="00000" value={{empresa.cp}} formControlName="cp"
+            [attr.readonly]="editar ? null : true">
+          <div class="invalid-feedback">
+            Es obligatorio insertar un código postal
+          </div>
+        </div>
+
+        <div class="col-md-8">
+          <label for="direccion" class="form-label">Dirección</label>
+          <input type="text" class="form-control" id="direccion" placeholder="Calle, nº, piso, puerta"
+            value={{empresa.direccion}} formControlName="direccion" [attr.readonly]="editar ? null : true">
+          <div class="invalid-feedback">
+            Es obligatorio insertar una dirección
+          </div>
+        </div>
+      </div>
+
+      <hr class="my-3">
+
+      <div class="row g-3">
+        <div class="col-12">
+          <p class="mb-0">Representante legal: <a href="#">A saber</a></p>
+        </div>
+      </div>
+
+      <ng-container *ngIf="editar">
+        <hr class="my-3">
+        <div class="row d-flex align-items-center justify-content-center modal-footer">
+          <input class="w-50 btn btn-primary btn-md" type="submit" value="Guardar cambios">
+        </div>
+      </ng-container>
+    </form>
   </div>
 </div>

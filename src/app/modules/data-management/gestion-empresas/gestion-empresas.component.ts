@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Empresa } from 'src/app/models/empresa';
-import { AsociarAlumnoEmpresaService } from 'src/app/services/asociar-alumno-empresa.service';
 import { CrudEmpresasService } from 'src/app/services/crud-empresas.service';
 import { ModalEmpresaComponent } from '../modal-empresa/modal-empresa.component';
 

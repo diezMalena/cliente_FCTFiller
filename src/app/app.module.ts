@@ -9,8 +9,8 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DragDropModule } from  '@angular/cdk/drag-drop';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // import { ModalInfoComponent } from './src/app/modules/data-upload/modal-info/modal-info.component';
-// import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 // import { NgxDropzoneModule } from 'ngx-dropzone';
 
 @NgModule({
@@ -27,8 +27,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     HttpClientModule,
     BrowserAnimationsModule,
     DragDropModule,
-    NgbModule
-    // NgbModule,
+    NgbModule,
+    FormsModule,
+    ReactiveFormsModule
     // NgxDropzoneModule
   ],
   providers: [
