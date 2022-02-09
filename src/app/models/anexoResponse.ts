@@ -1,8 +1,8 @@
 export interface anexoResponse {
   // dni: string;
-  codigo: string;
   nombre: string;
+  codigo: string;
   empresa: string;
-  firma_empresa: string;
-  firma_instituto: string;
+  firma_empresa: number;
+  firma_centro: number;
 }

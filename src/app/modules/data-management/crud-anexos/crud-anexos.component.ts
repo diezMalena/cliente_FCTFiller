@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Anexo } from 'src/app/models/anexo';
 import { AnexoService } from 'src/app/services/crud-anexos.service';
+import * as FileSaver from 'file-saver';
 
 @Component({
   selector: 'app-crud-anexos',
@@ -10,7 +11,7 @@ import { AnexoService } from 'src/app/services/crud-anexos.service';
   styleUrls: ['./crud-anexos.component.scss']
 })
 export class CrudAnexosComponent implements OnInit {
-  anexos: Anexo[] = [];
+  //anexos: Anexo[] = [];
   respuesta: any =[];
   dni_tutor: string = '3c';
   codigo: string = '';
@@ -26,21 +27,57 @@ export class CrudAnexosComponent implements OnInit {
   }
 
 
-  verAnexos(): void {
-    this.anexoService.verAnexos(this.dni_tutor).subscribe(Anexo => this.anexos = Anexo);
+  public verAnexos(){
+    this.anexoService.getAnexos(this.dni_tutor).subscribe((response)=>{
+      this.respuesta=response;
+      console.log(response);
+    })
   }
 
-  descargarAnexo(codigo:string): void {
-    this.anexoService.descargarAnexo(this.dni_tutor,codigo).subscribe(Anexo => this.anexos = Anexo);
+  public descargarAnexo(codigo: string){
+    this.anexoService.descargarAnexo('3c',codigo).subscribe({
+     next:(res)=>{
+       const current= new Date();
+       const blob = new Blob([res], {type: 'application/octet-stream'});
+        FileSaver.saveAs(blob,codigo);
+       this.toastr.success('Anexo Descargado', 'Descarga');
+     },
+     error: e =>{
+       console.log(e);
+       this.toastr.error('El anexo no ha podido descargarse', 'Fallo');
+     }
+   })
+    this.router.navigate(['/data-management/curd-anexos']);
   }
 
-  descgargarTodo(): void{
-    this.anexoService.descargarTodo(this.dni_tutor).subscribe(Anexo => this.anexos = Anexo);
+
+  public descargarTodo(){
+    this.anexoService.descargarTodo('3c').subscribe({
+     next:(res)=>{
+       const current= new Date();
+       const blob = new Blob([res], {type: 'application/octet-stream'});
+        FileSaver.saveAs(blob,'backup_'+current.getTime()+'.zip');
+       this.toastr.success('Anexos Descargados', 'Descarga');
+     },
+     error: e =>{
+       console.log(e);
+       this.toastr.error('Los anexos no han podido descargarse', 'Fallo');
+     }
+   })
+    this.router.navigate(['/data-management/curd-anexos']);
   }
 
-  eliminarAnexo(codigo:string): void{
-
-    this.anexoService.eliminarAnexo(this.dni_tutor,codigo).subscribe(Anexo => this.anexos = Anexo);
+  public eliminarAnexo(codigo: string){
+    this.anexoService.eliminarAnexo('3c',codigo).subscribe({
+     next:(res)=>{
+       this.toastr.success('Anexo Eliminado', 'Eliminado');
+     },
+     error: e =>{
+       console.log(e);
+       this.toastr.error('El anexo no ha podido eliminarse', 'Fallo');
+     }
+   })
+    this.router.navigate(['/data-management/curd-anexos']);
   }
 
 
