@@ -6,6 +6,7 @@ import { RegistroEmpresaComponent } from './registro-empresa/registro-empresa.co
 import { RepresentanteComponent } from './registro-empresa/representante/representante.component';
 import { ResumenComponent } from './registro-empresa/resumen/resumen.component';
 import { UbicacionComponent } from './registro-empresa/ubicacion/ubicacion.component';
+import { SeguimientoComponent } from './seguimiento/seguimiento.component';
 //import { SectionEmpresaComponent } from './components/section-empresa/section-empresa.component';
 
 
@@ -33,6 +34,10 @@ const routes: Routes = [
   {
     path:'registro-empresa/resumen',
     component: ResumenComponent
+  },
+  {
+    path:'seguimiento',
+    component: SeguimientoComponent
   },
 ];
 

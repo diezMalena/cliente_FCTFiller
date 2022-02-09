@@ -58,7 +58,7 @@ export class AsociarEmpAluComponent implements OnInit {
     this.alumnosEmpresas.solicitarNombreCiclo(this.dniTutor).subscribe(
       {
         next: (response: any) => {
-          this.nombreCiclo = response[0]['nombre'];
+          this.nombreCiclo = response[0]['nombre_alumno'];
         }
       });
   }
