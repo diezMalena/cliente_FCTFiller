@@ -6,28 +6,78 @@ import { AsociarAlumnoEmpresaService } from '../../../services/asociar-alumno-em
 import { ToastrService } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+
 @Component({
   selector: 'app-asociar-emp-alu',
   templateUrl: './asociar-emp-alu.component.html',
   styleUrls: ['./asociar-emp-alu.component.scss']
 })
 export class AsociarEmpAluComponent implements OnInit {
+
   alumnos: Alumno[] = [];
   empresas: Empresa[] = [];
   respuesta: any = [];
   nombreCiclo: string = '';
-  dniTutor: string = '117372673';
+  dniTutor: string = '4d';
+  // formulario: FormGroup;
+  // submitted: boolean = false;
 
   constructor(
     private alumnosEmpresas: AsociarAlumnoEmpresaService,
     private router: Router,
-    private toastr: ToastrService,) { }
+    private toastr: ToastrService,
+    // private formBuilder: FormBuilder,
+  ) {
+    // this.formulario = this.formBuilder.group({
+    //   empresasFormulario: this.formBuilder.array([]),
+    //   alumnosFormulario: this.formBuilder.array([])
+    // });
+  }
 
   ngOnInit(): void {
+    // this.crearFormulario();
     this.getNombreCiclo();
     this.getAlumnos();
     this.getEmpresas();
   }
+
+  // crearFormulario() {
+  //   this.formulario = this.formBuilder.group({
+  //     empresasFormulario: this.formBuilder.array([]),
+  //     alumnosFormulario: this.formBuilder.array([])
+  //   })
+  // }
+
+  // get empresasFormulario(): FormArray {
+  //   return this.formulario.get('empresasFormulario') as FormArray;
+  // }
+
+  // get alumnosFormulario(): FormArray {
+  //   return this.formulario.get('alumnosFormulario') as FormArray;
+  // }
+
+  // anadirEmpresaFormulario() {
+  //   const empresa = this.formBuilder.group({
+  //     responsable: ["", [Validators.required]],
+  //   })
+
+  //   this.empresasFormulario.push(empresa);
+  // }
+
+  // anadirAlumnosFormulario() {
+  //   const alumnos = this.formBuilder.group({
+  //     horario: ["", [Validators.required]],
+  //     inicio: ["", [Validators.required]],
+  //     fin: ["", [Validators.required]],
+  //   })
+
+  //   this.alumnosFormulario.push(alumnos);
+  // }
+
+  // onSubmit() {
+
+  // }
 
   drop(event: CdkDragDrop<any>) {
     if (event.previousContainer === event.container) {
@@ -40,34 +90,43 @@ export class AsociarEmpAluComponent implements OnInit {
         event.currentIndex,
       );
     }
-    console.log(this.alumnos);
     console.log(this.empresas);
   }
 
   getAlumnos(): void {
-    this.alumnosEmpresas.solicitarAlumnos(this.dniTutor).subscribe(Alumno => {
-      this.alumnos = Alumno
-      console.log(this.alumnos);
+    this.alumnosEmpresas.solicitarAlumnos(this.dniTutor).subscribe(resultado => {
+      this.alumnos = resultado
     });
-
   }
+
   getEmpresas(): void {
-    this.alumnosEmpresas.solicitarEmpresas(this.dniTutor).subscribe(Empresa => {
-      this.empresas = Empresa
-      console.log(this.empresas);
+    this.alumnosEmpresas.solicitarEmpresas(this.dniTutor).subscribe(resultado => {
+      this.empresas = resultado
+      // this.empresas.forEach(empresa => {
+      //   this.anadirEmpresaFormulario();
+      //   empresa.alumnos?.forEach(element => {
+      //     this.anadirAlumnosFormulario();
+      //   });
+      // });
     });
-
   }
+
   getNombreCiclo(): void {
     this.alumnosEmpresas.solicitarNombreCiclo(this.dniTutor).subscribe(
       {
         next: (response: any) => {
-          this.nombreCiclo = response[0]['nombre'];
+          this.nombreCiclo = response;
         }
-      });
+      }
+    );
   }
+
   setCambiosEmpresas() {
-    this.alumnosEmpresas.asignarAlumnos(this.dniTutor, this.empresas).subscribe(Empresa => console.log(Empresa));
+    var datos = {
+      'empresas': this.empresas,
+      'alumnos_solos': this.alumnos
+    }
+    this.alumnosEmpresas.asignarAlumnos(datos).subscribe();
   }
 
   GenerarAnexos() {
