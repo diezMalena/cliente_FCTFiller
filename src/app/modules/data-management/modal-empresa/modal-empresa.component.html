@@ -1,14 +1,15 @@
 <div class="card" *ngIf="empresa">
   <div class="modal-header">
     <h1 class="modal-title fs-4">Detalles de {{empresa.nombre}} </h1>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModal()"></button>
   </div>
   <div class="modal-body">
     <form class="needs-validation" novalidate="" [formGroup]="datosEmpresa" (ngSubmit)="onSubmit()">
       <div class="row g-3">
+        <h2 class="fs-6">Datos de la empresa</h2>
         <div class="col-md-4">
           <label for="cif" class="form-label">CIF</label>
-          <input type="text" class="form-control" id="cif" placeholder="00000000X" value={{empresa.cif}}
+          <input type="text" class="form-control" id="cif" placeholder="00000000X"
             formControlName="cif" [attr.readonly]="editar ? null : true">
           <div class="invalid-feedback">
             Es obligatorio insertar un CIF válido
@@ -16,9 +17,9 @@
         </div>
 
         <div class="col-md-8">
-          <label for="nombre" class="form-label">Nombre</label>
-          <input type="text" class="form-control" id="nombre" placeholder="Nombre de la empresa"
-            formControlName="nombre" [attr.readonly]="editar ? null : true">
+          <label for="nombre_empresa" class="form-label">Nombre</label>
+          <input type="text" class="form-control" id="nombre_empresa" placeholder="Nombre de la empresa"
+            formControlName="nombre_empresa" [attr.readonly]="editar ? null : true">
           <div class="invalid-feedback">
             Es obligatorio insertar un nombre
           </div>
@@ -26,7 +27,7 @@
 
         <div class="col-md-4">
           <label for="telefono" class="form-label">Teléfono</label>
-          <input type="text" class="form-control" id="telefono" placeholder="+34666666666" value={{empresa.telefono}}
+          <input type="text" class="form-control" id="telefono" placeholder="+34666666666"
             formControlName="telefono" [attr.readonly]="editar ? null : true">
           <div class="invalid-feedback">
             Es obligatorio insertar un teléfono
@@ -34,9 +35,9 @@
         </div>
 
         <div class="col-md-8">
-          <label for="email" class="form-label">e-mail</label>
-          <input type="email" class="form-control" id="email" placeholder="email@contacto.com" value={{empresa.email}}
-            formControlName="email" [attr.readonly]="editar ? null : true">
+          <label for="email_empresa" class="form-label">e-mail</label>
+          <input type="email" class="form-control" id="email_empresa" placeholder="email@contacto.com"
+            formControlName="email_empresa" [attr.readonly]="editar ? null : true">
           <div class="invalid-feedback">
             Es obligatorio insertar un email válido
           </div>
@@ -47,10 +48,11 @@
       <hr class="my-3">
 
       <div class="row g-3">
+        <h2 class="fs-6">Domicilio de la empresa</h2>
         <!-- Los dos inputs siguientes ideal extraerlos de la base de datos y hacerlos con un select->option -->
         <div class="col-md-4">
           <label for="provincia" class="form-label">Provincia</label>
-          <input type="text" class="form-control" id="provincia" placeholder="Provincia" value={{empresa.provincia}}
+          <input type="text" class="form-control" id="provincia" placeholder="Provincia"
             formControlName="provincia" [attr.readonly]="editar ? null : true">
           <div class="invalid-feedback">
             Es obligatorio insertar una provincia
@@ -60,7 +62,7 @@
         <div class="col-md-8">
           <label for="localidad" class="form-label">Localidad</label>
           <input type="text" class="form-control" id="localidad" placeholder="Localidad de la empresa"
-            value={{empresa.localidad}} formControlName="localidad" [attr.readonly]="editar ? null : true">
+           formControlName="localidad" [attr.readonly]="editar ? null : true">
           <div class="invalid-feedback">
             Es obligatorio insertar una localidad
           </div>
@@ -68,7 +70,7 @@
 
         <div class="col-md-4">
           <label for="cp" class="form-label">CP</label>
-          <input type="text" class="form-control" id="cp" placeholder="00000" value={{empresa.cp}} formControlName="cp"
+          <input type="text" class="form-control" id="cp" placeholder="00000" formControlName="cp"
             [attr.readonly]="editar ? null : true">
           <div class="invalid-feedback">
             Es obligatorio insertar un código postal
@@ -87,16 +89,51 @@
 
       <hr class="my-3">
 
-      <div class="row g-3">
-        <div class="col-12">
-          <p class="mb-0">Representante legal: <a href="#">A saber</a></p>
+      <div class="row g-3" *ngIf="empresa.representante">
+        <h2 class="fs-6">Datos del representante legal</h2>
+        <div class="col-md-4">
+          <label for="nombre_representante" class="form-label">Nombre</label>
+          <input type="text" class="form-control" id="nombre_representante" placeholder="Nombre del representante"
+            formControlName="nombre_representante" [attr.readonly]="editar ? null : true">
+          <div class="invalid-feedback">
+            Es obligatorio insertar un nombre
+          </div>
         </div>
+
+        <div class="col-md-8">
+          <label for="apellidos" class="form-label">Apellidos</label>
+          <input type="apellidos" class="form-control" id="apellidos" placeholder="Apellidos del representante"
+            formControlName="apellidos" [attr.readonly]="editar ? null : true">
+          <div class="invalid-feedback">
+            Es obligatorio insertar apellidos
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <label for="dni" class="form-label">DNI</label>
+          <!-- De momento, el DNI del representante no se puede cambiar. De momento -->
+          <input type="text" class="form-control" id="dni" placeholder="00000000A"
+            formControlName="dni" readonly>
+          <div class="invalid-feedback">
+            Es obligatorio insertar un DNI válido
+          </div>
+        </div>
+
+        <div class="col-md-8">
+          <label for="email_rempresentante" class="form-label">e-mail</label>
+          <input type="text" class="form-control" id="email_representante" placeholder="Nombre del representante"
+            formControlName="email_representante" [attr.readonly]="editar ? null : true">
+          <div class="invalid-feedback">
+            Es obligatorio insertar un email válido
+          </div>
+        </div>
+
       </div>
 
       <ng-container *ngIf="editar">
         <hr class="my-3">
         <div class="row d-flex align-items-center justify-content-center modal-footer">
-          <input class="w-50 btn btn-primary btn-md" type="submit" value="Guardar cambios">
+          <input class="w-50 btn btn-primary btn-md" type="submit" value="Guardar cambios" [disabled]="!modified ? true : null">
         </div>
       </ng-container>
     </form>

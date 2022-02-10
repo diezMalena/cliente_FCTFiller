@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Empresa } from 'src/app/models/empresa';
 import { CrudEmpresasService } from 'src/app/services/crud-empresas.service';
@@ -17,8 +16,7 @@ export class GestionEmpresasComponent implements OnInit {
 
   constructor(
     private crudEmpresasService: CrudEmpresasService,
-    private modal: NgbModal,
-    private router: Router
+    private modal: NgbModal
   ) {}
 
   ngOnInit(): void {
@@ -30,9 +28,18 @@ export class GestionEmpresasComponent implements OnInit {
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
   public getEmpresas(): void {
-    this.crudEmpresasService
-      .getEmpresas(this.dniTutor)
-      .subscribe((response) => (this.empresas = response));
+    this.crudEmpresasService.getEmpresas(this.dniTutor).subscribe({
+      next: (empresas) => {
+        this.empresas = empresas;
+        this.empresas.forEach(empresa => {
+          this.crudEmpresasService.getRepresentante(empresa.id).subscribe({
+            next: (representante) => {
+              empresa.representante = representante;
+            }
+          })
+        })
+      }
+    })
   }
 
   /**
@@ -42,7 +49,25 @@ export class GestionEmpresasComponent implements OnInit {
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
   public mostrarEmpresa(empresa: Empresa, editar: boolean) {
-    this.modal.open(ModalEmpresaComponent, { size: 'md' });
+    this.modal.open(ModalEmpresaComponent, {
+      size: 'md',
+      backdrop: 'static',
+      keyboard: false,
+    });
     this.crudEmpresasService.empresaTrigger.emit([empresa, editar]);
+  }
+
+  /**
+   * Elimina una empresa de la base de datos
+   * @param idEmpresa el ID de la empresa a eliminar
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public deleteEmpresa(idEmpresa: string) {
+    this.crudEmpresasService.deleteEmpresa(idEmpresa).subscribe({
+      next: (response: any) => {
+        this.getEmpresas();
+        console.log(response.message);
+      },
+    });
   }
 }
