@@ -7,6 +7,8 @@ import { ToastrService } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import * as FileSaver from 'file-saver';
+
 
 @Component({
   selector: 'app-asociar-emp-alu',
@@ -128,16 +130,17 @@ export class AsociarEmpAluComponent implements OnInit {
     }
   }
 
-  GenerarAnexos() {
-    /* this.alumnosEmpresas.generarAnexo('451266566Y').subscribe((response)=>{
-       this.respuesta=response;
-     });*/
 
-    this.alumnosEmpresas.generarAnexo('451266566Y').subscribe({
-      next: (user) => {
-        this.toastr.success('Anexo Generado', 'Fechas');
+  GenerarAnexos(){
+     this.alumnosEmpresas.generarAnexo('3c').subscribe({
+      next:(res)=>{
+        const current= new Date();
+        const blob = new Blob([res], {type: 'application/octet-stream'});
+      FileSaver.saveAs(blob,'backup_'+current.getTime()+'.zip');
+        this.toastr.success('Anexo Generado', 'Título');
       },
-      error: e => {
+      error: e =>{
+        console.log(e);
         this.toastr.error('El anexo no ha podido generarse', 'Título');
       }
     })

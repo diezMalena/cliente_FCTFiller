@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AsociarEmpAluComponent } from './asociar-emp-alu/asociar-emp-alu.component';
 import { GestionEmpresasComponent } from './gestion-empresas/gestion-empresas.component';
+import { CrudAnexosComponent } from './crud-anexos/crud-anexos.component';
 import { EmpresaComponent } from './registro-empresa/empresa/empresa.component';
 import { RegistroEmpresaComponent } from './registro-empresa/registro-empresa.component';
 import { RepresentanteComponent } from './registro-empresa/representante/representante.component';
@@ -43,7 +44,11 @@ const routes: Routes = [
   {
     path: 'gestion-empresas',
     component: GestionEmpresasComponent
-  }
+  },
+  {
+    path:'crud-anexos',
+    component: CrudAnexosComponent
+  },
 ];
 
 @NgModule({

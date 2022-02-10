@@ -16,6 +16,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DragDropModule } from  '@angular/cdk/drag-drop';
 import { GestionEmpresasComponent } from './gestion-empresas/gestion-empresas.component';
 import { ModalEmpresaComponent } from './modal-empresa/modal-empresa.component';
+import { CrudAnexosComponent } from './crud-anexos/crud-anexos.component';
 
 
 
@@ -33,6 +34,7 @@ import { ModalEmpresaComponent } from './modal-empresa/modal-empresa.component';
     ModalAddComponent,
     GestionEmpresasComponent,
     ModalEmpresaComponent,
+    CrudAnexosComponent,
   ],
   imports: [
     CommonModule,
