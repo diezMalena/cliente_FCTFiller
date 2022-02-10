@@ -13,6 +13,7 @@ import { SeguimientoComponent } from './seguimiento/seguimiento.component';
 import { ModalEditarComponent } from './seguimiento/modal-editar/modal-editar.component';
 import { ModalAddComponent } from './seguimiento/modal-add/modal-add.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { DragDropModule } from  '@angular/cdk/drag-drop';
 
 
 
@@ -35,6 +36,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ReactiveFormsModule,
     DataManagementRoutingModule,
     NgbModule,
+    DragDropModule,
   ]
 })
 export class DataManagementModule { }
