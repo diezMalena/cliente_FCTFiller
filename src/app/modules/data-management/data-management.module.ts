@@ -9,6 +9,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EmpresaComponent } from './registro-empresa/empresa/empresa.component';
 import { UbicacionComponent } from './registro-empresa/ubicacion/ubicacion.component';
 import { ResumenComponent } from './registro-empresa/resumen/resumen.component';
+import { SeguimientoComponent } from './seguimiento/seguimiento.component';
+import { ModalEditarComponent } from './seguimiento/modal-editar/modal-editar.component';
+import { ModalAddComponent } from './seguimiento/modal-add/modal-add.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 
@@ -21,12 +25,16 @@ import { ResumenComponent } from './registro-empresa/resumen/resumen.component';
     EmpresaComponent,
     UbicacionComponent,
     ResumenComponent,
+    SeguimientoComponent,
+    ModalEditarComponent,
+    ModalAddComponent,
   ],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    DataManagementRoutingModule
+    DataManagementRoutingModule,
+    NgbModule,
   ]
 })
 export class DataManagementModule { }
