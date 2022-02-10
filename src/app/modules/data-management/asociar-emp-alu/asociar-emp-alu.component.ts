@@ -122,11 +122,37 @@ export class AsociarEmpAluComponent implements OnInit {
   }
 
   setCambiosEmpresas() {
-    var datos = {
-      'empresas': this.empresas,
-      'alumnos_solos': this.alumnos
+    var bandera = true;
+    var menor = true;
+    var msg = '';
+    this.empresas.forEach(empresa => {
+      if (empresa.responsable && bandera) {
+        empresa.alumnos?.forEach(alumno => {
+          if (!alumno.fecha_fin || !alumno.fecha_ini || !alumno.horario || !menor) {
+            bandera = false;
+          };
+          if (alumno.fecha_ini! >= alumno.fecha_fin! || !bandera && menor){
+            menor = false;
+            msg +=`${alumno.nombre} tiene la fecha de inicio mayor que la fecha de fin.\n`;
+          }
+        });
+      }else{
+        bandera = false;
+      }
+    });
+    if (bandera && menor) {
+      var datos = {
+        'empresas': this.empresas,
+        'alumnos_solos': this.alumnos
+      }
+      this.alumnosEmpresas.asignarAlumnos(datos).subscribe();
+      this.toastr.success('Cambios realizados con exito.' , 'Guardado')
+    } else if(!bandera) {
+      this.toastr.error('No pueden haber campos vacíos, o las fechas son incorrectas', 'Rellena campos');
     }
-    this.alumnosEmpresas.asignarAlumnos(datos).subscribe();
+    if(msg != ''){
+      this.toastr.error(msg, 'Fechas incorrectas')
+    }
   }
 
   GenerarAnexos() {
@@ -136,7 +162,7 @@ export class AsociarEmpAluComponent implements OnInit {
 
     this.alumnosEmpresas.generarAnexo('451266566Y').subscribe({
       next: (user) => {
-        this.toastr.success('Anexo Generado', 'Título');
+        this.toastr.success('Anexo Generado', 'Fechas');
       },
       error: e => {
         this.toastr.error('El anexo no ha podido generarse', 'Título');
