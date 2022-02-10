@@ -145,7 +145,7 @@ export class CsvUploadComponent implements OnInit {
     .pipe(first(),catchError((e) => {
       console.log(e);
       const modalRef = this.modalService.open(ModalInfoComponent);
-      modalRef.componentInstance.content="ERROR DE CONEXIÓN";
+      modalRef.componentInstance.content="No se ha podido establecer una conexión con el servidor";
       return throwError(new Error(e));
     }))
     .subscribe((storage: FileUploadModel[]) => {
