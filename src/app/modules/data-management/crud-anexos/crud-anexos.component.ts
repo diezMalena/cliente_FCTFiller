@@ -47,7 +47,8 @@ export class CrudAnexosComponent implements OnInit {
        this.toastr.error('El anexo no ha podido descargarse', 'Fallo');
      }
    })
-    this.router.navigate(['/data-management/curd-anexos']);
+    // this.router.navigate(['/data-management/curd-anexos']);
+    this.router.navigate(['/data-management/crud-anexos']);
   }
 
 
@@ -64,20 +65,23 @@ export class CrudAnexosComponent implements OnInit {
        this.toastr.error('Los anexos no han podido descargarse', 'Fallo');
      }
    })
-    this.router.navigate(['/data-management/curd-anexos']);
+    // this.router.navigate(['/data-management/curd-anexos']);
+    this.router.navigate(['/data-management/crud-anexos']);
   }
 
   public eliminarAnexo(codigo: string){
     this.anexoService.eliminarAnexo('3c',codigo).subscribe({
      next:(res)=>{
        this.toastr.success('Anexo Eliminado', 'Eliminado');
+       this.verAnexos();
      },
      error: e =>{
        console.log(e);
        this.toastr.error('El anexo no ha podido eliminarse', 'Fallo');
      }
    })
-    this.router.navigate(['/data-management/curd-anexos']);
+    // this.router.navigate(['/data-management/curd-anexos']);
+    // this.router.navigate(['/data-management/crud-anexos']);
   }
 
 
