@@ -58,6 +58,11 @@ export class SeguimientoComponent implements OnInit {
   }
 
 
+  /**
+   * Con este metodo recojo el array de las jornadas directamente del modal para que se actualice
+   * la tabla de las jornadas al insertar una nueva, sin necesidad de recargar la pagina.
+   * @author Malena.
+   */
   public getArrayJornadas(){
     this.modalJornadaService.jornadasArray.subscribe(array => {
       this.arrayJornadas = array;
@@ -227,8 +232,14 @@ export class SeguimientoComponent implements OnInit {
   }
 
   public descargarPDF(){
-
-
+    this.seguimientoService.descargarPDF(this.dni_alumno).subscribe({
+      next:(response) => {
+        console.log('Se ha descargado');
+      },
+      error: e => {
+        console.log('No se ha descargado el documento');
+      }
+    });
   }
 
   public verPDF(){

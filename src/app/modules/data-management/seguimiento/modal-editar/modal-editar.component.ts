@@ -51,6 +51,11 @@ export class ModalEditarComponent implements OnInit {
     this.modalActive.dismiss();
   }
 
+  /**
+   * Metodo que recoge los campos de la jornada que quiere editar el alumno, los cambia
+   * y los envia al servidor para poder actualizarlos en la BBDD.
+   * @author Malena.
+   */
   public editJornada(){
     this.submitted = true;
     if(!this.editarJornada.valid) return;
