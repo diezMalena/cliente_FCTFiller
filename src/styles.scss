@@ -10,3 +10,7 @@ html, body { height: 100%; }
 @import "./styles/imagenes";
 @import "./styles/tablas";
 @import "./styles/componentes";
+@import "./styles/cursores";
+
+/* Importing Bootstrap SCSS file. */
+@import '~bootstrap/scss/bootstrap';

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AsociarEmpAluComponent } from './asociar-emp-alu/asociar-emp-alu.component';
+import { GestionEmpresasComponent } from './gestion-empresas/gestion-empresas.component';
 import { EmpresaComponent } from './registro-empresa/empresa/empresa.component';
 import { RegistroEmpresaComponent } from './registro-empresa/registro-empresa.component';
 import { RepresentanteComponent } from './registro-empresa/representante/representante.component';
@@ -39,6 +40,10 @@ const routes: Routes = [
     path:'seguimiento',
     component: SeguimientoComponent
   },
+  {
+    path: 'gestion-empresas',
+    component: GestionEmpresasComponent
+  }
 ];
 
 @NgModule({

@@ -14,6 +14,8 @@ import { ModalEditarComponent } from './seguimiento/modal-editar/modal-editar.co
 import { ModalAddComponent } from './seguimiento/modal-add/modal-add.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DragDropModule } from  '@angular/cdk/drag-drop';
+import { GestionEmpresasComponent } from './gestion-empresas/gestion-empresas.component';
+import { ModalEmpresaComponent } from './modal-empresa/modal-empresa.component';
 
 
 
@@ -29,6 +31,8 @@ import { DragDropModule } from  '@angular/cdk/drag-drop';
     SeguimientoComponent,
     ModalEditarComponent,
     ModalAddComponent,
+    GestionEmpresasComponent,
+    ModalEmpresaComponent,
   ],
   imports: [
     CommonModule,
