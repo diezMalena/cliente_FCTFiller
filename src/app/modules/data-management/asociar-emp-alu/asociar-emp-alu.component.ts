@@ -20,65 +20,24 @@ export class AsociarEmpAluComponent implements OnInit {
   respuesta: any = [];
   nombreCiclo: string = '';
   dniTutor: string = '4d';
-  // formulario: FormGroup;
-  // submitted: boolean = false;
 
   constructor(
     private alumnosEmpresas: AsociarAlumnoEmpresaService,
     private router: Router,
     private toastr: ToastrService,
-    // private formBuilder: FormBuilder,
-  ) {
-    // this.formulario = this.formBuilder.group({
-    //   empresasFormulario: this.formBuilder.array([]),
-    //   alumnosFormulario: this.formBuilder.array([])
-    // });
-  }
+  ) { }
 
   ngOnInit(): void {
-    // this.crearFormulario();
     this.getNombreCiclo();
     this.getAlumnos();
     this.getEmpresas();
   }
 
-  // crearFormulario() {
-  //   this.formulario = this.formBuilder.group({
-  //     empresasFormulario: this.formBuilder.array([]),
-  //     alumnosFormulario: this.formBuilder.array([])
-  //   })
-  // }
-
-  // get empresasFormulario(): FormArray {
-  //   return this.formulario.get('empresasFormulario') as FormArray;
-  // }
-
-  // get alumnosFormulario(): FormArray {
-  //   return this.formulario.get('alumnosFormulario') as FormArray;
-  // }
-
-  // anadirEmpresaFormulario() {
-  //   const empresa = this.formBuilder.group({
-  //     responsable: ["", [Validators.required]],
-  //   })
-
-  //   this.empresasFormulario.push(empresa);
-  // }
-
-  // anadirAlumnosFormulario() {
-  //   const alumnos = this.formBuilder.group({
-  //     horario: ["", [Validators.required]],
-  //     inicio: ["", [Validators.required]],
-  //     fin: ["", [Validators.required]],
-  //   })
-
-  //   this.alumnosFormulario.push(alumnos);
-  // }
-
-  // onSubmit() {
-
-  // }
-
+  /**
+   * Esta función se encarga de hacer el drag and drop de los alumnos.
+   * @author Alvaro <alvarosantosmartin6@gmail.com>
+   * @param event
+   */
   drop(event: CdkDragDrop<any>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
@@ -90,27 +49,35 @@ export class AsociarEmpAluComponent implements OnInit {
         event.currentIndex,
       );
     }
-    console.log(this.empresas);
   }
 
+  /**
+   * Esta función se encarga de obtener los alumnos del tutor logueado del servidor.
+   * @author Alvaro <alvarosantosmartin6@gmail.com>
+   * @param event
+   */
   getAlumnos(): void {
     this.alumnosEmpresas.solicitarAlumnos(this.dniTutor).subscribe(resultado => {
       this.alumnos = resultado
     });
   }
 
+  /**
+   * Esta función se encarga de obtener las empresas con sus alumnos asignados del tutor logueado del servidor.
+   * @author Alvaro <alvarosantosmartin6@gmail.com>
+   * @param event
+   */
   getEmpresas(): void {
     this.alumnosEmpresas.solicitarEmpresas(this.dniTutor).subscribe(resultado => {
       this.empresas = resultado
-      // this.empresas.forEach(empresa => {
-      //   this.anadirEmpresaFormulario();
-      //   empresa.alumnos?.forEach(element => {
-      //     this.anadirAlumnosFormulario();
-      //   });
-      // });
     });
   }
 
+  /**
+   * Esta función se encarga de obtener el nombre del curso el tutor logueado.
+   * @author Alvaro <alvarosantosmartin6@gmail.com>
+   * @param event
+   */
   getNombreCiclo(): void {
     this.alumnosEmpresas.solicitarNombreCiclo(this.dniTutor).subscribe(
       {
@@ -121,6 +88,12 @@ export class AsociarEmpAluComponent implements OnInit {
     );
   }
 
+  /**
+   * Esta función se encarga de enviar los cambios a la base de datos
+   * y comprueba que todos los datos sean correctos antes de enviar los cambios al server.
+   * @author Alvaro <alvarosantosmartin6@gmail.com>
+   * @param event
+   */
   setCambiosEmpresas() {
     var bandera = true;
     var menor = true;
@@ -131,12 +104,12 @@ export class AsociarEmpAluComponent implements OnInit {
           if (!alumno.fecha_fin || !alumno.fecha_ini || !alumno.horario || !menor) {
             bandera = false;
           };
-          if (alumno.fecha_ini! >= alumno.fecha_fin! || !bandera && menor){
+          if (alumno.fecha_ini! >= alumno.fecha_fin! || !bandera && menor) {
             menor = false;
-            msg +=`${alumno.nombre} tiene la fecha de inicio mayor que la fecha de fin.\n`;
+            msg += `${alumno.nombre} tiene la fecha de inicio mayor que la fecha de fin.\n`;
           }
         });
-      }else{
+      } else {
         bandera = false;
       }
     });
@@ -146,11 +119,11 @@ export class AsociarEmpAluComponent implements OnInit {
         'alumnos_solos': this.alumnos
       }
       this.alumnosEmpresas.asignarAlumnos(datos).subscribe();
-      this.toastr.success('Cambios realizados con exito.' , 'Guardado')
-    } else if(!bandera) {
+      this.toastr.success('Cambios realizados con exito.', 'Guardado')
+    } else if (!bandera) {
       this.toastr.error('No pueden haber campos vacíos, o las fechas son incorrectas', 'Rellena campos');
     }
-    if(msg != ''){
+    if (msg != '') {
       this.toastr.error(msg, 'Fechas incorrectas')
     }
   }
