@@ -101,7 +101,7 @@ export class AsociarEmpAluComponent implements OnInit {
     var menor = true;
     var msg = '';
     this.empresas.forEach(empresa => {
-      if (empresa.responsable && bandera) {
+      if (empresa.nombre_responsable && bandera) {
         empresa.alumnos?.forEach(alumno => {
           if (!alumno.fecha_fin || !alumno.fecha_ini || !alumno.horario || !menor) {
             bandera = false;

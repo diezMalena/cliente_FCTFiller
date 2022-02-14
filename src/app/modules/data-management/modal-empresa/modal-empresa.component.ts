@@ -134,8 +134,6 @@ export class ModalEmpresaComponent implements OnInit {
       this.empresa?.id!,
       datos.cif,
       datos.nombre_empresa,
-      undefined,
-      undefined,
       datos.email_empresa,
       datos.telefono,
       datos.localidad,
