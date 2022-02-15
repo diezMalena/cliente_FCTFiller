@@ -9,6 +9,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EmpresaComponent } from './registro-empresa/empresa/empresa.component';
 import { UbicacionComponent } from './registro-empresa/ubicacion/ubicacion.component';
 import { ResumenComponent } from './registro-empresa/resumen/resumen.component';
+import { SeguimientoComponent } from './seguimiento/seguimiento.component';
+import { ModalEditarComponent } from './seguimiento/modal-editar/modal-editar.component';
+import { ModalAddComponent } from './seguimiento/modal-add/modal-add.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { DragDropModule } from  '@angular/cdk/drag-drop';
+import { GestionEmpresasComponent } from './gestion-empresas/gestion-empresas.component';
+import { ModalEmpresaComponent } from './modal-empresa/modal-empresa.component';
+import { CrudAnexosComponent } from './crud-anexos/crud-anexos.component';
 
 
 
@@ -21,12 +29,20 @@ import { ResumenComponent } from './registro-empresa/resumen/resumen.component';
     EmpresaComponent,
     UbicacionComponent,
     ResumenComponent,
+    SeguimientoComponent,
+    ModalEditarComponent,
+    ModalAddComponent,
+    GestionEmpresasComponent,
+    ModalEmpresaComponent,
+    CrudAnexosComponent,
   ],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    DataManagementRoutingModule
+    DataManagementRoutingModule,
+    NgbModule,
+    DragDropModule,
   ]
 })
 export class DataManagementModule { }

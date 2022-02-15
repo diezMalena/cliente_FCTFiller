@@ -1,19 +1,39 @@
-import { Alumno } from "./alumno";
-import { empresaResponse } from "./empresaResponse";
+import { Alumno } from './alumno';
+import { EmpresaResponse } from './empresaResponse';
+import { Trabajador } from './trabajador';
 
 export class Empresa {
-
-  static empresaJSON(obj: empresaResponse) {
+  static empresaJSON(obj: EmpresaResponse) {
     return new Empresa(
       obj['id'],
+      obj['cif'],
       obj['nombre'],
+      obj['email'],
+      obj['telefono'],
+      obj['localidad'],
+      obj['provincia'],
+      obj['direccion'],
+      obj['cp'],
+      obj['representante'],
+      obj['nombre_responsable'],
+      obj['dni_responsable'],
       obj['alumnos']
     );
   }
 
   constructor(
     public id: string,
+    public cif: string,
     public nombre: string,
+    public email: string,
+    public telefono: string,
+    public localidad: string,
+    public provincia: string,
+    public direccion: string,
+    public cp: string,
+    public representante?: Trabajador,
+    public nombre_responsable?: string,
+    public dni_responsable?: string,
     public alumnos?: Alumno[]
-  ) { }
+  ) {}
 }
