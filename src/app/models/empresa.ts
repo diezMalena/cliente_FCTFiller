@@ -8,8 +8,6 @@ export class Empresa {
       obj['id'],
       obj['cif'],
       obj['nombre'],
-      obj['responsable'],
-      obj['dni_responsable'],
       obj['email'],
       obj['telefono'],
       obj['localidad'],
@@ -17,23 +15,25 @@ export class Empresa {
       obj['direccion'],
       obj['cp'],
       obj['representante'],
+      obj['nombre_responsable'],
+      obj['dni_responsable'],
       obj['alumnos']
     );
   }
 
   constructor(
     public id: string,
-    public cif?: string,
-    public nombre?: string,
-    public responsable?: string,
-    public dni_responsable?: string,
-    public email?: string,
-    public telefono?: string,
-    public localidad?: string,
-    public provincia?: string,
-    public direccion?: string,
-    public cp?: string,
+    public cif: string,
+    public nombre: string,
+    public email: string,
+    public telefono: string,
+    public localidad: string,
+    public provincia: string,
+    public direccion: string,
+    public cp: string,
     public representante?: Trabajador,
+    public nombre_responsable?: string,
+    public dni_responsable?: string,
     public alumnos?: Alumno[]
   ) {}
 }

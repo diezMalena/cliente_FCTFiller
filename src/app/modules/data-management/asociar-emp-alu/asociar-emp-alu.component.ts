@@ -21,7 +21,7 @@ export class AsociarEmpAluComponent implements OnInit {
   empresas: Empresa[] = [];
   respuesta: any = [];
   nombreCiclo: string = '';
-  dniTutor: string = '4d';
+  dniTutor: string = '3c';
 
   constructor(
     private alumnosEmpresas: AsociarAlumnoEmpresaService,
@@ -101,7 +101,7 @@ export class AsociarEmpAluComponent implements OnInit {
     var menor = true;
     var msg = '';
     this.empresas.forEach(empresa => {
-      if (empresa.responsable && bandera) {
+      if (empresa.nombre_responsable && bandera) {
         empresa.alumnos?.forEach(alumno => {
           if (!alumno.fecha_fin || !alumno.fecha_ini || !alumno.horario || !menor) {
             bandera = false;
@@ -122,12 +122,14 @@ export class AsociarEmpAluComponent implements OnInit {
       }
       this.alumnosEmpresas.asignarAlumnos(datos).subscribe();
       this.toastr.success('Cambios realizados con exito.', 'Guardado')
+      this.GenerarAnexos();
     } else if (!bandera) {
       this.toastr.error('No pueden haber campos vacíos, o las fechas son incorrectas', 'Rellena campos');
     }
     if (msg != '') {
       this.toastr.error(msg, 'Fechas incorrectas')
     }
+
   }
 
 
@@ -141,7 +143,7 @@ export class AsociarEmpAluComponent implements OnInit {
       },
       error: e =>{
         console.log(e);
-        this.toastr.error('El anexo no ha podido generarse', 'Título');
+        this.toastr.error('El anexo no ha podido generarse', 'Generado');
       }
     })
     this.router.navigate(['/data-management/asig-alum-empresa']);

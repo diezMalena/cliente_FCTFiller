@@ -35,7 +35,7 @@ export class CrudAnexosComponent implements OnInit {
   }
 
   public descargarAnexo(codigo: string){
-    this.anexoService.descargarAnexo('3c',codigo).subscribe({
+    this.anexoService.descargarAnexo(this.dni_tutor,codigo).subscribe({
      next:(res)=>{
        const current= new Date();
        const blob = new Blob([res], {type: 'application/octet-stream'});
@@ -53,7 +53,7 @@ export class CrudAnexosComponent implements OnInit {
 
 
   public descargarTodo(){
-    this.anexoService.descargarTodo('3c').subscribe({
+    this.anexoService.descargarTodo(this.dni_tutor).subscribe({
      next:(res)=>{
        const current= new Date();
        const blob = new Blob([res], {type: 'application/octet-stream'});
@@ -70,7 +70,7 @@ export class CrudAnexosComponent implements OnInit {
   }
 
   public eliminarAnexo(codigo: string){
-    this.anexoService.eliminarAnexo('3c',codigo).subscribe({
+    this.anexoService.eliminarAnexo(this.dni_tutor,codigo).subscribe({
      next:(res)=>{
        this.toastr.success('Anexo Eliminado', 'Eliminado');
        this.verAnexos();

@@ -2,8 +2,8 @@
   <div class="position-sticky pt-4">
     <ul class="nav nav-pills flex-column">
       <li>
-        <a routerlink="/" routerlinkactive="active"
-          class="active nav-link link-dark" aria-current="page">
+        <a class="nav-link link-dark" routerLinkActive="active" routerLink="data-upload/csv-upload"
+          aria-current="page">
           <svg width="20" height="20" class="bi me-2">
             <use xlink:href="#CSV" />
           </svg>
@@ -12,37 +12,27 @@
         </a>
       </li>
       <li>
-        <a routerlink="/" routerlinkactive="active"
-          class=" nav-link link-dark" aria-current="page">
+        <a routerLinkActive="active" routerLink="data-management/gestion-empresas"
+          class="nav-link link-dark" aria-current="page">
           <svg width="20" height="20" class="bi me-2">
             <use xlink:href="#A0" />
           </svg>
 
-          Anexo 0
+          Empresas
         </a>
       </li>
       <li>
-        <a routerlink="/" routerlinkactive="active"
-          class="nav-link link-dark">
-          <svg width="20" height="20" class="bi me-2">
-            <use xlink:href="#A0" />
-          </svg>
-
-          Anexo 0a
-        </a>
-      </li>
-      <li>
-        <a routerlink="/" routerlinkactive="active"
+        <a routerLink="data-management/asig-alum-empresa" routerLinkActive="active"
           class="nav-link link-dark">
           <svg width="20" height="20" class="bi me-2">
             <use xlink:href="#A1" />
           </svg>
 
-          Anexo I
+          FCT
         </a>
       </li>
-      <li>
-        <a routerlink="/" routerlinkactive="active"
+      <!-- <li>
+        <a routerLink="/" routerLinkActive="active"
           class="nav-link link-dark">
           <svg width="20" height="20" class="bi me-2">
             <use xlink:href="#A2" />
@@ -50,14 +40,23 @@
 
           Anexo II
         </a>
-      </li>
+      </li> -->
       <li>
-        <a routerlink="/" routerlinkactive="active"
+        <a routerLink="data-management/seguimiento" routerLinkActive="active"
           class="nav-link link-dark">
           <svg width="20" height="20" class="bi me-2">
             <use xlink:href="#A3" />
           </svg>
-          Anexo III
+          Seguimiento
+        </a>
+      </li>
+      <li>
+        <a routerLink="data-management/crud-anexos" routerLinkActive="active"
+          class="nav-link link-dark">
+          <svg width="20" height="20" class="bi me-2">
+            <use xlink:href="#crud-anexos" />
+          </svg>
+          Anexos generados
         </a>
       </li>
 
