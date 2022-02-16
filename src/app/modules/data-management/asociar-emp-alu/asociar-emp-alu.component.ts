@@ -132,7 +132,10 @@ export class AsociarEmpAluComponent implements OnInit {
 
   }
 
-
+/**
+ * @author Laura <lauramorenoramos97@gmail.com>
+ * Esta funcion te permite descargar los anexos que se han generado
+ */
   GenerarAnexos(){
      this.alumnosEmpresas.generarAnexo('3c').subscribe({
       next:(res)=>{
