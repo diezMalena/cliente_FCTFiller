@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Usuario } from 'src/app/models/usuario';
+import { LoginService } from '../../../services/login.service';
 
 @Component({
   selector: 'app-login',
@@ -10,11 +11,12 @@ import { Usuario } from 'src/app/models/usuario';
 })
 export class LoginComponent implements OnInit {
   login: FormGroup;
-  submited: boolean = false;
+  submitted: boolean = false;
   usuario?: Usuario;
   constructor(
     private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+    private LoginService: LoginService,
   ) {
     this.login = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
@@ -30,16 +32,29 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    this.submited = true;
-    if(this.login.invalid){
+    this.submitted = true;
+    if(!this.login.valid){
       return;
     }
-    this.usuario = new Usuario(this.login.value.email, this.login.value.password);
+    var datos = {
+      'email': this.login.value.email,
+      'pass':this.login.value.password
+    }
+    this.LoginService.hacerLogin(datos).subscribe({
+      next: () => {
+
+        //Cuando la API esté lista, me devolverá un mensaje indicandome que la empresa ha sido registrada correctamente.
+        //this.router.navigateByUrl('principal');
+      },
+      error: e => {
+      }
+    });
+
     this.onReset();
   }
 
   onReset() {
-    this.submited = false;
+    this.submitted = false;
     this.login.reset();
   }
 }
