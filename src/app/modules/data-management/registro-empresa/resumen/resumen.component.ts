@@ -54,7 +54,7 @@ export class ResumenComponent implements OnInit {
     this.provincia = "hola";
     this.cp = 0;
 
-    this.dniTutor = '978528198';
+    this.dniTutor = '20a';
 
     this.resumen = this.formBuilder.group({
       correoRep: [''],
