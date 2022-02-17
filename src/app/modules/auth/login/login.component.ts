@@ -10,6 +10,7 @@ import { LoginService } from '../../../services/login.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+  public imgLogo: string;
   login: FormGroup;
   submitted: boolean = false;
   usuario?: Usuario;
@@ -18,6 +19,7 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private LoginService: LoginService,
   ) {
+    this.imgLogo="./assets/images/logo.png";
     this.login = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.pattern]]
