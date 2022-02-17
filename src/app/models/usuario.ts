@@ -9,6 +9,7 @@ export class Usuario {
       obj['nombre'],
       obj['dni'],
       obj['token'],
+      obj['tipo'],
       obj['roles']
     );
   }
@@ -18,6 +19,7 @@ export class Usuario {
     public nombre: string,
     public dni?: string,
     public token?: string,
+    public tipo?: string,
     public roles?: []
   ) { }
 }

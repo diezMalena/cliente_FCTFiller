@@ -40,9 +40,9 @@ export class LoginComponent implements OnInit {
     }
     var datos = {
       'email': this.login.value.email,
-      'pass':this.login.value.password
+      'pass': this.login.value.password
     }
-    this.LoginService.hacerLogin(datos).subscribe({
+    this.LoginService.login(datos).subscribe({
       next: () => {
 
         //Cuando la API esté lista, me devolverá un mensaje indicandome que la empresa ha sido registrada correctamente.

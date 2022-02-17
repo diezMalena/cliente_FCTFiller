@@ -10,8 +10,8 @@ export class LoginService {
   public ruta: string = "http://localhost:8000/api/";
   constructor(private http: HttpClient,) { }
 
-  public hacerLogin(datos:object){
-    let url: string = this.ruta + "hacerLogin";
+  public login(datos:object){
+    let url: string = this.ruta + "login";
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });

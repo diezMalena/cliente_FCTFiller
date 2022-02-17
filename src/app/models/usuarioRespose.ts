@@ -3,5 +3,6 @@ export interface usuarioResponse {
   email: string;
   nombre: string;
   token?: string;
+  tipo?: string;
   roles?: [];
 }

@@ -1,11 +1,11 @@
 <div class="container-fluid py-2">
   <div class="row d-flex justify-content-center align-items-center h-100">
     <div class="col-12 col-md-9 col-lg-7 col-xl-6">
-      <div class="card bg-dark text-light" style="border-radius: 1rem;">
+      <div class="card bg-dark text-white" style="border-radius: 1rem;">
         <div class="card-body p-5 text-center">
           <form [formGroup]="login" (ngSubmit)="onSubmit()" class="mb-md-2 mt-md-1 pb-2">
-            <img height="70" src="{{imgLogo}}" alt="">
-            <p class="mb-4 mt-3">Introduce tu email y contraseña</p>
+            <img height="70" src="{{imgLogo}}" alt="Logo de la página">
+            <h1 class="mb-4 mt-3 h6">Introduce tu email y contraseña</h1>
 
             <div class="form-outline form-white mb-4">
               <label class="form-label" for="correo">Correo</label>
