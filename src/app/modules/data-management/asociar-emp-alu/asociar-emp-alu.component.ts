@@ -21,7 +21,7 @@ export class AsociarEmpAluComponent implements OnInit {
   empresas: Empresa[] = [];
   respuesta: any = [];
   nombreCiclo: string = '';
-  dniTutor: string = '3c';
+  dniTutor: string = '20a';
 
   constructor(
     private alumnosEmpresas: AsociarAlumnoEmpresaService,
@@ -132,9 +132,12 @@ export class AsociarEmpAluComponent implements OnInit {
 
   }
 
-
+/**
+ * @author Laura <lauramorenoramos97@gmail.com>
+ * Esta funcion te permite descargar los anexos que se han generado
+ */
   GenerarAnexos(){
-     this.alumnosEmpresas.generarAnexo('3c').subscribe({
+     this.alumnosEmpresas.generarAnexo(this.dniTutor).subscribe({
       next:(res)=>{
         const current= new Date();
         const blob = new Blob([res], {type: 'application/octet-stream'});
