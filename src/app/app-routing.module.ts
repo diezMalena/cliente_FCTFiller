@@ -13,12 +13,11 @@ const routes: Routes = [
   {
     path: 'data-management',
     loadChildren:() => import('./modules/data-management/data-management.module').then((m) => m.DataManagementModule),
+  },
+  {
+    path: '**',
+    redirectTo: ''
   }
-
-  // {
-  //   path:'**',
-  //   redirectTo:'',
-  // }
 ];
 
 @NgModule({
