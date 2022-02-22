@@ -21,7 +21,7 @@ export class AsociarEmpAluComponent implements OnInit {
   empresas: Empresa[] = [];
   respuesta: any = [];
   nombreCiclo: string = '';
-  dniTutor: string = '4d';
+  dniTutor: string = '20a';
 
   constructor(
     private alumnosEmpresas: AsociarAlumnoEmpresaService,

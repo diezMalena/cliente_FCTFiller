@@ -13,7 +13,7 @@ import * as FileSaver from 'file-saver';
 export class CrudAnexosComponent implements OnInit {
   //anexos: Anexo[] = [];
   respuesta: any =[];
-  dni_tutor: string = '4d';
+  dni_tutor: string = '20a';
   codigo: string = '';
 
   constructor(
