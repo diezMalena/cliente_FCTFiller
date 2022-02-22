@@ -16,8 +16,9 @@ export class ModalAddComponent implements OnInit {
   jornada: FormGroup;
   submitted: boolean = false;
   public jornadaEdit: string = "";
-  public dni_alumno: string = "12345678Q";
+  public dni_alumno: string = "14d";
   public jornadasArray: any = [];
+  public fecha_invalida:boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -30,7 +31,7 @@ export class ModalAddComponent implements OnInit {
       fecha: ['',[Validators.required]],
       actividad:['',[Validators.required]],
       observaciones:[''],
-      horas: ['',[Validators.required]]
+      horas: ['',[Validators.required,Validators.max(10)]]
     });
 
     //Para editar la jornada:
@@ -63,6 +64,12 @@ export class ModalAddComponent implements OnInit {
     if(!this.jornada.valid) return;
     //Recojo los campos y los guardo en una nueva Jornada.
     //La id de la fct la mando vacía para establecerle su valor en el servidor buscando a qué fct está asociada ese alumno.
+    var hoy = new Date();
+    // console.log(hoy);
+    //console.log(new Date(this.jornada.value.fecha)>hoy);
+
+    this.fecha_invalida = new Date(this.jornada.value.fecha)>hoy;
+    if(this.fecha_invalida) return;
     var fecha_jornada = this.jornada.value.fecha;
     var actividades = this.jornada.value.actividad;
     var observaciones = this.jornada.value.observaciones;

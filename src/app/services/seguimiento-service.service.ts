@@ -60,12 +60,9 @@ export class SeguimientoServiceService {
   }
 
   public descargarPDF(dni:string){
-    let url: string = this.ruta + "generarAnexo3";
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-    let dato={dni:dni};
-    return this.http.post(url, dato, { headers: headers });
+    let dato= {dni:dni};
+    const url: string= this.ruta+"generarAnexo3";
+    return this.http.post(url,dato, {responseType:'arraybuffer'});
   }
 
 }
