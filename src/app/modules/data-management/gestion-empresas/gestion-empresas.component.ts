@@ -12,7 +12,7 @@ import { ModalEmpresaComponent } from '../modal-empresa/modal-empresa.component'
 export class GestionEmpresasComponent implements OnInit {
   empresas: Empresa[] = [];
   //Temporalmente, cogemos un dni de un tutor de la BBDD
-  dniTutor: string = '978528198';
+  dniTutor: string = '20a';
 
   constructor(
     private crudEmpresasService: CrudEmpresasService,

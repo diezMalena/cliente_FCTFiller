@@ -12,5 +12,7 @@ export interface EmpresaResponse {
   direccion: string;
   cp: string;
   representante: Trabajador;
+  nombre_responsable: string;
+  dni_responsable: string;
   alumnos: Alumno[];
 }

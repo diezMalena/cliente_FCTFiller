@@ -15,6 +15,8 @@ export class Empresa {
       obj['direccion'],
       obj['cp'],
       obj['representante'],
+      obj['nombre_responsable'],
+      obj['dni_responsable'],
       obj['alumnos']
     );
   }
@@ -30,6 +32,8 @@ export class Empresa {
     public direccion: string,
     public cp: string,
     public representante?: Trabajador,
+    public nombre_responsable?: string,
+    public dni_responsable?: string,
     public alumnos?: Alumno[]
   ) {}
 }
