@@ -3,6 +3,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModalJornadaService } from '../../../../services/modal-jornada.service';
 import { Jornada } from 'src/app/models/Jornada/jornada';
+import { SeguimientoServiceService } from 'src/app/services/seguimiento-service.service';
 
 @Component({
   selector: 'app-modal-editar',
@@ -14,18 +15,23 @@ export class ModalEditarComponent implements OnInit {
   editarJornada: FormGroup;
   submitted: boolean = false;
   public jornada?: Jornada;
+  public dni_alumno: string = "14d";
+  public arrayJornadas: any = [];
+  public fecha_invalida:boolean = false;
+
 
   constructor(
     private modalActive: NgbActiveModal,
     private formBuilder: FormBuilder,
     private modalJornadaService: ModalJornadaService,
+    private seguimientoService:SeguimientoServiceService
 
   ) {
     this.editarJornada = this.formBuilder.group({
       fecha: ['',[Validators.required]],
       actividad:['',[Validators.required]],
       observaciones:[''],
-      horas: ['',[Validators.required]]
+      horas: ['',[Validators.required, Validators.max(10)]]
     });
 
     this.modalJornadaService.jornadaTrigger.subscribe((data: Jornada) => {
@@ -63,12 +69,13 @@ export class ModalEditarComponent implements OnInit {
     if(this.jornada != undefined){
       var id_jornada = this.jornada.id_jornada;
       var orden_jornada = this.jornada.orden_jornada;
+      var hoy = new Date();
+      this.fecha_invalida = new Date(this.jornada.fecha_jornada)>hoy;
+      if(this.fecha_invalida) return;
       var fecha_jornada = this.jornada.fecha_jornada;
       var actividades = this.jornada.actividades;
       var observaciones = this.jornada.observaciones;
       var tiempo_empleado = this.jornada.tiempo_empleado;
-      var dni_alumno = '12345678Q';
-
 
       var jornadaUpdate = new Jornada(
         id_jornada,
@@ -79,10 +86,11 @@ export class ModalEditarComponent implements OnInit {
         tiempo_empleado
       );
       //console.log(jornadaUpdate);
-      this.modalJornadaService.updateJornada(jornadaUpdate,dni_alumno).subscribe({
+      this.modalJornadaService.updateJornada(jornadaUpdate,this.dni_alumno).subscribe({
         next: (response) => {
           //console.log(response);
           console.log('La jornada se ha actualizado correctamente.');
+          this.recogerJornadas();
           this.closeModel();
         },
         error: e => {
@@ -91,4 +99,20 @@ export class ModalEditarComponent implements OnInit {
       });
     }
   }
+
+  /**
+   * Método que recoge las jornadas correspondientes al alumno y las muestra por pantalla.
+   * @author Malena.
+   */
+    public recogerJornadas(){
+      this.seguimientoService.devolverJornadas(this.dni_alumno).subscribe({
+        next: (response: any) => {
+          this.arrayJornadas = response;
+          this.modalJornadaService.getJornadasInArray(this.arrayJornadas);
+        },
+        error: e => {
+          console.log('error en el nombre',e);
+        }
+      });
+    }
 }
