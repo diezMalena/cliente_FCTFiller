@@ -8,6 +8,7 @@ import { Jornada } from  '../../../models/Jornada/jornada';
 import { ModalJornadaService } from '../../../services/modal-jornada.service';
 import { SeguimientoServiceService } from 'src/app/services/seguimiento-service.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import * as FileSaver from 'file-saver';
 
 @Component({
   selector: 'app-seguimiento',
@@ -17,7 +18,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class SeguimientoComponent implements OnInit {
 
   public arrayJornadas: any = [];
-  public dni_alumno: string = "12345678Q";
+  public dni_alumno: string = "14d";
   public nombre_alumno: any;
   public nombre_empresa: any;
   public departamento: any;
@@ -67,6 +68,7 @@ export class SeguimientoComponent implements OnInit {
     this.modalJornadaService.jornadasArray.subscribe(array => {
       this.arrayJornadas = array;
         var cuantasJornadasHay = this.arrayJornadas.length;
+        this.sumatorioHorasTotales();
         //console.log(cuantasJornadasHay);
 
         //Cuando se inserten 5 nuevas jornadas, se habilita el boton Descargar PDF:
@@ -233,8 +235,10 @@ export class SeguimientoComponent implements OnInit {
 
   public descargarPDF(){
     this.seguimientoService.descargarPDF(this.dni_alumno).subscribe({
-      next:(response) => {
+      next:(res:any) => {
         console.log('Se ha descargado');
+        const blob = new Blob([res], {type: 'application/octet-stream'});
+        FileSaver.saveAs(blob,'hoja_seguimiento.docx');
       },
       error: e => {
         console.log('No se ha descargado el documento');
