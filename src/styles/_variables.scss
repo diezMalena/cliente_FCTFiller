@@ -1,9 +1,23 @@
-$primary: #064663;
-$secondary: #ECB365;
-$success: #1B8223;
-$info: #203EC1;
-$warning: #D69500;
-$danger: #96240D;
-$dark: #041C32;
+//Colores de la paleta
+$dark: #09192b;
+$light: #e5ebf2;
+$primary: #225082;
+$secondary: #428bca;
+$info: #1c5769;
+$warning: #7b4c09;
+$success: #295b29;
+$danger: #af130d;
 
-$nav-pills-link-active-bg: $dark;
+//Color default para los botones que contradigan la acción principal
+$custom-colors: (
+  "default": #000000,
+);
+
+$theme-colors: map-merge($theme-colors, $custom-colors);
+
+//Colores para las píldoras de navegación
+$nav-pills-link-active-bg: $primary;
+
+//Color de fondo de las tablas
+$table-bg: white;
+$table-bg-scale: 0%;

@@ -1,8 +1,10 @@
 .contenido {
   overflow-y: auto;
-  height: calc(100vh - 66px - 48px);
+  height: calc(100vh - 66px - 20px);
+  background-color: $light;
 }
 
 body {
   overflow: hidden;
 }
+
