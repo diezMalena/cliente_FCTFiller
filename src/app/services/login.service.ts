@@ -17,5 +17,4 @@ export class LoginService {
     });
     return this.http.post(url, datos, {headers: headers});
   }
-
 }

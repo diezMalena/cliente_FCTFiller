@@ -1,8 +1,9 @@
 export interface usuarioResponse {
-  dni?: string;
   email: string;
   nombre: string;
-  token?: string;
+  apellidos: string;
+  dni?: string;
   tipo?: string;
   roles?: [];
+  token?: string;
 }
