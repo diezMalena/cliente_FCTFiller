@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CrudProfesoresService } from 'src/app/services/crud-profesores.service';
+import { ModalProfesoresComponent } from '../modal-profesores/modal-profesores.component';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 
 @Component({
@@ -17,6 +19,7 @@ export class CrudProfesoresComponent implements OnInit {
     private profesoresService: CrudProfesoresService,
     private router: Router,
     private toastr: ToastrService,
+    private modal: NgbModal
   ) { }
 
   ngOnInit(): void {
@@ -32,14 +35,15 @@ export class CrudProfesoresComponent implements OnInit {
 
 
   public registrarProfesor(){
-
+    sessionStorage.setItem("numPeticion", '1');
+    this.modal.open(ModalProfesoresComponent, {size: 'lg'});
   }
 
   public verProfesor(dni_profesor: string){
-    this.profesoresService.getProfesor(dni_profesor).subscribe((response)=>{
-      this.profesor=response;
-      console.log(response);
-    })
+    sessionStorage.setItem("numPeticion", '0');
+    sessionStorage.setItem("dniProfesor", dni_profesor);
+    this.modal.open(ModalProfesoresComponent, {size: 'lg'});
+
   }
 
   public eliminarProfesor(dni_profesor: string){

@@ -18,6 +18,7 @@ import { GestionEmpresasComponent } from './gestion-empresas/gestion-empresas.co
 import { ModalEmpresaComponent } from './modal-empresa/modal-empresa.component';
 import { CrudAnexosComponent } from './crud-anexos/crud-anexos.component';
 import { CrudProfesoresComponent } from './crud-profesores/crud-profesores.component';
+import { ModalProfesoresComponent } from './modal-profesores/modal-profesores.component';
 
 
 
@@ -37,6 +38,7 @@ import { CrudProfesoresComponent } from './crud-profesores/crud-profesores.compo
     ModalEmpresaComponent,
     CrudAnexosComponent,
     CrudProfesoresComponent,
+    ModalProfesoresComponent,
   ],
   imports: [
     CommonModule,
