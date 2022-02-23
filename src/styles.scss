@@ -1,12 +1,15 @@
 html, body { height: 100%; }
 
+//IMPORTANTE: DEJAR SIEMPRE EL IMPORT DE LAS VARIABLES EN PRIMER LUGAR
+@import './styles/variables';
+
 @import '~bootstrap/scss/bootstrap';
+
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
 @import "~bootstrap/scss/root";
 
-@import './styles/variables';
 @import "./styles/colores";
 @import "./styles/tipografia";
 @import "./styles/botones";
