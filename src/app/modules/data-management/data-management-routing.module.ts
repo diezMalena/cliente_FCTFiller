@@ -1,11 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AsociarEmpAluComponent } from './asociar-emp-alu/asociar-emp-alu.component';
+import { GestionEmpresasComponent } from './gestion-empresas/gestion-empresas.component';
+import { CrudAnexosComponent } from './crud-anexos/crud-anexos.component';
 import { EmpresaComponent } from './registro-empresa/empresa/empresa.component';
 import { RegistroEmpresaComponent } from './registro-empresa/registro-empresa.component';
 import { RepresentanteComponent } from './registro-empresa/representante/representante.component';
 import { ResumenComponent } from './registro-empresa/resumen/resumen.component';
 import { UbicacionComponent } from './registro-empresa/ubicacion/ubicacion.component';
+import { SeguimientoComponent } from './seguimiento/seguimiento.component';
 //import { SectionEmpresaComponent } from './components/section-empresa/section-empresa.component';
 
 
@@ -33,6 +36,18 @@ const routes: Routes = [
   {
     path:'registro-empresa/resumen',
     component: ResumenComponent
+  },
+  {
+    path:'seguimiento',
+    component: SeguimientoComponent
+  },
+  {
+    path: 'gestion-empresas',
+    component: GestionEmpresasComponent
+  },
+  {
+    path:'crud-anexos',
+    component: CrudAnexosComponent
   },
 ];
 
