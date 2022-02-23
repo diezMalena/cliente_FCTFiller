@@ -8,13 +8,6 @@ $warning: #7b4c09;
 $success: #295b29;
 $danger: #af130d;
 
-//Color default para los botones que contradigan la acción principal
-$custom-colors: (
-  "default": #000000,
-);
-
-$theme-colors: map-merge($theme-colors, $custom-colors);
-
 //Colores para las píldoras de navegación
 $nav-pills-link-active-bg: $primary;
 
