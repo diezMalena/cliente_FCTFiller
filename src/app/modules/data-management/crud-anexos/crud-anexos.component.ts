@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Anexo } from 'src/app/models/anexo';
 import { AnexoService } from 'src/app/services/crud-anexos.service';
 import * as FileSaver from 'file-saver';
+import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 
 @Component({
   selector: 'app-crud-anexos',
@@ -12,15 +13,20 @@ import * as FileSaver from 'file-saver';
 })
 export class CrudAnexosComponent implements OnInit {
   //anexos: Anexo[] = [];
+  usuario;
   respuesta: any =[];
-  dni_tutor: string = '4d';
+  dni_tutor?: string;
   codigo: string = '';
 
   constructor(
     private anexoService: AnexoService,
     private router: Router,
     private toastr: ToastrService,
-    ){ }
+    private storageUser: LoginStorageUserService,
+    ){
+      this.usuario = storageUser.getUser();
+      this.dni_tutor = this.usuario?.dni
+    }
 
   ngOnInit(): void {
     this.verAnexos();
@@ -32,7 +38,7 @@ export class CrudAnexosComponent implements OnInit {
    * @author Pablo y Laura
    */
   public verAnexos(){
-    this.anexoService.getAnexos(this.dni_tutor).subscribe((response)=>{
+    this.anexoService.getAnexos(this.dni_tutor!).subscribe((response)=>{
       this.respuesta=response;
       console.log(response);
     })
@@ -44,7 +50,7 @@ export class CrudAnexosComponent implements OnInit {
    * Este metodo te permite descargar un anexo en concreto, te avisa si ha salido mal o bien
    */
   public descargarAnexo(codigo: string){
-    this.anexoService.descargarAnexo(this.dni_tutor,codigo).subscribe({
+    this.anexoService.descargarAnexo(this.dni_tutor!,codigo).subscribe({
      next:(res)=>{
        const current= new Date();
        const blob = new Blob([res], {type: 'application/octet-stream'});
@@ -66,7 +72,7 @@ export class CrudAnexosComponent implements OnInit {
    * Esta funcion te permite descargar todos los anexos, te avisa si la descarga ha salido bien o mal
    */
   public descargarTodo(){
-    this.anexoService.descargarTodo(this.dni_tutor).subscribe({
+    this.anexoService.descargarTodo(this.dni_tutor!).subscribe({
      next:(res)=>{
        const current= new Date();
        const blob = new Blob([res], {type: 'application/octet-stream'});
@@ -89,7 +95,7 @@ export class CrudAnexosComponent implements OnInit {
    que se refresque la vista
    */
   public eliminarAnexo(codigo: string){
-    this.anexoService.eliminarAnexo(this.dni_tutor,codigo).subscribe({
+    this.anexoService.eliminarAnexo(this.dni_tutor!,codigo).subscribe({
      next:(res)=>{
        this.toastr.success('Anexo Eliminado', 'Eliminado');
        this.verAnexos();
