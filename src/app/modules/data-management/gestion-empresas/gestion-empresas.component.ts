@@ -59,13 +59,6 @@ export class GestionEmpresasComponent implements OnInit {
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
   public mostrarEmpresa(empresa: Empresa, editar: boolean) {
-    // await this.dialogService.confirmacion(
-    //   "Eliminar registro",
-    //   `¿Está seguro de que quiere eliminar el registro de la empresa ${empresa.nombre}?`
-    //   ).then( resp => {
-    //     console.log(resp);
-    //   })
-
     this.modal.open(ModalEmpresaComponent, {
       size: 'md',
       backdrop: 'static',
@@ -80,6 +73,18 @@ export class GestionEmpresasComponent implements OnInit {
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
   public deleteEmpresa(empresa: Empresa) {
+
+    /*****************************************************************************************/
+    /**************************UNIVERSALIZAR DIÁLOGO CONFIRMACIÓN*****************************/
+    /*****************************************************************************************/
+
+    // await this.dialogService.confirmacion(
+    //   "Eliminar registro",
+    //   `¿Está seguro de que quiere eliminar el registro de la empresa ${empresa.nombre}?`
+    //   ).then( resp => {
+    //     console.log(resp);
+    //   })
+
     this.dialog
       .open(ConfirmDialogComponent, {
         data: {
@@ -88,7 +93,8 @@ export class GestionEmpresasComponent implements OnInit {
         },
         width: '400px',
       })
-      .afterClosed().subscribe((res) => {
+      .afterClosed()
+      .subscribe((res) => {
         if (res.respuesta) {
           this.crudEmpresasService.deleteEmpresa(empresa.id).subscribe({
             next: (response: any) => {
