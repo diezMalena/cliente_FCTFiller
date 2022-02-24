@@ -9,6 +9,7 @@ import { RepresentanteComponent } from './registro-empresa/representante/represe
 import { ResumenComponent } from './registro-empresa/resumen/resumen.component';
 import { UbicacionComponent } from './registro-empresa/ubicacion/ubicacion.component';
 import { SeguimientoComponent } from './seguimiento/seguimiento.component';
+import { CrudProfesoresComponent } from './crud-profesores/crud-profesores.component';
 //import { SectionEmpresaComponent } from './components/section-empresa/section-empresa.component';
 
 
@@ -48,6 +49,10 @@ const routes: Routes = [
   {
     path:'crud-anexos',
     component: CrudAnexosComponent
+  },
+  {
+    path:'crud-profesores',
+    component: CrudProfesoresComponent
   },
 ];
 
