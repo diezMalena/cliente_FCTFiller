@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Empresa } from 'src/app/models/empresa';
 import { CrudEmpresasService } from 'src/app/services/crud-empresas.service';
+import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 import { ModalEmpresaComponent } from '../modal-empresa/modal-empresa.component';
 
 @Component({
@@ -11,13 +12,17 @@ import { ModalEmpresaComponent } from '../modal-empresa/modal-empresa.component'
 })
 export class GestionEmpresasComponent implements OnInit {
   empresas: Empresa[] = [];
-  //Temporalmente, cogemos un dni de un tutor de la BBDD
-  dniTutor: string = '20a';
+  usuario;
+  dniTutor?: string;
 
   constructor(
     private crudEmpresasService: CrudEmpresasService,
-    private modal: NgbModal
-  ) {}
+    private modal: NgbModal,
+    private storageUser: LoginStorageUserService
+  ) {
+    this.usuario = storageUser.getUser();
+      this.dniTutor = this.usuario?.dni
+  }
 
   ngOnInit(): void {
     this.getEmpresas();
@@ -28,7 +33,7 @@ export class GestionEmpresasComponent implements OnInit {
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
   public getEmpresas(): void {
-    this.crudEmpresasService.getEmpresas(this.dniTutor).subscribe({
+    this.crudEmpresasService.getEmpresas(this.dniTutor!).subscribe({
       next: (empresas) => {
         this.empresas = empresas;
         this.empresas.forEach(empresa => {
