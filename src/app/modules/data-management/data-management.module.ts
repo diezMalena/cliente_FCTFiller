@@ -17,6 +17,7 @@ import { DragDropModule } from  '@angular/cdk/drag-drop';
 import { GestionEmpresasComponent } from './gestion-empresas/gestion-empresas.component';
 import { ModalEmpresaComponent } from './modal-empresa/modal-empresa.component';
 import { CrudAnexosComponent } from './crud-anexos/crud-anexos.component';
+import { ModalDescargaComponent } from './registro-empresa/modal-descarga/modal-descarga.component';
 
 
 
@@ -35,6 +36,7 @@ import { CrudAnexosComponent } from './crud-anexos/crud-anexos.component';
     GestionEmpresasComponent,
     ModalEmpresaComponent,
     CrudAnexosComponent,
+    ModalDescargaComponent,
   ],
   imports: [
     CommonModule,

@@ -107,6 +107,29 @@
             </div>
           </div>
 
+          <div class="mb-3">
+            <div class="row d-flex align-items-center">
+              <div class="col-12 col-lg-4 d-lg-flex justify-content-end">
+                <label for="telefono" class="form-label fw-bold m-0">Tipo de empresa</label>
+              </div>
+              <div class="col-12 col-lg-4">
+                <div class="form-check">
+                  <input class="form-check-input" formControlName="tipoEmpresa" type="radio" value="1" name="tipoEmpresa" id="privada">
+                  <label class="form-check-label" for="privada">
+                    Privada
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" formControlName="tipoEmpresa" type="radio" name="tipoEmpresa" value="0" id="publica" ng-checked="true">
+                  <label class="form-check-label" for="publica">
+                    Pública
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
           <div class="row py-2 d-flex justify-content-center">
             <div class="col-6 d-flex justify-content-center">
               <input type="submit" value="Aceptar y continuar" class="btn btn-primary">
