@@ -29,6 +29,11 @@ export class CsvUploadComponent implements OnInit {
 
   //filesAlumnos CSV-----------------------------------------------------
   filesAlumnos: File[] = [];
+  /**
+   *  @author Pablo
+   * Controla si existe un fichero para ser añadido
+   * Si existe ya un fichero no puede agregarse un segundo
+   */
   onSelectAlumnos(event: any) {
     if (this.filesAlumnos.length == 0) {
       this.filesAlumnos.push(...event.addedFiles);
@@ -99,7 +104,10 @@ export class CsvUploadComponent implements OnInit {
     this.filesProfesores.splice(this.filesProfesores.indexOf(event), 1);
   }
 
-
+  /**
+   *  @author Pablo
+   * Comprueba si existe un fichero, lo formatea y lo añade a la lista común que será enviada al servidor
+   */
   async subirFicheros() {
     let filesUploadList = [];
     if (this.filesAlumnos.length > 0) {
@@ -173,6 +181,10 @@ export class CsvUploadComponent implements OnInit {
     }
   }
 
+  /**
+   *  @author Pablo
+   * Crea el modelo del fichero
+   */
   createFileUpload(file: File, content: any, box_name: string) {
     const newStorage = new FileUploadModel()
     newStorage.file_name = file.name
@@ -182,6 +194,10 @@ export class CsvUploadComponent implements OnInit {
     return newStorage;
   }
 
+   /**
+ *  @author Pablo
+ * Función propia de la biblioteca del drag and drop que lee el contenido del fichero
+ */
   private async readFile(file: File): Promise<string | ArrayBuffer> {
     return new Promise<string | ArrayBuffer>((resolve, reject) => {
       const reader = new FileReader();
