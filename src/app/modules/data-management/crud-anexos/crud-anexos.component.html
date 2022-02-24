@@ -1,16 +1,14 @@
 <div class="row">
     <div class="col-12">
         <div class="row">
-            <h2 class="col-12">Gestión de Anexos</h2>
+            <div class="col-12 d-flex justify-content-between pb-3 page-header">
+                <h1 class="h2">Gestión de Anexos</h1>
+                <button (click)="descargarTodo()" class="btn btn-outline-primary float-end">Descargar todo</button>
+            </div>
         </div>
         <div class="row">
             <div class="col-12">
                 <form>
-                    <div class="row pb-2">
-                        <div class="col">
-                            <button (click)="descargarTodo()" class="btn btn-outline-primary">Descargar todo</button>
-                        </div>
-                    </div>
                     <div class="row">
                         <div class="col-12">
 
@@ -24,7 +22,7 @@
                                         <th scope="col">Acciones</th>
                                     </tr>
                                 </thead>
-                                <tbody class="table-secondary">
+                                <tbody>
                                     <tr *ngFor="let anexo of respuesta; index as i">
 
                                         <td scope="col">
@@ -52,25 +50,24 @@
 
                                         <td scope="col">
 
-                                            <button (click)="descargarAnexo(anexo.codigo)" class="btn mb-2 mx-2" type="submit">
+                                            <button (click)="descargarAnexo(anexo.codigo)" class="btn btn-outline-primary px-2 py-1 me-2" type="submit">
                                               <svg class="bi" width="16" height="16">
                                                 <use xlink:href="#descarga" />
                                               </svg>
                                                 </button>
 
-                                            <button (click)="eliminarAnexo(anexo.codigo)" class="btn btn-outline-danger px-2 py-1" type="submit">
-                                              <svg class="bi" width="16" height="16">
-                                                <use xlink:href="#papelera" />
-                                              </svg>
-                                                </button>
-
-                                            <button (click)="abrirModalFirma(anexo.codigo)" class="btn mb-2 mx-2" type="submit">
+                                            <button (click)="abrirModalFirma(anexo.codigo)" class="btn btn-outline-primary px-2 py-1 me-2" type="submit">
                                               <svg class="bi" width="16" height="16">
                                                 <use xlink:href="#firma" />
                                               </svg>
                                                 </button>
-                                        </td>
 
+                                            <button (click)="eliminarAnexo(anexo.codigo)" class="btn btn-outline-danger px-2 py-1 me-2" type="submit">
+                                                  <svg class="bi" width="16" height="16">
+                                                    <use xlink:href="#papelera" />
+                                                  </svg>
+                                                    </button>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
