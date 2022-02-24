@@ -27,25 +27,20 @@
                                     <tbody class="table-secondary">
                                         <tr *ngFor="let p of profesores; index as i">
 
-                                            <td scope="col">
+                                            <td class="cursor-pointer" (click)="verProfesor(p.dni)" scope="col">
                                                 <p>{{p.apellidos}}</p>
                                             </td>
 
-                                            <td scope="col">
+                                            <td class="cursor-pointer" (click)="verProfesor(p.dni)" scope="col">
                                                 <p> {{p.nombre}} </p>
                                             </td>
 
-                                            <td scope="col">
+                                            <td class="cursor-pointer" (click)="verProfesor(p.dni)" scope="col">
                                                 <p>{{p.dni}}</p>
                                             </td>
 
 
                                             <td scope="col">
-
-                                                <button (click)="verProfesor(p.dni)" class=" border btn mb-2 mx-2" type="submit">
-                                                  Ver
-                                              </button>
-
 
                                                 <button (click)="modificarProfesor(p.dni)" class="btn mb-2 mx-2" type="submit">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">

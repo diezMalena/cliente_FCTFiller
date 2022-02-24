@@ -15,6 +15,7 @@ export class CrudProfesoresComponent implements OnInit {
 
   profesores: any =[];
   profesor: any = [];
+  dni: string = '1A';
   constructor(
     private profesoresService: CrudProfesoresService,
     private router: Router,
@@ -27,22 +28,23 @@ export class CrudProfesoresComponent implements OnInit {
   }
 
   public verProfesores(){
-    this.profesoresService.getProfesores().subscribe((response)=>{
+    this.profesoresService.getProfesores(this.dni).subscribe((response)=>{
       this.profesores=response;
     })
   }
 
 
+  //0 ver, 1 es crear y 2 es editar
 
   public registrarProfesor(){
     sessionStorage.setItem("numPeticion", '1');
-    this.modal.open(ModalProfesoresComponent, {size: 'lg'});
+    this.modal.open(ModalProfesoresComponent, {size: 'md'});
   }
 
   public verProfesor(dni_profesor: string){
     sessionStorage.setItem("numPeticion", '0');
     sessionStorage.setItem("dniProfesor", dni_profesor);
-    this.modal.open(ModalProfesoresComponent, {size: 'lg'});
+    this.modal.open(ModalProfesoresComponent, {size: 'md'});
 
   }
 
@@ -60,6 +62,8 @@ export class CrudProfesoresComponent implements OnInit {
   }
 
   public modificarProfesor(dni_profesor: string){
-
+    sessionStorage.setItem("numPeticion", '2');
+    sessionStorage.setItem("dniProfesor", dni_profesor);
+    this.modal.open(ModalProfesoresComponent, {size: 'md'});
   }
 }
