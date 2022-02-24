@@ -5,7 +5,7 @@ import { NgxDropzoneModule } from 'ngx-dropzone';
 import { CsvUploadComponent } from './csv-upload/csv-upload.component';
 import { DataUploadRoutingModule } from './data-upload-routing.module';
 import { ModalInfoComponent } from './modal-info/modal-info.component';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 
