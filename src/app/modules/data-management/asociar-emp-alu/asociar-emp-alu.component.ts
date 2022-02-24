@@ -8,6 +8,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import * as FileSaver from 'file-saver';
+import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 
 
 @Component({
@@ -17,17 +18,22 @@ import * as FileSaver from 'file-saver';
 })
 export class AsociarEmpAluComponent implements OnInit {
 
+  usuario;
   alumnos: Alumno[] = [];
   empresas: Empresa[] = [];
   respuesta: any = [];
   nombreCiclo: string = '';
-  dniTutor: string = '20a';
+  dniTutor?: string;
 
   constructor(
     private alumnosEmpresas: AsociarAlumnoEmpresaService,
     private router: Router,
     private toastr: ToastrService,
-  ) { }
+    private storageUser: LoginStorageUserService,
+  ) {
+    this.usuario = storageUser.getUser();
+    this.dniTutor = this.usuario?.dni
+  }
 
   ngOnInit(): void {
     this.getNombreCiclo();
@@ -59,7 +65,7 @@ export class AsociarEmpAluComponent implements OnInit {
    * @param event
    */
   getAlumnos(): void {
-    this.alumnosEmpresas.solicitarAlumnos(this.dniTutor).subscribe(resultado => {
+    this.alumnosEmpresas.solicitarAlumnos(this.dniTutor!).subscribe(resultado => {
       this.alumnos = resultado
     });
   }
@@ -70,7 +76,7 @@ export class AsociarEmpAluComponent implements OnInit {
    * @param event
    */
   getEmpresas(): void {
-    this.alumnosEmpresas.solicitarEmpresas(this.dniTutor).subscribe(resultado => {
+    this.alumnosEmpresas.solicitarEmpresas(this.dniTutor!).subscribe(resultado => {
       this.empresas = resultado
     });
   }
@@ -81,7 +87,7 @@ export class AsociarEmpAluComponent implements OnInit {
    * @param event
    */
   getNombreCiclo(): void {
-    this.alumnosEmpresas.solicitarNombreCiclo(this.dniTutor).subscribe(
+    this.alumnosEmpresas.solicitarNombreCiclo(this.dniTutor!).subscribe(
       {
         next: (response: any) => {
           this.nombreCiclo = response;
@@ -137,7 +143,7 @@ export class AsociarEmpAluComponent implements OnInit {
  * Esta funcion te permite descargar los anexos que se han generado
  */
   GenerarAnexos(){
-     this.alumnosEmpresas.generarAnexo(this.dniTutor).subscribe({
+     this.alumnosEmpresas.generarAnexo(this.dniTutor!).subscribe({
       next:(res)=>{
         const current= new Date();
         const blob = new Blob([res], {type: 'application/octet-stream'});
