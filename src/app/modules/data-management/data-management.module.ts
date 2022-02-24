@@ -19,6 +19,7 @@ import { ModalEmpresaComponent } from './modal-empresa/modal-empresa.component';
 import { CrudAnexosComponent } from './crud-anexos/crud-anexos.component';
 import { CrudProfesoresComponent } from './crud-profesores/crud-profesores.component';
 import { ModalProfesoresComponent } from './modal-profesores/modal-profesores.component';
+import { ModalDescargaComponent } from './registro-empresa/modal-descarga/modal-descarga.component';
 
 
 
@@ -39,6 +40,7 @@ import { ModalProfesoresComponent } from './modal-profesores/modal-profesores.co
     CrudAnexosComponent,
     CrudProfesoresComponent,
     ModalProfesoresComponent,
+    ModalDescargaComponent,
   ],
   imports: [
     CommonModule,
