@@ -4,6 +4,8 @@ import { ToastrService } from 'ngx-toastr';
 import { Anexo } from 'src/app/models/anexo';
 import { AnexoService } from 'src/app/services/crud-anexos.service';
 import * as FileSaver from 'file-saver';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalFirmaComponent } from '../modal-firma/modal-firma.component';
 
 @Component({
   selector: 'app-crud-anexos',
@@ -13,13 +15,14 @@ import * as FileSaver from 'file-saver';
 export class CrudAnexosComponent implements OnInit {
   //anexos: Anexo[] = [];
   respuesta: any =[];
-  dni_tutor: string = '3c';
+  dni_tutor: string = '20a';
   codigo: string = '';
 
   constructor(
     private anexoService: AnexoService,
     private router: Router,
     private toastr: ToastrService,
+    private modal: NgbModal
     ){ }
 
   ngOnInit(): void {
@@ -27,6 +30,10 @@ export class CrudAnexosComponent implements OnInit {
   }
 
 
+  /**
+   * Este metodo te permite ver los anexos
+   * @author Pablo y Laura
+   */
   public verAnexos(){
     this.anexoService.getAnexos(this.dni_tutor).subscribe((response)=>{
       this.respuesta=response;
@@ -34,8 +41,13 @@ export class CrudAnexosComponent implements OnInit {
     })
   }
 
+  /**
+   *  @author Pablo
+   * @param codigo es el mnombre del anexo a descargar
+   * Este metodo te permite descargar un anexo en concreto, te avisa si ha salido mal o bien
+   */
   public descargarAnexo(codigo: string){
-    this.anexoService.descargarAnexo('3c',codigo).subscribe({
+    this.anexoService.descargarAnexo(this.dni_tutor,codigo).subscribe({
      next:(res)=>{
        const current= new Date();
        const blob = new Blob([res], {type: 'application/octet-stream'});
@@ -52,8 +64,12 @@ export class CrudAnexosComponent implements OnInit {
   }
 
 
+  /**
+   * @author Pablo
+   * Esta funcion te permite descargar todos los anexos, te avisa si la descarga ha salido bien o mal
+   */
   public descargarTodo(){
-    this.anexoService.descargarTodo('3c').subscribe({
+    this.anexoService.descargarTodo(this.dni_tutor).subscribe({
      next:(res)=>{
        const current= new Date();
        const blob = new Blob([res], {type: 'application/octet-stream'});
@@ -69,8 +85,14 @@ export class CrudAnexosComponent implements OnInit {
     this.router.navigate(['/data-management/crud-anexos']);
   }
 
+  /**
+   *  @author Laura <lauramorenoramos97@gmail.com>
+   *Esta funcion te permite eliminar un anexo, suscribiendote al metodo eliminar anexo del servicio
+   Ademas, te avisa si todo ha salido bien o mal, por ultimo, vuelve a llamar a la funcion para
+   que se refresque la vista
+   */
   public eliminarAnexo(codigo: string){
-    this.anexoService.eliminarAnexo('3c',codigo).subscribe({
+    this.anexoService.eliminarAnexo(this.dni_tutor,codigo).subscribe({
      next:(res)=>{
        this.toastr.success('Anexo Eliminado', 'Eliminado');
        this.verAnexos();
@@ -83,6 +105,43 @@ export class CrudAnexosComponent implements OnInit {
     // this.router.navigate(['/data-management/curd-anexos']);
     // this.router.navigate(['/data-management/crud-anexos']);
   }
+
+
+  /**
+   *  @author Pablo
+   * @param codigo es el mnombre del anexo a descargar
+   * Este metodo te permite descargar un anexo en concreto, te avisa si ha salido mal o bien
+   */
+    //  public firmarAnexo(codigo: string){
+    //   this.anexoService.descargarAnexo(this.dni_tutor,codigo).subscribe({
+    //    next:(res)=>{
+    //      const current= new Date();
+    //      const blob = new Blob([res], {type: 'application/octet-stream'});
+    //       FileSaver.saveAs(blob,codigo);
+    //      this.toastr.success('Anexo Descargado', 'Descarga');
+    //    },
+    //    error: e =>{
+    //      console.log(e);
+    //      this.toastr.error('El anexo no ha podido descargarse', 'Fallo');
+    //    }
+    //  })
+    //   // this.router.navigate(['/data-management/curd-anexos']);
+    //   this.router.navigate(['/data-management/crud-anexos']);
+    // }
+
+
+    /**
+   * Abre un modal para la firma del anexo
+   * @author Pablo
+   */
+     public abrirModalFirma(codigo_anexo: string) {
+     const modalFirma = this.modal.open(ModalFirmaComponent, {
+        size: 'md',
+        backdrop: 'static',
+        keyboard: false,
+      });
+      modalFirma.componentInstance.codigo_anexo=codigo_anexo
+    }
 
 
 }
