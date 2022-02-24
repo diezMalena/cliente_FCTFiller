@@ -217,16 +217,29 @@
   </symbol>
 </svg>
 
+<ng-container *ngIf="usuario">
+  <app-header ></app-header>
 
-<app-header></app-header>
-
-<div class="container-fluid flex-grow-1 d-flex h-100">
-  <div class="row flex-fill">
-    <app-navbar class="col-md-3 col-lg-2 d-md-block bg-dark collapse user-select-none h-100"> </app-navbar>
-    <div class="col-md-9 ms-sm-auto col-lg-10 p-3 contenido">
-      <router-outlet class="contenido"></router-outlet>
+  <div class="container-fluid flex-grow-1 d-flex h-100">
+    <div class="row flex-fill">
+      <app-navbar class="col-md-3 col-lg-2 d-md-block bg-dark collapse user-select-none h-100"> </app-navbar>
+      <div class="col-md-9 ms-sm-auto col-lg-10 p-3 contenido">
+        <router-outlet class="contenido"></router-outlet>
+      </div>
     </div>
   </div>
-</div>
+  <app-footer></app-footer>
+</ng-container>
 
-<app-footer></app-footer>
+<ng-container ng-else>
+  <div class="container-fluid h-100 align-items-center">
+    <div class="row flex-fill">
+      <div class="col ms-sm-auto p-3 login">
+        <router-outlet class="login"></router-outlet>
+      </div>
+    </div>
+  </div>
+  <app-footer></app-footer>
+</ng-container>
+
+

@@ -4,6 +4,9 @@ import { ToastrService } from 'ngx-toastr';
 import { Anexo } from 'src/app/models/anexo';
 import { AnexoService } from 'src/app/services/crud-anexos.service';
 import * as FileSaver from 'file-saver';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalFirmaComponent } from '../modal-firma/modal-firma.component';
+import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 
 @Component({
   selector: 'app-crud-anexos',
@@ -12,15 +15,21 @@ import * as FileSaver from 'file-saver';
 })
 export class CrudAnexosComponent implements OnInit {
   //anexos: Anexo[] = [];
-  respuesta: any =[];
-  dni_tutor: string = '1A';
+  usuario;
+  respuesta: any = [];
+  dni_tutor?: string;
   codigo: string = '';
 
   constructor(
     private anexoService: AnexoService,
     private router: Router,
     private toastr: ToastrService,
-    ){ }
+    private modal: NgbModal,
+    private storageUser: LoginStorageUserService,
+  ) {
+    this.usuario = storageUser.getUser();
+    this.dni_tutor = this.usuario?.dni
+  }
 
   ngOnInit(): void {
     this.verAnexos();
@@ -31,9 +40,9 @@ export class CrudAnexosComponent implements OnInit {
    * Este metodo te permite ver los anexos
    * @author Pablo y Laura
    */
-  public verAnexos(){
-    this.anexoService.getAnexos(this.dni_tutor).subscribe((response)=>{
-      this.respuesta=response;
+  public verAnexos() {
+    this.anexoService.getAnexos(this.dni_tutor!).subscribe((response) => {
+      this.respuesta = response;
       console.log(response);
     })
   }
@@ -43,19 +52,19 @@ export class CrudAnexosComponent implements OnInit {
    * @param codigo es el mnombre del anexo a descargar
    * Este metodo te permite descargar un anexo en concreto, te avisa si ha salido mal o bien
    */
-  public descargarAnexo(codigo: string){
-    this.anexoService.descargarAnexo(this.dni_tutor,codigo).subscribe({
-     next:(res)=>{
-       const current= new Date();
-       const blob = new Blob([res], {type: 'application/octet-stream'});
-        FileSaver.saveAs(blob,codigo);
-       this.toastr.success('Anexo Descargado', 'Descarga');
-     },
-     error: e =>{
-       console.log(e);
-       this.toastr.error('El anexo no ha podido descargarse', 'Fallo');
-     }
-   })
+  public descargarAnexo(codigo: string) {
+    this.anexoService.descargarAnexo(this.dni_tutor!, codigo).subscribe({
+      next: (res) => {
+        const current = new Date();
+        const blob = new Blob([res], { type: 'application/octet-stream' });
+        FileSaver.saveAs(blob, codigo);
+        this.toastr.success('Anexo Descargado', 'Descarga');
+      },
+      error: e => {
+        console.log(e);
+        this.toastr.error('El anexo no ha podido descargarse', 'Fallo');
+      }
+    })
     // this.router.navigate(['/data-management/curd-anexos']);
     this.router.navigate(['/data-management/crud-anexos']);
   }
@@ -65,19 +74,19 @@ export class CrudAnexosComponent implements OnInit {
    * @author Pablo
    * Esta funcion te permite descargar todos los anexos, te avisa si la descarga ha salido bien o mal
    */
-  public descargarTodo(){
-    this.anexoService.descargarTodo(this.dni_tutor).subscribe({
-     next:(res)=>{
-       const current= new Date();
-       const blob = new Blob([res], {type: 'application/octet-stream'});
-        FileSaver.saveAs(blob,'backup_'+current.getTime()+'.zip');
-       this.toastr.success('Anexos Descargados', 'Descarga');
-     },
-     error: e =>{
-       console.log(e);
-       this.toastr.error('Los anexos no han podido descargarse', 'Fallo');
-     }
-   })
+  public descargarTodo() {
+    this.anexoService.descargarTodo(this.dni_tutor!).subscribe({
+      next: (res) => {
+        const current = new Date();
+        const blob = new Blob([res], { type: 'application/octet-stream' });
+        FileSaver.saveAs(blob, 'backup_' + current.getTime() + '.zip');
+        this.toastr.success('Anexos Descargados', 'Descarga');
+      },
+      error: e => {
+        console.log(e);
+        this.toastr.error('Los anexos no han podido descargarse', 'Fallo');
+      }
+    })
     // this.router.navigate(['/data-management/curd-anexos']);
     this.router.navigate(['/data-management/crud-anexos']);
   }
@@ -88,20 +97,57 @@ export class CrudAnexosComponent implements OnInit {
    Ademas, te avisa si todo ha salido bien o mal, por ultimo, vuelve a llamar a la funcion para
    que se refresque la vista
    */
-  public eliminarAnexo(codigo: string){
-    this.anexoService.eliminarAnexo(this.dni_tutor,codigo).subscribe({
-     next:(res)=>{
-       this.toastr.success('Anexo Eliminado', 'Eliminado');
-       this.verAnexos();
-     },
-     error: e =>{
-       console.log(e);
-       this.toastr.error('El anexo no ha podido eliminarse', 'Fallo');
-     }
-   })
+  public eliminarAnexo(codigo: string) {
+    this.anexoService.eliminarAnexo(this.dni_tutor!, codigo).subscribe({
+      next: (res) => {
+        this.toastr.success('Anexo Eliminado', 'Eliminado');
+        this.verAnexos();
+      },
+      error: e => {
+        console.log(e);
+        this.toastr.error('El anexo no ha podido eliminarse', 'Fallo');
+      }
+    })
     // this.router.navigate(['/data-management/curd-anexos']);
     // this.router.navigate(['/data-management/crud-anexos']);
   }
+
+
+  /**
+   *  @author Pablo
+   * @param codigo es el mnombre del anexo a descargar
+   * Este metodo te permite descargar un anexo en concreto, te avisa si ha salido mal o bien
+   */
+    //  public firmarAnexo(codigo: string){
+    //   this.anexoService.descargarAnexo(this.dni_tutor,codigo).subscribe({
+    //    next:(res)=>{
+    //      const current= new Date();
+    //      const blob = new Blob([res], {type: 'application/octet-stream'});
+    //       FileSaver.saveAs(blob,codigo);
+    //      this.toastr.success('Anexo Descargado', 'Descarga');
+    //    },
+    //    error: e =>{
+    //      console.log(e);
+    //      this.toastr.error('El anexo no ha podido descargarse', 'Fallo');
+    //    }
+    //  })
+    //   // this.router.navigate(['/data-management/curd-anexos']);
+    //   this.router.navigate(['/data-management/crud-anexos']);
+    // }
+
+
+    /**
+   * Abre un modal para la firma del anexo
+   * @author Pablo
+   */
+     public abrirModalFirma(codigo_anexo: string) {
+     const modalFirma = this.modal.open(ModalFirmaComponent, {
+        size: 'md',
+        backdrop: 'static',
+        keyboard: false,
+      });
+      modalFirma.componentInstance.codigo_anexo=codigo_anexo
+    }
 
 
 }
