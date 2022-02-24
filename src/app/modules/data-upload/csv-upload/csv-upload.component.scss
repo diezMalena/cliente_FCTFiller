@@ -11,13 +11,13 @@
 .inputfile:focus + label,
 .inputfile.has-focus + label,
 .inputfile + label:hover {
-  color: #077d3f;
+  color: #173117;
 }
 
 .inputfile + label figure {
   width: 75px;
   height: 101px;
-  background-color: #8cc08b;
+  background-color: #295B29;
   display: block;
   position: relative;
   padding: 30px;
@@ -27,7 +27,7 @@
 .inputfile:focus + label figure,
 .inputfile.has-focus + label figure,
 .inputfile + label:hover figure {
-  background-color: #077d3f;
+  background-color: #173117;
 }
 
 .inputfile + label figure::before,
@@ -46,14 +46,15 @@
 }
 
 .inputfile + label figure::after {
-  border-bottom: 20px solid #077d3f;
+  border-bottom: 20px solid #173117;
   border-right: 20px solid transparent;
+  background-color: #ffffff;
 }
 
 .inputfile:focus + label figure::after,
 .inputfile.has-focus + label figure::after,
 .inputfile + label:hover figure::after {
-  border-bottom-color: #8cc08b;
+  border-bottom-color: #295B29;
 }
 
 .inputfile + label svg {
@@ -81,4 +82,8 @@
 
 .box + .box {
   margin-top: 2.5rem;
+}
+
+ngx-dropzone {
+  background-color: transparent;
 }
