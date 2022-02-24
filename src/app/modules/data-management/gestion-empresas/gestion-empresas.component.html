@@ -1,5 +1,5 @@
 <h1 class="fs-2">Gestión de empresas</h1>
-<div class="row d-flex align-items-center p-2">
+<div class="d-flex align-items-center py-2 justify-content-between">
   <div class="input-group w-50 me-auto px-0">
     <span class="input-group-text" id="buscar-empresa">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search"
@@ -12,8 +12,7 @@
     <input type="text" class="form-control" placeholder="Buscar empresa" aria-label="Buscar empresa"
       aria-describedby="buscar-empresa">
   </div>
-  <a href="data-management/registro-empresa/representante" class="btn btn-outline-primary w-25 float-end">
-    Registrar empresa
+  <a href="data-management/registro-empresa/representante" aria-label="Registrar empresa" class="btn btn-outline-primary" placement="left" ngbTooltip="Registrar empresa">
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square-fill"
       viewBox="0 0 16 16">
       <path
@@ -25,7 +24,7 @@
 <div class="row">
   <div class="col-12 p-2 table-responsive">
     <table class="table table-striped table-hover">
-      <thead class="table-primary">
+      <thead class="table-primary text-white">
         <tr>
           <th>CIF</th>
           <th>Nombre</th>
@@ -34,14 +33,14 @@
           <th colspan="2">Acciones</th>
         </tr>
       </thead>
-      <tbody class="table-secondary">
+      <tbody>
         <tr *ngFor="let empresa of empresas">
-          <td class="align-middle cursor-pointer" (click)="mostrarEmpresa(empresa, false)">{{empresa.cif}}</td>
-          <td class="align-middle cursor-pointer" (click)="mostrarEmpresa(empresa, false)">{{empresa.nombre}}</td>
-          <td class="align-middle cursor-pointer" (click)="mostrarEmpresa(empresa, false)">{{empresa.email}}</td>
-          <td class="align-middle cursor-pointer" (click)="mostrarEmpresa(empresa, false)">{{empresa.localidad}}</td>
+          <td class="align-middle cursor-pointer" attr.aria-label="Ver en detalle {{empresa.nombre}}" (click)="mostrarEmpresa(empresa, false)">{{empresa.cif}}</td>
+          <td class="align-middle cursor-pointer" attr.aria-label="Ver en detalle {{empresa.nombre}}" (click)="mostrarEmpresa(empresa, false)">{{empresa.nombre}}</td>
+          <td class="align-middle cursor-pointer" attr.aria-label="Ver en detalle {{empresa.nombre}}" (click)="mostrarEmpresa(empresa, false)">{{empresa.email}}</td>
+          <td class="align-middle cursor-pointer" attr.aria-label="Ver en detalle {{empresa.nombre}}" (click)="mostrarEmpresa(empresa, false)">{{empresa.localidad}}</td>
           <td class="align-middle">
-            <button class="btn btn-outline-warning px-2 py-1" (click)="mostrarEmpresa(empresa, true)">
+            <button class="btn btn-outline-warning px-2 py-1" (click)="mostrarEmpresa(empresa, true)" placement="left" ngbTooltip="Editar empresa" attr.aria-label="Editar {{empresa.nombre}}">
               <svg class="bi" width="16" height="16">
                 <use xlink:href="#lapiz" />
               </svg>
@@ -55,7 +54,7 @@
             </button>
           </td>
           <td class="align-middle">
-            <button class="btn btn-outline-danger px-2 py-1" (click)="deleteEmpresa(empresa.id)">
+            <button class="btn btn-outline-danger px-2 py-1" (click)="deleteEmpresa(empresa)" placement="left" ngbTooltip="Eliminar empresa" attr.aria-label="Eliminar {{empresa.nombre}}">
               <svg class="bi" width="16" height="16">
                 <use xlink:href="#papelera" />
               </svg>
