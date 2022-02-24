@@ -10,6 +10,9 @@ export class RegistroEmpresaService {
   public ruta: string = "http://localhost:8000/api/";
   constructor(private http: HttpClient) { }
 
+  /**
+   * @author Malena
+   */
   public enviarDatos(datos:object){
     //console.log(datos);
     let url: string = this.ruta + "addDatosEmpresa";
@@ -19,6 +22,9 @@ export class RegistroEmpresaService {
     return this.http.post(url, datos, {headers: headers});
   }
 
+  /**
+   * @author Malena
+   */
   public descargarAnexo0(ruta:string){
     let dato= {ruta_anexo:ruta};
     const url: string= this.ruta+'descargarAnexo0';

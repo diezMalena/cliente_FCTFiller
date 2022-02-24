@@ -117,6 +117,9 @@ export class ResumenComponent implements OnInit {
     return this.resumen.controls;
   }
 
+  /**
+   * @author Malena
+   */
   onSubmit(){
     this.submitted = true;
     if (!this.resumen.valid) return;

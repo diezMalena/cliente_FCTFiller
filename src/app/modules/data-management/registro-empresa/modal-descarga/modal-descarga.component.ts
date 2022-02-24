@@ -37,6 +37,9 @@ export class ModalDescargaComponent implements OnInit {
     this.modalActive.dismiss();
   }
 
+  /**
+   * @author Malena
+   */
   descargarDocumento(){
     this.registroEmpresaService.descargarAnexo0(this.ruta_anexo).subscribe({
       next: (response: any) => {
@@ -56,6 +59,9 @@ export class ModalDescargaComponent implements OnInit {
     this.router.navigateByUrl('');
   }
 
+  /**
+   * @author Malena
+   */
   goHomePage(){
     this.closeModel();
     this.router.navigateByUrl('');
