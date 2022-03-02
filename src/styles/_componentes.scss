@@ -4,7 +4,17 @@
   background-color: $light;
 }
 
+.login {
+  overflow-y: auto;
+  height: calc(100vh - 40px);
+  background-color: $light;
+}
+
 body {
   overflow: hidden;
 }
 
+.mat-dialog-container {
+  background-color: $light !important;
+  color: $dark !important;
+}

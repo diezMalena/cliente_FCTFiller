@@ -17,6 +17,11 @@ import { DragDropModule } from  '@angular/cdk/drag-drop';
 import { GestionEmpresasComponent } from './gestion-empresas/gestion-empresas.component';
 import { ModalEmpresaComponent } from './modal-empresa/modal-empresa.component';
 import { CrudAnexosComponent } from './crud-anexos/crud-anexos.component';
+import { ModalFirmaComponent } from './modal-firma/modal-firma.component';
+import { SignaturePadModule } from 'angular2-signaturepad';
+import { CrudProfesoresComponent } from './crud-profesores/crud-profesores.component';
+import { ModalProfesoresComponent } from './modal-profesores/modal-profesores.component';
+import { ModalDescargaComponent } from './registro-empresa/modal-descarga/modal-descarga.component';
 
 
 
@@ -35,6 +40,10 @@ import { CrudAnexosComponent } from './crud-anexos/crud-anexos.component';
     GestionEmpresasComponent,
     ModalEmpresaComponent,
     CrudAnexosComponent,
+    ModalFirmaComponent,
+    CrudProfesoresComponent,
+    ModalProfesoresComponent,
+    ModalDescargaComponent,
   ],
   imports: [
     CommonModule,
@@ -43,6 +52,7 @@ import { CrudAnexosComponent } from './crud-anexos/crud-anexos.component';
     DataManagementRoutingModule,
     NgbModule,
     DragDropModule,
+    SignaturePadModule,
   ]
 })
 export class DataManagementModule { }

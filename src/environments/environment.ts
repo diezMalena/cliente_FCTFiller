@@ -11,6 +11,7 @@ export const environment = {
   notas: "notas",
   unidades: "unidades",
   profesores: "profesores",
+  apiUrlFirma: "http://localhost:8000/api/"
 };
 
 
