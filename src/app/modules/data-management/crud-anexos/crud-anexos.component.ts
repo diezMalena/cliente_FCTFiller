@@ -4,6 +4,8 @@ import { ToastrService } from 'ngx-toastr';
 import { Anexo } from 'src/app/models/anexo';
 import { AnexoService } from 'src/app/services/crud-anexos.service';
 import * as FileSaver from 'file-saver';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalFirmaComponent } from '../modal-firma/modal-firma.component';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 
 @Component({
@@ -22,6 +24,7 @@ export class CrudAnexosComponent implements OnInit {
     private anexoService: AnexoService,
     private router: Router,
     private toastr: ToastrService,
+    private modal: NgbModal,
     private storageUser: LoginStorageUserService,
   ) {
     this.usuario = storageUser.getUser();
@@ -108,6 +111,43 @@ export class CrudAnexosComponent implements OnInit {
     // this.router.navigate(['/data-management/curd-anexos']);
     // this.router.navigate(['/data-management/crud-anexos']);
   }
+
+
+  /**
+   *  @author Pablo
+   * @param codigo es el mnombre del anexo a descargar
+   * Este metodo te permite descargar un anexo en concreto, te avisa si ha salido mal o bien
+   */
+    //  public firmarAnexo(codigo: string){
+    //   this.anexoService.descargarAnexo(this.dni_tutor,codigo).subscribe({
+    //    next:(res)=>{
+    //      const current= new Date();
+    //      const blob = new Blob([res], {type: 'application/octet-stream'});
+    //       FileSaver.saveAs(blob,codigo);
+    //      this.toastr.success('Anexo Descargado', 'Descarga');
+    //    },
+    //    error: e =>{
+    //      console.log(e);
+    //      this.toastr.error('El anexo no ha podido descargarse', 'Fallo');
+    //    }
+    //  })
+    //   // this.router.navigate(['/data-management/curd-anexos']);
+    //   this.router.navigate(['/data-management/crud-anexos']);
+    // }
+
+
+    /**
+   * Abre un modal para la firma del anexo
+   * @author Pablo
+   */
+     public abrirModalFirma(codigo_anexo: string) {
+     const modalFirma = this.modal.open(ModalFirmaComponent, {
+        size: 'md',
+        backdrop: 'static',
+        keyboard: false,
+      });
+      modalFirma.componentInstance.codigo_anexo=codigo_anexo
+    }
 
 
 }
