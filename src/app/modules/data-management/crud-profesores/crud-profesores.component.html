@@ -24,7 +24,6 @@
                                     </thead>
                                     <tbody>
                                         <tr *ngFor="let p of profesores; index as i">
-
                                             <td class="cursor-pointer" (click)="verProfesor(p.dni)" scope="col">
                                                 <p>{{p.apellidos}}</p>
                                             </td>
@@ -45,14 +44,13 @@
                                                     <use xlink:href="#lapiz" />
                                                   </svg>
                                             </button>
-                                                <button (click)="eliminarProfesor(p.dni)" class="btn btn-outline-danger px-2 py-1 me-2" type="submit">
+
+                                                <button *ngIf="p.dni != this.dni" (click)="eliminarProfesor(p.dni)" class="btn btn-outline-danger px-2 py-1 me-2" type="submit">
                                                   <svg class="bi" width="16" height="16">
                                                     <use xlink:href="#papelera" />
                                                   </svg>
                                               </button>
-
                                             </td>
-
                                         </tr>
                                     </tbody>
                                 </table>

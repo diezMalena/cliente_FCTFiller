@@ -4,7 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { CrudProfesoresService } from 'src/app/services/crud-profesores.service';
 import { ModalProfesoresComponent } from '../modal-profesores/modal-profesores.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-
+import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 
 @Component({
   selector: 'app-crud-profesores',
@@ -15,24 +15,36 @@ export class CrudProfesoresComponent implements OnInit {
 
   profesores: any =[];
   profesor: any = [];
-  dni: string = '1A';
+  usuario;
+  dni?: string;
+
   constructor(
     private profesoresService: CrudProfesoresService,
     private router: Router,
     private toastr: ToastrService,
-    private modal: NgbModal
-  ) { }
+    private modal: NgbModal,
+    private storageUser: LoginStorageUserService,
+  ) {
+    this.usuario = storageUser.getUser();
+    this.dni = this.usuario?.dni
+   }
 
   ngOnInit(): void {
-    this.verProfesores();
+  this.verProfesores();
+  this.getArrayProfesores();
   }
 
   public verProfesores(){
-    this.profesoresService.getProfesores(this.dni).subscribe((response)=>{
+    this.profesoresService.getProfesores(this.dni!).subscribe((response)=>{
       this.profesores=response;
     })
   }
 
+  public getArrayProfesores(){
+    this.profesoresService.profesoresArray.subscribe(array => {
+      this.profesores = array;
+    });
+  }
 
   //0 ver, 1 es crear y 2 es editar
 
