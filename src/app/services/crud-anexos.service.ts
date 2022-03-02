@@ -61,6 +61,9 @@ export class AnexoService {
    * Este metodo hace una llamada a la api y elimina un anexo
    */
   public eliminarAnexo(dni_tutor: string, cod_anexo: string){
+    cod_anexo = cod_anexo.replace('/', "*");
+    cod_anexo = cod_anexo.replace('/', "*");
+
     let url: string = this.ruta+'eliminarAnexo/'+dni_tutor+'/'+cod_anexo;
     let headers= new HttpHeaders({
       'Content-Type' : 'application/json',
