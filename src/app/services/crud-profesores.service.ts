@@ -4,6 +4,7 @@ import { profesorCreateResponse } from '../models/profesores/profesorCreateRespo
 import { ProfesorCreate } from '../models/profesores/profesorCreate';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,7 @@ export class CrudProfesoresService {
   constructor(private http: HttpClient) { }
 
   public ruta='http://127.0.0.1:8000/api/';
+  public profesoresArray = new BehaviorSubject<string>('');
 
   /**
    * @author Laura <lauramorenoramos@gmail.com>
@@ -100,5 +102,14 @@ public editarUser(usuario: ProfesorCreate){
       })
     );
 
+  }
+
+  /**
+   *  @author Laura <lauramorenoramos@gmail.com>
+   * Esta funcion recoge el nuevo array de profesores en una variable
+   * @param arrayProfesores
+   */
+  public getProfesoresInArray(arrayProfesores: string){
+    this.profesoresArray.next(arrayProfesores);
   }
 }

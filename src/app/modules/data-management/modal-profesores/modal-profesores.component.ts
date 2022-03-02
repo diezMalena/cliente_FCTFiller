@@ -4,6 +4,7 @@ import { CrudProfesoresService } from 'src/app/services/crud-profesores.service'
 import { FormBuilder, FormControl,FormGroup, Validators } from '@angular/forms';
 import { ProfesorCreate } from 'src/app/models/profesores/profesorCreate';
 import { ToastrService } from 'ngx-toastr';
+import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 
 @Component({
   selector: 'app-modal-profesores',
@@ -16,8 +17,10 @@ export class ModalProfesoresComponent implements OnInit {
   public profesor: any = [];
   public numero : any;
   public roles: any=[];
-  public dniPersonaRegistrada='1A';
+  public profesoresArray: any = [];
   submitted: boolean =false;
+  dni?: string;
+  usuario;
 
   datosProfesor:FormGroup;
   constructor(
@@ -25,9 +28,13 @@ export class ModalProfesoresComponent implements OnInit {
     private modalActive: NgbActiveModal,
     private profesorService: CrudProfesoresService,
     private toastr: ToastrService,
+    private storageUser: LoginStorageUserService
   ) {
 
     this.numero=  sessionStorage.getItem("numPeticion");
+
+    this.usuario = storageUser.getUser();
+    this.dni = this.usuario?.dni
 
     this.datosProfesor= this.formBuilder.group({
       dni:['',[Validators.required]],
@@ -94,6 +101,19 @@ export class ModalProfesoresComponent implements OnInit {
     this.datosProfesor.controls['apellido'].setValue(this.profesor[0].apellidos);
     this.datosProfesor.controls['password1'].setValue(this.profesor[0].password1);
     this.datosProfesor.controls['password2'].setValue(this.profesor[0].password2);
+
+    let rolesAux = document.querySelectorAll('#rolesUsers input') as NodeListOf<HTMLInputElement>;
+
+    this.profesor[0].roles.forEach((r: number   )=> {
+    rolesAux .forEach((element: { checked: any; value: string; }) => {
+      if (element) {
+        let elemento = parseInt(element.value);
+        if(r == elemento){
+          element.checked= true;
+        }
+      }
+    });
+  });
   }
 
 
@@ -113,14 +133,19 @@ export class ModalProfesoresComponent implements OnInit {
       this.roles = document.querySelectorAll('#rolesUsers input') as NodeListOf<HTMLInputElement>;
       let rolesAux: any = [];
       let i : number = 0;
+      let hayAlMenosUnRol = false;
 
       this.roles .forEach((element: { checked: any; value: string; }) => {
         if (element.checked) {
+          hayAlMenosUnRol = true;
           rolesAux[i]=parseInt(element.value);
           i++;
         }
       });
 
+      if(hayAlMenosUnRol == false){
+        this.toastr.error('Tienes que poner un rol como minimo', 'Fallo');
+      }else{
       let dniAnt : any=sessionStorage.getItem('dniAnt');
       let usuario= new ProfesorCreate(
         this.datosProfesor.value.dni,
@@ -137,14 +162,20 @@ export class ModalProfesoresComponent implements OnInit {
          this.profesorService.editarUser(usuario).subscribe({
           next:()=>{
             this.toastr.success('Profesor Editado', 'Logrado!');
+            this.recogerProfesores();
+            this.CloseModal();
           },
           error: e =>{
             this.toastr.error('Error al editar', 'Error');
           }
         })
+      }
 
   }
 
+  /**
+   * Esta funcion te permite cerrar un modal con la cruz situada arriba a la derecha
+   */
   CloseModal(){
     this.modalActive.dismiss();
   }
@@ -159,6 +190,7 @@ export class ModalProfesoresComponent implements OnInit {
 
     let i : number = 0;
     let rolesAux: any = [];
+    let hayAlMenosUnRol = false;
 
     this.submitted=true;
     if(this.datosProfesor.invalid)
@@ -169,30 +201,55 @@ export class ModalProfesoresComponent implements OnInit {
 
       this.roles .forEach((element: { checked: any; value: string; }) => {
         if (element.checked) {
+          hayAlMenosUnRol = true;
           rolesAux[i]=parseInt(element.value);
           i++;
         }
       });
 
-      let usuario= new ProfesorCreate(
-        this.datosProfesor.value.dni,
-        this.datosProfesor.value.email,
-        this.datosProfesor.value.nombre,
-        this.datosProfesor.value.apellido,
-        this.datosProfesor.value.password1,
-        this.datosProfesor.value.password2,
-        rolesAux,
-         this.dniPersonaRegistrada
-         );
+      if(hayAlMenosUnRol == false){
+        this.toastr.error('Tienes que poner un rol como minimo', 'Fallo');
+      }else{
+        let usuario= new ProfesorCreate(
+          this.datosProfesor.value.dni,
+          this.datosProfesor.value.email,
+          this.datosProfesor.value.nombre,
+          this.datosProfesor.value.apellido,
+          this.datosProfesor.value.password1,
+          this.datosProfesor.value.password2,
+          rolesAux,
+           this.dni
+           );
 
-         console.log(usuario);
+           console.log(usuario);
 
-         this.profesorService.registrarProfesor(usuario).subscribe({
-          next:()=>{
-            this.toastr.success('Profesor Creado', 'Logrado!');          },
-          error: e =>{
-            this.toastr.error('El profesor no ha podido crearse', 'Fallo');
-          }
-        });
+           this.profesorService.registrarProfesor(usuario).subscribe({
+            next:()=>{
+              this.toastr.success('Profesor Creado', 'Logrado!');
+              this.recogerProfesores();
+            this.CloseModal();      },
+            error: e =>{
+              this.toastr.error('El profesor no ha podido crearse', 'Fallo');
+            }
+          });
+      }
+  }
+
+
+/**
+ *  @author Laura <lauramorenoramos@gmail.com>
+ * Esta funcion recoge  el nuevo array actualizado de profesores para darselo
+ * a la ventana principal y que se muestre actualizada
+ */
+  public recogerProfesores(){
+    this.profesorService.getProfesores(this.dni!).subscribe({
+      next: (response: any) => {
+        this.profesoresArray = response;
+        this.profesorService.getProfesoresInArray(this.profesoresArray);
+      },
+      error: e => {
+        this.toastr.error('Los profesores no han podido mostrarse', 'Fallo');
+      }
+    });
   }
 }
