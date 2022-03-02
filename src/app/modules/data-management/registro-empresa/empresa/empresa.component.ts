@@ -16,6 +16,7 @@ export class EmpresaComponent implements OnInit {
   nombreEmpresa?;
   telefonoEmpresa?;
   cif?;
+  tipoEmpresa?;
 
   constructor(
 
@@ -29,6 +30,7 @@ export class EmpresaComponent implements OnInit {
     this.nombreEmpresa = '';
     this.telefonoEmpresa = '';
     this.cif = '';
+    this.tipoEmpresa = '0';
 
     if(sessionStorage.getItem(EmpresaComponent.empresa) != null){
       empresa = sessionStorage.getItem(EmpresaComponent.empresa)!;
@@ -37,13 +39,15 @@ export class EmpresaComponent implements OnInit {
       this.nombreEmpresa = datosEmpresa["nombre"] ? datosEmpresa["nombre"] : '';
       this.telefonoEmpresa = datosEmpresa["telefono"] ? datosEmpresa["telefono"] : '';
       this.cif = datosEmpresa["cif"] ? datosEmpresa["cif"] : '';
+      this.tipoEmpresa = datosEmpresa["tipoEmpresa"] ? datosEmpresa["tipoEmpresa"] : '0';
     }
 
     this.empresa = this.formBuilder.group({
       email: [this.correoEmpresa,[Validators.required, Validators.email]],
       nombre: [this.nombreEmpresa,[Validators.required]],
       telefono: [this.telefonoEmpresa, [Validators.required, Validators.minLength(9), Validators.maxLength(9)]],
-      cif: [this.cif,[Validators.required, Validators.minLength(9), Validators.maxLength(9)]]
+      cif: [this.cif,[Validators.required, Validators.minLength(9), Validators.maxLength(9)]],
+      tipoEmpresa: [this.tipoEmpresa,[Validators.required]],
     });
 
   }
@@ -64,12 +68,15 @@ export class EmpresaComponent implements OnInit {
     var nombre = this.empresa.value.nombre;
     var telefono = this.empresa.value.telefono;
     var cif = this.empresa.value.cif;
+    var tipoEmpresa = this.empresa.value.tipoEmpresa;
+    // console.log(tipoEmpresa);
 
     var datosEmpresa = {
       'correo': correo,
       'nombre': nombre,
       'telefono': telefono,
       'cif': cif,
+      'tipoEmpresa': tipoEmpresa,
     }
 
     sessionStorage.setItem(EmpresaComponent.empresa, JSON.stringify(datosEmpresa));

@@ -1,76 +1,82 @@
-<div class="container-fluid">
-    <div class="row" cdkDropListGroup>
-        <div class="col-sm-12">
-            <div class="row">
-                <div class="col-sm-12 text-center mt-2">
-                    <h1>{{nombreCiclo}}</h1>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <p class="bg-info bg-opacity-25">
-                        <b>Arrastre</b> a los alumnos a sus empresas y rellene todos sus campos. El <b>primer campo</b> de todos es el <b>nombre del responsable</b> de la empresa.<br> El primer campo de los alumnos es su <b>horario en la empresa</b>,
-                        el segundo la <b>fecha de inicio</b> de las prácticas, y el último, la <b>fecha de finalización</b> de las prácticas.<br> Puede <b>mover</b> a los alumnos de nuevo al cuadro de 'Alumnos' si los quiere <b>desasignar</b>.
-                    </p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4 col-sm-6 mt-1">
-                    <div class="row">
-                        <div class="col-12">
-                            <h2 class="h4">Alumnos</h2>
-                            <div class="row">
-                                <div class="col-sm-9">
-                                    <div class="card">
-                                        <div class="card-body ps-3" cdkDropList [cdkDropListData]="alumnos" (cdkDropListDropped)="drop($event)">
-                                            <div *ngFor="let alumno of alumnos" ngClass="alumnos bg-warning bg-opacity-50 rounded border border-3 border-secondary mb-2" attr.id="{{alumno.dni}}" cdkDrag>
-                                                {{alumno.nombre}}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+<!--Títulos de las secciones-->
+<div class="row">
+  <div class="page-header d-flex justify-content-between pb-3">
+    <h1 class="h2">Asignación de alumnos de {{nombreCiclo}} </h1>
+    <button type="button" class="btn btn-outline-secondary mr-2" placement="left" ngbTooltip="Haga clic para acceder a la ayuda de esta sección">?</button>
+  </div>
+</div>
+
+<!--Contenido de las secciones-->
+<div class="card p-3" cdkDropListGroup>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="row bg-white p-2 rounded border-white">
+        <div class="col-md-4 col-sm-6 mt-1">
+          <div class="row">
+            <div class="col-12">
+              <h2 class="h4">Alumnos</h2>
+              <div class="row">
+                <div class="col-sm-9">
+                  <div class="card">
+                    <div class="card-body ps-3" cdkDropList [cdkDropListData]="alumnos"
+                      (cdkDropListDropped)="drop($event)">
+                      <div *ngFor="let alumno of alumnos"
+                        ngClass="alumnos text-white bg-secondary rounded border-secondary row p-1 mb-2"
+                        attr.id="{{alumno.dni}}" cdkDrag>
+                        {{alumno.nombre}}
+                      </div>
                     </div>
+                  </div>
                 </div>
-                <div class="col-md-8 col-sm-6 mt-1">
-                    <div class="row">
-                        <div class="col-12">
-                            <h2 class="h4">Empresas</h2>
-                            <div class="row">
-                                <div class="col">
-                                    <div *ngFor="let empresa of empresas" ngClass="row mb-2 bg-primary bg-opacity-50 p-2 border border-primary rounded" attr.id="{{empresa.id}}">
-                                        <div class="col">
-                                            <label class="row" for="responsable{{empresa.dni_responsable}}">
-                                                <h3 class="col-4 h5">{{empresa.nombre}}</h3>
-                                                <span class="col-4 text-end" for="responsableEmpresa">Responsable de la empresa:</span>
-                                                <input aria-label="responsable de la empresa" class="col-4" type="text" id="responsable{{empresa.dni_responsable}}" [(ngModel)]="empresa.nombre_responsable">
-                                            </label>
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <div cdkDropList [cdkDropListData]="empresa.alumnos" class="py-3" (cdkDropListDropped)="drop($event)">
-                                                        <div *ngFor="let alumno2 of empresa.alumnos" ngClass="alumnos bg-warning bg-opacity-50 rounded border border-3 border-secondary row p-1 mb-2" attr.id="{{alumno2.dni}}" cdkDrag>
-                                                            <span class="col-12 col-md-3">{{alumno2.nombre}}</span>
-                                                            <input aria-label="horario del alumno" class="col-12 col-md-3" placeholder="Horario" type="text" [(ngModel)]="alumno2.horario">
-                                                            <input aria-label="fecha de inicio de prácticas" class="col-12 col-md-3" type="date" [(ngModel)]="alumno2.fecha_ini">
-                                                            <input aria-label="fecha de fin de prácticas" class="col-12 col-md-3" type="date" [(ngModel)]="alumno2.fecha_fin">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+              </div>
             </div>
-            <div class="row d-flex justify-content-center">
-                <div class="col-sm-12 mt-1 text-center">
-                    <input type="button" class="btn btn-primary m-1" value="Guardar y Generar Word" (click)='setCambiosEmpresas()'>
-                </div>
-            </div>
+          </div>
         </div>
+        <div class="col-md-8 col-sm-6 mt-1">
+          <div class="row">
+            <div class="col-12">
+              <h2 class="h4">Empresas</h2>
+              <div class="row">
+                <div class="col">
+                  <div *ngFor="let empresa of empresas"
+                    ngClass="row mb-2 bg-primary p-2 border border-primary rounded text-white" attr.id="{{empresa.id}}">
+                    <div class="col">
+                      <label class="row" for="responsable{{empresa.dni_responsable}}">
+                        <h3 class="col-4 h5">{{empresa.nombre}}</h3>
+                        <span class="col-4 text-end" for="responsableEmpresa">Responsable de la empresa:</span>
+                        <input aria-label="responsable de la empresa" class="col-4" type="text"
+                          id="responsable{{empresa.dni_responsable}}" [(ngModel)]="empresa.nombre_responsable">
+                      </label>
+                      <div class="row">
+                        <div class="col-12">
+                          <div cdkDropList [cdkDropListData]="empresa.alumnos" class="py-3"
+                            (cdkDropListDropped)="drop($event)">
+                            <div *ngFor="let alumno2 of empresa.alumnos"
+                              ngClass="alumnos text-white bg-secondary rounded border-secondary row p-1 mb-2"
+                              attr.id="{{alumno2.dni}}" cdkDrag>
+                              <span class="col-12 col-md-3">{{alumno2.nombre}}</span>
+                              <input aria-label="horario del alumno" class="col-12 col-md-3" placeholder="Horario"
+                                type="text" [(ngModel)]="alumno2.horario">
+                              <input aria-label="fecha de inicio de prácticas" class="col-12 col-md-3" type="date"
+                                [(ngModel)]="alumno2.fecha_ini">
+                              <input aria-label="fecha de fin de prácticas" class="col-12 col-md-3" type="date"
+                                [(ngModel)]="alumno2.fecha_fin">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 mt-1 text-center">
+          <input type="button" class="btn btn-outline-primary m-1" value="Guardar y Generar Word"
+            (click)='setCambiosEmpresas()'>
+        </div>
+      </div>
     </div>
+  </div>
 </div>

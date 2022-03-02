@@ -1,0 +1,213 @@
+<div class="card" *ngIf="this.numero=='0'">
+    <div class="modal-header">
+        <h1 class="modal-title fs-4">Perfil de {{profesor[0].nombre}} </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="CloseModal()"></button>
+    </div>
+    <div class="modal-body">
+        <form class="needs-validation">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label for="cif" class="form-label"><b>Nombre:</b></label>
+                    <input type="text" class="form-control-plaintext" id="nombre" value="{{profesor[0].nombre}}" readonly>
+                </div>
+
+                <div class="col-md-8">
+                    <label for="nombre_empresa" class="form-label"><b>Apellido:</b></label>
+                    <input type="text" class="form-control-plaintext" id="apellido" value="{{profesor[0].apellidos}}" readonly>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="telefono" class="form-label"><b>DNI:</b></label>
+                    <input type="text" class="form-control-plaintext" id="dni" value="{{profesor[0].dni}}" readonly>
+                </div>
+
+                <div class="col-md-8">
+                    <label for="email_empresa" class="form-label"><b>Email:</b></label>
+                    <input type="text" class="form-control-plaintext" id="email_profesor" value="{{profesor[0].email}}" readonly>
+                </div>
+            </div>
+
+            <hr class="my-3">
+            <div class="row g-3">
+                <label for="roles" class="form-label"><b>Roles:</b></label>
+                <div class="col-md-4" *ngFor="let p of profesor; index as i">
+                    <div class="col-md-9" *ngFor="let r of p.roles; index as i">
+                        <div *ngIf="r==1">
+                            <input type="text" class="form-control-plaintext" id="roles{{i}}" value="Director">
+                        </div>
+                        <div *ngIf="r==2">
+                            <input type="text" class="form-control-plaintext" id="roles{{i}}" value="Jefe de estudios">
+                        </div>
+                        <div *ngIf="r==3">
+                            <input type="text" class="form-control-plaintext" id="roles{{i}}" value="Tutor">
+                        </div>
+                        <div *ngIf="r==4">
+                            <input type="text" class="form-control-plaintext" id="roles{{i}}" value="Profesor">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!----------------------------------------Crear Usuario------------------------------------------------>
+<div class="card" *ngIf="this.numero=='1'">
+    <div class="modal-header">
+        <h1 class="modal-title fs-4">Crear Usuario: </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="CloseModal()"></button>
+    </div>
+    <div class="modal-body">
+        <form class="needs-validation" novalidate="" [formGroup]="datosProfesor" (ngSubmit)="onSubmitCreate()">
+            <div class="row g-3">
+                <div class="col-md-8 pb-2">
+                    <label for="nombre" class="form-label"><b>Nombre:</b></label>
+                    <input type="text" class="form-control" id="nombre" placeholder="Maria" formControlName="nombre">
+                    <div *ngIf="submitted && formulario['nombre'].errors">
+                        <div *ngIf="formulario['nombre'].errors['required']">El nombre no puede estar vacio</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8 pb-2">
+                <label for="apellido" class="form-label"><b>Apellido:</b></label>
+                <input type="text" class="form-control" id="nombre_empresa" placeholder="Fernandez" formControlName="apellido">
+                <div *ngIf="submitted && formulario['apellido'].errors">
+                    <div *ngIf="formulario['apellido'].errors['required']">El apellido no puede estar vacio</div>
+                </div>
+            </div>
+
+            <div class="col-md-8 pb-2">
+                <label for="dni" class="form-label"><b>DNI:</b></label>
+                <input type="text" class="form-control" id="dni" placeholder="00000000X" formControlName="dni">
+                <div *ngIf="submitted && formulario['dni'].errors">
+                    <div *ngIf="formulario['dni'].errors['required']">El dni no puede estar vacio</div>
+                </div>
+            </div>
+
+            <div class="col-md-8 pb-2">
+                <label for="email" class="form-label"><b>Email:</b></label>
+                <input type="email" class="form-control" id="email" placeholder="ejemplo@gmail.com" formControlName="email">
+                <div *ngIf="submitted && formulario['email'].errors">
+                    <div *ngIf="formulario['email'].errors['required']">El email no puede estar vacio</div>
+                    <div *ngIf="formulario['email'].errors['email']">El email debe ser un email valido</div>
+                </div>
+            </div>
+
+
+            <div class="row g-3 pb-2">
+                <div class="col-md-4">
+                    <label for="password1" class="form-label"><b>Contraseña:</b></label>
+                    <input type="password" class="form-control" id="password1" formControlName="password1">
+                    <div *ngIf="submitted && formulario['password1'].errors">
+                        <div *ngIf="formulario['password1'].errors['required']"> La contraseña no puede estar vacia</div>
+                        <div *ngIf="formulario['password1'].errors['pattern']">La contraseña debe tener al menos un dígito, una minúscula, una mayúscula y tener como mínimo 8 caracteres</div>
+                    </div>
+                </div>
+
+                <div class="col-md-8 pb-2">
+                    <label for="password2" class="form-label"><b>Repite la Contraseña:</b></label>
+                    <input type="password" class="form-control" id="password2" formControlName="password2">
+                    <div *ngIf="submitted && formulario['password2'].errors">
+                        <div *ngIf="formulario['password2'].errors['required']"> La contraseña no puede estar vacia</div>
+                        <div *ngIf="formulario['password2'].errors['pattern']">La contraseña debe tener al menos un dígito, una minúscula, una mayúscula y tener como mínimo 8 caracteres</div>
+                    </div>
+                </div>
+
+                <p class="form-label"><b>Roles:</b></p>
+                <div class="col pb-2 d-flex justify-content-between" id="rolesUsers">
+                    <label for="cbox1"><input type="checkbox" id="roles" value="1"> Director</label>
+                    <label for="cbox2"><input type="checkbox" id="roles" value="2"> Jefe de estudios</label>
+                    <label for="cbox3"><input type="checkbox" id="roles" value="3"> Tutor</label>
+                    <label for="cbox4"><input type="checkbox" id="roles" value="4" checked> Profesor</label>
+                </div>
+
+            </div>
+            <hr class="my-3">
+            <div class="row d-flex align-items-center justify-content-center modal-footer">
+                <input class="w-50 btn btn-primary btn-md" type="submit" value="Crear Usuario">
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!----------------------------------------Editar Usuario------------------------------------------------>
+<div class="card" *ngIf="this.numero=='2'">
+    <div class="modal-header">
+        <h1 class="modal-title fs-4">Editar Profesor: </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="CloseModal()"></button>
+    </div>
+    <div class="modal-body">
+        <form class="needs-validation" novalidate="" [formGroup]="datosProfesor" (ngSubmit)="onSubmitEdit()">
+            <div class="row g-3">
+                <div class="col-md-8 pb-2">
+                    <label for="nombre" class="form-label"><b>Nombre:</b></label>
+                    <input type="text" class="form-control" id="nombre" placeholder="Maria" formControlName="nombre">
+                    <div *ngIf="submitted && formulario['nombre'].errors">
+                        <div *ngIf="formulario['nombre'].errors['required']">El nombre no puede estar vacio</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8 pb-2">
+                <label for="apellido" class="form-label"><b>Apellido:</b></label>
+                <input type="text" class="form-control" id="nombre_empresa" placeholder="Fernandez" formControlName="apellido">
+                <div *ngIf="submitted && formulario['apellido'].errors">
+                    <div *ngIf="formulario['apellido'].errors['required']">El apellido no puede estar vacio</div>
+                </div>
+            </div>
+
+            <div class="col-md-8 pb-2">
+                <label for="dni" class="form-label"><b>DNI:</b></label>
+                <input type="text" class="form-control" id="dni" placeholder="00000000X" formControlName="dni">
+                <div *ngIf="submitted && formulario['dni'].errors">
+                    <div *ngIf="formulario['dni'].errors['required']">El dni no puede estar vacio</div>
+                </div>
+            </div>
+
+            <div class="col-md-8 pb-2">
+                <label for="email" class="form-label"><b>Email:</b></label>
+                <input type="email" class="form-control" id="email" placeholder="ejemplo@gmail.com" formControlName="email">
+                <div *ngIf="submitted && formulario['email'].errors">
+                    <div *ngIf="formulario['email'].errors['required']">El email no puede estar vacio</div>
+                    <div *ngIf="formulario['email'].errors['email']">El email debe ser un email valido</div>
+                </div>
+            </div>
+
+
+            <div class="row g-3 pb-2">
+                <div class="col-md-4">
+                    <label for="password1" class="form-label"><b>Contraseña:</b></label>
+                    <input type="password" class="form-control" id="password1" formControlName="password1">
+                    <div *ngIf="submitted && formulario['password1'].errors">
+                        <div *ngIf="formulario['password1'].errors['required']"> La contraseña no puede estar vacia</div>
+                        <div *ngIf="formulario['password1'].errors['pattern']">La contraseña debe tener al menos un dígito, una minúscula, una mayúscula y tener como mínimo 8 caracteres</div>
+                    </div>
+                </div>
+
+                <div class="col-md-8 pb-2">
+                    <label for="password2" class="form-label"><b>Repite la Contraseña:</b></label>
+                    <input type="password" class="form-control" id="password2" formControlName="password2">
+                    <div *ngIf="submitted && formulario['password2'].errors">
+                        <div *ngIf="formulario['password2'].errors['required']"> La contraseña no puede estar vacia</div>
+                        <div *ngIf="formulario['password2'].errors['pattern']">La contraseña debe tener al menos un dígito, una minúscula, una mayúscula y tener como mínimo 8 caracteres</div>
+                    </div>
+                </div>
+
+                <p class="form-label"><b>Roles:</b></p>
+                <div class="col pb-2 d-flex justify-content-between" id="rolesUsers">
+                    <label for="cbox1"><input type="checkbox" id="roles" value="1"> Director</label>
+                    <label for="cbox2"><input type="checkbox" id="roles" value="2"> Jefe de estudios</label>
+                    <label for="cbox3"><input type="checkbox" id="roles" value="3"> Tutor</label>
+                    <label for="cbox4"><input type="checkbox" id="roles" value="4"> Profesor</label>
+                </div>
+
+            </div>
+            <hr class="my-3">
+            <div class="row d-flex align-items-center justify-content-center modal-footer">
+                <input class="w-50 btn btn-primary btn-md" type="submit" value="Guardar cambios">
+            </div>
+        </form>
+    </div>
+</div>
