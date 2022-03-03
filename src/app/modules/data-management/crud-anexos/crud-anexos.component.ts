@@ -81,37 +81,7 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
     //   }
     // });
 
-    // this.dtOptions = {
-    //   pagingType: 'full_numbers',
-    //   pageLength: 10,
-    //   processing: true,
-    //   lengthMenu: [5, 10, 20, 50],
-    //   responsive: true,
-    //   language: {
-    //     url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json'
-    //     // "lengthMenu": "Mostrar _MENU_ registros por página",
-    //     // "zeroRecords": "Sin resultados",
-    //     // "info": "Mostrando página _PAGE_ de _PAGES_",
-    //     // "infoEmpty": "Sin registros disponibles",
-    //     // "infoFiltered": "(_MAX_ registros totales)",
-    //     // "search": "Filtrar: ",
-    //     // "searchPlaceholder": "Escriba para empezar",
-    //     // "paginate": {
-    //     //   "first": "<<",
-    //     //   "last": ">>",
-    //     //   "next": ">",
-    //     //   "previous": "<",
-    //     // }
-    //   }
-    // };
-
-    this.dtOptions = {
-      pagingType: 'full_numbers',
-      pageLength: 5,
-      language: {
-        url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json'
-      }
-    };
+    
     this.anexoService.getAnexos(this.dni_tutor!).subscribe((response) => {
       this.respuesta = response;
       response = (this.respuesta as any).data;
