@@ -9,6 +9,8 @@ import { ModalFirmaComponent } from '../modal-firma/modal-firma.component';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 import { Subject } from 'rxjs';
 import { DialogService } from 'src/app/services/dialog.service';
+import {ManualCrudAnexosComponent} from '../../manuales/manual-crud-anexos/manual-crud-anexos.component';
+
 
 @Component({
   selector: 'app-crud-anexos',
@@ -200,4 +202,7 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
     }
 
 
+    public abrirAyuda(){
+      this.modal.open(ManualCrudAnexosComponent, {size: 'lg'});
+    }
 }
