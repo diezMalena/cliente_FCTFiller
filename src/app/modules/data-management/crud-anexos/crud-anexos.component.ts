@@ -8,6 +8,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalFirmaComponent } from '../modal-firma/modal-firma.component';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 import { Subject } from 'rxjs';
+import { DialogService } from 'src/app/services/dialog.service';
 
 @Component({
   selector: 'app-crud-anexos',
@@ -15,7 +16,7 @@ import { Subject } from 'rxjs';
   styleUrls: ['./crud-anexos.component.scss']
 })
 export class CrudAnexosComponent implements OnDestroy, OnInit {
-  
+
   dtOptions: DataTables.Settings = {};
   dtTrigger = new Subject<any>();
   data: any;
@@ -32,13 +33,14 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
     private toastr: ToastrService,
     private modal: NgbModal,
     private storageUser: LoginStorageUserService,
+    public dialogService: DialogService
   ) {
     this.usuario = storageUser.getUser();
     this.dni_tutor = this.usuario?.dni
   }
 
   ngOnInit(): void {
-    
+
     this.verAnexos();
   }
 
@@ -51,10 +53,7 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
    * @author Pablo y Laura
    */
   public verAnexos() {
-    // this.anexoService.getAnexos(this.dni_tutor!).subscribe((response) => {
-    //   this.respuesta = response;
-    //   console.log(response);
-    // })
+
     this.dtOptions = {
       pagingType: 'full_numbers',
       pageLength: 5,
@@ -75,7 +74,14 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
    * @param codigo es el mnombre del anexo a descargar
    * Este metodo te permite descargar un anexo en concreto, te avisa si ha salido mal o bien
    */
-  public descargarAnexo(codigo: string) {
+  public async descargarAnexo(codigo: string) {
+
+    let hacerlo = await this.dialogService.confirmacion(
+      'Descargar',
+      `¿Está seguro de que desea descargar el anexo?`
+    );
+
+    if (hacerlo) {
     this.anexoService.descargarAnexo(this.dni_tutor!, codigo).subscribe({
       next: (res) => {
         const current = new Date();
@@ -90,14 +96,24 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
     })
     // this.router.navigate(['/data-management/curd-anexos']);
     this.router.navigate(['/data-management/crud-anexos']);
+  }else{
+    this.toastr.info('No has descargado el anexo', 'Descarga');
   }
+}
 
 
   /**
    * @author Pablo
    * Esta funcion te permite descargar todos los anexos, te avisa si la descarga ha salido bien o mal
    */
-  public descargarTodo() {
+  public async descargarTodo() {
+
+    let hacerlo = await this.dialogService.confirmacion(
+      'Descargar',
+      `¿Está seguro de que desea descargar los anexos?`
+    );
+
+    if (hacerlo) {
     this.anexoService.descargarTodo(this.dni_tutor!).subscribe({
       next: (res) => {
         const current = new Date();
@@ -112,6 +128,9 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
     })
     // this.router.navigate(['/data-management/curd-anexos']);
     this.router.navigate(['/data-management/crud-anexos']);
+  }else{
+    this.toastr.info('No has descargado los anexos', 'Descarga');
+  }
   }
 
   /**
@@ -120,7 +139,14 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
    Ademas, te avisa si todo ha salido bien o mal, por ultimo, vuelve a llamar a la funcion para
    que se refresque la vista
    */
-  public eliminarAnexo(codigo: string) {
+  public async eliminarAnexo(codigo: string) {
+
+    let hacerlo = await this.dialogService.confirmacion(
+      'Eliminar',
+      `¿Está seguro de que desea eliminar el anexo?: `+codigo
+    );
+
+    if (hacerlo) {
     this.anexoService.eliminarAnexo(this.dni_tutor!, codigo).subscribe({
       next: (res) => {
         this.toastr.success('Anexo Eliminado', 'Eliminado');
@@ -131,8 +157,9 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
         this.toastr.error('El anexo no ha podido eliminarse', 'Fallo');
       }
     })
-    // this.router.navigate(['/data-management/curd-anexos']);
-    // this.router.navigate(['/data-management/crud-anexos']);
+  }else{
+    this.toastr.info('Has decidido no eliminar el anexo', 'No eliminado');
+  }
   }
 
 
