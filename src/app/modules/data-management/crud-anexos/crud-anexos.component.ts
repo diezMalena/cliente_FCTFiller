@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy,OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Anexo } from 'src/app/models/anexo';
@@ -7,13 +7,19 @@ import * as FileSaver from 'file-saver';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalFirmaComponent } from '../modal-firma/modal-firma.component';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-crud-anexos',
   templateUrl: './crud-anexos.component.html',
   styleUrls: ['./crud-anexos.component.scss']
 })
-export class CrudAnexosComponent implements OnInit {
+export class CrudAnexosComponent implements OnDestroy, OnInit {
+  
+  dtOptions: DataTables.Settings = {};
+  dtTrigger = new Subject<any>();
+  data: any;
+
   //anexos: Anexo[] = [];
   usuario;
   respuesta: any = [];
@@ -32,19 +38,36 @@ export class CrudAnexosComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    
     this.verAnexos();
   }
 
+  ngOnDestroy(): void {
+    this.dtTrigger.unsubscribe();
+  }
 
   /**
    * Este metodo te permite ver los anexos
    * @author Pablo y Laura
    */
   public verAnexos() {
+    // this.anexoService.getAnexos(this.dni_tutor!).subscribe((response) => {
+    //   this.respuesta = response;
+    //   console.log(response);
+    // })
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 5,
+      language: {
+        url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json'
+      }
+    };
     this.anexoService.getAnexos(this.dni_tutor!).subscribe((response) => {
       this.respuesta = response;
-      console.log(response);
-    })
+       response = (this.respuesta as any).data;
+        // Calling the DT trigger to manually render the table
+        this.dtTrigger.next(this.respuesta);
+      });
   }
 
   /**
