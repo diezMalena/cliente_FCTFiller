@@ -9,7 +9,7 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import * as FileSaver from 'file-saver';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
-
+import { DialogService } from 'src/app/services/dialog.service';
 
 @Component({
   selector: 'app-asociar-emp-alu',
@@ -30,6 +30,7 @@ export class AsociarEmpAluComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService,
     private storageUser: LoginStorageUserService,
+    public dialogService: DialogService
   ) {
     this.usuario = storageUser.getUser();
     this.dniTutor = this.usuario?.dni
@@ -102,7 +103,12 @@ export class AsociarEmpAluComponent implements OnInit {
    * @author Alvaro <alvarosantosmartin6@gmail.com>
    * @param event
    */
-  setCambiosEmpresas() {
+   async setCambiosEmpresas() {
+    let hacerlo = await this.dialogService.confirmacion(
+      'Generar y Descargar',
+      `¿Está seguro de que desea generar y descargar el anexo?`
+    );
+    if (hacerlo) {
     var bandera = true;
     var menor = true;
     var msg = '';
@@ -135,6 +141,9 @@ export class AsociarEmpAluComponent implements OnInit {
     if (msg != '') {
       this.toastr.error(msg, 'Fechas incorrectas')
     }
+  }else{
+    this.toastr.info('Has decidido no generar y descargar el Anexo', 'Generacion y Descarga');
+  }
 
   }
 
