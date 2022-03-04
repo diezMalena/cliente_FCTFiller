@@ -21,7 +21,7 @@ export class ModalFirmaComponent implements OnInit {
 
   signaturePadOptions: Object = { 
     'minWidth': 2,
-    'canvasWidth': 700,
+    'canvasWidth': 450,
     'canvasHeight': 300
   };
 

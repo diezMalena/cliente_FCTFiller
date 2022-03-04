@@ -22,7 +22,7 @@ import { SignaturePadModule } from 'angular2-signaturepad';
 import { CrudProfesoresComponent } from './crud-profesores/crud-profesores.component';
 import { ModalProfesoresComponent } from './modal-profesores/modal-profesores.component';
 import { ModalDescargaComponent } from './registro-empresa/modal-descarga/modal-descarga.component';
-
+import { DataTablesModule } from 'angular-datatables';
 
 
 @NgModule({
@@ -53,6 +53,7 @@ import { ModalDescargaComponent } from './registro-empresa/modal-descarga/modal-
     NgbModule,
     DragDropModule,
     SignaturePadModule,
+    DataTablesModule
   ]
 })
 export class DataManagementModule { }

@@ -5,6 +5,7 @@ import { CrudProfesoresService } from 'src/app/services/crud-profesores.service'
 import { ModalProfesoresComponent } from '../modal-profesores/modal-profesores.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
+import { DialogService } from 'src/app/services/dialog.service';
 
 @Component({
   selector: 'app-crud-profesores',
@@ -24,6 +25,7 @@ export class CrudProfesoresComponent implements OnInit {
     private toastr: ToastrService,
     private modal: NgbModal,
     private storageUser: LoginStorageUserService,
+    public dialogService: DialogService,
   ) {
     this.usuario = storageUser.getUser();
     this.dni = this.usuario?.dni
@@ -60,7 +62,13 @@ export class CrudProfesoresComponent implements OnInit {
 
   }
 
-  public eliminarProfesor(dni_profesor: string){
+  public async eliminarProfesor(dni_profesor: string){
+    let hacerlo = await this.dialogService.confirmacion(
+      'Eliminar',
+      `¿Está seguro de que desea eliminar el profesor ` + dni_profesor + `?`
+    );
+
+    if (hacerlo) {
     this.profesoresService.eliminarProfesor(dni_profesor).subscribe({
       next:(res)=>{
         this.toastr.success('Profesor Eliminado', 'Eliminado');
@@ -71,6 +79,7 @@ export class CrudProfesoresComponent implements OnInit {
         this.toastr.error('El profesor no ha podido eliminarse', 'Fallo');
       }
     })
+  }
   }
 
   public modificarProfesor(dni_profesor: string){
