@@ -2,7 +2,7 @@
 <div class="row">
   <div class="page-header d-flex justify-content-between pb-3">
     <h1 class="h2">Asignación de alumnos de {{nombreCiclo}} </h1>
-    <button type="button" class="btn btn-outline-secondary mr-2" placement="left" ngbTooltip="Haga clic para acceder a la ayuda de esta sección">?</button>
+    <button type="button" class="btn btn-outline-default mr-2" placement="left" ngbTooltip="Haga clic para acceder a la ayuda de esta sección">?</button>
   </div>
 </div>
 
@@ -21,7 +21,7 @@
                     <div class="card-body ps-3" cdkDropList [cdkDropListData]="alumnos"
                       (cdkDropListDropped)="drop($event)">
                       <div *ngFor="let alumno of alumnos"
-                        ngClass="alumnos text-white bg-secondary rounded border-secondary row p-1 mb-2"
+                        ngClass="alumnos h6 text-black bg-secondary rounded border-secondary row p-1 mb-2"
                         attr.id="{{alumno.dni}}" cdkDrag>
                         {{alumno.nombre}}
                       </div>
@@ -54,7 +54,7 @@
                             <div *ngFor="let alumno2 of empresa.alumnos"
                               ngClass="alumnos text-white bg-secondary rounded border-secondary row p-1 mb-2"
                               attr.id="{{alumno2.dni}}" cdkDrag>
-                              <span class="col-12 col-md-3">{{alumno2.nombre}}</span>
+                              <span class="h6 text-black col-12 col-md-3">{{alumno2.nombre}}</span>
                               <input aria-label="horario del alumno" class="col-12 col-md-3" placeholder="Horario"
                                 type="text" [(ngModel)]="alumno2.horario">
                               <input aria-label="fecha de inicio de prácticas" class="col-12 col-md-3" type="date"

@@ -130,7 +130,8 @@ export class AsociarEmpAluComponent implements OnInit {
     if (bandera && menor) {
       var datos = {
         'empresas': this.empresas,
-        'alumnos_solos': this.alumnos
+        'alumnos_solos': this.alumnos,
+        'dni_tutor': this.dniTutor
       }
       this.alumnosEmpresas.asignarAlumnos(datos).subscribe();
       this.toastr.success('Cambios realizados con exito.', 'Guardado')
