@@ -5,6 +5,7 @@ import { ModalJornadaService } from '../../../../services/modal-jornada.service'
 import { Jornada } from 'src/app/models/Jornada/jornada';
 import { SeguimientoServiceService } from 'src/app/services/seguimiento-service.service';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-modal-editar',
@@ -28,6 +29,7 @@ export class ModalEditarComponent implements OnInit {
     private modalJornadaService: ModalJornadaService,
     private seguimientoService:SeguimientoServiceService,
     private storageUser: LoginStorageUserService,
+    private toastr: ToastrService,
 
   ) {
 
@@ -44,7 +46,6 @@ export class ModalEditarComponent implements OnInit {
     this.modalJornadaService.jornadaTrigger.subscribe((data: Jornada) => {
       //console.log(data);
       this.jornada = data;
-      console.log(this.jornada);
     });
   }
 
@@ -96,12 +97,12 @@ export class ModalEditarComponent implements OnInit {
       this.modalJornadaService.updateJornada(jornadaUpdate,this.dni_alumno!).subscribe({
         next: (response) => {
           //console.log(response);
-          console.log('La jornada se ha actualizado correctamente.');
+          this.toastr.success('La jornada se ha actualizado correctamente.','Editar jornada');
           this.recogerJornadas();
           this.closeModel();
         },
         error: e => {
-          console.log('error en la actualizacion de la jornada',e);
+          this.toastr.error('No se ha actualizado la jornada.','Error al editar jornada');
         }
       });
     }

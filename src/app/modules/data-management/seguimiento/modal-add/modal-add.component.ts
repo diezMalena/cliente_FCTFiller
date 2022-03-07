@@ -6,6 +6,7 @@ import { Jornada } from '../../../../models/Jornada/jornada';
 import { ModalJornadaService } from '../../../../services/modal-jornada.service';
 import { SeguimientoServiceService } from 'src/app/services/seguimiento-service.service';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-modal-add',
@@ -28,6 +29,7 @@ export class ModalAddComponent implements OnInit {
     private modalActive: NgbActiveModal,
     private seguimientoService:SeguimientoServiceService,
     private storageUser: LoginStorageUserService,
+    private toastr: ToastrService,
 
   ) {
 
@@ -98,11 +100,13 @@ export class ModalAddComponent implements OnInit {
     this.modalJornadaService.addJornada(jornada, this.dni_alumno!).subscribe({
       next: (response) => {
         console.log('se ha insertado');
+        this.toastr.success('Jornada añadida correctamente.','Nueva jornada');
         this.recogerJornadas();
         this.closeModel();
       },
       error: e => {
         console.log('error');
+        this.toastr.error('Oh vaya, algo ha fallado al añadir una jornada.','Error al añadir jornada');
       }
     });
   }

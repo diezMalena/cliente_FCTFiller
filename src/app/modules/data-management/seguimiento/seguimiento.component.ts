@@ -10,6 +10,7 @@ import { SeguimientoServiceService } from 'src/app/services/seguimiento-service.
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import * as FileSaver from 'file-saver';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-seguimiento',
@@ -40,6 +41,8 @@ export class SeguimientoComponent implements OnInit {
     private modalJornadaService: ModalJornadaService,
     private seguimientoService:SeguimientoServiceService,
     private storageUser: LoginStorageUserService,
+    private toastr: ToastrService,
+
   ) {
     this.usuario = storageUser.getUser();
     this.dni_alumno = this.usuario?.dni
@@ -242,18 +245,14 @@ export class SeguimientoComponent implements OnInit {
   public descargarPDF(){
     this.seguimientoService.descargarPDF(this.dni_alumno!).subscribe({
       next:(res:any) => {
-        console.log('Se ha descargado');
         const blob = new Blob([res], {type: 'application/octet-stream'});
         FileSaver.saveAs(blob,'hoja_seguimiento.docx');
+        this.toastr.success('Se ha descargado la hoja de seguimiento correctamente.','Generación de Anexo III');
       },
       error: e => {
-        console.log('No se ha descargado el documento');
+        this.toastr.error('No se ha podido generar el documento correctamente.','Error en la generación del Anexo III');
+        // console.log('No se ha descargado el documento');
       }
     });
   }
-
-  public verPDF(){
-
-  }
-
 }
