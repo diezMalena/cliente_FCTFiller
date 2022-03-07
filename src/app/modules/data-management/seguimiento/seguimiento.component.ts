@@ -30,6 +30,7 @@ export class SeguimientoComponent implements OnInit {
   public horasTotales: number = 0;
   public botonDescargar: boolean = false;
   public botonVer: boolean = false;
+  public static readonly dniAlumno: string = "dniAlumno";
 
 
   constructor(

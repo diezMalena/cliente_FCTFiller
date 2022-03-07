@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Jornada } from '../../../../models/Jornada/jornada';
 import { ModalJornadaService } from '../../../../services/modal-jornada.service';
 import { SeguimientoServiceService } from 'src/app/services/seguimiento-service.service';
+import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 
 @Component({
   selector: 'app-modal-add',
@@ -12,11 +13,12 @@ import { SeguimientoServiceService } from 'src/app/services/seguimiento-service.
   styleUrls: ['./modal-add.component.scss']
 })
 export class ModalAddComponent implements OnInit {
-
+  usuario;
   jornada: FormGroup;
   submitted: boolean = false;
+  public static readonly dniA: string = "dniA";
   public jornadaEdit: string = "";
-  public dni_alumno: string = "14d";
+  public dni_alumno?: string ;
   public jornadasArray: any = [];
   public fecha_invalida:boolean = false;
 
@@ -24,9 +26,14 @@ export class ModalAddComponent implements OnInit {
     private formBuilder: FormBuilder,
     private modalJornadaService: ModalJornadaService,
     private modalActive: NgbActiveModal,
-    private seguimientoService:SeguimientoServiceService
+    private seguimientoService:SeguimientoServiceService,
+    private storageUser: LoginStorageUserService,
 
   ) {
+
+    this.usuario = storageUser.getUser();
+    this.dni_alumno = this.usuario?.dni;
+
     this.jornada = this.formBuilder.group({
       fecha: ['',[Validators.required]],
       actividad:['',[Validators.required]],
@@ -41,6 +48,7 @@ export class ModalAddComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.dni_alumno);
   }
 
   get formulario(){
@@ -87,7 +95,7 @@ export class ModalAddComponent implements OnInit {
       tiempo_empleado
     );
 
-    this.modalJornadaService.addJornada(jornada, this.dni_alumno).subscribe({
+    this.modalJornadaService.addJornada(jornada, this.dni_alumno!).subscribe({
       next: (response) => {
         console.log('se ha insertado');
         this.recogerJornadas();
@@ -105,7 +113,7 @@ export class ModalAddComponent implements OnInit {
    * @author Malena.
    */
   public recogerJornadas(){
-    this.seguimientoService.devolverJornadas(this.dni_alumno).subscribe({
+    this.seguimientoService.devolverJornadas(this.dni_alumno!).subscribe({
       next: (response: any) => {
         this.jornadasArray = response;
         this.modalJornadaService.getJornadasInArray(this.jornadasArray);
