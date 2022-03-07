@@ -57,18 +57,6 @@ export class ModalEmpresaComponent implements OnInit {
     return this.datosEmpresa.controls;
   }
 
-  // /**
-  //  * Obtiene el representante legal de una empresa
-  //  * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
-  //  */
-  // getRepresentante() {
-  //   this.crudEmpresasService.getRepresentante(this.empresa!.id).subscribe({
-  //     next: (representante) => {
-  //       this.empresa!.representante = representante;
-  //     },
-  //   });
-  // }
-
   /**
    * Construye el formulario reactivo
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
@@ -157,6 +145,7 @@ export class ModalEmpresaComponent implements OnInit {
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
   onSubmit() {
+    this.submitted = true;
     let datos = this.datosEmpresa.value;
     let representanteEditado = new Trabajador(
       datos.dni,
