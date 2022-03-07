@@ -315,6 +315,10 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
     }
 
 
+    /**
+     *@author Laura <lauramorenoramos97@gmail.com>
+     * @param dni es el dni del tutor a buscar para mostrar sus anexos
+     */
     public buscar(dni : string){
       this.dniAux= dni;
       this.verAnexosDirector();
