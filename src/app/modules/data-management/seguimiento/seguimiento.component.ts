@@ -9,6 +9,7 @@ import { ModalJornadaService } from '../../../services/modal-jornada.service';
 import { SeguimientoServiceService } from 'src/app/services/seguimiento-service.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import * as FileSaver from 'file-saver';
+import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 
 @Component({
   selector: 'app-seguimiento',
@@ -17,8 +18,9 @@ import * as FileSaver from 'file-saver';
 })
 export class SeguimientoComponent implements OnInit {
 
+  usuario;
   public arrayJornadas: any = [];
-  public dni_alumno: string = "14d";
+  public dni_alumno?: string;
   public nombre_alumno: any;
   public nombre_empresa: any;
   public departamento: any;
@@ -35,8 +37,11 @@ export class SeguimientoComponent implements OnInit {
     private router: Router,
     private modal: NgbModal,
     private modalJornadaService: ModalJornadaService,
-    private seguimientoService:SeguimientoServiceService
+    private seguimientoService:SeguimientoServiceService,
+    private storageUser: LoginStorageUserService,
   ) {
+    this.usuario = storageUser.getUser();
+    this.dni_alumno = this.usuario?.dni
     this.deptoForm = this.formBuilder.group({
       depto: ['',[Validators.required]],
     });
@@ -109,7 +114,7 @@ export class SeguimientoComponent implements OnInit {
 
 
   public rellenarArray(){
-    this.seguimientoService.devolverJornadas(this.dni_alumno).subscribe({
+    this.seguimientoService.devolverJornadas(this.dni_alumno!).subscribe({
       next: (response: any) => {
         this.arrayJornadas = response;
         var cuantasJornadasHay = this.arrayJornadas.length;
@@ -155,7 +160,7 @@ export class SeguimientoComponent implements OnInit {
    */
   public ponerNombre(){
     //console.log(this.dni_alumno);
-    this.seguimientoService.escribirDatos(this.dni_alumno).subscribe({
+    this.seguimientoService.escribirDatos(this.dni_alumno!).subscribe({
       next: (response: any) => {
         this.nombre_alumno = response[0]['nombre_alumno'] +' ' + response[0]['apellidos_alumno'] ;
         this.nombre_empresa = response[0]['nombre_empresa']
@@ -175,7 +180,7 @@ export class SeguimientoComponent implements OnInit {
    * @author Malena
    */
   public gestionDepartamento(){
-    this.seguimientoService.gestionarDepartamento(this.dni_alumno).subscribe({
+    this.seguimientoService.gestionarDepartamento(this.dni_alumno!).subscribe({
       next: (response:any) => {
         //console.log(response);
         if(response[0]['departamento'] != ''){
@@ -205,7 +210,7 @@ export class SeguimientoComponent implements OnInit {
     this.departamento = this.deptoForm.value.depto;
     //console.log(this.departamento);
 
-    this.seguimientoService.addDepartamento(this.dni_alumno,this.departamento).subscribe({
+    this.seguimientoService.addDepartamento(this.dni_alumno!,this.departamento).subscribe({
       next: (response: any) => {
         this.departamentoEstablecido = true;
       },
@@ -223,7 +228,7 @@ export class SeguimientoComponent implements OnInit {
    * @author Malena.
    */
   public sumatorioHorasTotales(){
-    this.seguimientoService.sumatorioHorasTotales(this.dni_alumno).subscribe({
+    this.seguimientoService.sumatorioHorasTotales(this.dni_alumno!).subscribe({
       next: (response:any) => {
         this.horasTotales = response
       },
@@ -234,7 +239,7 @@ export class SeguimientoComponent implements OnInit {
   }
 
   public descargarPDF(){
-    this.seguimientoService.descargarPDF(this.dni_alumno).subscribe({
+    this.seguimientoService.descargarPDF(this.dni_alumno!).subscribe({
       next:(res:any) => {
         console.log('Se ha descargado');
         const blob = new Blob([res], {type: 'application/octet-stream'});

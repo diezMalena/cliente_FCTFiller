@@ -215,29 +215,46 @@
       <path d="M160 145 c0 -10 10 -15 30 -15 20 0 30 5 30 15 0 10 -10 15 -30 15 -20 0 -30 -5 -30 -15z" />
     </g>
   </symbol>
+
+  <symbol id='descarga' viewBox="0 0 16 16">
+    <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+    <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+  </symbol>
+
+  <symbol  id='firma' viewBox="0 0 240 240">
+    <g  transform="translate(0.000000,240.000000) scale(0.100000,-0.100000)"  stroke="none">
+      <path d="M514 2136 c-163 -53 -267 -230 -305 -521 -15 -118 -6 -316 21 -423 21 -87 79 -224 99 -237 8 -5 -11 -31 -58 -80 -79 -82 -90 -114 -48 -153 39 -37 69 -29 147 42 l71 64 67 -35 c162 -83 394 -36 597 122 l68 52 35 -23 c107 -73 241 -53 346 52 40 40 71 87 114 171 l60 117 12 -72 c24 -143 87 -219 174 -208 60 7 86 34 147 149 31 59 75 127 98 152 26 28 41 54 41 70 0 34 -42 75 -77 75 -41 0 -131 -98 -178 -194 -24 -48 -41 -72 -46 -64 -3 7 -14 67 -24 133 -19 137 -32 173 -70 203 -32 26 -65 28 -105 7 -29 -15 -35 -25 -154 -277 -28 -60 -64 -116 -95 -150 -47 -51 -51 -53 -99 -53 -80 0 -82 12 -18 95 113 146 179 327 162 441 -11 76 -62 148 -126 182 -48 25 -63 28 -113 24 -150 -13 -239 -140 -254 -362 -7 -106 7 -203 43 -290 l24 -60 -23 -18 c-57 -47 -173 -118 -225 -138 -75 -29 -202 -32 -250 -6 l-32 18 54 67 c264 328 370 714 265 959 -23 55 -92 129 -143 155 -50 26 -147 32 -202 14z m146 -151 c18 -9 39 -36 57 -72 26 -53 28 -67 27 -163 -1 -127 -25 -222 -88 -355 -44 -94 -131 -232 -185 -295 -35 -40 -38 -38 -71 48 -68 179 -63 482 10 672 56 145 158 213 250 165z m659 -359 c12 -13 24 -39 27 -58 11 -66 -43 -200 -124 -312 l-36 -49 -13 39 c-44 124 -12 354 54 393 30 18 68 12 92 -13z"/>
+      <path d="M225 375 c-14 -13 -25 -36 -25 -50 0 -14 11 -37 25 -50 l24 -25 951 0 951 0 24 25 c32 31 32 69 0 100 l-24 25 -951 0 -951 0 -24 -25z"/>
+      </g>
+  </symbol>
+
+  <symbol  id='profesor' viewBox="0 0 16 16">
+    <path d="M4 16s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H4Zm4-5.95a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/>
+    <path d="M2 1a2 2 0 0 0-2 2v9.5A1.5 1.5 0 0 0 1.5 14h.653a5.373 5.373 0 0 1 1.066-2H1V3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v9h-2.219c.554.654.89 1.373 1.066 2h.653a1.5 1.5 0 0 0 1.5-1.5V3a2 2 0 0 0-2-2H2Z"/>
+  </symbol>
 </svg>
 
 <ng-container *ngIf="usuario">
-  <app-header ></app-header>
+    <app-header></app-header>
 
-  <div class="container-fluid flex-grow-1 d-flex h-100">
-    <div class="row flex-fill">
-      <app-navbar class="col-md-3 col-lg-2 d-md-block bg-light collapse user-select-none h-100"> </app-navbar>
-      <div class="col-md-9 ms-sm-auto col-lg-10 p-3 contenido">
-        <router-outlet class="contenido"></router-outlet>
-      </div>
+    <div class="container-fluid flex-grow-1 d-flex h-100">
+        <div class="row flex-fill">
+            <app-navbar class="col-md-3 col-lg-2 d-md-block bg-dark collapse user-select-none h-100"> </app-navbar>
+            <div class="col-md-9 ms-sm-auto col-lg-10 p-3 contenido">
+                <router-outlet class="contenido"></router-outlet>
+            </div>
+        </div>
     </div>
-  </div>
+    <app-footer></app-footer>
 </ng-container>
 
 <ng-container ng-else>
-  <div class="container-fluid flex-grow-1 d-flex h-100 align-items-center">
-    <div class="row flex-fill">
-      <div class="col ms-sm-auto p-3 contenido">
-        <router-outlet class="contenido"></router-outlet>
-      </div>
+    <div class="container-fluid h-100 align-items-center">
+        <div class="row flex-fill">
+            <div class="col ms-sm-auto p-3 login">
+                <router-outlet class="login"></router-outlet>
+            </div>
+        </div>
     </div>
-  </div>
+    <app-footer></app-footer>
 </ng-container>
-
-<app-footer></app-footer>
