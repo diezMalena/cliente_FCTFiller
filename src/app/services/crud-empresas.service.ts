@@ -89,6 +89,11 @@ export class CrudEmpresasService {
     return this.http.delete(url, {headers});
   }
 
+  /**
+   * Establece el array de empresas
+   * @param empresasArray array de empresas
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
   public getEmpresasArray(empresasArray: Empresa[]) {
     this.empresasArray.next(empresasArray);
   }

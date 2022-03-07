@@ -9,6 +9,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Empresa } from 'src/app/models/empresa';
 import { Trabajador } from 'src/app/models/trabajador';
 import { CrudEmpresasService } from 'src/app/services/crud-empresas.service';
+import { DialogService } from 'src/app/services/dialog.service';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 
 @Component({
@@ -29,7 +30,8 @@ export class ModalEmpresaComponent implements OnInit {
     private modalActive: NgbActiveModal,
     private crudEmpresasService: CrudEmpresasService,
     private storageUser: LoginStorageUserService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    public dialogService: DialogService
   ) {
     this.usuario = storageUser.getUser();
     //Atención a la ñapa
@@ -123,6 +125,11 @@ export class ModalEmpresaComponent implements OnInit {
     });
   }
 
+  /**
+   * Mete los representantes en las empresas correspondientes
+   * @param empresas el vector de empresas
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
   public async meterRepresentantesEmpresas(empresas: Empresa[]) {
     empresas.forEach((empresa) => {
       this.crudEmpresasService.getRepresentante(empresa.id).subscribe({
@@ -178,6 +185,7 @@ export class ModalEmpresaComponent implements OnInit {
       this.modified = false;
       this.updateEmpresa(empresaEditada);
       this.updateRepresentante(representanteEditado);
+      this.modalActive.close();
     }
   }
 
@@ -215,12 +223,18 @@ export class ModalEmpresaComponent implements OnInit {
    * Cierra el modal sólo si no hay cambios sin guardar
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
-  closeModal() {
+  async closeModal() {
     if (!this.modified) {
       this.modalActive.close();
     } else {
-      console.log('No puedes salir');
-      //this.modalActive.close();
+      let guardar = await this.dialogService.confirmacion(
+        'Guardar cambios',
+        `Hay cambios sin guardar. ¿Quiere guardarlos antes de salir?`
+      );
+      if (guardar) {
+        this.onSubmit();
+      }
+      this.modalActive.close();
     }
   }
 }
