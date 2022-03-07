@@ -28,44 +28,49 @@
     </div>
   </div>
 
-  <div class="col-6">
-    <div class="row" *ngIf="!departamentoEstablecido">
-      <form [formGroup]="deptoForm" (ngSubmit)="guardarDepartamento()">
-        <div class="col-12 col-xl-3">
+  <div class="row">
+    <div class="col-6">
+      <div class="row" *ngIf="!departamentoEstablecido">
+        <form [formGroup]="deptoForm" (ngSubmit)="guardarDepartamento()">
+          <div class="col-xl-4 col-12">
+            Departamento:
+          </div>
+          <div class="col-xl-8 col-12">
+            <input type="text" placeholder="Informática..." formControlName="depto">
+          </div>
+          <div class="row d-flex justify-content-center">
+            <div class="col-12 col-xl-2">
+              <input type="submit" name="" class="btn btn-outline-primary" value="Guardar">
+            </div>
+          </div>
+
+
+          <div class="row text-center pt-2">
+            <div class="col-12 col-xl-12" *ngIf="submitted && formulario['depto'].errors">
+              <div *ngIf="formulario['depto'].errors['required']">El Departamento no puede estar vacío.</div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="row" *ngIf="departamentoEstablecido">
+        <div class="col-xl-4 col-12">
           Departamento:
         </div>
-        <div class="col-12 col-xl-5">
-          <input type="text" placeholder="Informática..." formControlName="depto">
+        <div class="col-xl-8 col-12 border-bottom">
+          {{ departamento }}
         </div>
-        <div class="col-12 col-xl-4">
-          <input type="submit" name="" class="btn btn-outline-primary" value="Guardar">
-        </div>
-
-        <div class="row text-center pt-2">
-          <div class="col-12 col-xl-12" *ngIf="submitted && formulario['depto'].errors">
-            <div *ngIf="formulario['depto'].errors['required']">El Departamento no puede estar vacío.</div>
-          </div>
-        </div>
-      </form>
-    </div>
-
-    <div class="row" *ngIf="departamentoEstablecido">
-      <div class="col-xl-4 col-12">
-        Departamento:
-      </div>
-      <div class="col-xl-8 col-12 border-bottom">
-        {{ departamento }}
       </div>
     </div>
-  </div>
 
-  <div class="col-6">
-    <div class="row">
-      <div class="col-xl-4 col-12">
-        Horas totales:
-      </div>
-      <div class="col-xl-8 col-12 border-bottom">
-        {{ horasTotales }}
+    <div class="col-6">
+      <div class="row">
+        <div class="col-xl-4 col-12">
+          Horas totales:
+        </div>
+        <div class="col-xl-8 col-12 border-bottom">
+          {{ horasTotales }}
+        </div>
       </div>
     </div>
   </div>
