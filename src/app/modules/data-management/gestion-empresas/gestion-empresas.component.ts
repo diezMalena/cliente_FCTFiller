@@ -28,6 +28,7 @@ export class GestionEmpresasComponent implements OnInit {
 
   ngOnInit(): void {
     this.getEmpresas();
+    this.getEmpresasFromModal();
   }
 
   /**
@@ -82,5 +83,11 @@ export class GestionEmpresasComponent implements OnInit {
         },
       });
     }
+  }
+
+  public getEmpresasFromModal() {
+    this.crudEmpresasService.empresasArray.subscribe(array => {
+      this.empresas = array;
+    })
   }
 }

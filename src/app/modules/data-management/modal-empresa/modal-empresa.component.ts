@@ -9,6 +9,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Empresa } from 'src/app/models/empresa';
 import { Trabajador } from 'src/app/models/trabajador';
 import { CrudEmpresasService } from 'src/app/services/crud-empresas.service';
+import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 
 @Component({
   selector: 'app-modal-empresa',
@@ -21,12 +22,16 @@ export class ModalEmpresaComponent implements OnInit {
   public datosEmpresa: FormGroup;
   public submitted: boolean = false;
   public modified: boolean = false;
+  public empresas: Empresa[] = [];
+  public usuario;
 
   constructor(
     private modalActive: NgbActiveModal,
     private crudEmpresasService: CrudEmpresasService,
+    private storageUser: LoginStorageUserService,
     private formBuilder: FormBuilder
   ) {
+    this.usuario = storageUser.getUser();
     //Atención a la ñapa
     //He tenido que crear un formGroup vacío para que se rellenase con la información asíncrona dentro del subscribe
     this.datosEmpresa = this.formBuilder.group({});
@@ -42,6 +47,7 @@ export class ModalEmpresaComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getEmpresas();
     this.onChanges();
   }
 
@@ -104,6 +110,30 @@ export class ModalEmpresaComponent implements OnInit {
   }
 
   /**
+   * Inicializa las empresas del componente mediante el servicio correspondiente
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public getEmpresas(): void {
+    this.crudEmpresasService.getEmpresas(this.usuario?.dni!).subscribe({
+      next: async (empresas) => {
+        this.empresas = empresas;
+        await this.meterRepresentantesEmpresas(empresas);
+        this.crudEmpresasService.getEmpresasArray(this.empresas);
+      },
+    });
+  }
+
+  public async meterRepresentantesEmpresas(empresas: Empresa[]) {
+    empresas.forEach((empresa) => {
+      this.crudEmpresasService.getRepresentante(empresa.id).subscribe({
+        next: (representante) => {
+          empresa.representante = representante;
+        },
+      });
+    });
+  }
+
+  /**
    * Detecta los cambios en el formulario y, si hay, pone una variable bandera a true
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
@@ -111,7 +141,6 @@ export class ModalEmpresaComponent implements OnInit {
     this.datosEmpresa.valueChanges.subscribe((val) => {
       if (!this.modified) {
         this.modified = true;
-        console.log('Modificado');
       }
     });
   }
@@ -150,7 +179,6 @@ export class ModalEmpresaComponent implements OnInit {
       this.updateEmpresa(empresaEditada);
       this.updateRepresentante(representanteEditado);
     }
-    console.log('Validado');
   }
 
   /**
@@ -164,6 +192,7 @@ export class ModalEmpresaComponent implements OnInit {
         this.empresa = empresa;
         console.log(response.message);
         this.updateRepresentante(empresa.representante!);
+        this.getEmpresas();
       },
     });
   }
@@ -178,7 +207,7 @@ export class ModalEmpresaComponent implements OnInit {
       next: (response: any) => {
         this.empresa!.representante = representante;
         console.log(response.message);
-      }
+      },
     });
   }
 
