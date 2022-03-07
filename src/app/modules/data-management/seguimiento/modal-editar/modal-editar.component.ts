@@ -6,6 +6,7 @@ import { Jornada } from 'src/app/models/Jornada/jornada';
 import { SeguimientoServiceService } from 'src/app/services/seguimiento-service.service';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 import { ToastrService } from 'ngx-toastr';
+import { DialogService } from 'src/app/services/dialog.service';
 
 @Component({
   selector: 'app-modal-editar',
@@ -21,6 +22,7 @@ export class ModalEditarComponent implements OnInit {
   public dni_alumno?: string;
   public arrayJornadas: any = [];
   public fecha_invalida:boolean = false;
+  public modified: boolean = false;
 
 
   constructor(
@@ -30,6 +32,7 @@ export class ModalEditarComponent implements OnInit {
     private seguimientoService:SeguimientoServiceService,
     private storageUser: LoginStorageUserService,
     private toastr: ToastrService,
+    public dialogService: DialogService
 
   ) {
 
@@ -62,7 +65,37 @@ export class ModalEditarComponent implements OnInit {
  * @author Malena
  */
   closeModel(){
-    this.modalActive.dismiss();
+    if(this.modified){
+      //Abro el modal preguntando si esta seguro de salir teniendo cambios sin guardar:
+      this.confirmacion();
+    }else{
+      this.modalActive.dismiss();
+    }
+
+  }
+
+
+  public async confirmacion(){
+    let cerrar = await this.dialogService.confirmacion(
+      'Descartar cambios',
+      'Tiene cambios sin guardar, ¿Desea salir igualmente?'
+    );
+    if(cerrar){
+      //Si quiero descartar los cambios y dejarlo como estaba...
+      window.location.reload();
+      this.modalActive.dismiss();
+    }
+  }
+
+
+  onChanges(): void {
+    console.log('funciona onChange');
+    this.editarJornada.valueChanges.subscribe((val) => {
+      if (!this.modified) {
+        this.modified = true;
+        console.log('Hay cambios');
+      }
+    });
   }
 
   /**
