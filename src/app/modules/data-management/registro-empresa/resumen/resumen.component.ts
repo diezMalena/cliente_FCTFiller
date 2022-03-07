@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { RegistroEmpresaService } from '../../../../services/registro-empresa.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalDescargaComponent } from '../modal-descarga/modal-descarga.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-resumen',
@@ -43,6 +44,7 @@ export class ResumenComponent implements OnInit {
     private formBuilder: FormBuilder,
     private registroEmpresaService: RegistroEmpresaService,
     private modal: NgbModal,
+    private toastr: ToastrService,
 
 
   ) {
@@ -160,9 +162,11 @@ export class ResumenComponent implements OnInit {
         console.log(ruta);
         this.modal.open(ModalDescargaComponent,{ size: 'xs' });
         this.registroEmpresaService.descargarTrigger.emit([ruta]);
+        this.toastr.success('Datos guardados correctamente.','Registro de empresa.');
       },
       error: e => {
-        console.log("No se han enviado los datos al servidor.");
+        // console.log("No se han enviado los datos al servidor.");
+        this.toastr.error('No se han guardado los datos correctamente.','Error al registrar empresa');
       }
     });
 
