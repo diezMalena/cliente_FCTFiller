@@ -57,8 +57,9 @@ export class GestionEmpresasComponent
 
   rerender(): void {
     this.dtElement!.dtInstance.then((dtInstance: DataTables.Api) => {
-      console.log('Entro en la promesa');
+      // Destroy the table first
       dtInstance.destroy();
+      // Call the dtTrigger to rerender again
       this.dtTrigger.next(this.empresas);
     });
   }
@@ -73,8 +74,8 @@ export class GestionEmpresasComponent
         this.empresas = empresas;
         await this.meterRepresentantesEmpresas(this.empresas);
         this.rerender();
-        this.dtTrigger.next(this.empresas);
         $.fn.dataTable.ext.errMode = 'throw';
+        this.dtTrigger.next(this.empresas);
       },
     });
     $.extend(true, $.fn.dataTable.defaults, {
@@ -139,6 +140,7 @@ export class GestionEmpresasComponent
   public getEmpresasFromModal() {
     this.crudEmpresasService.empresasArray.subscribe((array) => {
       this.empresas = array;
+      this.rerender();
     });
   }
 }
