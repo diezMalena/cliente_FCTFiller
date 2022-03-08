@@ -69,6 +69,7 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
       this.respuesta = response;
       response = (this.respuesta as any).data;
       // Calling the DT trigger to manually render the table
+      $.fn.dataTable.ext.errMode = 'throw';
       this.dtTrigger.next(this.respuesta);
     });
     $.extend(true, $.fn.dataTable.defaults, {
@@ -115,6 +116,7 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
             this.toastr.info('Anexos de: '+this.dniAux, 'Vistas Anexos');
             res = (this.respuesta as any).data;
             // Calling the DT trigger to manually render the table
+            $.fn.dataTable.ext.errMode = 'throw';
             this.dtTrigger.next(this.respuesta);
           },
           error: e => {
