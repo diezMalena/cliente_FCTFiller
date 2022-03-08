@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, Output, EventEmitter } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { Empresa } from '../models/empresa';
 import { EmpresaResponse } from '../models/empresaResponse';
 import { Trabajador } from '../models/trabajador';
@@ -11,7 +11,9 @@ import { TrabajadorResponse } from '../models/trabajadorResponse';
 })
 export class CrudEmpresasService {
   @Output() empresaTrigger: EventEmitter<any> = new EventEmitter();
+
   public URLAPI: string = 'http://127.0.0.1:8000/api/';
+  public empresasArray = new BehaviorSubject<Empresa[]>([]);
 
   constructor(private http: HttpClient) {}
 
@@ -85,5 +87,14 @@ export class CrudEmpresasService {
       'Content-Type': 'application/json',
     })
     return this.http.delete(url, {headers});
+  }
+
+  /**
+   * Establece el array de empresas
+   * @param empresasArray array de empresas
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public getEmpresasArray(empresasArray: Empresa[]) {
+    this.empresasArray.next(empresasArray);
   }
 }
