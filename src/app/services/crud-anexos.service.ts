@@ -16,7 +16,7 @@ export class AnexoService {
   public ruta='http://127.0.0.1:8000/api/';
 
   /**
-   * @author Pablo y Laura
+   * @author Pablo y Laura <lauramorenoramos97@gmail.com>
    * @param dni_tutor Es el dni del tutor
    * @returns
    *  Este metodo hace una llamada a la api y listar los anexos
