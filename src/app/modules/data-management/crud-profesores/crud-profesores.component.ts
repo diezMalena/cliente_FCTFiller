@@ -14,7 +14,7 @@ import { DataTableDirective } from 'angular-datatables';
   styleUrls: ['./crud-profesores.component.scss']
 })
 export class CrudProfesoresComponent implements AfterViewInit, OnDestroy, OnInit {
-  
+
   @ViewChild(DataTableDirective, {static: false})
   dtElement: DataTableDirective | undefined;
   dtOptions: DataTables.Settings = {};
@@ -61,6 +61,11 @@ export class CrudProfesoresComponent implements AfterViewInit, OnDestroy, OnInit
     });
   }
 
+  /**
+   * @author Laura <lauramorenoramos97@gmail.com>
+   * Esta funcion recoge a los profesores del centro de estudios del director/jefe de estudios
+   *
+   */
   public verProfesores(){
 
     this.profesoresService.getProfesores(this.dni!).subscribe((response) => {
@@ -77,6 +82,12 @@ export class CrudProfesoresComponent implements AfterViewInit, OnDestroy, OnInit
 
   }
 
+  /**
+   * @author Laura <lauramorenoramos97@gmail.com>
+   * Esta funcion es una suscripcion a una variable BehaviorSubject que recoge el nuevo
+   * array de profesores que ha sido modificado por haber añadido un profesor,
+   * modificado un profesor o eliminado un profesor desde los modales
+   */
   public getArrayProfesores(){
     this.profesoresService.profesoresArray.subscribe(array => {
       this.profesores = array;
@@ -85,12 +96,19 @@ export class CrudProfesoresComponent implements AfterViewInit, OnDestroy, OnInit
   }
 
   //0 ver, 1 es crear y 2 es editar
-
+  /**
+   * @author Laura <lauramorenoramos97@gmail.com>
+   * Esta funcion sirve para llamar al modal que nos va a permitir registrar un profesor
+   */
   public registrarProfesor(){
     sessionStorage.setItem("numPeticion", '1');
     this.modal.open(ModalProfesoresComponent, {size: 'md'});
   }
 
+  /**
+   * @author Laura <lauramorenoramos97@gmail.com>
+   * Esta funcion sirve para llamar al modal que nos va a permitir ver un profesor
+   */
   public verProfesor(dni_profesor: string){
     sessionStorage.setItem("numPeticion", '0');
     sessionStorage.setItem("dniProfesor", dni_profesor);
@@ -98,6 +116,10 @@ export class CrudProfesoresComponent implements AfterViewInit, OnDestroy, OnInit
 
   }
 
+  /**
+   * @author Laura <lauramorenoramos97@gmail.com>
+   * Esta funcion sirve para llamar al modal que nos va a permitir eliminar un profesor
+   */
   public eliminarProfesor(dni_profesor: string){
     this.profesoresService.eliminarProfesor(dni_profesor).subscribe({
       next:(res)=>{
@@ -111,6 +133,10 @@ export class CrudProfesoresComponent implements AfterViewInit, OnDestroy, OnInit
     })
   }
 
+  /**
+   * @author Laura <lauramorenoramos97@gmail.com>
+   * Esta funcion sirve para llamar al modal que nos va a permitir modificar un profesor
+   */
   public modificarProfesor(dni_profesor: string){
     sessionStorage.setItem("numPeticion", '2');
     sessionStorage.setItem("dniProfesor", dni_profesor);
