@@ -10,6 +10,9 @@ export class SeguimientoServiceService {
 
   constructor(private http: HttpClient) { }
 
+  /**
+   * @author Malena
+   */
   public escribirDatos(dni: string) {
     //console.log(datos);
     let url: string = this.ruta + "devolverDatosAlumno";
@@ -20,6 +23,9 @@ export class SeguimientoServiceService {
     return this.http.post(url, dato, { headers: headers });
   }
 
+  /**
+   * @author Malena
+   */
   public gestionarDepartamento(dni:string){
     let url: string = this.ruta + "gestionarDepartamento";
     let headers = new HttpHeaders({
@@ -29,6 +35,9 @@ export class SeguimientoServiceService {
     return this.http.post(url, dato, { headers: headers });
   }
 
+  /**
+   * @author Malena
+   */
   public addDepartamento(dni:string,departamento:string){
     let url: string = this.ruta + "addDepartamento";
     let headers = new HttpHeaders({
@@ -41,6 +50,9 @@ export class SeguimientoServiceService {
     return this.http.put(url, datos, { headers: headers });
   }
 
+  /**
+   * @author Malena
+   */
   public sumatorioHorasTotales(dni:string){
     let url: string = this.ruta + "sumatorioHorasTotales";
     let headers = new HttpHeaders({
@@ -50,6 +62,9 @@ export class SeguimientoServiceService {
     return this.http.post(url, dato, { headers: headers });
   }
 
+  /**
+   * @author Malena
+   */
   public devolverJornadas(dni:string){
     let url: string = this.ruta + "devolverJornadas";
     let headers = new HttpHeaders({
@@ -59,13 +74,13 @@ export class SeguimientoServiceService {
     return this.http.post(url, dato, { headers: headers });
   }
 
+  /**
+   * @author Malena
+   */
   public descargarPDF(dni:string){
-    let url: string = this.ruta + "generarAnexo3";
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-    let dato={dni:dni};
-    return this.http.post(url, dato, { headers: headers });
+    let dato= {dni:dni};
+    const url: string= this.ruta+"generarAnexo3";
+    return this.http.post(url,dato, {responseType:'arraybuffer'});
   }
 
 }

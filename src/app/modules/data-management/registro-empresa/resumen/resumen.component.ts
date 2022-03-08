@@ -2,6 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RegistroEmpresaService } from '../../../../services/registro-empresa.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalDescargaComponent } from '../modal-descarga/modal-descarga.component';
+import { ToastrService } from 'ngx-toastr';
+import { DialogService } from 'src/app/services/dialog.service';
+import * as FileSaver from 'file-saver';
 
 @Component({
   selector: 'app-resumen',
@@ -10,6 +15,7 @@ import { RegistroEmpresaService } from '../../../../services/registro-empresa.se
 })
 export class ResumenComponent implements OnInit {
 
+  public static readonly dni_tutor: string = "dni_tutor";
   public static repre: string = "representante";
   public static empresa: string = "empresa";
   public static ubi: string = "ubicacion";
@@ -24,6 +30,8 @@ export class ResumenComponent implements OnInit {
   public nombreEmp: string;
   public telefonoEmp:number;
   public cifEmp: string;
+  public tipoEmpresa: string;
+  public tipoNumero: number = 0;
 
   public direccion: string;
   public localidad: string;
@@ -37,6 +45,10 @@ export class ResumenComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
     private registroEmpresaService: RegistroEmpresaService,
+    private modal: NgbModal,
+    private toastr: ToastrService,
+    public dialogService: DialogService
+
 
   ) {
     this.correoRep = "hola";
@@ -48,13 +60,14 @@ export class ResumenComponent implements OnInit {
     this.nombreEmp = "hola";
     this.telefonoEmp = 0;
     this.cifEmp = "hola";
+    this.tipoEmpresa = '0';
 
     this.localidad = "hola";
     this.direccion = "hola";
     this.provincia = "hola";
     this.cp = 0;
 
-    this.dniTutor = '978528198';
+    this.dniTutor = '20a';
 
     this.resumen = this.formBuilder.group({
       correoRep: [''],
@@ -65,6 +78,7 @@ export class ResumenComponent implements OnInit {
       nombreEmp: [''],
       telefonoEmp: [''],
       cifEmp: [''],
+      tipoEmpresa: [''],
       direccion: [''],
       localidad: [''],
       provincia: [''],
@@ -88,6 +102,13 @@ export class ResumenComponent implements OnInit {
     this.nombreEmp = datosEmpresa["nombre"];
     this.telefonoEmp = datosEmpresa["telefono"];
     this.cifEmp = datosEmpresa["cif"];
+    if(datosEmpresa["tipoEmpresa"] == '1'){
+      this.tipoEmpresa = 'Privada';
+    }else{
+      this.tipoEmpresa = 'Pública';
+    }
+    this.tipoNumero = datosEmpresa["tipoEmpresa"];
+    // console.log(this.tipoNumero);
 
     var datosUbicacion = JSON.parse(ubicacion);
     this.localidad = datosUbicacion["localidad"];
@@ -101,6 +122,9 @@ export class ResumenComponent implements OnInit {
     return this.resumen.controls;
   }
 
+  /**
+   * @author Malena
+   */
   onSubmit(){
     this.submitted = true;
     if (!this.resumen.valid) return;
@@ -114,6 +138,7 @@ export class ResumenComponent implements OnInit {
       'provincia': this.provincia,
       'direccion': this.direccion,
       'cp': this.cp,
+      'es_privada': this.tipoNumero,
     };
 
     var representante = {
@@ -133,17 +158,21 @@ export class ResumenComponent implements OnInit {
 
     console.log(datos);
 
-    this.registroEmpresaService.enviarDatos(datos).subscribe({
-      next: () => {
 
-        //Cuando la API esté lista, me devolverá un mensaje indicandome que la empresa ha sido registrada correctamente.
-        //this.router.navigateByUrl('principal');
+    this.registroEmpresaService.enviarDatos(datos).subscribe({
+      next: (response:any) => {
+        let ruta = response.ruta_anexo;
+        console.log(ruta);
+        this.abrirModalDialog(ruta);
+        // this.modal.open(ModalDescargaComponent,{ size: 'xs' });
+        // this.registroEmpresaService.descargarTrigger.emit([ruta]);
+        this.toastr.success('Datos guardados correctamente.','Registro de empresa.');
       },
       error: e => {
+        // console.log("No se han enviado los datos al servidor.");
+        this.toastr.error('No se han guardado los datos correctamente.','Error al registrar empresa');
       }
     });
-    //this.router.navigateByUrl('empresa');
-
 
     this.onReset();
   }
@@ -151,6 +180,38 @@ export class ResumenComponent implements OnInit {
   onReset() {
     this.submitted = false;
     this.resumen.reset();
+  }
+
+  /**
+   * Metodo que abre el Modal Dialog y si elegimos la opcion afirmativa, descargará el anexo 0.
+   *
+   * @author Malena
+   * @param ruta
+   */
+  public async abrirModalDialog(ruta:string){
+    let descargar = await this.dialogService.confirmacion(
+      'Descargar Anexo 0',
+      'Se ha generado el Anexo 0, ¿Quiere descargarlo?'
+    );
+    if(descargar){
+      this.registroEmpresaService.descargarAnexo0(ruta).subscribe({
+        next: (response: any) => {
+          // console.log('Se descarga el anexo 0');
+          this.toastr.success('Anexo 0 descargado correctamente.','Descarga Anexo 0.');
+          let arr = ruta.split('\\',3);
+          let nombre = arr.pop();
+          // console.log(nombre);
+          const blob = new Blob([response], {type: 'application/octet-stream'});
+          FileSaver.saveAs(blob,nombre);
+          //Hacer un split de la ruta, y hacer un pop para coger el ultimo elemento.
+        },
+        error: e => {
+          // console.log('El anexo no se ha descargado');
+          this.toastr.error('No se ha descargado el Anexo 0.','Error al descargar el Anexo 0');
+        }
+      });
+      this.router.navigateByUrl('data-management/gestion-empresas');
+    }
   }
 
 }

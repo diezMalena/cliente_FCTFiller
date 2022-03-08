@@ -1,226 +1,225 @@
 <div class="row">
+  <div class="page-header d-flex justify-content-between pb-3">
+    <h1 class="h2">Registro de empresas</h1>
+    <button type="button" class="btn btn-outline-default mr-2" placement="left"
+      ngbTooltip="Haga clic para acceder a la ayuda de esta sección">?</button>
+  </div>
+  <div class="col-12 p-2">
+    <div class="breadcrumb">
+      <a routerLink="/data-management/registro-empresa/representante" class="item completed">
+        <span class="arrow"></span>
+        <span class="hide-mobile">Representante</span>
+        <span class="show-mobile">Repre...</span>
+      </a>
+      <a routerLink="/data-management/registro-empresa/empresa" class="item completed">
+        <span class="arrow"></span>
+        <span class="hide-mobile">Empresa</span>
+        <span class="show-mobile">Empresa</span>
+      </a>
+      <a routerLink="/data-management/registro-empresa/ubicacion" class="item completed">
+        <span class="arrow"></span>
+        <span class="hide-mobile">Ubicación</span>
+        <span class="show-mobile">Ubicación</span>
+      </a>
+      <a routerLink="data-management/registro-empresa/resumen" class="item active">
+        <span class="hide-mobile">Resumen</span>
+        <span class="show-mobile">Resumen</span>
+      </a>
+    </div>
+  </div>
+</div>
 
-  <body class="col-12">
+<form [formGroup]="resumen" (ngSubmit)="onSubmit()" class="row px-4 py-4 d-flex justify-content-center">
+  <div class="col-12 border border-black p-3 card">
 
     <div class="row">
-      <div class=" col-12 col-xl-10 p-2 text-dark bg-opacity-50 bg-secondary">
+      <!-- PARTE DE DATOS DEL REPRESENTANTE -->
+      <div class="col-xl-4 col-12 px-4">
         <div class="row">
-          <div class="col-12">
-            <!-- <div class="container"> -->
-            <div class="breadcrumb">
-              <a routerLink="/data-management/registro-empresa/representante" class="item completed">
-                <!--class="item completed" para seleccionar que ya se ha completado ese paso-->
-                <span class="arrow"></span>
-                <span class="hide-mobile">Representante</span>
-                <span class="show-mobile">Repre...</span>
-              </a>
-              <a routerLink="/data-management/registro-empresa/empresa" class="item completed">
-                <!--class="item active" para determinar que estamos en ese paso-->
-                <span class="arrow"></span>
-                <span class="hide-mobile">Empresa</span>
-                <span class="show-mobile">Empresa</span>
-              </a>
-              <a routerLink="/data-management/registro-empresa/ubicacion" class="item completed">
-                <span class="arrow"></span>
-                <span class="hide-mobile">Ubicación</span>
-                <span class="show-mobile">Ubicación</span>
-              </a>
-              <a href="" class="item active">
-                <span class="hide-mobile">Resumen</span>
-                <span class="show-mobile">Resumen</span>
-              </a>
-            </div>
-            <!-- </div> -->
-          </div>
+          <h2 class="col-12 h3 text-center">Representante</h2>
         </div>
 
-
-        <form [formGroup]="resumen" (ngSubmit)="onSubmit()" class="row px-4 py-4 d-flex justify-content-center">
-          <div class="col-12 col-xl-12 border border-black py-3 px-3">
-
-            <!-- PARTE DE DATOS DEL REPRESENTANTE -->
-            <div class="row">
-
-
-              <div class="col-xl-4 col-12 border border-danger">
-                <div class="row">
-                  <div class="col-12 text-center">
-                    <h3>Representante:</h3>
-                  </div>
-                </div>
-                <div class="mb-3">
-                  <div class="row d-flex justify-content-center">
-                    <div class="col-12 col-xl-4">
-                      <label for="exampleInputEmail1" class="form-label fw-bold">E-mail:</label>
-                    </div>
-                    <div class="col-12 col-xl-8">
-                      <input type="text" class="form-control" formControlName="correoRep" [(ngModel)]="correoRep" readonly>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="mb-3">
-                  <div class="row d-flex justify-content-center">
-                    <div class="col-12 col-xl-4">
-                      <label for="exampleInputEmail1" class="form-label fw-bold">Nombre:</label>
-                    </div>
-                    <div class="col-12 col-xl-8">
-                      <input type="text" class="form-control" formControlName="nombreRep" [(ngModel)]="nombreRep" readonly>
-                    </div>
-                  </div>
-                </div>
-
-
-                <div class="mb-3">
-                  <div class="row d-flex justify-content-center">
-                    <div class="col-12 col-xl-4">
-                      <label for="exampleInputEmail1" class="form-label fw-bold">Primer apellido:</label>
-                    </div>
-                    <div class="col-12 col-xl-8">
-                      <input type="text" class="form-control" formControlName="apellidosRep" [(ngModel)]="apellidosRep" readonly>
-                    </div>
-                  </div>
-                </div>
-
-
-                <div class="mb-3">
-                  <div class="row d-flex justify-content-center">
-                    <div class="col-12 col-xl-4">
-                      <label for="exampleInputEmail1" class="form-label fw-bold">DNI:</label>
-                    </div>
-                    <div class="col-12 col-xl-8">
-                      <input type="text" class="form-control" formControlName="dniRep" [(ngModel)]="dniRep" readonly>
-                    </div>
-                  </div>
-                </div>
-
+        <div class="row border border-dark border-1 rounded p-2 d-flex align-items-center">
+          <div class="col-12 mb-3">
+            <div class="row d-flex align-items-center">
+              <div class="col-12 col-lg-4 d-lg-flex justify-content-end">
+                <label for="dniRep" class="form-label fw-bold m-0">DNI:</label>
               </div>
-
-
-
-              <!-- PARTE DE DATOS DE LA EMPRESA -->
-
-              <div class="col-xl-4 col-12 border border-danger">
-
-                <div class="row">
-                  <div class="col-12 text-center">
-                    <h3>Empresa:</h3>
-                  </div>
-                </div>
-
-                <div class="mb-3">
-                  <div class="row d-flex justify-content-center">
-                    <div class="col-12 col-xl-4">
-                      <label for="exampleInputEmail1" class="form-label fw-bold">Email:</label>
-                    </div>
-                    <div class="col-12 col-xl-8">
-                      <input type="text" class="form-control" formControlName="correoEmp" [(ngModel)]="correoEmp" readonly>
-                    </div>
-                  </div>
-                </div>
-                <div class="mb-3">
-                  <div class="row d-flex justify-content-center">
-                    <div class="col-12 col-xl-4">
-                      <label for="exampleInputEmail1" class="form-label fw-bold">Nombre:</label>
-                    </div>
-                    <div class="col-12 col-xl-8">
-                      <input type="text" class="form-control" formControlName="nombreEmp" [(ngModel)]="nombreEmp" readonly>
-                    </div>
-                  </div>
-                </div>
-                <div class="mb-3">
-                  <div class="row d-flex justify-content-center">
-                    <div class="col-12 col-xl-4">
-                      <label for="exampleInputEmail1" class="form-label fw-bold">Teléfono:</label>
-                    </div>
-                    <div class="col-12 col-xl-8">
-                      <input type="text" class="form-control" formControlName="telefonoEmp" [(ngModel)]="telefonoEmp" readonly>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="mb-3">
-                  <div class="row d-flex justify-content-center">
-                    <div class="col-12 col-xl-4">
-                      <label for="exampleInputEmail1" class="form-label fw-bold">CIF:</label>
-                    </div>
-                    <div class="col-12 col-xl-8">
-                      <input type="text" class="form-control" formControlName="cifEmp" [(ngModel)]="cifEmp" readonly>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-
-
-              <div class="col-xl-4 col-12 border border-danger">
-
-                <div class="row">
-                  <div class="col-12 text-center">
-                    <h3>Ubicación:</h3>
-                  </div>
-                </div>
-
-                <div class="mb-3">
-                  <div class="row d-flex justify-content-center">
-                    <div class="col-12 col-xl-4">
-                      <label for="exampleInputEmail1" class="form-label fw-bold">Localidad:</label>
-                    </div>
-                    <div class="col-12 col-xl-8">
-                      <input type="text" class="form-control" formControlName="localidad" [(ngModel)]="localidad" readonly>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="mb-3">
-                  <div class="row d-flex justify-content-center">
-                    <div class="col-12 col-xl-4">
-                      <label for="exampleInputEmail1" class="form-label fw-bold">Dirección:</label>
-                    </div>
-                    <div class="col-12 col-xl-8">
-                      <input type="text" class="form-control" formControlName="direccion" [(ngModel)]="direccion" readonly>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="mb-3">
-                  <div class="row d-flex justify-content-center">
-                    <div class="col-12 col-xl-4">
-                      <label for="exampleInputEmail1" class="form-label fw-bold">Provincia:</label>
-                    </div>
-                    <div class="col-12 col-xl-8">
-                      <input type="text" class="form-control" formControlName="provincia" [(ngModel)]="provincia" readonly>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="mb-3">
-                  <div class="row d-flex justify-content-center">
-                    <div class="col-12 col-xl-4">
-                      <label for="exampleInputEmail1" class="form-label fw-bold">CP:</label>
-                    </div>
-                    <div class="col-12 col-xl-8">
-                      <input type="text" class="form-control" formControlName="cp" [(ngModel)]="cp" readonly>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-            <div class="row py-2 d-flex justify-content-center">
-              <div class="col-6 col-xl-6 d-flex justify-content-center">
-                <input type="submit" value="Aceptar y continuar" class="btn btn-primary">
+              <div class="col-12 col-lg-8">
+                <input type="text" id="dniRep" class="form-control-plaintext" formControlName="dniRep"
+                  [(ngModel)]="dniRep" readonly>
               </div>
             </div>
           </div>
-        </form>
+
+          <div class="col-12 mb-3">
+            <div class="row d-flex align-items-center">
+              <div class="col-12 col-lg-4 d-lg-flex justify-content-end">
+                <label for="nompreRep" class="form-label fw-bold m-0">Nombre:</label>
+              </div>
+              <div class="col-12 col-lg-8">
+                <input type="text" id="nombreRep" class="form-control-plaintext" formControlName="nombreRep"
+                  [(ngModel)]="nombreRep" readonly>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 mb-3">
+            <div class="row d-flex align-items-center">
+              <div class="col-12 col-lg-4 d-lg-flex justify-content-end">
+                <label for="apellidosRep" class="form-label fw-bold m-0">Apellidos:</label>
+              </div>
+              <div class="col-12 col-lg-8">
+                <input type="text" id="apellidosRep" class="form-control-plaintext" formControlName="apellidosRep"
+                  [(ngModel)]="apellidosRep" readonly>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 mb-3">
+            <div class="row d-flex align-items-center">
+              <div class="col-12 col-lg-4 d-lg-flex justify-content-end">
+                <label for="correoRep" class="form-label fw-bold m-0">E-mail:</label>
+              </div>
+              <div class="col-12 col-lg-8">
+                <input type="text" id="correoRep" class="form-control-plaintext" formControlName="correoRep"
+                  [(ngModel)]="correoRep" readonly>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PARTE DE DATOS DE LA EMPRESA -->
+      <div class="col-xl-4 col-12 px-4">
         <div class="row">
-          <div class="col-12 col-xl-12">
-            <input type="button" value="Atrás" class="btn btn-danger" routerLink="/empresa">
+          <h2 class="col-12 text-center h3">Empresa</h2>
+        </div>
+
+        <div class="row border border-dark border-1 rounded p-2 d-flex align-items-center">
+          <div class="col-12 mb-3">
+            <div class="row d-flex align-items-center">
+              <div class="col-12 col-lg-4 d-lg-flex justify-content-end">
+                <label for="cifEmp" class="form-label fw-bold m-0">CIF:</label>
+              </div>
+              <div class="col-12 col-lg-8">
+                <input type="text" id="cifEmp" class="form-control-plaintext" formControlName="cifEmp"
+                  [(ngModel)]="cifEmp" readonly>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 mb-3">
+            <div class="row d-flex align-items-center">
+              <div class="col-12 col-lg-4 d-lg-flex justify-content-end">
+                <label for="nombreEmp" class="form-label fw-bold m-0">Nombre:</label>
+              </div>
+              <div class="col-12 col-lg-8">
+                <input type="text" id="nombreEmp" class="form-control-plaintext" formControlName="nombreEmp" [(ngModel)]="nombreEmp"
+                  readonly>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 mb-3">
+            <div class="row d-flex align-items-center">
+              <div class="col-12 col-lg-4 d-lg-flex justify-content-end">
+                <label for="correoEmp" class="form-label fw-bold m-0">Email:</label>
+              </div>
+              <div class="col-12 col-lg-8">
+                <input type="text" id="correoEmp" class="form-control-plaintext" formControlName="correoEmp"
+                  [(ngModel)]="correoEmp" readonly>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 mb-3">
+            <div class="row d-flex align-items-center">
+              <div class="col-12 col-lg-4 d-lg-flex justify-content-end">
+                <label for="telefonoEmp" class="form-label fw-bold m-0">Teléfono:</label>
+              </div>
+              <div class="col-12 col-lg-8">
+                <input type="text" id="telefonoEmp" class="form-control-plaintext" formControlName="telefonoEmp"
+                  [(ngModel)]="telefonoEmp" readonly>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 mb-3">
+            <div class="row d-flex align-items-center">
+              <div class="col-12 col-lg-4 d-lg-flex justify-content-end">
+                <label for="tipoEmpresa" class="form-label fw-bold m-0">Tipo:</label>
+              </div>
+              <div class="col-12 col-lg-8">
+                <input type="text" id="tipoEmpresa" class="form-control-plaintext" formControlName="tipoEmpresa"
+                  [(ngModel)]="tipoEmpresa" readonly>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PARTE DE DATOS DE UBICACIÓN -->
+      <div class="col-xl-4 col-12 px-4">
+        <div class="row">
+          <h2 class="col-12 text-center h3">Ubicación</h2>
+        </div>
+
+        <div class="row border border-dark border-1 rounded p-2 d-flex align-items-center">
+          <div class="col-12 mb-3">
+            <div class="row d-flex align-items-center">
+              <div class="col-12 col-lg-4 d-lg-flex justify-content-end">
+                <label for="localidad" class="form-label fw-bold m-0">Localidad:</label>
+              </div>
+              <div class="col-12 col-lg-8">
+                <input type="text" id="localidad" class="form-control-plaintext" formControlName="localidad"
+                  [(ngModel)]="localidad" readonly>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 mb-3">
+            <div class="row d-flex align-items-center">
+              <div class="col-12 col-lg-4 d-lg-flex justify-content-end">
+                <label for="provincia" class="form-label fw-bold m-0">Provincia:</label>
+              </div>
+              <div class="col-12 col-lg-8">
+                <input type="text" id="provincia" class="form-control-plaintext" formControlName="provincia"
+                  [(ngModel)]="provincia" readonly>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 mb-3">
+            <div class="row d-flex align-items-center">
+              <div class="col-12 col-lg-4 d-lg-flex justify-content-end">
+                <label for="direccion" class="form-label fw-bold m-0">Dirección:</label>
+              </div>
+              <div class="col-12 col-lg-8">
+                <input type="text" id="direccion" class="form-control-plaintext" formControlName="direccion"
+                  [(ngModel)]="direccion" readonly>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 mb-3">
+            <div class="row d-flex align-items-center">
+              <div class="col-12 col-lg-4 d-lg-flex justify-content-end">
+                <label for="cp" class="form-label fw-bold m-0">CP:</label>
+              </div>
+              <div class="col-12 col-lg-8">
+                <input type="text" id="cp" class="form-control-plaintext" formControlName="cp" [(ngModel)]="cp"
+                  readonly>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </body>
-</div>
-
+    <div class="row py-2 d-flex align-items-center">
+      <div class="col-12 col-xl-12 d-flex justify-content-center">
+        <input type="submit" value="Aceptar y continuar" class="btn btn-outline-primary">
+      </div>
+    </div>
+  </div>
+</form>

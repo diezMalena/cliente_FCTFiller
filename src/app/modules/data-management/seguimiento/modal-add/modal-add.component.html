@@ -83,6 +83,18 @@
           </div>
         </div>
 
+        <div class="row text-center">
+          <div class="col-12 col-xl-12" *ngIf="submitted && formulario['horas'].errors">
+            <div *ngIf="formulario['horas'].errors['max']">No se pueden añadir más de 10 horas diarias. </div>
+          </div>
+        </div>
+
+        <div class="row text-center">
+          <div class="col-12 col-xl-12" *ngIf="fecha_invalida">
+            <div>No se puede introducir una fecha superior a la de hoy. </div>
+          </div>
+        </div>
+
 
         <div class="row d-flex justify-content-center pt-2">
           <div class="col-xl-5 col-5">

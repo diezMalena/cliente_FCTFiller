@@ -8,6 +8,10 @@ import { Jornada } from  '../../../models/Jornada/jornada';
 import { ModalJornadaService } from '../../../services/modal-jornada.service';
 import { SeguimientoServiceService } from 'src/app/services/seguimiento-service.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import * as FileSaver from 'file-saver';
+import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
+import { ToastrService } from 'ngx-toastr';
+import { DialogService } from 'src/app/services/dialog.service';
 
 @Component({
   selector: 'app-seguimiento',
@@ -16,8 +20,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class SeguimientoComponent implements OnInit {
 
+  usuario;
   public arrayJornadas: any = [];
-  public dni_alumno: string = "12345678Q";
+  public dni_alumno?: string;
   public nombre_alumno: any;
   public nombre_empresa: any;
   public departamento: any;
@@ -27,6 +32,7 @@ export class SeguimientoComponent implements OnInit {
   public horasTotales: number = 0;
   public botonDescargar: boolean = false;
   public botonVer: boolean = false;
+  public static readonly dniAlumno: string = "dniAlumno";
 
 
   constructor(
@@ -34,8 +40,15 @@ export class SeguimientoComponent implements OnInit {
     private router: Router,
     private modal: NgbModal,
     private modalJornadaService: ModalJornadaService,
-    private seguimientoService:SeguimientoServiceService
+    private seguimientoService:SeguimientoServiceService,
+    private storageUser: LoginStorageUserService,
+    private toastr: ToastrService,
+    public dialogService: DialogService
+
+
   ) {
+    this.usuario = storageUser.getUser();
+    this.dni_alumno = this.usuario?.dni
     this.deptoForm = this.formBuilder.group({
       depto: ['',[Validators.required]],
     });
@@ -67,6 +80,7 @@ export class SeguimientoComponent implements OnInit {
     this.modalJornadaService.jornadasArray.subscribe(array => {
       this.arrayJornadas = array;
         var cuantasJornadasHay = this.arrayJornadas.length;
+        this.sumatorioHorasTotales();
         //console.log(cuantasJornadasHay);
 
         //Cuando se inserten 5 nuevas jornadas, se habilita el boton Descargar PDF:
@@ -91,11 +105,6 @@ export class SeguimientoComponent implements OnInit {
  */
   nuevaJornada(){
     this.modal.open(ModalAddComponent, { size: 'm' });
-    /*const ventanaModal = this.modal.open(ModalAddComponent, { size: 'm' });
-    ventanaModal.componentInstance.jornadaTrigger.subscribe(() => {
-      console.log('holaaa');
-    });
-    */
   }
 
 
@@ -107,11 +116,10 @@ export class SeguimientoComponent implements OnInit {
 
 
   public rellenarArray(){
-    this.seguimientoService.devolverJornadas(this.dni_alumno).subscribe({
+    this.seguimientoService.devolverJornadas(this.dni_alumno!).subscribe({
       next: (response: any) => {
         this.arrayJornadas = response;
         var cuantasJornadasHay = this.arrayJornadas.length;
-        //console.log(cuantasJornadasHay);
 
         //Cuando se inserten 5 nuevas jornadas, se habilita el boton Descargar PDF:
         if(cuantasJornadasHay >= 5 && cuantasJornadasHay % 5 == 0){
@@ -153,7 +161,7 @@ export class SeguimientoComponent implements OnInit {
    */
   public ponerNombre(){
     //console.log(this.dni_alumno);
-    this.seguimientoService.escribirDatos(this.dni_alumno).subscribe({
+    this.seguimientoService.escribirDatos(this.dni_alumno!).subscribe({
       next: (response: any) => {
         this.nombre_alumno = response[0]['nombre_alumno'] +' ' + response[0]['apellidos_alumno'] ;
         this.nombre_empresa = response[0]['nombre_empresa']
@@ -173,7 +181,7 @@ export class SeguimientoComponent implements OnInit {
    * @author Malena
    */
   public gestionDepartamento(){
-    this.seguimientoService.gestionarDepartamento(this.dni_alumno).subscribe({
+    this.seguimientoService.gestionarDepartamento(this.dni_alumno!).subscribe({
       next: (response:any) => {
         //console.log(response);
         if(response[0]['departamento'] != ''){
@@ -203,7 +211,7 @@ export class SeguimientoComponent implements OnInit {
     this.departamento = this.deptoForm.value.depto;
     //console.log(this.departamento);
 
-    this.seguimientoService.addDepartamento(this.dni_alumno,this.departamento).subscribe({
+    this.seguimientoService.addDepartamento(this.dni_alumno!,this.departamento).subscribe({
       next: (response: any) => {
         this.departamentoEstablecido = true;
       },
@@ -221,7 +229,7 @@ export class SeguimientoComponent implements OnInit {
    * @author Malena.
    */
   public sumatorioHorasTotales(){
-    this.seguimientoService.sumatorioHorasTotales(this.dni_alumno).subscribe({
+    this.seguimientoService.sumatorioHorasTotales(this.dni_alumno!).subscribe({
       next: (response:any) => {
         this.horasTotales = response
       },
@@ -231,19 +239,27 @@ export class SeguimientoComponent implements OnInit {
     })
   }
 
-  public descargarPDF(){
-    this.seguimientoService.descargarPDF(this.dni_alumno).subscribe({
-      next:(response) => {
-        console.log('Se ha descargado');
-      },
-      error: e => {
-        console.log('No se ha descargado el documento');
-      }
-    });
+/**
+ * Método que abre el Modal Dialog y depende de la respuesta hace una cosa u otra, en este
+ * caso descargaría la hoja de seguimiento correspondiente.
+ * @author Malena
+ */
+  public async descargarPDF(){
+    let descargar = await this.dialogService.confirmacion(
+      'Descargar Anexo III',
+      'Se ha generado tu hoja de seguimiento, ¿Quiere descargarla?'
+    );
+    if(descargar){
+      this.seguimientoService.descargarPDF(this.dni_alumno!).subscribe({
+        next:(res:any) => {
+          const blob = new Blob([res], {type: 'application/octet-stream'});
+          FileSaver.saveAs(blob,'hoja_seguimiento.docx');
+          this.toastr.success('Se ha descargado la hoja de seguimiento correctamente.','Generación de Anexo III');
+        },
+        error: e => {
+          this.toastr.error('No se ha podido generar el documento correctamente.','Error en la generación del Anexo III');
+        }
+      });
+    }
   }
-
-  public verPDF(){
-
-  }
-
 }
