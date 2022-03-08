@@ -1,23 +1,28 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CrudProfesoresService } from 'src/app/services/crud-profesores.service';
 import { ModalProfesoresComponent } from '../modal-profesores/modal-profesores.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
-import { DialogService } from 'src/app/services/dialog.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-crud-profesores',
   templateUrl: './crud-profesores.component.html',
   styleUrls: ['./crud-profesores.component.scss']
 })
-export class CrudProfesoresComponent implements OnInit {
+export class CrudProfesoresComponent implements OnDestroy, OnInit {
+
+  dtOptions: DataTables.Settings = {};
+  dtTrigger = new Subject<any>();
+  data: any;
 
   profesores: any =[];
   profesor: any = [];
   usuario;
   dni?: string;
+  respuesta: any = [];
 
   constructor(
     private profesoresService: CrudProfesoresService,
@@ -25,21 +30,34 @@ export class CrudProfesoresComponent implements OnInit {
     private toastr: ToastrService,
     private modal: NgbModal,
     private storageUser: LoginStorageUserService,
-    public dialogService: DialogService,
   ) {
     this.usuario = storageUser.getUser();
     this.dni = this.usuario?.dni
    }
 
   ngOnInit(): void {
-  this.verProfesores();
-  this.getArrayProfesores();
+    delete this.dtOptions['language'];
+    this.verProfesores();
+    this.getArrayProfesores();
+  }
+
+  ngOnDestroy(): void {
+    this.dtTrigger.unsubscribe();
   }
 
   public verProfesores(){
-    this.profesoresService.getProfesores(this.dni!).subscribe((response)=>{
-      this.profesores=response;
+
+    this.profesoresService.getProfesores(this.dni!).subscribe((response) => {
+      this.profesores = response;
+      response = (this.profesores as any).data;
+      // Calling the DT trigger to manually render the table
+      this.dtTrigger.next(this.profesores);
+      $.fn.dataTable.ext.errMode = 'throw';
+    });
+    $.extend(true, $.fn.dataTable.defaults, {
+      "language": { "url": '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json' }
     })
+
   }
 
   public getArrayProfesores(){
@@ -62,13 +80,7 @@ export class CrudProfesoresComponent implements OnInit {
 
   }
 
-  public async eliminarProfesor(dni_profesor: string){
-    let hacerlo = await this.dialogService.confirmacion(
-      'Eliminar',
-      `¿Está seguro de que desea eliminar el profesor ` + dni_profesor + `?`
-    );
-
-    if (hacerlo) {
+  public eliminarProfesor(dni_profesor: string){
     this.profesoresService.eliminarProfesor(dni_profesor).subscribe({
       next:(res)=>{
         this.toastr.success('Profesor Eliminado', 'Eliminado');
@@ -79,7 +91,6 @@ export class CrudProfesoresComponent implements OnInit {
         this.toastr.error('El profesor no ha podido eliminarse', 'Fallo');
       }
     })
-  }
   }
 
   public modificarProfesor(dni_profesor: string){
