@@ -113,7 +113,7 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
             this.toastr.info('Anexos de: '+this.dniAux, 'Vistas Anexos');
             res = (this.anexosArray as any).data;
             // Calling the DT trigger to manually render the table
-            this.rerender();
+            //this.rerender();
             this.dtTrigger.next(this.anexosArray);
             $.fn.dataTable.ext.errMode = 'throw';
           },
