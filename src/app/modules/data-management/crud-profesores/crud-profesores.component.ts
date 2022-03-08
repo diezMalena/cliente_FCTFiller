@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CrudProfesoresService } from 'src/app/services/crud-profesores.service';
@@ -6,14 +6,17 @@ import { ModalProfesoresComponent } from '../modal-profesores/modal-profesores.c
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 import { Subject } from 'rxjs';
+import { DataTableDirective } from 'angular-datatables';
 
 @Component({
   selector: 'app-crud-profesores',
   templateUrl: './crud-profesores.component.html',
   styleUrls: ['./crud-profesores.component.scss']
 })
-export class CrudProfesoresComponent implements OnDestroy, OnInit {
-
+export class CrudProfesoresComponent implements AfterViewInit, OnDestroy, OnInit {
+  
+  @ViewChild(DataTableDirective, {static: false})
+  dtElement: DataTableDirective | undefined;
   dtOptions: DataTables.Settings = {};
   dtTrigger = new Subject<any>();
   data: any;
@@ -34,6 +37,9 @@ export class CrudProfesoresComponent implements OnDestroy, OnInit {
     this.usuario = storageUser.getUser();
     this.dni = this.usuario?.dni
    }
+  ngAfterViewInit(): void {
+    this.dtTrigger.next(this.profesores);
+  }
 
   ngOnInit(): void {
     delete this.dtOptions['language'];
@@ -41,8 +47,18 @@ export class CrudProfesoresComponent implements OnDestroy, OnInit {
     this.getArrayProfesores();
   }
 
+
   ngOnDestroy(): void {
     this.dtTrigger.unsubscribe();
+  }
+
+  rerender(): void {
+    this.dtElement!.dtInstance.then((dtInstance: DataTables.Api) => {
+      // Destroy the table first
+      dtInstance.destroy();
+      // Call the dtTrigger to rerender again
+      this.dtTrigger.next(this.profesores);
+    });
   }
 
   public verProfesores(){
@@ -51,6 +67,7 @@ export class CrudProfesoresComponent implements OnDestroy, OnInit {
       this.profesores = response;
       response = (this.profesores as any).data;
       // Calling the DT trigger to manually render the table
+      this.rerender();
       this.dtTrigger.next(this.profesores);
       $.fn.dataTable.ext.errMode = 'throw';
     });
@@ -63,6 +80,7 @@ export class CrudProfesoresComponent implements OnDestroy, OnInit {
   public getArrayProfesores(){
     this.profesoresService.profesoresArray.subscribe(array => {
       this.profesores = array;
+      this.rerender();
     });
   }
 
