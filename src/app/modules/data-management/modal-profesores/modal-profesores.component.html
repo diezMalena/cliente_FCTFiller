@@ -1,3 +1,4 @@
+<!----------------------------------------Ver Usuario------------------------------------------------>
 <div class="card" *ngIf="this.numero=='0'">
     <div class="modal-header">
         <h1 class="modal-title fs-4">Perfil de {{profesor[0].nombre}} </h1>
@@ -7,22 +8,22 @@
         <form class="needs-validation">
             <div class="row g-3">
                 <div class="col-md-4">
-                    <label for="cif" class="form-label"><b>Nombre:</b></label>
+                    <label for="nombre" class="form-label"><b>Nombre:</b></label>
                     <input type="text" class="form-control-plaintext" id="nombre" value="{{profesor[0].nombre}}" readonly>
                 </div>
 
                 <div class="col-md-8">
-                    <label for="nombre_empresa" class="form-label"><b>Apellido:</b></label>
+                    <label for="apellido" class="form-label"><b>Apellido:</b></label>
                     <input type="text" class="form-control-plaintext" id="apellido" value="{{profesor[0].apellidos}}" readonly>
                 </div>
 
                 <div class="col-md-4">
-                    <label for="telefono" class="form-label"><b>DNI:</b></label>
+                    <label for="dni" class="form-label"><b>DNI:</b></label>
                     <input type="text" class="form-control-plaintext" id="dni" value="{{profesor[0].dni}}" readonly>
                 </div>
 
                 <div class="col-md-8">
-                    <label for="email_empresa" class="form-label"><b>Email:</b></label>
+                    <label for="email_profesor" class="form-label"><b>Email:</b></label>
                     <input type="text" class="form-control-plaintext" id="email_profesor" value="{{profesor[0].email}}" readonly>
                 </div>
             </div>
@@ -33,16 +34,16 @@
                 <div class="col-md-4" *ngFor="let p of profesor; index as i">
                     <div class="col-md-9" *ngFor="let r of p.roles; index as i">
                         <div *ngIf="r==1">
-                            <input type="text" class="form-control-plaintext" id="roles{{i}}" value="Director">
+                            <input type="text" class="form-control-plaintext" id="roles" value="Director">
                         </div>
                         <div *ngIf="r==2">
-                            <input type="text" class="form-control-plaintext" id="roles{{i}}" value="Jefe de estudios">
+                            <input type="text" class="form-control-plaintext" id="roles" value="Jefe de estudios">
                         </div>
                         <div *ngIf="r==3">
-                            <input type="text" class="form-control-plaintext" id="roles{{i}}" value="Tutor">
+                            <input type="text" class="form-control-plaintext" id="roles" value="Tutor">
                         </div>
                         <div *ngIf="r==4">
-                            <input type="text" class="form-control-plaintext" id="roles{{i}}" value="Profesor">
+                            <input type="text" class="form-control-plaintext" id="roles" value="Profesor">
                         </div>
                     </div>
                 </div>
@@ -71,7 +72,7 @@
 
             <div class="col-md-8 pb-2">
                 <label for="apellido" class="form-label"><b>Apellido:</b></label>
-                <input type="text" class="form-control" id="nombre_empresa" placeholder="Fernandez" formControlName="apellido">
+                <input type="text" class="form-control" id="apellido" placeholder="Fernandez" formControlName="apellido">
                 <div *ngIf="submitted && formulario['apellido'].errors">
                     <div *ngIf="formulario['apellido'].errors['required']">El apellido no puede estar vacio</div>
                 </div>
@@ -116,10 +117,10 @@
 
                 <p class="form-label"><b>Roles:</b></p>
                 <div class="col pb-2 d-flex justify-content-between" id="rolesUsers">
-                    <label for="cbox1"><input type="checkbox" id="roles" value="1"> Director</label>
-                    <label for="cbox2"><input type="checkbox" id="roles" value="2"> Jefe de estudios</label>
-                    <label for="cbox3"><input type="checkbox" id="roles" value="3"> Tutor</label>
-                    <label for="cbox4"><input type="checkbox" id="roles" value="4" checked> Profesor</label>
+                    <label for="cbox1"><input type="checkbox" id="cbox1" value="1"> Director</label>
+                    <label for="cbox2"><input type="checkbox" id="cbox2" value="2"> Jefe de estudios</label>
+                    <label for="cbox3"><input type="checkbox" id="cbox3" value="3"> Tutor</label>
+                    <label for="cbox4"><input type="checkbox" id="cbox4" value="4" checked> Profesor</label>
                 </div>
 
             </div>
@@ -152,7 +153,7 @@
 
             <div class="col-md-8 pb-2">
                 <label for="apellido" class="form-label"><b>Apellido:</b></label>
-                <input type="text" class="form-control" id="nombre_empresa" placeholder="Fernandez" formControlName="apellido">
+                <input type="text" class="form-control" id="apellido" placeholder="Fernandez" formControlName="apellido">
                 <div *ngIf="submitted && formulario['apellido'].errors">
                     <div *ngIf="formulario['apellido'].errors['required']">El apellido no puede estar vacio</div>
                 </div>
@@ -197,10 +198,10 @@
 
                 <p class="form-label"><b>Roles:</b></p>
                 <div class="col pb-2 d-flex justify-content-between" id="rolesUsers">
-                    <label for="cbox1"><input type="checkbox" id="roles" value="1"> Director</label>
-                    <label for="cbox2"><input type="checkbox" id="roles" value="2"> Jefe de estudios</label>
-                    <label for="cbox3"><input type="checkbox" id="roles" value="3"> Tutor</label>
-                    <label for="cbox4"><input type="checkbox" id="roles" value="4"> Profesor</label>
+                    <label for="cbox1"><input type="checkbox" id="cbox1" value="1"> Director</label>
+                    <label for="cbox2"><input type="checkbox" id="cbox2" value="2"> Jefe de estudios</label>
+                    <label for="cbox3"><input type="checkbox" id="cbox3" value="3"> Tutor</label>
+                    <label for="cbox4"><input type="checkbox" id="cbox4" value="4"> Profesor</label>
                 </div>
 
             </div>

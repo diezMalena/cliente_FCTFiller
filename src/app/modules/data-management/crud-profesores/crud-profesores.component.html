@@ -39,13 +39,13 @@
 
                                             <td scope="col">
 
-                                                <button (click)="modificarProfesor(p.dni)" class="btn btn-outline-warning px-2 py-1 me-2" type="submit">
+                                                <button (click)="modificarProfesor(p.dni)" class="btn btn-outline-warning px-2 py-1 me-2" type="submit" aria-label="modificar profesor">
                                                   <svg class="bi" width="16" height="16">
                                                     <use xlink:href="#lapiz" />
                                                   </svg>
                                             </button>
 
-                                                <button *ngIf="p.dni != this.dni" (click)="eliminarProfesor(p.dni)" class="btn btn-outline-danger px-2 py-1 me-2" type="submit">
+                                                <button *ngIf="p.dni != this.dni" (click)="eliminarProfesor(p.dni)" class="btn btn-outline-danger px-2 py-1 me-2" type="submit" aria-label="eliminar profesor">
                                                   <svg class="bi" width="16" height="16">
                                                     <use xlink:href="#papelera" />
                                                   </svg>
