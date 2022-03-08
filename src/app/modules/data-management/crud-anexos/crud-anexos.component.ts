@@ -1,4 +1,4 @@
-import { Component, OnDestroy,OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Anexo } from 'src/app/models/anexo';
@@ -10,7 +10,8 @@ import { LoginStorageUserService } from 'src/app/services/login.storageUser.serv
 import { Subject } from 'rxjs';
 import { DialogService } from 'src/app/services/dialog.service';
 import {ManualCrudAnexosComponent} from '../../manuales/manual-crud-anexos/manual-crud-anexos.component';
-
+import { tutoriaResponse } from 'src/app/models/tutoriaResponse';
+import { Tutoria } from 'src/app/models/tutoria';
 
 @Component({
   selector: 'app-crud-anexos',
@@ -20,13 +21,16 @@ import {ManualCrudAnexosComponent} from '../../manuales/manual-crud-anexos/manua
 export class CrudAnexosComponent implements OnDestroy, OnInit {
 
   dtOptions: DataTables.Settings = {};
+  // dtOptions: any  = {};
   dtTrigger = new Subject<any>();
   data: any;
 
   //anexos: Anexo[] = [];
   usuario;
   respuesta: any = [];
+  gruposArr: any = [];
   dni_tutor?: string;
+  dniAux?: string;
   codigo: string = '';
 
   constructor(
@@ -42,8 +46,14 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit(): void {
+    delete this.dtOptions['language'];
 
-    this.verAnexos();
+    if(this.usuario!.isTutor()){
+      this.verAnexos();
+    }else{
+      this.verGrupos();
+    }
+
   }
 
   ngOnDestroy(): void {
@@ -55,26 +65,94 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
    * @author Pablo y Laura
    */
   public verAnexos() {
-
-    this.dtOptions = {
-      pagingType: 'full_numbers',
-      pageLength: 5,
-      language: {
-        url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json'
-      }
-    };
     this.anexoService.getAnexos(this.dni_tutor!).subscribe((response) => {
       this.respuesta = response;
-       response = (this.respuesta as any).data;
+      response = (this.respuesta as any).data;
+      // Calling the DT trigger to manually render the table
+      this.dtTrigger.next(this.respuesta);
+    });
+    $.extend(true, $.fn.dataTable.defaults, {
+      "language": { "url": '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json' }
+    })
+  }
+
+    /**
+   * Este metodo sirve para traer los grupos y su tutor de un centro de estudio
+   * @author  Laura <lauramorenoramos97@gmail.com>
+   */
+     public verGrupos(){
+      this.anexoService.getGrupos(this.dni_tutor!).subscribe((response) => {
+        this.gruposArr = response;
+        this.dniAux= this.gruposArr[0].dni_profesor;
+        this.verAnexosDirector();
+      });
+
+    }
+    /**
+   * Este metodo te permite ver los anexos para el director
+   * @author Laura
+   */
+     /*public verAnexosDirector() {
+      this.anexoService.getAnexos(this.dniAux!).subscribe((response) => {
+        this.respuesta = response;
+        response = (this.respuesta as any).data;
         // Calling the DT trigger to manually render the table
         this.dtTrigger.next(this.respuesta);
       });
-  }
+      $.extend(true, $.fn.dataTable.defaults, {
+        "language": { "url": '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json' }
+      })
+    }*/
+
+      /**
+   * Este metodo te permite ver los anexos para el director
+   * @author Laura
+   */
+       public verAnexosDirector() {
+        this.anexoService.getAnexos(this.dniAux!).subscribe({
+          next: (res) => {
+            this.respuesta = res;
+            this.toastr.info('Anexos de: '+this.dniAux, 'Vistas Anexos');
+            res = (this.respuesta as any).data;
+            // Calling the DT trigger to manually render the table
+            this.dtTrigger.next(this.respuesta);
+          },
+          error: e => {
+            console.log(e);
+            this.toastr.error('Los anexos afiliados a este grupo no han podido visualizarse', 'Fallo');
+            this.respuesta= null;
+          }
+        });
+        $.extend(true, $.fn.dataTable.defaults, {
+          "language": { "url": '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json' }
+        })
+      }
+
+
+  /*public render(): void{
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.destroy();
+      this.dtTrigger.next();
+   });
+  }*/
+    /**
+   * Este metodo te permite ver los anexos
+   * @author  Laura <lauramorenoramos97@gmail.com>
+   */
+     public verAnexosEliminar() {
+
+      this.anexoService.getAnexos(this.dni_tutor!).subscribe((response) => {
+        this.respuesta = response;
+        response = (this.respuesta as any).data;
+      });
+    }
 
   /**
    *  @author Pablo
    * @param codigo es el mnombre del anexo a descargar
-   * Este metodo te permite descargar un anexo en concreto, te avisa si ha salido mal o bien
+   * Este metodo te permite descargar un anexo en concreto, comprobando si estamos
+   * intentando descargar el anexo como tutor o como director/jefe de estudios
+   * para usar una variable dni o la otra, te avisa si ha salido mal o bien
    */
   public async descargarAnexo(codigo: string) {
 
@@ -84,7 +162,15 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
     );
 
     if (hacerlo) {
-    this.anexoService.descargarAnexo(this.dni_tutor!, codigo).subscribe({
+      let dni : string;
+
+      if(this.usuario?.isTutor()){
+        dni = this.dni_tutor!;
+      }else{
+        dni = this.dniAux!;
+      }
+
+    this.anexoService.descargarAnexo(dni, codigo).subscribe({
       next: (res) => {
         const current = new Date();
         const blob = new Blob([res], { type: 'application/octet-stream' });
@@ -116,7 +202,16 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
     );
 
     if (hacerlo) {
-    this.anexoService.descargarTodo(this.dni_tutor!).subscribe({
+
+      let dni : string;
+
+      if(this.usuario?.isTutor()){
+        dni = this.dni_tutor!;
+      }else{
+        dni = this.dniAux!;
+      }
+
+    this.anexoService.descargarTodo(dni).subscribe({
       next: (res) => {
         const current = new Date();
         const blob = new Blob([res], { type: 'application/octet-stream' });
@@ -149,10 +244,23 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
     );
 
     if (hacerlo) {
-    this.anexoService.eliminarAnexo(this.dni_tutor!, codigo).subscribe({
+      let dni : string;
+
+      if(this.usuario?.isTutor()){
+        dni = this.dni_tutor!;
+      }else{
+        dni = this.dniAux!;
+      }
+    this.anexoService.eliminarAnexo(dni, codigo).subscribe({
       next: (res) => {
         this.toastr.success('Anexo Eliminado', 'Eliminado');
-        this.verAnexos();
+
+        if(this.usuario?.isTutor()){
+          this.verAnexos();
+        }else{
+          this.verGrupos();
+        }
+
       },
       error: e => {
         console.log(e);
@@ -170,39 +278,46 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
    * @param codigo es el mnombre del anexo a descargar
    * Este metodo te permite descargar un anexo en concreto, te avisa si ha salido mal o bien
    */
-    //  public firmarAnexo(codigo: string){
-    //   this.anexoService.descargarAnexo(this.dni_tutor,codigo).subscribe({
-    //    next:(res)=>{
-    //      const current= new Date();
-    //      const blob = new Blob([res], {type: 'application/octet-stream'});
-    //       FileSaver.saveAs(blob,codigo);
-    //      this.toastr.success('Anexo Descargado', 'Descarga');
-    //    },
-    //    error: e =>{
-    //      console.log(e);
-    //      this.toastr.error('El anexo no ha podido descargarse', 'Fallo');
-    //    }
-    //  })
-    //   // this.router.navigate(['/data-management/curd-anexos']);
-    //   this.router.navigate(['/data-management/crud-anexos']);
-    // }
+  //  public firmarAnexo(codigo: string){
+  //   this.anexoService.descargarAnexo(this.dni_tutor,codigo).subscribe({
+  //    next:(res)=>{
+  //      const current= new Date();
+  //      const blob = new Blob([res], {type: 'application/octet-stream'});
+  //       FileSaver.saveAs(blob,codigo);
+  //      this.toastr.success('Anexo Descargado', 'Descarga');
+  //    },
+  //    error: e =>{
+  //      console.log(e);
+  //      this.toastr.error('El anexo no ha podido descargarse', 'Fallo');
+  //    }
+  //  })
+  //   // this.router.navigate(['/data-management/curd-anexos']);
+  //   this.router.navigate(['/data-management/crud-anexos']);
+  // }
 
 
-    /**
-   * Abre un modal para la firma del anexo
-   * @author Pablo
-   */
-     public abrirModalFirma(codigo_anexo: string) {
-     const modalFirma = this.modal.open(ModalFirmaComponent, {
-        size: 'md',
-        backdrop: 'static',
-        keyboard: false,
-      });
-      modalFirma.componentInstance.codigo_anexo=codigo_anexo
-    }
+  /**
+ * Abre un modal para la firma del anexo
+ * @author Pablo
+ */
+  public abrirModalFirma(codigo_anexo: string) {
+    const modalFirma = this.modal.open(ModalFirmaComponent, {
+      size: 'md',
+      backdrop: 'static',
+      keyboard: false,
+    });
+    modalFirma.componentInstance.codigo_anexo = codigo_anexo
+  }
 
 
     public abrirAyuda(){
       this.modal.open(ManualCrudAnexosComponent, {size: 'lg'});
     }
+
+
+    public buscar(dni : string){
+      this.dniAux= dni;
+      this.verAnexosDirector();
+    }
+
 }
