@@ -9,6 +9,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Empresa } from 'src/app/models/empresa';
 import { Trabajador } from 'src/app/models/trabajador';
 import { CrudEmpresasService } from 'src/app/services/crud-empresas.service';
+import { DialogService } from 'src/app/services/dialog.service';
+import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 
 @Component({
   selector: 'app-modal-empresa',
@@ -21,12 +23,17 @@ export class ModalEmpresaComponent implements OnInit {
   public datosEmpresa: FormGroup;
   public submitted: boolean = false;
   public modified: boolean = false;
+  public empresas: Empresa[] = [];
+  public usuario;
 
   constructor(
     private modalActive: NgbActiveModal,
     private crudEmpresasService: CrudEmpresasService,
-    private formBuilder: FormBuilder
+    private storageUser: LoginStorageUserService,
+    private formBuilder: FormBuilder,
+    public dialogService: DialogService
   ) {
+    this.usuario = storageUser.getUser();
     //Atención a la ñapa
     //He tenido que crear un formGroup vacío para que se rellenase con la información asíncrona dentro del subscribe
     this.datosEmpresa = this.formBuilder.group({});
@@ -42,24 +49,13 @@ export class ModalEmpresaComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getEmpresas();
     this.onChanges();
   }
 
   get formulario() {
     return this.datosEmpresa.controls;
   }
-
-  // /**
-  //  * Obtiene el representante legal de una empresa
-  //  * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
-  //  */
-  // getRepresentante() {
-  //   this.crudEmpresasService.getRepresentante(this.empresa!.id).subscribe({
-  //     next: (representante) => {
-  //       this.empresa!.representante = representante;
-  //     },
-  //   });
-  // }
 
   /**
    * Construye el formulario reactivo
@@ -104,6 +100,35 @@ export class ModalEmpresaComponent implements OnInit {
   }
 
   /**
+   * Inicializa las empresas del componente mediante el servicio correspondiente
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public getEmpresas(): void {
+    this.crudEmpresasService.getEmpresas(this.usuario?.dni!).subscribe({
+      next: async (empresas) => {
+        this.empresas = empresas;
+        await this.meterRepresentantesEmpresas(empresas);
+        this.crudEmpresasService.getEmpresasArray(this.empresas);
+      },
+    });
+  }
+
+  /**
+   * Mete los representantes en las empresas correspondientes
+   * @param empresas el vector de empresas
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public async meterRepresentantesEmpresas(empresas: Empresa[]) {
+    empresas.forEach((empresa) => {
+      this.crudEmpresasService.getRepresentante(empresa.id).subscribe({
+        next: (representante) => {
+          empresa.representante = representante;
+        },
+      });
+    });
+  }
+
+  /**
    * Detecta los cambios en el formulario y, si hay, pone una variable bandera a true
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
@@ -111,7 +136,6 @@ export class ModalEmpresaComponent implements OnInit {
     this.datosEmpresa.valueChanges.subscribe((val) => {
       if (!this.modified) {
         this.modified = true;
-        console.log('Modificado');
       }
     });
   }
@@ -121,6 +145,7 @@ export class ModalEmpresaComponent implements OnInit {
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
   onSubmit() {
+    this.submitted = true;
     let datos = this.datosEmpresa.value;
     let representanteEditado = new Trabajador(
       datos.dni,
@@ -149,8 +174,8 @@ export class ModalEmpresaComponent implements OnInit {
       this.modified = false;
       this.updateEmpresa(empresaEditada);
       this.updateRepresentante(representanteEditado);
+      this.modalActive.close();
     }
-    console.log('Validado');
   }
 
   /**
@@ -164,6 +189,7 @@ export class ModalEmpresaComponent implements OnInit {
         this.empresa = empresa;
         console.log(response.message);
         this.updateRepresentante(empresa.representante!);
+        this.getEmpresas();
       },
     });
   }
@@ -178,7 +204,7 @@ export class ModalEmpresaComponent implements OnInit {
       next: (response: any) => {
         this.empresa!.representante = representante;
         console.log(response.message);
-      }
+      },
     });
   }
 
@@ -186,12 +212,18 @@ export class ModalEmpresaComponent implements OnInit {
    * Cierra el modal sólo si no hay cambios sin guardar
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
-  closeModal() {
+  async closeModal() {
     if (!this.modified) {
       this.modalActive.close();
     } else {
-      console.log('No puedes salir');
-      //this.modalActive.close();
+      let guardar = await this.dialogService.confirmacion(
+        'Guardar cambios',
+        `Hay cambios sin guardar. ¿Quiere guardarlos antes de salir?`
+      );
+      if (guardar) {
+        this.onSubmit();
+      }
+      this.modalActive.close();
     }
   }
 }

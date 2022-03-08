@@ -28,6 +28,7 @@ export class GestionEmpresasComponent implements OnInit {
 
   ngOnInit(): void {
     this.getEmpresas();
+    this.getEmpresasFromModal();
   }
 
   /**
@@ -66,7 +67,7 @@ export class GestionEmpresasComponent implements OnInit {
 
   /**
    * Elimina una empresa de la base de datos, previa confirmación
-   * @param idEmpresa el ID de la empresa a eliminar
+   * @param empresa la empresa a eliminar
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
   public async deleteEmpresa(empresa: Empresa) {
@@ -82,5 +83,15 @@ export class GestionEmpresasComponent implements OnInit {
         },
       });
     }
+  }
+
+  /**
+   * Coge el vector de empresas modificado del modal
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public getEmpresasFromModal() {
+    this.crudEmpresasService.empresasArray.subscribe(array => {
+      this.empresas = array;
+    })
   }
 }
