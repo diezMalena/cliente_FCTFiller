@@ -1,17 +1,32 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Empresa } from 'src/app/models/empresa';
 import { CrudEmpresasService } from 'src/app/services/crud-empresas.service';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 import { ModalEmpresaComponent } from '../modal-empresa/modal-empresa.component';
 import { DialogService } from 'src/app/services/dialog.service';
+import { DataTableDirective } from 'angular-datatables';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-gestion-empresas',
   templateUrl: './gestion-empresas.component.html',
   styleUrls: ['./gestion-empresas.component.scss'],
 })
-export class GestionEmpresasComponent implements OnInit {
+export class GestionEmpresasComponent
+  implements AfterViewInit, OnDestroy, OnInit
+{
+  @ViewChild(DataTableDirective, { static: false })
+  dtElement?: DataTableDirective;
+  dtOptions: DataTables.Settings = {};
+  dtTrigger = new Subject<any>();
+
   empresas: Empresa[] = [];
   usuario;
   dniTutor?: string;
@@ -26,9 +41,26 @@ export class GestionEmpresasComponent implements OnInit {
     this.dniTutor = this.usuario?.dni;
   }
 
+  ngAfterViewInit(): void {
+    this.dtTrigger.next(this.empresas);
+  }
+
   ngOnInit(): void {
+    delete this.dtOptions['language'];
     this.getEmpresas();
     this.getEmpresasFromModal();
+  }
+
+  ngOnDestroy(): void {
+    this.dtTrigger.unsubscribe();
+  }
+
+  rerender(): void {
+    this.dtElement!.dtInstance.then((dtInstance: DataTables.Api) => {
+      console.log('Entro en la promesa');
+      dtInstance.destroy();
+      this.dtTrigger.next(this.empresas);
+    });
   }
 
   /**
@@ -37,16 +69,31 @@ export class GestionEmpresasComponent implements OnInit {
    */
   public getEmpresas(): void {
     this.crudEmpresasService.getEmpresas(this.dniTutor!).subscribe({
-      next: (empresas) => {
+      next: async (empresas) => {
         this.empresas = empresas;
-        this.empresas.forEach((empresa) => {
-          this.crudEmpresasService.getRepresentante(empresa.id).subscribe({
-            next: (representante) => {
-              empresa.representante = representante;
-            },
-          });
-        });
+        await this.meterRepresentantesEmpresas(this.empresas);
+        this.rerender();
+        this.dtTrigger.next(this.empresas);
+        $.fn.dataTable.ext.errMode = 'throw';
       },
+    });
+    $.extend(true, $.fn.dataTable.defaults, {
+      language: { url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json' },
+    });
+  }
+
+  /**
+   * Mete los representantes en las empresas correspondientes
+   * @param empresas el vector de empresas
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public async meterRepresentantesEmpresas(empresas: Empresa[]) {
+    empresas.forEach((empresa) => {
+      this.crudEmpresasService.getRepresentante(empresa.id).subscribe({
+        next: (representante) => {
+          empresa.representante = representante;
+        },
+      });
     });
   }
 
@@ -90,8 +137,8 @@ export class GestionEmpresasComponent implements OnInit {
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
   public getEmpresasFromModal() {
-    this.crudEmpresasService.empresasArray.subscribe(array => {
+    this.crudEmpresasService.empresasArray.subscribe((array) => {
       this.empresas = array;
-    })
+    });
   }
 }
