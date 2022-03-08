@@ -64,7 +64,7 @@
                 <div class="col-md-8 pb-2">
                     <label for="nombre" class="form-label"><b>Nombre:</b></label>
                     <input type="text" class="form-control" id="nombre" placeholder="Maria" formControlName="nombre">
-                    <div *ngIf="submitted && formulario['nombre'].errors">
+                    <div *ngIf="submitted && formulario['nombre'].errors" class="text-danger bg-white rounded border border-2 border-danger p-2">
                         <div *ngIf="formulario['nombre'].errors['required']">El nombre no puede estar vacio</div>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
             <div class="col-md-8 pb-2">
                 <label for="apellido" class="form-label"><b>Apellido:</b></label>
                 <input type="text" class="form-control" id="apellido" placeholder="Fernandez" formControlName="apellido">
-                <div *ngIf="submitted && formulario['apellido'].errors">
+                <div *ngIf="submitted && formulario['apellido'].errors" class="text-danger bg-white rounded border border-2 border-danger p-2">
                     <div *ngIf="formulario['apellido'].errors['required']">El apellido no puede estar vacio</div>
                 </div>
             </div>
@@ -81,7 +81,7 @@
             <div class="col-md-8 pb-2">
                 <label for="dni" class="form-label"><b>DNI:</b></label>
                 <input type="text" class="form-control" id="dni" placeholder="00000000X" formControlName="dni">
-                <div *ngIf="submitted && formulario['dni'].errors">
+                <div *ngIf="submitted && formulario['dni'].errors" class="text-danger bg-white rounded border border-2 border-danger p-2">
                     <div *ngIf="formulario['dni'].errors['required']">El dni no puede estar vacio</div>
                 </div>
             </div>
@@ -89,7 +89,7 @@
             <div class="col-md-8 pb-2">
                 <label for="email" class="form-label"><b>Email:</b></label>
                 <input type="email" class="form-control" id="email" placeholder="ejemplo@gmail.com" formControlName="email">
-                <div *ngIf="submitted && formulario['email'].errors">
+                <div *ngIf="submitted && formulario['email'].errors" class="text-danger bg-white rounded border border-2 border-danger p-2">
                     <div *ngIf="formulario['email'].errors['required']">El email no puede estar vacio</div>
                     <div *ngIf="formulario['email'].errors['email']">El email debe ser un email valido</div>
                 </div>
@@ -100,7 +100,7 @@
                 <div class="col-md-4">
                     <label for="password1" class="form-label"><b>Contraseña:</b></label>
                     <input type="password" class="form-control" id="password1" formControlName="password1">
-                    <div *ngIf="submitted && formulario['password1'].errors">
+                    <div *ngIf="submitted && formulario['password1'].errors" class="text-danger bg-white rounded border border-2 border-danger p-2">
                         <div *ngIf="formulario['password1'].errors['required']"> La contraseña no puede estar vacia</div>
                         <div *ngIf="formulario['password1'].errors['pattern']">La contraseña debe tener al menos un dígito, una minúscula, una mayúscula y tener como mínimo 8 caracteres</div>
                     </div>
@@ -109,7 +109,7 @@
                 <div class="col-md-8 pb-2">
                     <label for="password2" class="form-label"><b>Repite la Contraseña:</b></label>
                     <input type="password" class="form-control" id="password2" formControlName="password2">
-                    <div *ngIf="submitted && formulario['password2'].errors">
+                    <div *ngIf="submitted && formulario['password2'].errors" class="text-danger bg-white rounded border border-2 border-danger p-2">
                         <div *ngIf="formulario['password2'].errors['required']"> La contraseña no puede estar vacia</div>
                         <div *ngIf="formulario['password2'].errors['pattern']">La contraseña debe tener al menos un dígito, una minúscula, una mayúscula y tener como mínimo 8 caracteres</div>
                     </div>
@@ -145,7 +145,7 @@
                 <div class="col-md-8 pb-2">
                     <label for="nombre" class="form-label"><b>Nombre:</b></label>
                     <input type="text" class="form-control" id="nombre" placeholder="Maria" formControlName="nombre">
-                    <div *ngIf="submitted && formulario['nombre'].errors">
+                    <div *ngIf="submitted && formulario['nombre'].errors" class="text-danger bg-white rounded border border-2 border-danger p-2">
                         <div *ngIf="formulario['nombre'].errors['required']">El nombre no puede estar vacio</div>
                     </div>
                 </div>
@@ -154,7 +154,7 @@
             <div class="col-md-8 pb-2">
                 <label for="apellido" class="form-label"><b>Apellido:</b></label>
                 <input type="text" class="form-control" id="apellido" placeholder="Fernandez" formControlName="apellido">
-                <div *ngIf="submitted && formulario['apellido'].errors">
+                <div *ngIf="submitted && formulario['apellido'].errors" class="text-danger bg-white rounded border border-2 border-danger p-2">
                     <div *ngIf="formulario['apellido'].errors['required']">El apellido no puede estar vacio</div>
                 </div>
             </div>
@@ -162,7 +162,7 @@
             <div class="col-md-8 pb-2">
                 <label for="dni" class="form-label"><b>DNI:</b></label>
                 <input type="text" class="form-control" id="dni" placeholder="00000000X" formControlName="dni">
-                <div *ngIf="submitted && formulario['dni'].errors">
+                <div *ngIf="submitted && formulario['dni'].errors" class="text-danger bg-white rounded border border-2 border-danger p-2">
                     <div *ngIf="formulario['dni'].errors['required']">El dni no puede estar vacio</div>
                 </div>
             </div>
@@ -170,7 +170,7 @@
             <div class="col-md-8 pb-2">
                 <label for="email" class="form-label"><b>Email:</b></label>
                 <input type="email" class="form-control" id="email" placeholder="ejemplo@gmail.com" formControlName="email">
-                <div *ngIf="submitted && formulario['email'].errors">
+                <div *ngIf="submitted && formulario['email'].errors" class="text-danger bg-white rounded border border-2 border-danger p-2">
                     <div *ngIf="formulario['email'].errors['required']">El email no puede estar vacio</div>
                     <div *ngIf="formulario['email'].errors['email']">El email debe ser un email valido</div>
                 </div>
@@ -181,7 +181,7 @@
                 <div class="col-md-4">
                     <label for="password1" class="form-label"><b>Contraseña:</b></label>
                     <input type="password" class="form-control" id="password1" formControlName="password1">
-                    <div *ngIf="submitted && formulario['password1'].errors">
+                    <div *ngIf="submitted && formulario['password1'].errors" class="text-danger bg-white rounded border border-2 border-danger p-2">
                         <div *ngIf="formulario['password1'].errors['required']"> La contraseña no puede estar vacia</div>
                         <div *ngIf="formulario['password1'].errors['pattern']">La contraseña debe tener al menos un dígito, una minúscula, una mayúscula y tener como mínimo 8 caracteres</div>
                     </div>
@@ -190,7 +190,7 @@
                 <div class="col-md-8 pb-2">
                     <label for="password2" class="form-label"><b>Repite la Contraseña:</b></label>
                     <input type="password" class="form-control" id="password2" formControlName="password2">
-                    <div *ngIf="submitted && formulario['password2'].errors">
+                    <div *ngIf="submitted && formulario['password2'].errors" class="text-danger bg-white rounded border border-2 border-danger p-2">
                         <div *ngIf="formulario['password2'].errors['required']"> La contraseña no puede estar vacia</div>
                         <div *ngIf="formulario['password2'].errors['pattern']">La contraseña debe tener al menos un dígito, una minúscula, una mayúscula y tener como mínimo 8 caracteres</div>
                     </div>
