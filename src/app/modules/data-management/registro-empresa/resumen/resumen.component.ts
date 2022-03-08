@@ -210,7 +210,7 @@ export class ResumenComponent implements OnInit {
           this.toastr.error('No se ha descargado el Anexo 0.','Error al descargar el Anexo 0');
         }
       });
-      this.router.navigateByUrl('');
+      this.router.navigateByUrl('data-management/gestion-empresas');
     }
   }
 

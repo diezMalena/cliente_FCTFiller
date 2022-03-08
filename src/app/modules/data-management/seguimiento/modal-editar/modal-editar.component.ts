@@ -89,11 +89,9 @@ export class ModalEditarComponent implements OnInit {
 
 
   onChanges(): void {
-    console.log('funciona onChange');
     this.editarJornada.valueChanges.subscribe((val) => {
       if (!this.modified) {
         this.modified = true;
-        console.log('Hay cambios');
       }
     });
   }
