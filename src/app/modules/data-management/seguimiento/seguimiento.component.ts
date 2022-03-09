@@ -12,6 +12,7 @@ import * as FileSaver from 'file-saver';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 import { ToastrService } from 'ngx-toastr';
 import { DialogService } from 'src/app/services/dialog.service';
+import { ModalCambiotutorComponent } from './modal-cambiotutor/modal-cambiotutor.component';
 
 @Component({
   selector: 'app-seguimiento',
@@ -32,8 +33,8 @@ export class SeguimientoComponent implements OnInit {
   public horasTotales: number = 0;
   public botonDescargar: boolean = false;
   public botonVer: boolean = false;
-  public static readonly dniAlumno: string = "dniAlumno";
-
+  public static readonly id_empresa: string = "id_empresa";
+  public tutor_empresa: string = "";
 
   constructor(
     private formBuilder: FormBuilder,
@@ -59,11 +60,39 @@ export class SeguimientoComponent implements OnInit {
   ngOnInit(): void {
     this.arrayJornadas = this.rellenarArray();
     this.ponerNombre();
+    this.recogerTutorEmpresa();
     this.gestionDepartamento();
     this.sumatorioHorasTotales();
     this.getArrayJornadas();
   }
 
+
+  /**
+   * Método que recoge el tutor que tiene asignado el alumno en la empresa.
+   * @author Malena
+   */
+  public recogerTutorEmpresa(){
+    this.seguimientoService.recogerTutorEmpresa(this.dni_alumno!).subscribe({
+      next: (response: any) => {
+        this.tutor_empresa = response[0]['dni_tutor'] +' - ' + response[0]['nombre_tutor'] ;
+        /*La empresa a la que pertenece el alumno, me la llevo al modal de cambiar tutor para poder
+        sacar los tutores/responsables de dicha empresa:*/
+        let id_empresa = response[1];
+        sessionStorage.setItem(SeguimientoComponent.id_empresa, JSON.stringify(id_empresa));
+      },
+      error: e => {
+        this.toastr.error('No se ha podido recoger el tutor empresa.','Error al recoger el tutor');
+      }
+    });
+  }
+
+  /**
+   * Método que abre un modal para seleccionar el nuevo tutor del alumno en la empresa.
+   * @author Malena
+   */
+  public modalCambiarTutor(){
+    this.modal.open(ModalCambiotutorComponent, { size: 'xs' });
+  }
 
 
   get formulario(){
@@ -81,7 +110,6 @@ export class SeguimientoComponent implements OnInit {
       this.arrayJornadas = array;
         var cuantasJornadasHay = this.arrayJornadas.length;
         this.sumatorioHorasTotales();
-        //console.log(cuantasJornadasHay);
 
         //Cuando se inserten 5 nuevas jornadas, se habilita el boton Descargar PDF:
         if(cuantasJornadasHay >= 5 && cuantasJornadasHay % 5 == 0){
@@ -94,7 +122,6 @@ export class SeguimientoComponent implements OnInit {
           this.botonVer = true;
           this.botonDescargar = false;
         }
-      //console.log(this.arrayJornadas);
     });
   }
 
@@ -113,8 +140,6 @@ export class SeguimientoComponent implements OnInit {
    * @returns arrayJornada, las jornadas que tiene el alumno.
    * @author Malena.
    */
-
-
   public rellenarArray(){
     this.seguimientoService.devolverJornadas(this.dni_alumno!).subscribe({
       next: (response: any) => {
@@ -132,11 +157,9 @@ export class SeguimientoComponent implements OnInit {
           this.botonVer = true;
           this.botonDescargar = false;
         }
-
-
       },
       error: e => {
-        console.log('error en el nombre',e);
+        this.toastr.error('No se han podido mostrar las jornadas.','Error al mostrar jornadas');
       }
     });
     return this.arrayJornadas;
@@ -154,25 +177,22 @@ export class SeguimientoComponent implements OnInit {
   }
 
 
-
   /**
    * Este método escribe el nombre del alumno y el nombre de la empresa en la interfaz.
    * @author Malena
    */
   public ponerNombre(){
-    //console.log(this.dni_alumno);
     this.seguimientoService.escribirDatos(this.dni_alumno!).subscribe({
       next: (response: any) => {
         this.nombre_alumno = response[0]['nombre_alumno'] +' ' + response[0]['apellidos_alumno'] ;
         this.nombre_empresa = response[0]['nombre_empresa']
-        //console.log(response);
       },
       error: e => {
+        this.toastr.error('No se ha podido mostrar ni el nombre del alumno ni de la empresa.','Error al mostrar datos');
         console.log('error en el nombre',e);
       }
     });
   }
-
 
 
   /**
@@ -188,16 +208,14 @@ export class SeguimientoComponent implements OnInit {
           this.departamentoEstablecido = true;
           this.departamento = response[0]['departamento'];
         }else{
-          console.log('El departamento está vacío.');
           this.departamentoEstablecido = false;
         }
       },
       error: e => {
-        console.log('error departamento');
+        this.toastr.error('No se ha podido mostrar el departamento.','Error al mostrar departamento');
       }
     });
   }
-
 
 
   /**
@@ -209,18 +227,16 @@ export class SeguimientoComponent implements OnInit {
     this.submitted = true;
     if(!this.deptoForm.valid) return;
     this.departamento = this.deptoForm.value.depto;
-    //console.log(this.departamento);
 
     this.seguimientoService.addDepartamento(this.dni_alumno!,this.departamento).subscribe({
       next: (response: any) => {
         this.departamentoEstablecido = true;
       },
       error: e => {
-        console.log('error en add el departamento.',e);
+        this.toastr.error('No se ha podido añadir el departamento.','Error al añadir departamento');
       }
     });
   }
-
 
 
   /**
@@ -234,7 +250,7 @@ export class SeguimientoComponent implements OnInit {
         this.horasTotales = response
       },
       error: e => {
-        console.log('No han llegado las horas');
+        this.toastr.error('No se ha podido mostrar las horas totales.','Error al mostrar horas totales');
       }
     })
   }

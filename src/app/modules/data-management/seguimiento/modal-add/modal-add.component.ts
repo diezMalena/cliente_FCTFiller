@@ -22,6 +22,7 @@ export class ModalAddComponent implements OnInit {
   public dni_alumno?: string ;
   public jornadasArray: any = [];
   public fecha_invalida:boolean = false;
+  public horasMal: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -87,6 +88,9 @@ export class ModalAddComponent implements OnInit {
       observaciones = "";
     }
     var tiempo_empleado = this.jornada.value.horas;
+    if(tiempo_empleado > 10){
+      this.horasMal = true;
+    }
 
     let jornada = new Jornada(
       0,

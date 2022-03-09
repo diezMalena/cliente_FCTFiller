@@ -23,7 +23,7 @@ import { CrudProfesoresComponent } from './crud-profesores/crud-profesores.compo
 import { ModalProfesoresComponent } from './modal-profesores/modal-profesores.component';
 import { ModalDescargaComponent } from './registro-empresa/modal-descarga/modal-descarga.component';
 import { DataTablesModule } from 'angular-datatables';
-
+import { ModalCambiotutorComponent } from './seguimiento/modal-cambiotutor/modal-cambiotutor.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +44,7 @@ import { DataTablesModule } from 'angular-datatables';
     CrudProfesoresComponent,
     ModalProfesoresComponent,
     ModalDescargaComponent,
+    ModalCambiotutorComponent
   ],
   imports: [
     CommonModule,

@@ -130,7 +130,7 @@ export class ModalEditarComponent implements OnInit {
           //console.log(response);
           this.toastr.success('La jornada se ha actualizado correctamente.','Editar jornada');
           this.recogerJornadas();
-          this.closeModel();
+          this.modalActive.dismiss();
         },
         error: e => {
           this.toastr.error('No se ha actualizado la jornada.','Error al editar jornada');
