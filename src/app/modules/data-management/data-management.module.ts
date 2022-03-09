@@ -24,7 +24,7 @@ import { ModalProfesoresComponent } from './modal-profesores/modal-profesores.co
 import { ModalDescargaComponent } from './registro-empresa/modal-descarga/modal-descarga.component';
 import { GestionAlumnosComponent } from './gestion-alumnos/gestion-alumnos.component';
 import { ModalAlumnoComponent } from './modal-alumno/modal-alumno.component';
-
+import { DataTablesModule } from 'angular-datatables';
 
 
 @NgModule({
@@ -57,6 +57,7 @@ import { ModalAlumnoComponent } from './modal-alumno/modal-alumno.component';
     NgbModule,
     DragDropModule,
     SignaturePadModule,
+    DataTablesModule
   ]
 })
 export class DataManagementModule { }

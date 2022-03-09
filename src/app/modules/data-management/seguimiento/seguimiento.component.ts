@@ -10,6 +10,8 @@ import { SeguimientoServiceService } from 'src/app/services/seguimiento-service.
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import * as FileSaver from 'file-saver';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
+import { ToastrService } from 'ngx-toastr';
+import { DialogService } from 'src/app/services/dialog.service';
 
 @Component({
   selector: 'app-seguimiento',
@@ -30,6 +32,7 @@ export class SeguimientoComponent implements OnInit {
   public horasTotales: number = 0;
   public botonDescargar: boolean = false;
   public botonVer: boolean = false;
+  public static readonly dniAlumno: string = "dniAlumno";
 
 
   constructor(
@@ -39,6 +42,10 @@ export class SeguimientoComponent implements OnInit {
     private modalJornadaService: ModalJornadaService,
     private seguimientoService:SeguimientoServiceService,
     private storageUser: LoginStorageUserService,
+    private toastr: ToastrService,
+    public dialogService: DialogService
+
+
   ) {
     this.usuario = storageUser.getUser();
     this.dni_alumno = this.usuario?.dni
@@ -98,11 +105,6 @@ export class SeguimientoComponent implements OnInit {
  */
   nuevaJornada(){
     this.modal.open(ModalAddComponent, { size: 'm' });
-    /*const ventanaModal = this.modal.open(ModalAddComponent, { size: 'm' });
-    ventanaModal.componentInstance.jornadaTrigger.subscribe(() => {
-      console.log('holaaa');
-    });
-    */
   }
 
 
@@ -118,7 +120,6 @@ export class SeguimientoComponent implements OnInit {
       next: (response: any) => {
         this.arrayJornadas = response;
         var cuantasJornadasHay = this.arrayJornadas.length;
-        //console.log(cuantasJornadasHay);
 
         //Cuando se inserten 5 nuevas jornadas, se habilita el boton Descargar PDF:
         if(cuantasJornadasHay >= 5 && cuantasJornadasHay % 5 == 0){
@@ -238,21 +239,27 @@ export class SeguimientoComponent implements OnInit {
     })
   }
 
-  public descargarPDF(){
-    this.seguimientoService.descargarPDF(this.dni_alumno!).subscribe({
-      next:(res:any) => {
-        console.log('Se ha descargado');
-        const blob = new Blob([res], {type: 'application/octet-stream'});
-        FileSaver.saveAs(blob,'hoja_seguimiento.docx');
-      },
-      error: e => {
-        console.log('No se ha descargado el documento');
-      }
-    });
+/**
+ * Método que abre el Modal Dialog y depende de la respuesta hace una cosa u otra, en este
+ * caso descargaría la hoja de seguimiento correspondiente.
+ * @author Malena
+ */
+  public async descargarPDF(){
+    let descargar = await this.dialogService.confirmacion(
+      'Descargar Anexo III',
+      'Se ha generado tu hoja de seguimiento, ¿Quiere descargarla?'
+    );
+    if(descargar){
+      this.seguimientoService.descargarPDF(this.dni_alumno!).subscribe({
+        next:(res:any) => {
+          const blob = new Blob([res], {type: 'application/octet-stream'});
+          FileSaver.saveAs(blob,'hoja_seguimiento.docx');
+          this.toastr.success('Se ha descargado la hoja de seguimiento correctamente.','Generación de Anexo III');
+        },
+        error: e => {
+          this.toastr.error('No se ha podido generar el documento correctamente.','Error en la generación del Anexo III');
+        }
+      });
+    }
   }
-
-  public verPDF(){
-
-  }
-
 }

@@ -4,9 +4,7 @@ import { Empresa } from 'src/app/models/empresa';
 import { CrudEmpresasService } from 'src/app/services/crud-empresas.service';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 import { ModalEmpresaComponent } from '../modal-empresa/modal-empresa.component';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DialogService } from 'src/app/services/dialog.service';
-import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-gestion-empresas',
@@ -22,7 +20,6 @@ export class GestionEmpresasComponent implements OnInit {
     private crudEmpresasService: CrudEmpresasService,
     private modal: NgbModal,
     private storageUser: LoginStorageUserService,
-    private dialog: MatDialog,
     public dialogService: DialogService
   ) {
     this.usuario = storageUser.getUser();
@@ -31,6 +28,7 @@ export class GestionEmpresasComponent implements OnInit {
 
   ngOnInit(): void {
     this.getEmpresas();
+    this.getEmpresasFromModal();
   }
 
   /**
@@ -68,41 +66,32 @@ export class GestionEmpresasComponent implements OnInit {
   }
 
   /**
-   * Elimina una empresa de la base de datos
-   * @param idEmpresa el ID de la empresa a eliminar
+   * Elimina una empresa de la base de datos, previa confirmación
+   * @param empresa la empresa a eliminar
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
-  public deleteEmpresa(empresa: Empresa) {
-
-    /*****************************************************************************************/
-    /**************************UNIVERSALIZAR DIÁLOGO CONFIRMACIÓN*****************************/
-    /*****************************************************************************************/
-
-    // await this.dialogService.confirmacion(
-    //   "Eliminar registro",
-    //   `¿Está seguro de que quiere eliminar el registro de la empresa ${empresa.nombre}?`
-    //   ).then( resp => {
-    //     console.log(resp);
-    //   })
-
-    this.dialog
-      .open(ConfirmDialogComponent, {
-        data: {
-          title: 'Eliminar registro',
-          message: `¿Está seguro de que quiere eliminar el registro de la empresa ${empresa.nombre}?`,
+  public async deleteEmpresa(empresa: Empresa) {
+    let eliminar = await this.dialogService.confirmacion(
+      'Eliminar registro',
+      `¿Está seguro de que quiere eliminar el registro de la empresa ${empresa.nombre}?`
+    );
+    if (eliminar) {
+      this.crudEmpresasService.deleteEmpresa(empresa.id).subscribe({
+        next: (response: any) => {
+          this.getEmpresas();
+          console.log(response.message);
         },
-        width: '400px',
-      })
-      .afterClosed()
-      .subscribe((res) => {
-        if (res.respuesta) {
-          this.crudEmpresasService.deleteEmpresa(empresa.id).subscribe({
-            next: (response: any) => {
-              this.getEmpresas();
-              console.log(response.message);
-            },
-          });
-        }
       });
+    }
+  }
+
+  /**
+   * Coge el vector de empresas modificado del modal
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public getEmpresasFromModal() {
+    this.crudEmpresasService.empresasArray.subscribe(array => {
+      this.empresas = array;
+    })
   }
 }

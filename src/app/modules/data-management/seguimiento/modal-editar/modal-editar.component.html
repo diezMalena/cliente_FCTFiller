@@ -20,7 +20,7 @@
           </div>
 
           <div class="col-8">
-            <input type="date" formControlName="fecha" name="" id="" [(ngModel)]="jornada.fecha_jornada" class="col-12 form-control">
+            <input type="date" formControlName="fecha" name="" id="" [(ngModel)]="jornada.fecha_jornada" class="col-12 form-control" (ngModelChange)="onChanges()">
           </div>
         </div>
 
@@ -34,7 +34,7 @@
           </div>
 
           <div class="col-8">
-            <textarea name="" formControlName="actividad" [(ngModel)]="jornada.actividades" id="" class="col-12 form-control"></textarea>
+            <textarea name="" formControlName="actividad" [(ngModel)]="jornada.actividades" id="" class="col-12 form-control" (ngModelChange)="onChanges()"></textarea>
           </div>
         </div>
 
@@ -46,7 +46,7 @@
           </div>
 
           <div class="col-8">
-            <textarea name="" formControlName="observaciones" [(ngModel)]="jornada.observaciones" id="" class="col-12 form-control"></textarea>
+            <textarea name="" formControlName="observaciones" [(ngModel)]="jornada.observaciones" id="" class="col-12 form-control" (ngModelChange)="onChanges()"></textarea>
           </div>
         </div>
 
@@ -58,7 +58,7 @@
           </div>
 
           <div class="col-8">
-            <input type="number" formControlName="horas" [(ngModel)]="jornada.tiempo_empleado" name="" id="" class="col-8 form-control">
+            <input type="number" formControlName="horas" [(ngModel)]="jornada.tiempo_empleado" name="" id="" class="col-8 form-control" (ngModelChange)="onChanges()">
           </div>
         </div>
 

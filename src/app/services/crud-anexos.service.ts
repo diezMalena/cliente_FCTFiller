@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Anexo } from '../models/anexo';
 import { anexoResponse } from '../models/anexoResponse';
+import { tutoriaResponse } from '../models/tutoriaResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class AnexoService {
   public ruta='http://127.0.0.1:8000/api/';
 
   /**
-   * @author Pablo y Laura
+   * @author Pablo y Laura <lauramorenoramos97@gmail.com>
    * @param dni_tutor Es el dni del tutor
    * @returns
    *  Este metodo hace una llamada a la api y listar los anexos
@@ -23,6 +24,11 @@ export class AnexoService {
   public getAnexos(dni_tutor: string){
     let url: string = this.ruta+'listarAnexos/'+dni_tutor;
     return this.http.get<anexoResponse>(url);
+  }
+
+  public getGrupos(dni_tutor: string){
+    let url: string = this.ruta+'listarGrupos/'+dni_tutor;
+    return this.http.get<tutoriaResponse>(url);
   }
 
 
