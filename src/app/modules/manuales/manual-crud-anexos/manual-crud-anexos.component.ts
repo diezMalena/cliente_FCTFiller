@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-manual-crud-anexos',
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ManualCrudAnexosComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private modalActive: NgbActiveModal,
+  ) { }
 
   ngOnInit(): void {
+  }
+
+  CloseModal(){
+    this.modalActive.dismiss();
   }
 
 }
