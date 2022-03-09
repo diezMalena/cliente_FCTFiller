@@ -3,10 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RegistroEmpresaService } from '../../../../services/registro-empresa.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ModalDescargaComponent } from '../modal-descarga/modal-descarga.component';
 import { ToastrService } from 'ngx-toastr';
 import { DialogService } from 'src/app/services/dialog.service';
 import * as FileSaver from 'file-saver';
+import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 
 @Component({
   selector: 'app-resumen',
@@ -38,18 +38,16 @@ export class ResumenComponent implements OnInit {
   public provincia: string;
   public cp: number;
 
-  public dniTutor: string;
+  public dniTutor?: string;
 
   constructor(
 
     private router: Router,
     private formBuilder: FormBuilder,
     private registroEmpresaService: RegistroEmpresaService,
-    private modal: NgbModal,
     private toastr: ToastrService,
-    public dialogService: DialogService
-
-
+    public dialogService: DialogService,
+    private storageUser: LoginStorageUserService
   ) {
     this.correoRep = "hola";
     this.nombreRep = "hola";
@@ -67,7 +65,7 @@ export class ResumenComponent implements OnInit {
     this.provincia = "hola";
     this.cp = 0;
 
-    this.dniTutor = '20a';
+    this.dniTutor = storageUser.getUser()?.dni;
 
     this.resumen = this.formBuilder.group({
       correoRep: [''],
@@ -108,7 +106,6 @@ export class ResumenComponent implements OnInit {
       this.tipoEmpresa = 'Pública';
     }
     this.tipoNumero = datosEmpresa["tipoEmpresa"];
-    // console.log(this.tipoNumero);
 
     var datosUbicacion = JSON.parse(ubicacion);
     this.localidad = datosUbicacion["localidad"];
@@ -156,20 +153,14 @@ export class ResumenComponent implements OnInit {
       'dni':this.dniTutor,
     }
 
-    console.log(datos);
-
-
     this.registroEmpresaService.enviarDatos(datos).subscribe({
       next: (response:any) => {
         let ruta = response.ruta_anexo;
         console.log(ruta);
         this.abrirModalDialog(ruta);
-        // this.modal.open(ModalDescargaComponent,{ size: 'xs' });
-        // this.registroEmpresaService.descargarTrigger.emit([ruta]);
         this.toastr.success('Datos guardados correctamente.','Registro de empresa.');
       },
       error: e => {
-        // console.log("No se han enviado los datos al servidor.");
         this.toastr.error('No se han guardado los datos correctamente.','Error al registrar empresa');
       }
     });
@@ -196,22 +187,19 @@ export class ResumenComponent implements OnInit {
     if(descargar){
       this.registroEmpresaService.descargarAnexo0(ruta).subscribe({
         next: (response: any) => {
-          // console.log('Se descarga el anexo 0');
           this.toastr.success('Anexo 0 descargado correctamente.','Descarga Anexo 0.');
           let arr = ruta.split('\\',3);
           let nombre = arr.pop();
-          // console.log(nombre);
           const blob = new Blob([response], {type: 'application/octet-stream'});
           FileSaver.saveAs(blob,nombre);
           //Hacer un split de la ruta, y hacer un pop para coger el ultimo elemento.
         },
         error: e => {
-          // console.log('El anexo no se ha descargado');
           this.toastr.error('No se ha descargado el Anexo 0.','Error al descargar el Anexo 0');
         }
       });
-      this.router.navigateByUrl('data-management/gestion-empresas');
     }
+    this.router.navigateByUrl('data-management/gestion-empresas');
   }
 
 }
