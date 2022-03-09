@@ -2,23 +2,98 @@
   <h1 class="modal-title fs-2">Manual de gestión de empresas</h1>
   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar" (click)="closeModal()"></button>
 </div>
-<div class="modal-body">
-  <div>
-    <h2 class="fs-4 text-info">Vistazo general</h2>
-    <p>En la vista de gestión de empresas se muestran los datos de las empresas que tienen convenio con el centro de
-      estudios en el que está trabajando</p>
-    <p>En la siguiente imagen puede observar cada uno de los elementos importantes de la vista, numerados</p>
-    <img class="img-fluid" src="/assets/Manuales/gestion-empresas/screenshot_00.png"
-      alt="Captura de pantalla con la vista de gestión de empresas">
-  </div>
-  <ul>
-    <ol>
-      <h2 class="fs-4 text-info">Registrar empresa</h2>
-      <p>El botón situado en la esquina superior derecha permite registrar una empresa en la aplicación, generándose el
-        convenio y el Anexo 0 o 0A correspondientes</p>
-      <p>El funcionamiento del registro de la empresa se detalla en el manual correspondiente</p>
-      <img src="/assets/Manuales/gestion-empresas/screenshot_01.png" alt="Botón para registrar una empresa"
-        class="img-fluid">
-    </ol>
+<div class="modal-body p-3">
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">
+      <h2 class="fs-4 text-info">Vistazo general</h2>
+      <p>En la vista de gestión de empresas se muestran los datos de las empresas que tienen convenio con el centro de
+        estudios en el que está trabajando</p>
+      <p>En la siguiente imagen puede observar cada uno de los elementos importantes de la vista, numerados</p>
+      <img class="img-fluid" src="/assets/Manuales/gestion-empresas/screenshot_00.png"
+        alt="Captura de pantalla con la vista de gestión de empresas">
+    </li>
+    <li class="list-group-item">
+      <h2 class="fs-4 text-info">1. Registrar empresa</h2>
+      <div class="d-flex justify-content-between align-items-center">
+        <img src="/assets/Manuales/gestion-empresas/screenshot_01.png"
+          alt="Captura de pantalla con el botón para registrar una empresa" class="img-fluid me-3">
+        <div>
+          <p>Este botón, situado en la esquina superior derecha permite registrar una empresa en la aplicación,
+            generándose el convenio y el Anexo 0 o 0A correspondientes</p>
+          <p class="m-0">El funcionamiento del registro de la empresa se detalla en el manual correspondiente</p>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <h2 class="fs-4 text-info">2. Cantidad de registros a mostrar</h2>
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <p>Clickee sobre el desplegable para seleccionar cuántos registros quiere ver en cada página</p>
+          <p class="m-0">Mostrar más de 50 registros puede reducir el rendimiento de la aplicación</p>
+        </div>
+        <img src="/assets/Manuales/gestion-empresas/screenshot_02.png"
+          alt="Captura de pantalla del desplegable de mostrar registros" class="img-fluid ms-3 border border-dark">
+      </div>
+    </li>
+    <li class="list-group-item">
+      <h2 class="fs-4 text-info">3. Búsqueda por cualquier campo</h2>
+      <p>Busque empresas registradas usando la barra de búsquedas en la parte superior derecha de la tabla</p>
+      <img src="/assets/Manuales/gestion-empresas/busqueda.gif"
+        alt="GIF que ejemplifica la búsqueda en la tabla de gestión de empresas"
+        class="img-fluid me-3 border border-dark">
+      <p>Puede buscar una empresa por cualquiera de los campos de la tabla: CIF, nombre, e-mail de contacto o localidad
+      </p>
+    </li>
+    <li class="list-group-item">
+      <h2 class="fs-4 text-info">4. Ordenar según campo</h2>
+      <p>Puede ordenar las empresas en orden ascendente o descendente de cualquiera de los campos de la tabla clickeando
+        sobre el título de la columna</p>
+      <img src="/assets/Manuales/gestion-empresas/screenshot_03.png"
+        alt="Captura de pantalla que muestra las empresas ordenadas ascendentemente por nombre, con el cursor sobre el título 'Nombre' de la tabla"
+        class="img-fluid me-3 border border-dark">
+      <p class="mt-3">Si desea cambiar el orden, clickee de nuevo sobre el mismo título</p>
+      <img src="/assets/Manuales/gestion-empresas/screenshot_04.png"
+        alt="Captura de pantalla que muestra las empresas ordenadas descendentemente por nombre, con el cursor sobre el título 'Nombre' de la tabla"
+        class="img-fluid me-3 border border-dark">
+    </li>
+    <li class="list-group-item">
+      <h2 class="fs-4 text-info">5. Ver empresa en detalle</h2>
+      <p>Clickee sobre una fila de la tabla para ver los datos de la empresa correspondiente en detalle</p>
+      <img src="/assets/Manuales/gestion-empresas/screenshot_05.png"
+        alt="Captura de pantalla que muestra el cursor sobre una fila de la tabla"
+        class="img-fluid me-3 border border-dark">
+    </li>
+    <li class="list-group-item">
+      <h2 class="fs-4 text-info">6. Editar empresa</h2>
+      <div class="d-flex justify-content-between align-items-center">
+        <img src="/assets/Manuales/gestion-empresas/screenshot_06.png"
+          alt="Captura de pantalla con el botón para editar una empresa" class="img-fluid me-3">
+        <div>
+          <p>Clickee sobre el botón de editar (lapicero) para modificar los datos de una empresa o su representante
+            legal.</p>
+          <p class="m-0">Se abrirá una ventana modal que le permitirá cambiar todos los datos de la empresa, salvo el
+            DNI del representante legal.</p>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <h2 class="fs-4 text-info">7. Eliminar empresa</h2>
+      <div class="d-flex justify-content-between align-items-center">
+        <img src="/assets/Manuales/gestion-empresas/screenshot_07.png"
+          alt="Captura de pantalla con el botón para eliminar una empresa" class="img-fluid me-3">
+        <div>
+          <p>Clickee sobre el botón de eliminar (cubo de basura) para eliminar de la aplicación los datos de una empresa
+            y sus trabajadores</p>
+          <p class="m-0">Dado que es una acción definitiva, se pedirá una confirmación</p>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <h2 class="fs-4 text-info">8. Navegar por las páginas de datos</h2>
+      <p>Utilice los botones de la esquina inferior derecha de la pantalla para navegar por las páginas de datos</p>
+    </li>
   </ul>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-outline-primary" (click)="closeModal()">Volver</button>
 </div>

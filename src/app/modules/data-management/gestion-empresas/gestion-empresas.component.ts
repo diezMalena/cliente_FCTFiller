@@ -83,6 +83,12 @@ export class GestionEmpresasComponent
     });
     $.extend(true, $.fn.dataTable.defaults, {
       language: { url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json' },
+      columnDefs: [
+        {
+          targets: 'nosort',
+          orderable: false,
+        },
+      ],
     });
   }
 
