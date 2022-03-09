@@ -1,0 +1,102 @@
+<div class="card" *ngIf="alumno">
+  <div class="modal-header">
+    <h1 class="modal-title fs-4">Detalles de {{alumno.nombreCompleto}} </h1>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModal()"></button>
+  </div>
+  <div class="modal-body">
+    <form class="needs-validation" novalidate="" [formGroup]="datosAlumno!" (ngSubmit)="onSubmit()">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label for="cod_alumno" class="form-label fw-bold {{editar ? 'required' : ''}}">Código</label>
+          <input type="text" class="{{editar ? 'form-control' : 'form-control-plaintext'}}" id="cod_alumno"
+            placeholder="12345" formControlName="cod_alumno" [attr.readonly]="editar ? null : true">
+          <div *ngIf="this.formulario['cod_alumno'].invalid" class="text-danger bg-white rounded border border-2 border-danger p-2">
+            Este campo es obligatorio
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label for="dni" class="form-label fw-bold {{editar ? 'required' : ''}}">DNI</label>
+          <input type="text" class="{{editar ? 'form-control' : 'form-control-plaintext'}}" id="dni"
+            placeholder="00000000X" formControlName="dni" [attr.readonly]="editar ? null : true">
+            <div *ngIf="this.formulario['dni'].invalid" class="text-danger bg-white rounded border border-2 border-danger p-2">
+              Este campo es obligatorio (un DNI válido tiene 8 números y una letra)
+            </div>
+        </div>
+
+        <div class="col-md-6">
+          <label for="nombre" class="form-label fw-bold {{editar ? 'required' : ''}}">Nombre</label>
+          <input type="text" class="{{editar ? 'form-control' : 'form-control-plaintext'}}" id="nombre"
+            placeholder="Nombre" formControlName="nombre" [attr.readonly]="editar ? null : true">
+            <div *ngIf="this.formulario['nombre'].invalid" class="text-danger bg-white rounded border border-2 border-danger p-2">
+              Este campo es obligatorio
+            </div>
+        </div>
+
+        <div class="col-md-6">
+          <label for="apellidos" class="form-label fw-bold {{editar ? 'required' : ''}}">Apellidos</label>
+          <input type="text" class="{{editar ? 'form-control' : 'form-control-plaintext'}}" id="apellidos"
+            placeholder="Apellidos" formControlName="apellidos" [attr.readonly]="editar ? null : true">
+            <div *ngIf="this.formulario['apellidos'].invalid" class="text-danger bg-white rounded border border-2 border-danger p-2">
+              Este campo es obligatorio
+            </div>
+        </div>
+
+        <div class="col-md-6">
+          <label for="email" class="form-label fw-bold {{editar ? 'required' : ''}}">Email</label>
+          <input type="text" class="{{editar ? 'form-control' : 'form-control-plaintext'}}" id="email"
+            placeholder="user@mail.com" formControlName="email" [attr.readonly]="editar ? null : true">
+            <div *ngIf="this.formulario['email'].invalid" class="text-danger bg-white rounded border border-2 border-danger p-2">
+              Este campo es obligatorio
+            </div>
+        </div>
+
+        <div class="col-md-6">
+          <label for="password" class="form-label fw-bold {{editar ? 'required' : ''}}">Contraseña</label>
+          <input type="text" class="{{editar ? 'form-control' : 'form-control-plaintext'}}" id="password"
+            placeholder="******" formControlName="password" [attr.readonly]="editar ? null : true">
+            <div *ngIf="this.formulario['password'].invalid" class="text-danger bg-white rounded border border-2 border-danger p-2">
+              Este campo es obligatorio
+            </div>
+        </div>
+
+        <div class="col-md-6">
+          <label for="provincia" class="form-label fw-bold {{editar ? 'required' : ''}}">Provincia</label>
+          <select class="{{editar ? 'form-control' : 'form-control-plaintext'}}" [attr.readonly]="editar ? null : true"
+           id="provincia" (change)="cambiarProvincia($event)">
+            <option *ngFor="let p of this.listadoProvincias"
+            [value]="p"
+            [selected]="this.datosAlumno?.value.provincia == p ? true : null" >
+              {{ p }}
+            </option>
+          </select>
+          <div *ngIf="this.formulario['provincia'].invalid" class="text-danger bg-white rounded border border-2 border-danger p-2">
+            Este campo es obligatorio
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label for="localidad" class="form-label fw-bold {{editar ? 'required' : ''}} ">Localidad</label>
+          <select class="{{editar ? 'form-control' : 'form-control-plaintext'}}" [attr.readonly]="editar ? null : true"
+          id="provincia" (change)="cambiarCiudad($event)">
+              <option *ngFor="let c of this.listadoCiudades"
+              [value]="c"
+              [selected]="this.datosAlumno?.value.localidad == c ? true : null" >
+                {{ c }}
+              </option>
+            </select>
+            <div *ngIf="this.formulario['localidad'].invalid" class="text-danger bg-white rounded border border-2 border-danger p-2">
+              Este campo es obligatorio
+            </div>
+        </div>
+      </div>
+
+      <ng-container *ngIf="editar">
+        <div class="row d-flex align-items-center justify-content-center modal-footer mt-3">
+          <input class="w-50 btn btn-primary btn-md" type="submit" value="Guardar cambios"
+            [disabled]="!modified ? true : null">
+        </div>
+      </ng-container>
+    </form>
+  </div>
+</div>

@@ -23,6 +23,16 @@
             Empresas
           </a>
         </li>
+        <li *ngIf="usuario.isDirector() || usuario.isJefatura()">
+          <a class="nav-link link-white" routerLinkActive="active" routerLink="data-management/gestion-alumnos"
+            aria-current="page">
+            <svg width="20" height="20" class="bi me-2">
+              <use xlink:href="#birrete" />
+            </svg>
+
+            Alumnos
+          </a>
+        </li>
         <li *ngIf="usuario.isProfesor()">
           <a routerLink="data-management/asig-alum-empresa" routerLinkActive="active" class="nav-link link-white">
             <svg width="20" height="20" class="bi me-2">
@@ -32,6 +42,7 @@
             FCT
           </a>
         </li>
+
         <!-- <li>
         <a routerLink="/" routerLinkActive="active"
           class="nav-link link-white">

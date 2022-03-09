@@ -22,6 +22,8 @@ import { SignaturePadModule } from 'angular2-signaturepad';
 import { CrudProfesoresComponent } from './crud-profesores/crud-profesores.component';
 import { ModalProfesoresComponent } from './modal-profesores/modal-profesores.component';
 import { ModalDescargaComponent } from './registro-empresa/modal-descarga/modal-descarga.component';
+import { GestionAlumnosComponent } from './gestion-alumnos/gestion-alumnos.component';
+import { ModalAlumnoComponent } from './modal-alumno/modal-alumno.component';
 
 
 
@@ -44,6 +46,8 @@ import { ModalDescargaComponent } from './registro-empresa/modal-descarga/modal-
     CrudProfesoresComponent,
     ModalProfesoresComponent,
     ModalDescargaComponent,
+    GestionAlumnosComponent,
+    ModalAlumnoComponent,
   ],
   imports: [
     CommonModule,
