@@ -6,6 +6,7 @@ import {
   FormControl,
 } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
 import { Empresa } from 'src/app/models/empresa';
 import { Trabajador } from 'src/app/models/trabajador';
 import { CrudEmpresasService } from 'src/app/services/crud-empresas.service';
@@ -31,7 +32,8 @@ export class ModalEmpresaComponent implements OnInit {
     private crudEmpresasService: CrudEmpresasService,
     private storageUser: LoginStorageUserService,
     private formBuilder: FormBuilder,
-    public dialogService: DialogService
+    public dialogService: DialogService,
+    public toastr: ToastrService
   ) {
     this.usuario = storageUser.getUser();
     //Atención a la ñapa
@@ -173,8 +175,6 @@ export class ModalEmpresaComponent implements OnInit {
     } else {
       this.modified = false;
       this.updateEmpresa(empresaEditada);
-      this.updateRepresentante(representanteEditado);
-      this.modalActive.close();
     }
   }
 
@@ -185,12 +185,15 @@ export class ModalEmpresaComponent implements OnInit {
    */
   updateEmpresa(empresa: Empresa) {
     this.crudEmpresasService.updateEmpresa(empresa).subscribe({
-      next: (response: any) => {
+      next: async (response: any) => {
         this.empresa = empresa;
-        console.log(response.message);
-        this.updateRepresentante(empresa.representante!);
+        await this.updateRepresentante(empresa.representante!);
         this.getEmpresas();
+        this.toastr.success(response.message, response.title)
       },
+      error: (err: any) => {
+        this.toastr.error(err.error.message, err.error.title);
+      }
     });
   }
 
@@ -199,12 +202,15 @@ export class ModalEmpresaComponent implements OnInit {
    * @param representante El representante legal de la empresa
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
-  updateRepresentante(representante: Trabajador) {
+  async updateRepresentante(representante: Trabajador) {
     this.crudEmpresasService.updateRepresentante(representante).subscribe({
       next: (response: any) => {
         this.empresa!.representante = representante;
-        console.log(response.message);
+        this.toastr.success(response.message, response.title)
       },
+      error: (err: any) => {
+        this.toastr.error(err.error.message, err.error.title);
+      }
     });
   }
 

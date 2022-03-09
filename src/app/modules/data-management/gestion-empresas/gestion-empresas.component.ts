@@ -13,6 +13,7 @@ import { ModalEmpresaComponent } from '../modal-empresa/modal-empresa.component'
 import { DialogService } from 'src/app/services/dialog.service';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-gestion-empresas',
@@ -35,7 +36,8 @@ export class GestionEmpresasComponent
     private crudEmpresasService: CrudEmpresasService,
     private modal: NgbModal,
     private storageUser: LoginStorageUserService,
-    public dialogService: DialogService
+    public dialogService: DialogService,
+    public toastr: ToastrService
   ) {
     this.usuario = storageUser.getUser();
     this.dniTutor = this.usuario?.dni;
@@ -127,8 +129,12 @@ export class GestionEmpresasComponent
       this.crudEmpresasService.deleteEmpresa(empresa.id).subscribe({
         next: (response: any) => {
           this.getEmpresas();
-          console.log(response.message);
+          this.toastr.success(response.message, response.title);
         },
+        error: (err: any) => {
+          console.log(err);
+          this.toastr.error(err.error.message, err.error.title)
+        }
       });
     }
   }
