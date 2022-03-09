@@ -22,7 +22,6 @@ export class ModalAddComponent implements OnInit {
   public dni_alumno?: string ;
   public jornadasArray: any = [];
   public fecha_invalida:boolean = false;
-  public horasMal: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -51,7 +50,6 @@ export class ModalAddComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.dni_alumno);
   }
 
   get formulario(){
@@ -75,11 +73,7 @@ export class ModalAddComponent implements OnInit {
     if(!this.jornada.valid) return;
     //Recojo los campos y los guardo en una nueva Jornada.
     //La id de la fct la mando vacía para establecerle su valor en el servidor buscando a qué fct está asociada ese alumno.
-    var hoy = new Date();
-    // console.log(hoy);
-    //console.log(new Date(this.jornada.value.fecha)>hoy);
-
-    this.fecha_invalida = new Date(this.jornada.value.fecha)>hoy;
+    this.fecha_invalida = this.comprobarFecha();
     if(this.fecha_invalida) return;
     var fecha_jornada = this.jornada.value.fecha;
     var actividades = this.jornada.value.actividad;
@@ -88,9 +82,6 @@ export class ModalAddComponent implements OnInit {
       observaciones = "";
     }
     var tiempo_empleado = this.jornada.value.horas;
-    if(tiempo_empleado > 10){
-      this.horasMal = true;
-    }
 
     let jornada = new Jornada(
       0,
@@ -103,18 +94,21 @@ export class ModalAddComponent implements OnInit {
 
     this.modalJornadaService.addJornada(jornada, this.dni_alumno!).subscribe({
       next: (response) => {
-        console.log('se ha insertado');
         this.toastr.success('Jornada añadida correctamente.','Nueva jornada');
         this.recogerJornadas();
         this.closeModel();
       },
       error: e => {
-        console.log('error');
         this.toastr.error('Oh vaya, algo ha fallado al añadir una jornada.','Error al añadir jornada');
       }
     });
   }
 
+
+  public comprobarFecha(){
+    var hoy = new Date();
+    return new Date(this.jornada.value.fecha)>hoy;
+  }
 
   /**
    * Método que recoge las jornadas correspondientes al alumno y las muestra por pantalla.
