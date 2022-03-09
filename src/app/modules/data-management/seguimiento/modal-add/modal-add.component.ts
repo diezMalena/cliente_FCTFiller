@@ -104,7 +104,11 @@ export class ModalAddComponent implements OnInit {
     });
   }
 
-
+  /**
+   * Método que comprueba si la fecha introducida es superior a la de hoy, en este caso devolverá False.
+   * @returns Boolean
+   * @author Malena
+   */
   public comprobarFecha(){
     var hoy = new Date();
     return new Date(this.jornada.value.fecha)>hoy;

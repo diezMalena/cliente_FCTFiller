@@ -27,7 +27,7 @@
               <div *ngIf="formulario['fecha'].errors['required']">La fecha no puede estar vacía.</div>
             </div>
             <div class="col-12 col-xl-12 text-danger bg-white rounded border border-2 border-danger p-2"
-              *ngIf="fecha_invalida">
+              *ngIf="comprobarFecha()">
               <div>No se puede introducir una fecha superior a la de hoy. </div>
             </div>
           </div>
@@ -64,13 +64,13 @@
           <div class="col-8">
             <input type="number" formControlName="horas" [(ngModel)]="jornada.tiempo_empleado" name=""
               id="tiempo_empleado" class="col-8 form-control" (ngModelChange)="onChanges()">
-            <div class="col-12 col-xl-12 text-danger bg-white rounded border border-2 border-danger p-2"
-              *ngIf="submitted && formulario['horas'].errors">
-              <div *ngIf="formulario['horas'].errors['required']">Las horas no pueden estar vacías. </div>
+              <div class="col-12 col-xl-12 text-danger bg-white rounded border border-2 border-danger p-2"
+              *ngIf="submitted && formulario['horas'].errors && formulario['horas'].errors['required']">
+              Las horas no pueden estar vacías.
             </div>
             <div class="col-12 col-xl-12 text-danger bg-white rounded border border-2 border-danger p-2"
-              *ngIf="submitted && formulario['horas'].errors">
-              <div *ngIf="formulario['horas'].errors['max']">No se pueden añadir más de 10 horas diarias.</div>
+              *ngIf="submitted && formulario['horas'].errors && formulario['horas'].errors['max']">
+              No se pueden añadir más de 10 horas diarias.
             </div>
           </div>
         </div>

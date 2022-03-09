@@ -1,5 +1,5 @@
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalAddComponent } from './modal-add/modal-add.component' ;
@@ -13,13 +13,20 @@ import { LoginStorageUserService } from 'src/app/services/login.storageUser.serv
 import { ToastrService } from 'ngx-toastr';
 import { DialogService } from 'src/app/services/dialog.service';
 import { ModalCambiotutorComponent } from './modal-cambiotutor/modal-cambiotutor.component';
+import { DataTableDirective } from 'angular-datatables';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-seguimiento',
   templateUrl: './seguimiento.component.html',
   styleUrls: ['./seguimiento.component.scss']
 })
-export class SeguimientoComponent implements OnInit {
+export class SeguimientoComponent implements AfterViewInit, OnDestroy, OnInit{
+
+  @ViewChild(DataTableDirective, { static: false })
+  dtElement?: DataTableDirective;
+  dtOptions: DataTables.Settings = {};
+  dtTrigger = new Subject<any>();
 
   usuario;
   public arrayJornadas: any = [];
@@ -45,8 +52,6 @@ export class SeguimientoComponent implements OnInit {
     private storageUser: LoginStorageUserService,
     private toastr: ToastrService,
     public dialogService: DialogService
-
-
   ) {
     this.usuario = storageUser.getUser();
     this.dni_alumno = this.usuario?.dni
@@ -55,7 +60,9 @@ export class SeguimientoComponent implements OnInit {
     });
   }
 
-
+  ngAfterViewInit(): void {
+    this.dtTrigger.next(this.arrayJornadas);
+  }
 
   ngOnInit(): void {
     this.arrayJornadas = this.rellenarArray();
@@ -64,6 +71,19 @@ export class SeguimientoComponent implements OnInit {
     this.gestionDepartamento();
     this.sumatorioHorasTotales();
     this.getArrayJornadas();
+  }
+
+  ngOnDestroy(): void {
+    this.dtTrigger.unsubscribe();
+  }
+
+  rerender(): void {
+    this.dtElement!.dtInstance.then((dtInstance: DataTables.Api) => {
+      // Destroy the table first
+      dtInstance.destroy();
+      // Call the dtTrigger to rerender again
+      this.dtTrigger.next(this.arrayJornadas);
+    });
   }
 
 
@@ -122,6 +142,8 @@ export class SeguimientoComponent implements OnInit {
           this.botonVer = true;
           this.botonDescargar = false;
         }
+
+        this.rerender();
     });
   }
 
@@ -157,11 +179,25 @@ export class SeguimientoComponent implements OnInit {
           this.botonVer = true;
           this.botonDescargar = false;
         }
+
+        this.rerender();
+        $.fn.dataTable.ext.errMode = 'throw';
+        this.dtTrigger.next(this.arrayJornadas);
       },
       error: e => {
         this.toastr.error('No se han podido mostrar las jornadas.','Error al mostrar jornadas');
       }
     });
+    $.extend(true, $.fn.dataTable.defaults, {
+      language: { url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json' },
+      columnDefs: [
+        {
+          targets: 'nosort',
+          orderable: false,
+        },
+      ],
+    });
+
     return this.arrayJornadas;
   }
 
