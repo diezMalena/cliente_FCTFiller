@@ -2,5 +2,6 @@
 *.*
 */*
 /src
+/.angular
 !/dist
 !.gitignore
