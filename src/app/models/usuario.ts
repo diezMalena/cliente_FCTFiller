@@ -12,6 +12,8 @@ export class Usuario {
       obj['tipo'],
       obj['roles'],
       obj['token'],
+      //DSB Cambio 10-03-2022: Añadido codigo de centro de estudios
+      obj['cod_centro']
     );
   }
 
@@ -22,7 +24,9 @@ export class Usuario {
     public dni?: string,
     public tipo?: string,
     public roles?: Array<any>,
-    public token?: string
+    public token?: string,
+    //DSB Cambio 10-03-2022: Añadido codigo de centro de estudios
+    public cod_centro?: string
   ) { }
 
   /**

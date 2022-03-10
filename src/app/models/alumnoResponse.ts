@@ -15,6 +15,8 @@ export interface alumnoResponse {
   password?: string,
   provincia?: string,
   localidad?: string,
-  dni_antiguo?: string
-
+  dni_antiguo?: string,
+  matricula_cod?: string,
+  matricula_cod_centro?: string,
+  matricula_cod_grupo?: string,
 }

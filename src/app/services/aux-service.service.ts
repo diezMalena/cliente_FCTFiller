@@ -1,8 +1,5 @@
 import { Injectable, Output, EventEmitter } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { LoginStorageUserService } from './login.storageUser.service';
-import { alumnoResponse } from '../models/alumnoResponse';
-import { Alumno } from '../models/alumno';
+import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs';
 
 @Injectable({
@@ -16,7 +13,6 @@ export class AuxService {
   constructor(
     private http: HttpClient,
   ) { }
-
 
   /**
    * Obtiene un listado de provincias

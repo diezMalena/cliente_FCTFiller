@@ -2,8 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Alumno } from 'src/app/models/alumno';
+import { Grupo } from 'src/app/models/grupo';
+import { ModoEdicion } from 'src/app/models/modoEdicion';
 import { AuxService } from 'src/app/services/aux-service.service';
 import { CrudAlumnosService } from 'src/app/services/crud-alumnos.service';
+import { DialogService } from 'src/app/services/dialog.service';
+import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 
 @Component({
   selector: 'app-modal-alumno',
@@ -13,17 +17,22 @@ import { CrudAlumnosService } from 'src/app/services/crud-alumnos.service';
 export class ModalAlumnoComponent implements OnInit {
 
   public alumno?: Alumno;
-  public editar?: boolean;
+  public modosEdicion: typeof ModoEdicion = ModoEdicion;
+  public modo?: number;
   public datosAlumno: FormGroup;
   public listadoProvincias?: string[];
   public listadoCiudades?: string[];
+  public listadoGrupos?: Grupo[];
+  public listadoAlumnos?: Alumno[];
   public submitted: boolean = false;
   public modified: boolean = false;
   constructor(
     private modalActive: NgbActiveModal,
     private crudAlumnosService: CrudAlumnosService,
     private auxService: AuxService,
-    private formBuilder: FormBuilder
+    private loginService: LoginStorageUserService,
+    private formBuilder: FormBuilder,
+    public dialogService: DialogService
   ) {
 
     this.datosAlumno = this.formBuilder.group({});
@@ -31,19 +40,24 @@ export class ModalAlumnoComponent implements OnInit {
     this.crudAlumnosService.alumnoTrigger.subscribe({
       next: (data: Array<any>) => {
         this.alumno = data[0];
-        this.editar = data[1];
+        this.modo = data[1];
 
         this.construirFormulario();
-
+        this.obtenerListaGrupos();
         this.obtenerListaProvincias();
-        this.obtenerListaCiudades(this.alumno?.provincia!);
+
+        if (this.modo != this.modosEdicion.nuevo) {
+          this.obtenerListaCiudades(this.alumno?.provincia!);
+        }
       },
     });
   }
 
+
   ngOnInit(): void {
     this.onChanges();
   }
+
 
   construirFormulario() {
     this.datosAlumno = this.formBuilder.group({
@@ -61,7 +75,7 @@ export class ModalAlumnoComponent implements OnInit {
       ],
       password: [
         this.alumno?.password,
-        (this.editar ? [] : [Validators.required])
+        (this.modo !== this.modosEdicion.detalle ? [] : [Validators.required])
       ],
       nombre: [
         this.alumno?.nombre,
@@ -78,6 +92,17 @@ export class ModalAlumnoComponent implements OnInit {
       localidad: [
         this.alumno?.localidad,
         [Validators.required]
+      ],
+      va_a_fct: [
+        parseInt(this.alumno?.va_a_fct + '') != 0
+      ],
+      matricula_cod: [
+        this.alumno?.matricula_cod,
+        [Validators.required]
+      ],
+      matricula_cod_grupo: [
+        this.alumno?.matricula_cod_grupo,
+        [Validators.required]
       ]
     });
   }
@@ -92,11 +117,14 @@ export class ModalAlumnoComponent implements OnInit {
    * @author David Sánchez Barragán
    */
   onSubmit() {
+    this.submitted = true;
+
     let datos = this.datosAlumno.value;
+    let vaAFCT : any = datos.va_a_fct ? 1 : 0;
     let alumnoEditado = new Alumno(
       datos.nombre,
       datos.dni,
-      new Uint8Array(0),
+      vaAFCT,
       '',
       new Date(),
       new Date(),
@@ -106,21 +134,25 @@ export class ModalAlumnoComponent implements OnInit {
       datos.password,
       datos.provincia,
       datos.localidad,
-      this.alumno?.dni
+      this.alumno?.dni,
+      datos.matricula_cod,
+      this.alumno?.matricula_cod_centro,
+      datos.matricula_cod_grupo
     );
 
-    console.log(JSON.stringify(alumnoEditado));
-
     if (this.datosAlumno.invalid) {
-    console.log('no valido');
-
       return;
-
     } else {
       this.modified = false;
-      this.actualizarAlumno(alumnoEditado);
+
+      if (this.modo == this.modosEdicion.nuevo) {
+        this.registrarAlumno(alumnoEditado);
+      } else {
+        this.actualizarAlumno(alumnoEditado);
+      }
+
+      this.modalActive.close();
     }
-    console.log('Validado');
   }
 
   /**
@@ -141,9 +173,19 @@ export class ModalAlumnoComponent implements OnInit {
    * @returns `void`
    * @author David Sánchez Barragán
    */
-  closeModal() {
+  async closeModal() {
     if (!this.modified) {
       this.modalActive.close();
+    } else {
+      let guardar = await this.dialogService.confirmacion(
+        'Guardar cambios',
+        `Hay cambios sin guardar. ¿Quiere guardarlos antes de salir?`
+      );
+      if (guardar) {
+        this.onSubmit();
+      } else {
+        this.modalActive.close();
+      }
     }
   }
 
@@ -156,10 +198,36 @@ export class ModalAlumnoComponent implements OnInit {
     this.formulario['localidad'].setValue(event.target.value);
   }
 
+  cambiarGrupo(event: any) {
+    this.formulario['matricula_cod_grupo'].setValue(event.target.value);
+  }
+
+  cambiarVaAFCT(event:any) {
+    this.formulario['va_a_fct'].setValue(event.target.checked);
+  }
+
+  obtenerListaGrupos() {
+    this.crudAlumnosService.listarGrupos().subscribe({
+      next: (respuesta) => {
+        if (this.modo == this.modosEdicion.nuevo) {
+          this.listadoGrupos = [new Grupo('', 'Seleccione uno...')];
+          this.listadoGrupos = this.listadoGrupos.concat(respuesta);
+        } else {
+          this.listadoGrupos = respuesta;
+        }
+      }
+    });
+  }
+
   obtenerListaProvincias() {
     this.auxService.listarProvincias().subscribe({
       next: (respuesta) => {
-        this.listadoProvincias = respuesta;
+        if (this.modo == this.modosEdicion.nuevo) {
+          this.listadoProvincias = ['Seleccione uno...'];
+          this.listadoProvincias = this.listadoProvincias.concat(respuesta);
+        } else {
+          this.listadoProvincias = respuesta;
+        }
       }
     });
   }
@@ -174,10 +242,26 @@ export class ModalAlumnoComponent implements OnInit {
 
   actualizarAlumno(alumno: Alumno) {
     this.crudAlumnosService.actualizarAlumno(alumno).subscribe({
-      next: (reponse : any) => {
-        console.log(reponse.message);
+      next: (reponse: any) => {
+        this.obtenerAlumnos();
       }
     });
+  }
+
+  registrarAlumno(alumno: Alumno) {
+    this.crudAlumnosService.registrarAlumno(alumno).subscribe({
+      next: (response: any) => {
+        this.obtenerAlumnos();
+      }
+    });
+  }
+
+  obtenerAlumnos() {
+    this.crudAlumnosService.listarAlumnos(this.loginService.getUser()?.dni).subscribe({
+      next: (response) => {
+        this.crudAlumnosService.setAlumnosArray(response);
+      }
+    })
   }
 
 }

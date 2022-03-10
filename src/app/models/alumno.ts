@@ -30,6 +30,9 @@ export class Alumno {
       obj['provincia'],
       obj['localidad'],
       obj['dni_antiguo'],
+      obj['matricula_cod'],
+      obj['matricula_cod_centro'],
+      obj['matricula_cod_grupo'],
     );
   }
 
@@ -49,7 +52,10 @@ export class Alumno {
     public password?: string,
     public provincia?: string,
     public localidad?: string,
-    public dni_antiguo?: string
+    public dni_antiguo?: string,
+    public matricula_cod?: string,
+    public matricula_cod_centro?: string,
+    public matricula_cod_grupo?: string,
   ) { }
 
   get nombreCompleto() {
