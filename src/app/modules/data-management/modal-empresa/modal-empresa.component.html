@@ -31,7 +31,8 @@
           <label for="telefono" class="form-label fw-bold">Teléfono</label>
           <input type="text" class="{{editar ? 'form-control' : 'form-control-plaintext'}}" id="telefono"
             placeholder="+34666666666" formControlName="telefono" [attr.readonly]="editar ? null : true">
-          <div *ngIf="submitted && formulario['telefono'].errors" class="text-danger bg-white rounded border border-2 border-danger p-2">
+          <div *ngIf="submitted && formulario['telefono'].errors"
+            class="text-danger bg-white rounded border border-2 border-danger p-2">
             Es obligatorio insertar un teléfono
           </div>
         </div>
@@ -40,7 +41,8 @@
           <label for="email_empresa" class="form-label fw-bold">e-mail</label>
           <input type="email" class="{{editar ? 'form-control' : 'form-control-plaintext'}}" id="email_empresa"
             placeholder="email@contacto.com" formControlName="email_empresa" [attr.readonly]="editar ? null : true">
-          <div *ngIf="submitted && formulario['email_empresa'].errors" class="text-danger bg-white rounded border border-2 border-danger p-2">
+          <div *ngIf="submitted && formulario['email_empresa'].errors"
+            class="text-danger bg-white rounded border border-2 border-danger p-2">
             Es obligatorio insertar un email válido
           </div>
         </div>
@@ -56,7 +58,8 @@
           <label for="provincia" class="form-label fw-bold">Provincia</label>
           <input type="text" class="{{editar ? 'form-control' : 'form-control-plaintext'}}" id="provincia"
             placeholder="Provincia" formControlName="provincia" [attr.readonly]="editar ? null : true">
-          <div *ngIf="submitted && formulario['provincia'].errors" class="text-danger bg-white rounded border border-2 border-danger p-2">
+          <div *ngIf="submitted && formulario['provincia'].errors"
+            class="text-danger bg-white rounded border border-2 border-danger p-2">
             Es obligatorio insertar una provincia
           </div>
         </div>
@@ -65,7 +68,8 @@
           <label for="localidad" class="form-label fw-bold">Localidad</label>
           <input type="text" class="{{editar ? 'form-control' : 'form-control-plaintext'}}" id="localidad"
             placeholder="Localidad de la empresa" formControlName="localidad" [attr.readonly]="editar ? null : true">
-          <div *ngIf="submitted && formulario['localidad'].errors" class="text-danger bg-white rounded border border-2 border-danger p-2">
+          <div *ngIf="submitted && formulario['localidad'].errors"
+            class="text-danger bg-white rounded border border-2 border-danger p-2">
             Es obligatorio insertar una localidad
           </div>
         </div>
@@ -74,7 +78,8 @@
           <label for="cp" class="form-label fw-bold">CP</label>
           <input type="text" class="{{editar ? 'form-control' : 'form-control-plaintext'}}" id="cp" placeholder="00000"
             formControlName="cp" [attr.readonly]="editar ? null : true">
-          <div *ngIf="submitted && formulario['cp'].errors" class="text-danger bg-white rounded border border-2 border-danger p-2">
+          <div *ngIf="submitted && formulario['cp'].errors"
+            class="text-danger bg-white rounded border border-2 border-danger p-2">
             Es obligatorio insertar un código postal
           </div>
         </div>
@@ -84,7 +89,8 @@
           <input type="text" class="{{editar ? 'form-control' : 'form-control-plaintext'}}" id="direccion"
             placeholder="Calle, nº, piso, puerta" value={{empresa.direccion}} formControlName="direccion"
             [attr.readonly]="editar ? null : true">
-          <div *ngIf="submitted && formulario['direccion'].errors" class="text-danger bg-white rounded border border-2 border-danger p-2">
+          <div *ngIf="submitted && formulario['direccion'].errors"
+            class="text-danger bg-white rounded border border-2 border-danger p-2">
             Es obligatorio insertar una dirección
           </div>
         </div>
@@ -99,7 +105,8 @@
           <input type="text" class="{{editar ? 'form-control' : 'form-control-plaintext'}}" id="nombre_representante"
             placeholder="Nombre del representante" formControlName="nombre_representante"
             [attr.readonly]="editar ? null : true">
-          <div *ngIf="submitted && formulario['nombre_representante'].errors" class="text-danger bg-white rounded border border-2 border-danger p-2">
+          <div *ngIf="submitted && formulario['nombre_representante'].errors"
+            class="text-danger bg-white rounded border border-2 border-danger p-2">
             Es obligatorio insertar un nombre
           </div>
         </div>
@@ -109,7 +116,8 @@
           <input type="apellidos" class="{{editar ? 'form-control' : 'form-control-plaintext'}}" id="apellidos"
             placeholder="Apellidos del representante" formControlName="apellidos"
             [attr.readonly]="editar ? null : true">
-          <div *ngIf="submitted && formulario['apellidos'].errors" class="text-danger bg-white rounded border border-2 border-danger p-2">
+          <div *ngIf="submitted && formulario['apellidos'].errors"
+            class="text-danger bg-white rounded border border-2 border-danger p-2">
             Es obligatorio insertar apellidos
           </div>
         </div>
@@ -119,7 +127,8 @@
           <!-- De momento, el DNI del representante no se puede cambiar. De momento -->
           <input type="text" class="{{editar ? 'form-control' : 'form-control-plaintext'}}" id="dni"
             placeholder="00000000A" formControlName="dni" readonly>
-          <div *ngIf="submitted && formulario['dni'].errors" class="text-danger bg-white rounded border border-2 border-danger p-2">
+          <div *ngIf="submitted && formulario['dni'].errors"
+            class="text-danger bg-white rounded border border-2 border-danger p-2">
             Es obligatorio insertar un DNI válido
           </div>
         </div>
@@ -127,9 +136,10 @@
         <div class="col-md-8">
           <label for="email_representante" class="form-label fw-bold">e-mail</label>
           <input type="text" class="{{editar ? 'form-control' : 'form-control-plaintext'}}" id="email_representante"
-            placeholder="Nombre del representante" formControlName="email_representante"
+            placeholder="e-mail del representante" formControlName="email_representante"
             [attr.readonly]="editar ? null : true">
-          <div *ngIf="submitted && formulario['email_representante'].errors" class="text-danger bg-white rounded border border-2 border-danger p-2">
+          <div *ngIf="submitted && formulario['email_representante'].errors"
+            class="text-danger bg-white rounded border border-2 border-danger p-2">
             Es obligatorio insertar un email válido
           </div>
         </div>
