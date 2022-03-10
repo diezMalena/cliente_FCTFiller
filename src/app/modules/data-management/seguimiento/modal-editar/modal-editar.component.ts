@@ -24,7 +24,6 @@ export class ModalEditarComponent implements OnInit {
   public fecha_invalida:boolean = false;
   public modified: boolean = false;
 
-
   constructor(
     private modalActive: NgbActiveModal,
     private formBuilder: FormBuilder,
@@ -95,6 +94,7 @@ export class ModalEditarComponent implements OnInit {
    * @author Malena
    */
   onChanges(): void {
+    console.log('cambio');
     this.editarJornada.valueChanges.subscribe((val) => {
       if (!this.modified) {
         this.modified = true;

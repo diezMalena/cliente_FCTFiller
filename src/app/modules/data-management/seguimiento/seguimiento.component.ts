@@ -15,6 +15,8 @@ import { DialogService } from 'src/app/services/dialog.service';
 import { ModalCambiotutorComponent } from './modal-cambiotutor/modal-cambiotutor.component';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
+import { ManualAnexo3Component } from '../../manuales/manual-anexo3/manual-anexo3.component';
+import { isEmptyObject } from 'jquery';
 
 @Component({
   selector: 'app-seguimiento',
@@ -297,21 +299,33 @@ export class SeguimientoComponent implements AfterViewInit, OnDestroy, OnInit{
  * @author Malena
  */
   public async descargarPDF(){
-    let descargar = await this.dialogService.confirmacion(
-      'Descargar Anexo III',
-      'Se ha generado tu hoja de seguimiento, ¿Quiere descargarla?'
-    );
-    if(descargar){
-      this.seguimientoService.descargarPDF(this.dni_alumno!).subscribe({
-        next:(res:any) => {
-          const blob = new Blob([res], {type: 'application/octet-stream'});
-          FileSaver.saveAs(blob,'hoja_seguimiento.docx');
-          this.toastr.success('Se ha descargado la hoja de seguimiento correctamente.','Generación de Anexo III');
-        },
-        error: e => {
-          this.toastr.error('No se ha podido generar el documento correctamente.','Error en la generación del Anexo III');
-        }
-      });
+    if(this.deptoForm.value.depto == ""){
+      this.toastr.error('No puedes descargar el documento sin añadir el departamento.','Error al descargar el documento');
+    }else{
+      let descargar = await this.dialogService.confirmacion(
+        'Descargar Anexo III',
+        'Se ha generado tu hoja de seguimiento, ¿Quiere descargarla?'
+      );
+      if(descargar){
+        this.seguimientoService.descargarPDF(this.dni_alumno!).subscribe({
+          next:(res:any) => {
+            const blob = new Blob([res], {type: 'application/octet-stream'});
+            FileSaver.saveAs(blob,'hoja_seguimiento.docx');
+            this.toastr.success('Se ha descargado la hoja de seguimiento correctamente.','Generación de Anexo III');
+          },
+          error: e => {
+            this.toastr.error('No se ha podido generar el documento correctamente.','Error en la generación del Anexo III');
+          }
+        });
+      }
     }
+  }
+
+  /**
+   * Método para abrir el manual del anexo3.
+   * @author Malena
+   */
+  public abrirAyuda(){
+    this.modal.open(ManualAnexo3Component, { size: 'lg' });
   }
 }
