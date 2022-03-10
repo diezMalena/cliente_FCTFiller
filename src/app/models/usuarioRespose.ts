@@ -6,4 +6,6 @@ export interface usuarioResponse {
   tipo?: string;
   roles?: [];
   token?: string;
+  //DSB Cambio 10-03-2022: Añadido codigo de centro de estudios
+  cod_centro?: string
 }

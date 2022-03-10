@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 import { throwError } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalInfoComponent } from '../modal-info/modal-info.component';
+import { ManualCSVUploadComponent } from '../../manuales/manual-csv-upload/manual-csv-upload.component';
 
 @Component({
   selector: 'app-csv-upload',
@@ -25,6 +26,10 @@ export class CsvUploadComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+  }
+
+  abrirAyuda() {
+    this.modalService.open(ManualCSVUploadComponent, {size: 'lg'});
   }
 
   //filesAlumnos CSV-----------------------------------------------------
