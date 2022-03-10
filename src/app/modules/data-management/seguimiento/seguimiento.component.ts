@@ -73,6 +73,8 @@ export class SeguimientoComponent implements AfterViewInit, OnDestroy, OnInit{
     this.gestionDepartamento();
     this.sumatorioHorasTotales();
     this.getArrayJornadas();
+    this.rerender();
+
   }
 
   ngOnDestroy(): void {
@@ -299,7 +301,7 @@ export class SeguimientoComponent implements AfterViewInit, OnDestroy, OnInit{
  * @author Malena
  */
   public async descargarPDF(){
-    if(this.deptoForm.value.depto == ""){
+    if(this.departamentoEstablecido == false){
       this.toastr.error('No puedes descargar el documento sin añadir el departamento.','Error al descargar el documento');
     }else{
       let descargar = await this.dialogService.confirmacion(
