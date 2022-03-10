@@ -14,6 +14,8 @@ import { ManualCrudAnexosComponent } from './modules/manuales/manual-crud-anexos
 import { ManualCrudProfesoresComponent } from './modules/manuales/manual-crud-profesores/manual-crud-profesores.component';
 import { ManualGestionEmpresasComponent } from './modules/manuales/manual-gestion-empresas/manual-gestion-empresas.component';
 import { ManualAnexo3Component } from './modules/manuales/manual-anexo3/manual-anexo3.component';
+import { ManualAsigAlumComponent } from './modules/manuales/manual-asig-alum/manual-asig-alum.component';
+import { ManualGestionAlumnosComponent } from './modules/manuales/manual-gestion-alumnos/manual-gestion-alumnos.component';
 // import { ModalInfoComponent } from './src/app/modules/data-upload/modal-info/modal-info.component';
 // import { NgxDropzoneModule } from 'ngx-dropzone';
 
@@ -24,6 +26,8 @@ import { ManualAnexo3Component } from './modules/manuales/manual-anexo3/manual-a
     ManualCrudProfesoresComponent,
     ManualGestionEmpresasComponent,
     ManualAnexo3Component,
+    ManualAsigAlumComponent,
+    ManualGestionAlumnosComponent,
     // ModalInfoComponent,
   ],
   imports: [

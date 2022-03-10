@@ -10,6 +10,7 @@ import { ResumenComponent } from './registro-empresa/resumen/resumen.component';
 import { UbicacionComponent } from './registro-empresa/ubicacion/ubicacion.component';
 import { SeguimientoComponent } from './seguimiento/seguimiento.component';
 import { CrudProfesoresComponent } from './crud-profesores/crud-profesores.component';
+import { GestionAlumnosComponent } from './gestion-alumnos/gestion-alumnos.component';
 //import { SectionEmpresaComponent } from './components/section-empresa/section-empresa.component';
 
 
@@ -45,6 +46,10 @@ const routes: Routes = [
   {
     path: 'gestion-empresas',
     component: GestionEmpresasComponent
+  },
+  {
+    path: 'gestion-alumnos',
+    component: GestionAlumnosComponent
   },
   {
     path:'crud-anexos',
