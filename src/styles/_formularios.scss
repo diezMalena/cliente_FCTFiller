@@ -1,3 +1,8 @@
+.required::after {
+  content:" *";
+  color:red;
+}
+
 $breakpoint-tablet: 991px;
 $breakpoint-mobile: 767px;
 

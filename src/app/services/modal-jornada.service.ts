@@ -26,9 +26,6 @@ export class ModalJornadaService {
       jornada: jornada,
       dni_alumno: dni
     }
-
-    console.log(datos);
-    //var datosString = JSON.stringify(datos);
     return this.http.post(url, datos, {headers: headers});
   }
 
@@ -41,7 +38,6 @@ export class ModalJornadaService {
       jornada: jornada,
       dni_alumno: dni
     }
-    console.log(datos);
     return this.http.post(url, datos, {headers: headers});
   }
 
