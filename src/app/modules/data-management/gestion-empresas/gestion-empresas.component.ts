@@ -14,6 +14,7 @@ import { DialogService } from 'src/app/services/dialog.service';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
+import { ManualGestionEmpresasComponent } from '../../manuales/manual-gestion-empresas/manual-gestion-empresas.component';
 
 @Component({
   selector: 'app-gestion-empresas',
@@ -82,6 +83,12 @@ export class GestionEmpresasComponent
     });
     $.extend(true, $.fn.dataTable.defaults, {
       language: { url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json' },
+      columnDefs: [
+        {
+          targets: 'nosort',
+          orderable: false,
+        },
+      ],
     });
   }
 
@@ -133,8 +140,8 @@ export class GestionEmpresasComponent
         },
         error: (err: any) => {
           console.log(err);
-          this.toastr.error(err.error.message, err.error.title)
-        }
+          this.toastr.error(err.error.message, err.error.title);
+        },
       });
     }
   }
@@ -148,5 +155,13 @@ export class GestionEmpresasComponent
       this.empresas = array;
       this.rerender();
     });
+  }
+
+  /**
+   * Abre un modal de ayuda
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public abrirAyuda(): void {
+    this.modal.open(ManualGestionEmpresasComponent, { size: 'lg' });
   }
 }
