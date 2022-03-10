@@ -220,3 +220,13 @@ $breakpoint-mobile: 767px;
 *, :after, :before {
   box-sizing: border-box;
 }
+
+// Quitar formato de legend
+// legend {
+//   float: none !important;
+//   display: inline-block !important;
+//   width: 100% !important;
+//   padding: 0 !important;
+//   margin-bottom: 0 !important;
+//   font-size: inherit !important;
+// }

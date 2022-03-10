@@ -69,7 +69,7 @@ export class CrudEmpresasService {
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
   public updateRepresentante(representante: Trabajador) {
-    const url: string = this.URLAPI + 'update_representante';
+    const url: string = this.URLAPI + 'update_trabajador';
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });

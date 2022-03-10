@@ -12,6 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ManualCrudAnexosComponent } from './modules/manuales/manual-crud-anexos/manual-crud-anexos.component';
 import { ManualCrudProfesoresComponent } from './modules/manuales/manual-crud-profesores/manual-crud-profesores.component';
+import { ManualGestionEmpresasComponent } from './modules/manuales/manual-gestion-empresas/manual-gestion-empresas.component';
 // import { ModalInfoComponent } from './src/app/modules/data-upload/modal-info/modal-info.component';
 // import { NgxDropzoneModule } from 'ngx-dropzone';
 
@@ -20,6 +21,7 @@ import { ManualCrudProfesoresComponent } from './modules/manuales/manual-crud-pr
     AppComponent,
     ManualCrudAnexosComponent,
     ManualCrudProfesoresComponent,
+    ManualGestionEmpresasComponent,
     // ModalInfoComponent,
   ],
   imports: [
