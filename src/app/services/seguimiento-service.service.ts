@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Tutor } from '../models/tutor';
+import { map, Observable } from 'rxjs';
+import { tutorResponse } from '../models/tutorResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -81,6 +84,45 @@ export class SeguimientoServiceService {
     let dato= {dni:dni};
     const url: string= this.ruta+"generarAnexo3";
     return this.http.post(url,dato, {responseType:'arraybuffer'});
+  }
+
+  /**
+   * @author Malena
+   */
+  public recogerTutorEmpresa(dni:string){
+    let url: string = this.ruta + "recogerTutorEmpresa";
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    let dato={dni:dni};
+    return this.http.post(url, dato, { headers: headers });
+  }
+
+  /**
+   * @author Malena
+   */
+  public getTutoresResponsables(id_empresa:string): Observable<Tutor[]> {
+    let url: string = this.ruta + "getTutoresResponsables/id=" + id_empresa;
+    return this.http.get<tutorResponse[]>(url).pipe(
+      map((resp: tutorResponse[]) => {
+        return resp.map((tutor) => Tutor.tutorJSON(tutor));
+      })
+    );
+  }
+
+  /**
+   * @author Malena
+   */
+  public guardarTutorSeleccionado(dni_tutor_nuevo:string,dni_alumno:string){
+    let url: string = this.ruta + "actualizarTutorEmpresa";
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    let dato={
+      dni_tutor_nuevo:dni_tutor_nuevo,
+      dni_alumno:dni_alumno
+    };
+    return this.http.put(url, dato, { headers: headers });
   }
 
 }

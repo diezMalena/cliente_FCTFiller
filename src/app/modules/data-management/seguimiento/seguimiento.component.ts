@@ -1,5 +1,5 @@
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalAddComponent } from './modal-add/modal-add.component' ;
@@ -10,13 +10,25 @@ import { SeguimientoServiceService } from 'src/app/services/seguimiento-service.
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import * as FileSaver from 'file-saver';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
+import { ToastrService } from 'ngx-toastr';
+import { DialogService } from 'src/app/services/dialog.service';
+import { ModalCambiotutorComponent } from './modal-cambiotutor/modal-cambiotutor.component';
+import { DataTableDirective } from 'angular-datatables';
+import { Subject } from 'rxjs';
+import { ManualAnexo3Component } from '../../manuales/manual-anexo3/manual-anexo3.component';
+import { isEmptyObject } from 'jquery';
 
 @Component({
   selector: 'app-seguimiento',
   templateUrl: './seguimiento.component.html',
   styleUrls: ['./seguimiento.component.scss']
 })
-export class SeguimientoComponent implements OnInit {
+export class SeguimientoComponent implements AfterViewInit, OnDestroy, OnInit{
+
+  @ViewChild(DataTableDirective, { static: false })
+  dtElement?: DataTableDirective;
+  dtOptions: DataTables.Settings = {};
+  dtTrigger = new Subject<any>();
 
   usuario;
   public arrayJornadas: any = [];
@@ -30,7 +42,8 @@ export class SeguimientoComponent implements OnInit {
   public horasTotales: number = 0;
   public botonDescargar: boolean = false;
   public botonVer: boolean = false;
-
+  public static readonly id_empresa: string = "id_empresa";
+  public tutor_empresa: string = "";
 
   constructor(
     private formBuilder: FormBuilder,
@@ -39,6 +52,8 @@ export class SeguimientoComponent implements OnInit {
     private modalJornadaService: ModalJornadaService,
     private seguimientoService:SeguimientoServiceService,
     private storageUser: LoginStorageUserService,
+    private toastr: ToastrService,
+    public dialogService: DialogService
   ) {
     this.usuario = storageUser.getUser();
     this.dni_alumno = this.usuario?.dni
@@ -47,16 +62,59 @@ export class SeguimientoComponent implements OnInit {
     });
   }
 
-
+  ngAfterViewInit(): void {
+    this.dtTrigger.next(this.arrayJornadas);
+  }
 
   ngOnInit(): void {
     this.arrayJornadas = this.rellenarArray();
     this.ponerNombre();
+    this.recogerTutorEmpresa();
     this.gestionDepartamento();
     this.sumatorioHorasTotales();
     this.getArrayJornadas();
   }
 
+  ngOnDestroy(): void {
+    this.dtTrigger.unsubscribe();
+  }
+
+  rerender(): void {
+    this.dtElement!.dtInstance.then((dtInstance: DataTables.Api) => {
+      // Destroy the table first
+      dtInstance.destroy();
+      // Call the dtTrigger to rerender again
+      this.dtTrigger.next(this.arrayJornadas);
+    });
+  }
+
+
+  /**
+   * Método que recoge el tutor que tiene asignado el alumno en la empresa.
+   * @author Malena
+   */
+  public recogerTutorEmpresa(){
+    this.seguimientoService.recogerTutorEmpresa(this.dni_alumno!).subscribe({
+      next: (response: any) => {
+        this.tutor_empresa = response[0]['dni_tutor'] +' - ' + response[0]['nombre_tutor'] ;
+        /*La empresa a la que pertenece el alumno, me la llevo al modal de cambiar tutor para poder
+        sacar los tutores/responsables de dicha empresa:*/
+        let id_empresa = response[1];
+        sessionStorage.setItem(SeguimientoComponent.id_empresa, JSON.stringify(id_empresa));
+      },
+      error: e => {
+        this.toastr.error('No se ha podido recoger el tutor empresa.','Error al recoger el tutor');
+      }
+    });
+  }
+
+  /**
+   * Método que abre un modal para seleccionar el nuevo tutor del alumno en la empresa.
+   * @author Malena
+   */
+  public modalCambiarTutor(){
+    this.modal.open(ModalCambiotutorComponent, { size: 'xs' });
+  }
 
 
   get formulario(){
@@ -74,7 +132,6 @@ export class SeguimientoComponent implements OnInit {
       this.arrayJornadas = array;
         var cuantasJornadasHay = this.arrayJornadas.length;
         this.sumatorioHorasTotales();
-        //console.log(cuantasJornadasHay);
 
         //Cuando se inserten 5 nuevas jornadas, se habilita el boton Descargar PDF:
         if(cuantasJornadasHay >= 5 && cuantasJornadasHay % 5 == 0){
@@ -87,7 +144,8 @@ export class SeguimientoComponent implements OnInit {
           this.botonVer = true;
           this.botonDescargar = false;
         }
-      //console.log(this.arrayJornadas);
+
+        this.rerender();
     });
   }
 
@@ -98,11 +156,6 @@ export class SeguimientoComponent implements OnInit {
  */
   nuevaJornada(){
     this.modal.open(ModalAddComponent, { size: 'm' });
-    /*const ventanaModal = this.modal.open(ModalAddComponent, { size: 'm' });
-    ventanaModal.componentInstance.jornadaTrigger.subscribe(() => {
-      console.log('holaaa');
-    });
-    */
   }
 
 
@@ -111,14 +164,11 @@ export class SeguimientoComponent implements OnInit {
    * @returns arrayJornada, las jornadas que tiene el alumno.
    * @author Malena.
    */
-
-
   public rellenarArray(){
     this.seguimientoService.devolverJornadas(this.dni_alumno!).subscribe({
       next: (response: any) => {
         this.arrayJornadas = response;
         var cuantasJornadasHay = this.arrayJornadas.length;
-        //console.log(cuantasJornadasHay);
 
         //Cuando se inserten 5 nuevas jornadas, se habilita el boton Descargar PDF:
         if(cuantasJornadasHay >= 5 && cuantasJornadasHay % 5 == 0){
@@ -132,12 +182,24 @@ export class SeguimientoComponent implements OnInit {
           this.botonDescargar = false;
         }
 
-
+        this.rerender();
+        $.fn.dataTable.ext.errMode = 'throw';
+        this.dtTrigger.next(this.arrayJornadas);
       },
       error: e => {
-        console.log('error en el nombre',e);
+        this.toastr.error('No se han podido mostrar las jornadas.','Error al mostrar jornadas');
       }
     });
+    $.extend(true, $.fn.dataTable.defaults, {
+      language: { url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json' },
+      columnDefs: [
+        {
+          targets: 'nosort',
+          orderable: false,
+        },
+      ],
+    });
+
     return this.arrayJornadas;
   }
 
@@ -153,25 +215,22 @@ export class SeguimientoComponent implements OnInit {
   }
 
 
-
   /**
    * Este método escribe el nombre del alumno y el nombre de la empresa en la interfaz.
    * @author Malena
    */
   public ponerNombre(){
-    //console.log(this.dni_alumno);
     this.seguimientoService.escribirDatos(this.dni_alumno!).subscribe({
       next: (response: any) => {
         this.nombre_alumno = response[0]['nombre_alumno'] +' ' + response[0]['apellidos_alumno'] ;
         this.nombre_empresa = response[0]['nombre_empresa']
-        //console.log(response);
       },
       error: e => {
+        this.toastr.error('No se ha podido mostrar ni el nombre del alumno ni de la empresa.','Error al mostrar datos');
         console.log('error en el nombre',e);
       }
     });
   }
-
 
 
   /**
@@ -187,16 +246,14 @@ export class SeguimientoComponent implements OnInit {
           this.departamentoEstablecido = true;
           this.departamento = response[0]['departamento'];
         }else{
-          console.log('El departamento está vacío.');
           this.departamentoEstablecido = false;
         }
       },
       error: e => {
-        console.log('error departamento');
+        this.toastr.error('No se ha podido mostrar el departamento.','Error al mostrar departamento');
       }
     });
   }
-
 
 
   /**
@@ -208,18 +265,16 @@ export class SeguimientoComponent implements OnInit {
     this.submitted = true;
     if(!this.deptoForm.valid) return;
     this.departamento = this.deptoForm.value.depto;
-    //console.log(this.departamento);
 
     this.seguimientoService.addDepartamento(this.dni_alumno!,this.departamento).subscribe({
       next: (response: any) => {
         this.departamentoEstablecido = true;
       },
       error: e => {
-        console.log('error en add el departamento.',e);
+        this.toastr.error('No se ha podido añadir el departamento.','Error al añadir departamento');
       }
     });
   }
-
 
 
   /**
@@ -233,26 +288,44 @@ export class SeguimientoComponent implements OnInit {
         this.horasTotales = response
       },
       error: e => {
-        console.log('No han llegado las horas');
+        this.toastr.error('No se ha podido mostrar las horas totales.','Error al mostrar horas totales');
       }
     })
   }
 
-  public descargarPDF(){
-    this.seguimientoService.descargarPDF(this.dni_alumno!).subscribe({
-      next:(res:any) => {
-        console.log('Se ha descargado');
-        const blob = new Blob([res], {type: 'application/octet-stream'});
-        FileSaver.saveAs(blob,'hoja_seguimiento.docx');
-      },
-      error: e => {
-        console.log('No se ha descargado el documento');
+/**
+ * Método que abre el Modal Dialog y depende de la respuesta hace una cosa u otra, en este
+ * caso descargaría la hoja de seguimiento correspondiente.
+ * @author Malena
+ */
+  public async descargarPDF(){
+    if(this.deptoForm.value.depto == ""){
+      this.toastr.error('No puedes descargar el documento sin añadir el departamento.','Error al descargar el documento');
+    }else{
+      let descargar = await this.dialogService.confirmacion(
+        'Descargar Anexo III',
+        'Se ha generado tu hoja de seguimiento, ¿Quiere descargarla?'
+      );
+      if(descargar){
+        this.seguimientoService.descargarPDF(this.dni_alumno!).subscribe({
+          next:(res:any) => {
+            const blob = new Blob([res], {type: 'application/octet-stream'});
+            FileSaver.saveAs(blob,'hoja_seguimiento.docx');
+            this.toastr.success('Se ha descargado la hoja de seguimiento correctamente.','Generación de Anexo III');
+          },
+          error: e => {
+            this.toastr.error('No se ha podido generar el documento correctamente.','Error en la generación del Anexo III');
+          }
+        });
       }
-    });
+    }
   }
 
-  public verPDF(){
-
+  /**
+   * Método para abrir el manual del anexo3.
+   * @author Malena
+   */
+  public abrirAyuda(){
+    this.modal.open(ManualAnexo3Component, { size: 'lg' });
   }
-
 }

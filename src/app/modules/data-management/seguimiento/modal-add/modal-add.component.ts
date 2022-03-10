@@ -5,6 +5,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Jornada } from '../../../../models/Jornada/jornada';
 import { ModalJornadaService } from '../../../../services/modal-jornada.service';
 import { SeguimientoServiceService } from 'src/app/services/seguimiento-service.service';
+import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-modal-add',
@@ -12,11 +14,12 @@ import { SeguimientoServiceService } from 'src/app/services/seguimiento-service.
   styleUrls: ['./modal-add.component.scss']
 })
 export class ModalAddComponent implements OnInit {
-
+  usuario;
   jornada: FormGroup;
   submitted: boolean = false;
+  public static readonly dniA: string = "dniA";
   public jornadaEdit: string = "";
-  public dni_alumno: string = "14d";
+  public dni_alumno?: string ;
   public jornadasArray: any = [];
   public fecha_invalida:boolean = false;
 
@@ -24,9 +27,15 @@ export class ModalAddComponent implements OnInit {
     private formBuilder: FormBuilder,
     private modalJornadaService: ModalJornadaService,
     private modalActive: NgbActiveModal,
-    private seguimientoService:SeguimientoServiceService
+    private seguimientoService:SeguimientoServiceService,
+    private storageUser: LoginStorageUserService,
+    private toastr: ToastrService,
 
   ) {
+
+    this.usuario = storageUser.getUser();
+    this.dni_alumno = this.usuario?.dni;
+
     this.jornada = this.formBuilder.group({
       fecha: ['',[Validators.required]],
       actividad:['',[Validators.required]],
@@ -64,11 +73,7 @@ export class ModalAddComponent implements OnInit {
     if(!this.jornada.valid) return;
     //Recojo los campos y los guardo en una nueva Jornada.
     //La id de la fct la mando vacía para establecerle su valor en el servidor buscando a qué fct está asociada ese alumno.
-    var hoy = new Date();
-    // console.log(hoy);
-    //console.log(new Date(this.jornada.value.fecha)>hoy);
-
-    this.fecha_invalida = new Date(this.jornada.value.fecha)>hoy;
+    this.fecha_invalida = this.comprobarFecha();
     if(this.fecha_invalida) return;
     var fecha_jornada = this.jornada.value.fecha;
     var actividades = this.jornada.value.actividad;
@@ -87,25 +92,34 @@ export class ModalAddComponent implements OnInit {
       tiempo_empleado
     );
 
-    this.modalJornadaService.addJornada(jornada, this.dni_alumno).subscribe({
+    this.modalJornadaService.addJornada(jornada, this.dni_alumno!).subscribe({
       next: (response) => {
-        console.log('se ha insertado');
+        this.toastr.success('Jornada añadida correctamente.','Nueva jornada');
         this.recogerJornadas();
         this.closeModel();
       },
       error: e => {
-        console.log('error');
+        this.toastr.error('Oh vaya, algo ha fallado al añadir una jornada.','Error al añadir jornada');
       }
     });
   }
 
+  /**
+   * Método que comprueba si la fecha introducida es superior a la de hoy, en este caso devolverá False.
+   * @returns Boolean
+   * @author Malena
+   */
+  public comprobarFecha(){
+    var hoy = new Date();
+    return new Date(this.jornada.value.fecha)>hoy;
+  }
 
   /**
    * Método que recoge las jornadas correspondientes al alumno y las muestra por pantalla.
    * @author Malena.
    */
   public recogerJornadas(){
-    this.seguimientoService.devolverJornadas(this.dni_alumno).subscribe({
+    this.seguimientoService.devolverJornadas(this.dni_alumno!).subscribe({
       next: (response: any) => {
         this.jornadasArray = response;
         this.modalJornadaService.getJornadasInArray(this.jornadasArray);

@@ -10,6 +10,8 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import * as FileSaver from 'file-saver';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 import { DialogService } from 'src/app/services/dialog.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ManualAsigAlumComponent } from '../../manuales/manual-asig-alum/manual-asig-alum.component';
 
 @Component({
   selector: 'app-asociar-emp-alu',
@@ -30,7 +32,8 @@ export class AsociarEmpAluComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService,
     private storageUser: LoginStorageUserService,
-    public dialogService: DialogService
+    public dialogService: DialogService,
+    private modal: NgbModal,
   ) {
     this.usuario = storageUser.getUser();
     this.dniTutor = this.usuario?.dni
@@ -166,6 +169,14 @@ export class AsociarEmpAluComponent implements OnInit {
       }
     })
     this.router.navigate(['/data-management/asig-alum-empresa']);
+  }
+
+  /**
+   * Abre un modal de ayuda
+   * @author Alvaro <alvarosantosmartin6@gmail.com>
+   */
+   public abrirAyuda(): void {
+    this.modal.open(ManualAsigAlumComponent, { size: 'lg' });
   }
 
 }

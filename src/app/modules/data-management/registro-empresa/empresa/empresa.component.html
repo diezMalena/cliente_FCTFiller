@@ -1,7 +1,7 @@
 <div class="row">
   <div class="page-header d-flex justify-content-between pb-3">
     <h1 class="h2">Registro de empresas</h1>
-    <button type="button" class="btn btn-outline-secondary mr-2" placement="left"
+    <button type="button" class="btn btn-outline-default mr-2" placement="left"
       ngbTooltip="Haga clic para acceder a la ayuda de esta sección">?</button>
   </div>
   <div class="col-12 p-2">
@@ -38,14 +38,15 @@
         </div>
         <div class="col-12 col-lg-8">
           <input type="text" class="form-control" id="cif" formControlName="cif" placeholder="00000000X">
-          <div class="row">
-            <div class="col-12 col-lg-8" *ngIf="submitted && formulario['cif'].errors">
-              <div *ngIf="formulario['cif'].errors['required']">No puede estar vacío.</div>
-              <div *ngIf="formulario['cif'].errors['minlength']">Debe tener 8 números y 1 letra en
-                mayúscula.</div>
-              <div *ngIf="formulario['cif'].errors['maxlength']">Debe tener 9 caracteres.</div>
-            </div>
-          </div>
+          <ng-container *ngIf="submitted && formulario['cif'].errors">
+            <div class="text-danger bg-white rounded border border-2 border-danger p-2"
+              *ngIf="formulario['cif'].errors['required']">No puede estar vacío.</div>
+            <div class="text-danger bg-white rounded border border-2 border-danger p-2"
+              *ngIf="formulario['cif'].errors['minlength']">Debe tener 8 números y 1 letra en
+              mayúscula.</div>
+            <div class="text-danger bg-white rounded border border-2 border-danger p-2"
+              *ngIf="formulario['cif'].errors['maxlength']">Debe tener 9 caracteres.</div>
+          </ng-container>
         </div>
       </div>
     </div>
@@ -58,11 +59,10 @@
         <div class="col-12 col-lg-8">
           <input type="text" class="form-control" id="nombre" formControlName="nombre"
             placeholder="Nombre de la empresa">
-          <div class="row">
-            <div class="col-12 col-lg-8" *ngIf="submitted && formulario['nombre'].errors">
-              <div *ngIf="formulario['nombre'].errors['required']">No puede estar vacío.</div>
-            </div>
-          </div>
+          <ng-container *ngIf="submitted && formulario['nombre'].errors">
+            <div class="text-danger bg-white rounded border border-2 border-danger p-2"
+              *ngIf="formulario['nombre'].errors['required']">No puede estar vacío.</div>
+          </ng-container>
         </div>
       </div>
     </div>
@@ -74,13 +74,13 @@
         </div>
         <div class="col-12 col-lg-8">
           <input type="email" id="email" class="form-control" placeholder="empresa@empresa.com" formControlName="email">
-          <div class="row">
-            <div class="col-12 col-lg-8" *ngIf="submitted && formulario['email'].errors">
-              <div *ngIf="formulario['email'].errors['required']">No puede estar vacío</div>
-              <div *ngIf="formulario['email'].errors['email']">Debe tener formato de correo electrónico
-              </div>
+          <ng-container *ngIf="submitted && formulario['email'].errors">
+            <div class="text-danger bg-white rounded border border-2 border-danger p-2"
+              *ngIf="formulario['email'].errors['required']">No puede estar vacío</div>
+            <div class="text-danger bg-white rounded border border-2 border-danger p-2"
+              *ngIf="formulario['email'].errors['email']">Debe tener formato de correo electrónico
             </div>
-          </div>
+          </ng-container>
         </div>
       </div>
     </div>
@@ -91,39 +91,40 @@
         </div>
         <div class="col-12 col-lg-8">
           <input type="text" class="form-control" id="telefono" formControlName="telefono" placeholder="000 00 00 00">
-          <div class="row">
-            <div class="col-12 col-lg-8" *ngIf="submitted && formulario['telefono'].errors">
-              <div *ngIf="formulario['telefono'].errors['required']">No puede estar vacío.</div>
-              <div *ngIf="formulario['telefono'].errors['minlength']">Debe tener 9 números.</div>
-              <div *ngIf="formulario['telefono'].errors['maxlength']">Debe tener 9 números.</div>
-            </div>
-          </div>
+          <ng-container *ngIf="submitted && formulario['telefono'].errors">
+            <div class="text-danger bg-white rounded border border-2 border-danger p-2"
+              *ngIf="formulario['telefono'].errors['required']">No puede estar vacío.</div>
+            <div class="text-danger bg-white rounded border border-2 border-danger p-2"
+              *ngIf="formulario['telefono'].errors['minlength']">Debe tener 9 números.</div>
+            <div class="text-danger bg-white rounded border border-2 border-danger p-2"
+              *ngIf="formulario['telefono'].errors['maxlength']">Debe tener 9 números.</div>
+          </ng-container>
         </div>
       </div>
     </div>
 
     <div class="mb-3">
-      <div class="row d-flex align-items-center">
+      <fieldset class="row d-flex align-items-center">
         <div class="col-12 col-lg-4 d-lg-flex justify-content-end">
-          <label class="form-label fw-bold m-0">Tipo de empresa</label>
+          <label class="form-label fw-bold m-0" id="tipo-empresa-label">Tipo de empresa</label>
         </div>
         <div class="col-12 col-lg-4">
           <div class="form-check">
             <input class="form-check-input" formControlName="tipoEmpresa" type="radio" value="1" name="tipoEmpresa"
-              id="privada">
+              id="privada" aria-describedby="tipo-empresa-label">
             <label class="form-check-label" for="privada">
               Privada
             </label>
           </div>
           <div class="form-check">
             <input class="form-check-input" formControlName="tipoEmpresa" type="radio" name="tipoEmpresa" value="0"
-              id="publica" ng-checked="true">
+              id="publica" ng-checked="true" aria-describedby="tipo-empresa-label">
             <label class="form-check-label" for="publica">
               Pública
             </label>
           </div>
         </div>
-      </div>
+      </fieldset>
     </div>
     <div class="row py-2 d-flex justify-content-center">
       <div class="col-6 d-flex justify-content-center">
@@ -132,9 +133,3 @@
     </div>
   </div>
 </form>
-
-<div class="row">
-  <div class="col-12">
-    <input type="button" value="Atrás" class="btn btn-danger" routerLink="data-management/registro-empresa/representante">
-  </div>
-</div>

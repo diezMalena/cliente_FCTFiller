@@ -1,7 +1,7 @@
 <div class="row">
   <div class="page-header d-flex justify-content-between pb-3">
     <h1 class="h2">Registro de empresas</h1>
-    <button type="button" class="btn btn-outline-secondary mr-2" placement="left"
+    <button type="button" class="btn btn-outline-default mr-2" placement="left"
       ngbTooltip="Haga clic para acceder a la ayuda de esta sección">?</button>
   </div>
   <div class="col-12 p-2">
@@ -38,14 +38,15 @@
         </div>
         <div class="col-12 col-lg-8">
           <input type="text" class="form-control" id="dni" placeholder="00000000X" formControlName="dni">
-          <div class="row">
-            <div class="col-12 col-lg-8" *ngIf="submitted && formulario['dni'].errors">
-              <div *ngIf="formulario['dni'].errors['required']" class="error">No puede estar vacío.</div>
-              <div *ngIf="formulario['dni'].errors['minlength']">Debe tener 8 números y 1 letra en
-                mayúscula.</div>
-              <div *ngIf="formulario['dni'].errors['maxlength']">Debe tener 9 caracteres.</div>
-            </div>
-          </div>
+          <ng-container *ngIf="submitted && formulario['dni'].errors">
+            <div *ngIf="formulario['dni'].errors['required']"
+              class="text-danger bg-white rounded border border-2 border-danger p-2">No puede estar vacío</div>
+            <div *ngIf="formulario['dni'].errors['minlength']"
+              class="text-danger bg-white rounded border border-2 border-danger p-2">Debe tener 8 números y 1 letra en
+              mayúscula</div>
+            <div *ngIf="formulario['dni'].errors['maxlength']"
+              class="text-danger bg-white rounded border border-2 border-danger p-2">Debe tener 9 caracteres</div>
+          </ng-container>
         </div>
       </div>
     </div>
@@ -57,11 +58,10 @@
         <div class="col-12 col-lg-8">
           <input type="text" class="form-control" id="nombre" formControlName="nombre"
             placeholder="Nombre del representante...">
-          <div class="row">
-            <div class="col-12 col-lg-8" *ngIf="submitted && formulario['nombre'].errors">
-              <div *ngIf="formulario['nombre'].errors['required']">No puede estar vacío.</div>
-            </div>
-          </div>
+          <ng-container *ngIf="submitted && formulario['nombre'].errors">
+            <div class="text-danger bg-white rounded border border-2 border-danger p-2"
+              *ngIf="formulario['nombre'].errors['required']">No puede estar vacío</div>
+          </ng-container>
         </div>
       </div>
     </div>
@@ -73,11 +73,10 @@
         <div class="col-12 col-lg-8">
           <input type="text" class="form-control" id="apellidos" formControlName="apellido"
             placeholder="Apellidos del representante...">
-          <div class="row">
-            <div class="col-12 col-lg-8" *ngIf="submitted && formulario['apellido'].errors">
-              <div *ngIf="formulario['apellido'].errors['required']">No puede estar vacío.</div>
-            </div>
-          </div>
+          <ng-container *ngIf="submitted && formulario['apellido'].errors">
+            <div class="text-danger bg-white rounded border border-2 border-danger p-2"
+              *ngIf="formulario['apellido'].errors['required']">No puede estar vacío.</div>
+          </ng-container>
         </div>
       </div>
     </div>
@@ -89,13 +88,13 @@
         <div class="col-12 col-lg-8">
           <input type="email" id="email" class="form-control" placeholder="representante@empresa.com"
             formControlName="email">
-          <div class="row">
-            <div class="col-12 col-lg-8" *ngIf="submitted && formulario['email'].errors">
-              <div *ngIf="formulario['email'].errors['required']">No puede estar vacío</div>
-              <div *ngIf="formulario['email'].errors['email']">Debe tener formato de correo electrónico
-              </div>
+          <ng-container *ngIf="submitted && formulario['email'].errors">
+            <div class="text-danger bg-white rounded border border-2 border-danger p-2"
+              *ngIf="formulario['email'].errors['required']">No puede estar vacío</div>
+            <div class="text-danger bg-white rounded border border-2 border-danger p-2"
+              *ngIf="formulario['email'].errors['email']">Debe tener formato de correo electrónico
             </div>
-          </div>
+          </ng-container>
         </div>
       </div>
     </div>

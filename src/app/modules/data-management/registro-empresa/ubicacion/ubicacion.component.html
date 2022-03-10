@@ -1,7 +1,7 @@
 <div class="row">
   <div class="page-header d-flex justify-content-between pb-3">
     <h1 class="h2">Registro de empresas</h1>
-    <button type="button" class="btn btn-outline-secondary mr-2" placement="left"
+    <button type="button" class="btn btn-outline-default mr-2" placement="left"
       ngbTooltip="Haga clic para acceder a la ayuda de esta sección">?</button>
   </div>
   <div class="col-12 p-2">
@@ -37,27 +37,27 @@
           <label for="localidad" class="form-label fw-bold m-0">Localidad</label>
         </div>
         <div class="col-12 col-lg-8">
-          <input type="text" id="localidad" class="form-control" formControlName="localidad" placeholder="Localidad del centro de trabajo">
-          <div class="row">
-            <div class="col-12 col-lg-8" *ngIf="submitted && formulario['localidad'].errors">
-              <div *ngIf="formulario['localidad'].errors['required']">No puede estar vacía.</div>
-            </div>
-          </div>
+          <input type="text" id="localidad" class="form-control" formControlName="localidad"
+            placeholder="Localidad del centro de trabajo">
+          <ng-container *ngIf="submitted && formulario['localidad'].errors">
+            <div class="text-danger bg-white rounded border border-2 border-danger p-2"
+              *ngIf="formulario['localidad'].errors['required']">No puede estar vacía</div>
+          </ng-container>
         </div>
       </div>
     </div>
     <div class="mb-3">
       <div class="row d-flex align-items-center">
         <div class="col-12 col-lg-4 d-lg-flex justify-content-end">
-          <label for="provincia" class="form-label fw-bold m-0">Provincia:</label>
+          <label for="provincia" class="form-label fw-bold m-0">Provincia</label>
         </div>
         <div class="col-12 col-lg-8">
-          <input type="text" class="form-control" id="provincia" formControlName="provincia" placeholder="Provincia del centro de trabajo">
-          <div class="row">
-            <div class="col-12 col-lg-8" *ngIf="submitted && formulario['provincia'].errors">
-              <div *ngIf="formulario['provincia'].errors['required']">No puede estar vacía.</div>
-            </div>
-          </div>
+          <input type="text" class="form-control" id="provincia" formControlName="provincia"
+            placeholder="Provincia del centro de trabajo">
+          <ng-container *ngIf="submitted && formulario['provincia'].errors">
+            <div class="text-danger bg-white rounded border border-2 border-danger p-2"
+              *ngIf="formulario['provincia'].errors['required']">No puede estar vacía</div>
+          </ng-container>
         </div>
       </div>
     </div>
@@ -67,12 +67,12 @@
           <label for="direccion" class="form-label fw-bold m-0">Dirección</label>
         </div>
         <div class="col-12 col-lg-8">
-          <input type="text" id="direccion" class="form-control" id="direccion" formControlName="direccion" placeholder="Av/ Avenida, 123">
-          <div class="row">
-            <div class="col-12 col-lg-8" *ngIf="submitted && formulario['direccion'].errors">
-              <div *ngIf="formulario['direccion'].errors['required']">No puede estar vacía.</div>
-            </div>
-          </div>
+          <input type="text" id="direccion" class="form-control" id="direccion" formControlName="direccion"
+            placeholder="Av/ Avenida, 123">
+          <ng-container *ngIf="submitted && formulario['direccion'].errors">
+            <div class="text-danger bg-white rounded border border-2 border-danger p-2"
+              *ngIf="formulario['direccion'].errors['required']">No puede estar vacía</div>
+          </ng-container>
         </div>
       </div>
     </div>
@@ -82,15 +82,16 @@
           <label for="cp" class="form-label fw-bold m-0">Código Postal</label>
         </div>
         <div class="col-12 col-lg-8">
-          <input type="text" class="form-control" id="exampleInputText1" aria-describedby="emailHelp"
+          <input type="text" class="form-control" id="cp"
             formControlName="cp" placeholder="00000">
-          <div class="row">
-            <div class="col-12 col-lg-8" *ngIf="submitted && formulario['cp'].errors">
-              <div *ngIf="formulario['cp'].errors['required']">No puede estar vacío.</div>
-              <div *ngIf="formulario['cp'].errors['minlength']">Debe tener 5 dígitos.</div>
-              <div *ngIf="formulario['cp'].errors['maxlength']">Debe tener 5 dígitos.</div>
-            </div>
-          </div>
+          <ng-container *ngIf="submitted && formulario['cp'].errors">
+            <div class="text-danger bg-white rounded border border-2 border-danger p-2"
+              *ngIf="formulario['cp'].errors['required']">No puede estar vacío</div>
+            <div class="text-danger bg-white rounded border border-2 border-danger p-2"
+              *ngIf="formulario['cp'].errors['minlength']">Debe tener 5 dígitos</div>
+            <div class="text-danger bg-white rounded border border-2 border-danger p-2"
+              *ngIf="formulario['cp'].errors['maxlength']">Debe tener 5 dígitos</div>
+          </ng-container>
         </div>
       </div>
     </div>
@@ -103,8 +104,3 @@
 
   </div>
 </form>
-<div class="row">
-  <div class="col-12 col-xl-12">
-    <input type="button" value="Atrás" class="btn btn-danger" routerLink="data-management/registro-empresa/empresa">
-  </div>
-</div>
