@@ -10,6 +10,8 @@ import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-di
 import { ModoEdicion } from 'src/app/models/modoEdicion';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
+import { ManualGestionEmpresasComponent } from '../../manuales/manual-gestion-empresas/manual-gestion-empresas.component';
+import { ManualGestionAlumnosComponent } from '../../manuales/manual-gestion-alumnos/manual-gestion-alumnos.component';
 
 
 @Component({
@@ -93,7 +95,7 @@ export class GestionAlumnosComponent implements AfterViewInit, OnDestroy, OnInit
       keyboard: false,
     });
 
-    let alumno = new Alumno('', '', new Uint8Array(0));
+    let alumno = new Alumno('', '', 0);
     alumno.matricula_cod_centro = this.loginStorageUser.getUser()?.cod_centro;
 
     this.crudAlumnosService.alumnoTrigger.emit([alumno, this.modosEdicion.nuevo]);
@@ -130,6 +132,14 @@ export class GestionAlumnosComponent implements AfterViewInit, OnDestroy, OnInit
       this.rerender();
       this.dtTrigger.next(this.listaAlumnos);
     })
+  }
+
+  /**
+   * Abre un modal de ayuda
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+   public abrirAyuda(): void {
+    this.modal.open(ManualGestionAlumnosComponent, { size: 'lg' });
   }
 
 }

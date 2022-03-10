@@ -1,8 +1,7 @@
 export interface alumnoResponse {
   nombre: string;
   dni: string;
-  va_a_fct: BigInteger;
-  //Preguntar
+  va_a_fct: number;
   horario?: string;
   fecha_ini?: Date;
   fecha_fin?: Date;

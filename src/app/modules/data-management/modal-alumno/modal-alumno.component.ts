@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
 import { Alumno } from 'src/app/models/alumno';
 import { Grupo } from 'src/app/models/grupo';
 import { ModoEdicion } from 'src/app/models/modoEdicion';
@@ -32,7 +33,8 @@ export class ModalAlumnoComponent implements OnInit {
     private auxService: AuxService,
     private loginService: LoginStorageUserService,
     private formBuilder: FormBuilder,
-    public dialogService: DialogService
+    public dialogService: DialogService,
+    public toastr: ToastrService
   ) {
 
     this.datosAlumno = this.formBuilder.group({});
@@ -46,9 +48,7 @@ export class ModalAlumnoComponent implements OnInit {
         this.obtenerListaGrupos();
         this.obtenerListaProvincias();
 
-        if (this.modo != this.modosEdicion.nuevo) {
-          this.obtenerListaCiudades(this.alumno?.provincia!);
-        }
+
       },
     });
   }
@@ -120,11 +120,10 @@ export class ModalAlumnoComponent implements OnInit {
     this.submitted = true;
 
     let datos = this.datosAlumno.value;
-    let vaAFCT : any = datos.va_a_fct ? 1 : 0;
     let alumnoEditado = new Alumno(
       datos.nombre,
       datos.dni,
-      vaAFCT,
+      datos.va_a_fct ? 1 : 0,
       '',
       new Date(),
       new Date(),
@@ -222,11 +221,17 @@ export class ModalAlumnoComponent implements OnInit {
   obtenerListaProvincias() {
     this.auxService.listarProvincias().subscribe({
       next: (respuesta) => {
-        if (this.modo == this.modosEdicion.nuevo) {
+
+        if (this.modo != this.modosEdicion.detalle) {
           this.listadoProvincias = ['Seleccione uno...'];
           this.listadoProvincias = this.listadoProvincias.concat(respuesta);
         } else {
-          this.listadoProvincias = respuesta;
+          this.listadoProvincias = [''];
+          this.listadoProvincias = this.listadoProvincias.concat(respuesta);
+        }
+
+        if(this.modo != this.modosEdicion.nuevo) {
+          this.obtenerListaCiudades(this.alumno?.provincia!);
         }
       }
     });
@@ -243,7 +248,11 @@ export class ModalAlumnoComponent implements OnInit {
   actualizarAlumno(alumno: Alumno) {
     this.crudAlumnosService.actualizarAlumno(alumno).subscribe({
       next: (reponse: any) => {
+        this.toastr.success('Alumno actualizado correctamente');
         this.obtenerAlumnos();
+      },
+      error: (error) => {
+        this.toastr.error('Se produjo un error al actualizar al alumno');
       }
     });
   }
@@ -251,7 +260,11 @@ export class ModalAlumnoComponent implements OnInit {
   registrarAlumno(alumno: Alumno) {
     this.crudAlumnosService.registrarAlumno(alumno).subscribe({
       next: (response: any) => {
+        this.toastr.success('Alumno registrado correctamente');
         this.obtenerAlumnos();
+      },
+      error: (error) => {
+        this.toastr.success('Se produjo un error al registrar al alumno');
       }
     });
   }

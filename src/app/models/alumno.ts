@@ -39,7 +39,7 @@ export class Alumno {
   constructor(
     public nombre: string,
     public dni: string,
-    public va_a_fct: BigInteger,
+    public va_a_fct: number,
     public horario?: string,
     public fecha_ini?: Date,
     public fecha_fin?: Date,
