@@ -24,7 +24,6 @@ export class ModalEditarComponent implements OnInit {
   public fecha_invalida:boolean = false;
   public modified: boolean = false;
 
-
   constructor(
     private modalActive: NgbActiveModal,
     private formBuilder: FormBuilder,
@@ -74,7 +73,10 @@ export class ModalEditarComponent implements OnInit {
 
   }
 
-
+  /**
+   * Método que abre el modal Dialog para preguntar si queremos salir sin guardar o no.
+   * @author Malena
+   */
   public async confirmacion(){
     let cerrar = await this.dialogService.confirmacion(
       'Descartar cambios',
@@ -87,13 +89,27 @@ export class ModalEditarComponent implements OnInit {
     }
   }
 
-
+  /**
+   * Método que comprueba si hay algún cambio en el formulario.
+   * @author Malena
+   */
   onChanges(): void {
+    console.log('cambio');
     this.editarJornada.valueChanges.subscribe((val) => {
       if (!this.modified) {
         this.modified = true;
       }
     });
+  }
+
+  /**
+   * Método que comprueba si la fecha introducida es superior a la de hoy, en este caso devolverá False.
+   * @returns Boolean
+   * @author Malena
+   */
+  public comprobarFecha(){
+    var hoy = new Date();
+    return new Date(this.editarJornada.value.fecha)>hoy;
   }
 
   /**
@@ -108,8 +124,7 @@ export class ModalEditarComponent implements OnInit {
     if(this.jornada != undefined){
       var id_jornada = this.jornada.id_jornada;
       var orden_jornada = this.jornada.orden_jornada;
-      var hoy = new Date();
-      this.fecha_invalida = new Date(this.jornada.fecha_jornada)>hoy;
+      this.fecha_invalida = this.comprobarFecha();
       if(this.fecha_invalida) return;
       var fecha_jornada = this.jornada.fecha_jornada;
       var actividades = this.jornada.actividades;
@@ -130,7 +145,7 @@ export class ModalEditarComponent implements OnInit {
           //console.log(response);
           this.toastr.success('La jornada se ha actualizado correctamente.','Editar jornada');
           this.recogerJornadas();
-          this.closeModel();
+          this.modalActive.dismiss();
         },
         error: e => {
           this.toastr.error('No se ha actualizado la jornada.','Error al editar jornada');

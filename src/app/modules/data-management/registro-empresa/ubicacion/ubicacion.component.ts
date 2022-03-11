@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ManualRegistroEmpresasComponent } from 'src/app/modules/manuales/manual-registro-empresas/manual-registro-empresas.component';
 
 @Component({
   selector: 'app-ubicacion',
   templateUrl: './ubicacion.component.html',
-  styleUrls: ['./ubicacion.component.scss']
+  styleUrls: ['./ubicacion.component.scss'],
 })
 export class UbicacionComponent implements OnInit {
-
-  public static readonly ubicacion: string = "ubicacion";
+  public static readonly ubicacion: string = 'ubicacion';
   ubicacion: FormGroup;
   submitted: boolean = false;
   localidad?;
@@ -18,12 +19,10 @@ export class UbicacionComponent implements OnInit {
   cp?;
 
   constructor(
-
     private formBuilder: FormBuilder,
-    private router: Router
-
+    private router: Router,
+    public modal: NgbModal
   ) {
-
     var ubicacion: string = '';
     this.localidad = '';
     this.direccion = '';
@@ -33,29 +32,30 @@ export class UbicacionComponent implements OnInit {
     if (sessionStorage.getItem(UbicacionComponent.ubicacion) != null) {
       ubicacion = sessionStorage.getItem(UbicacionComponent.ubicacion)!;
       var datosRepre = JSON.parse(ubicacion);
-      this.localidad = datosRepre["localidad"] ? datosRepre["localidad"] : '';
-      this.direccion = datosRepre["direccion"] ? datosRepre["direccion"] : '';
-      this.provincia = datosRepre["provincia"] ? datosRepre["provincia"] : '';
-      this.cp = datosRepre["cp"] ? datosRepre["cp"] : '';
+      this.localidad = datosRepre['localidad'] ? datosRepre['localidad'] : '';
+      this.direccion = datosRepre['direccion'] ? datosRepre['direccion'] : '';
+      this.provincia = datosRepre['provincia'] ? datosRepre['provincia'] : '';
+      this.cp = datosRepre['cp'] ? datosRepre['cp'] : '';
     }
 
     this.ubicacion = this.formBuilder.group({
       localidad: [this.localidad, [Validators.required]],
       direccion: [this.direccion, [Validators.required]],
       provincia: [this.provincia, [Validators.required]],
-      cp: [this.cp, [Validators.required, Validators.minLength(5), Validators.maxLength(5)]]
+      cp: [
+        this.cp,
+        [Validators.required, Validators.minLength(5), Validators.maxLength(5)],
+      ],
     });
-
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
-  get formulario(){
+  get formulario() {
     return this.ubicacion.controls;
   }
 
-  onSubmit(){
+  onSubmit() {
     this.submitted = true;
     if (!this.ubicacion.valid) return;
 
@@ -65,13 +65,16 @@ export class UbicacionComponent implements OnInit {
     var cp = this.ubicacion.value.cp;
 
     var datosUbicacion = {
-      'localidad': localidad,
-      'direccion': direccion,
-      'provincia': provincia,
-      'cp': cp,
-    }
+      localidad: localidad,
+      direccion: direccion,
+      provincia: provincia,
+      cp: cp,
+    };
 
-    sessionStorage.setItem(UbicacionComponent.ubicacion, JSON.stringify(datosUbicacion));
+    sessionStorage.setItem(
+      UbicacionComponent.ubicacion,
+      JSON.stringify(datosUbicacion)
+    );
     console.log(datosUbicacion);
 
     this.router.navigateByUrl('data-management/registro-empresa/resumen');
@@ -79,9 +82,16 @@ export class UbicacionComponent implements OnInit {
     this.onReset();
   }
 
-  onReset(){
+  onReset() {
     this.submitted = false;
     this.ubicacion.reset();
   }
 
+  /**
+   * Abre un modal de ayuda
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public abrirAyuda(): void {
+    this.modal.open(ManualRegistroEmpresasComponent, { size: 'lg' });
+  }
 }

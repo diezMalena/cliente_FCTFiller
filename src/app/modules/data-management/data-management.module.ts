@@ -25,7 +25,7 @@ import { ModalDescargaComponent } from './registro-empresa/modal-descarga/modal-
 import { GestionAlumnosComponent } from './gestion-alumnos/gestion-alumnos.component';
 import { ModalAlumnoComponent } from './modal-alumno/modal-alumno.component';
 import { DataTablesModule } from 'angular-datatables';
-
+import { ModalCambiotutorComponent } from './seguimiento/modal-cambiotutor/modal-cambiotutor.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +46,7 @@ import { DataTablesModule } from 'angular-datatables';
     CrudProfesoresComponent,
     ModalProfesoresComponent,
     ModalDescargaComponent,
+    ModalCambiotutorComponent,
     GestionAlumnosComponent,
     ModalAlumnoComponent,
   ],
