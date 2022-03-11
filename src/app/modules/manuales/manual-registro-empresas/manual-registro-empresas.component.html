@@ -1,0 +1,83 @@
+<div class="modal-header">
+  <h1 class="modal-title fs-2">Manual de registro de empresas</h1>
+  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar" (click)="closeModal()"></button>
+</div>
+<div class="modal-body p-3">
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">
+      <h2 class="fs-4 text-info">Vistazo general</h2>
+      <p>En esta serie de pantallas podrá registrar una empresa en la aplicación para contar con ella en el proceso de
+        las FCT. Al terminar el registro, se generará el Anexo 0 o 0A, de convenio entre su centro de estudios y la
+        empresa que registre</p>
+      <p class="m-0">Para realizar el registro necesitará los datos de la empresa que aparecen en el Anexo 0:</p>
+      <ul class="mb-2">
+        <li>
+          <span class="fw-bold">Del representante legal</span>: DNI, nombre completo y correo electrónico.
+        </li>
+        <li>
+          <span class="fw-bold">De la empresa</span>: CIF, nombre, correo electrónico, teléfono y si es pública o
+          privada.
+        </li>
+        <li>
+          <span class="fw-bold">Del centro de trabajo</span>: localidad, provincia, dirección y código postal.
+        </li>
+      </ul>
+      <p>En caso de disponer de varios centros de trabajo, registre los datos del centro de trabajo principal</p>
+    </li>
+    <li class="list-group-item">
+      <h2 class="fs-4 text-info">Vistazo general</h2>
+      <img class="img-fluid mb-2" src="/assets/Manuales/registro-empresas/screenshot_00.png"
+        alt="Captura de pantalla con la vista del registro de empresas (representante legal)">
+      <p>El registro de empresas está dividido en cuatro partes: tres para introducir datos y una cuarta que le servirá
+        para revisar la veracidad de los datos y confirmarlos</p>
+      <p class="m-0">El progreso del registro se marca en la parte superior de la pantalla:</p>
+      <img class="img-fluid mb-2" src="/assets/Manuales/registro-empresas/screenshot_01.png"
+        alt="Captura de pantalla: barra de progreso situada en 1. Representante">
+      <p class="m-0">Los datos se introducen en la parte central de la pantalla:</p>
+      <img class="img-fluid mb-2" src="/assets/Manuales/registro-empresas/screenshot_02.png"
+        alt="Captura de pantalla: introducción de datos del representante">
+    </li>
+    <li class="list-group-item">
+      <h2 class="fs-4 text-info">1. Barra de progreso</h2>
+      <p>La barra de progreso irá avanzando según avance en el registro.</p>
+      <img class="img-fluid mb-2" src="/assets/Manuales/registro-empresas/screenshot_03.png"
+        alt="Captura de pantalla: barra de progreso explicada en detalle. Las secciones anteriores son más oscuras, la actual más clara">
+      <p>Podrá volver a las secciones previas clickeando sobre la barra de progreso, pero no podrá avanzar a las
+        siguientes sin completar antes la parte del formulario en la que se encuentra</p>
+    </li>
+    <li class="list-group-item">
+      <h2 class="fs-4 text-info">2. Completar el formulario</h2>
+      <p>Introduzca los datos de formulario correctamente y clickee en "Aceptar y continuar" para avanzar a la siguiente sección</p>
+      <img class="img-fluid mb-2" src="/assets/Manuales/registro-empresas/relleno_formulario.gif"
+        alt="Vídeo demostrativo: rellene los datos correctamente y clickee en 'Aceptar y continuar' para avanzar el registro">
+      <p>Si introduce algún dato incorrectamente, se le avisará para que pueda corregirlo</p>
+    </li>
+    <li class="list-group-item">
+      <h2 class="fs-4 text-info">3. Resumen</h2>
+      <p>En esta sección aparecerán todos los valores insertados anteriormente, ofreciendo la posibilidad de comprobarlos antes de registrar la empresa.</p>
+      <img class="img-fluid mb-2" src="/assets/Manuales/registro-empresas/resumen.png"
+        alt="Captura de pantalla: vista general de la ventana resumen.">
+      <p>Gracias a la barra de progreso, puede retroceder a cualquiera de las 3 partes anteriores del registro (Representante legal, Empresa y Ubicación) tan solo clickeando en ella,
+        para cambiar el valor de cualquier dato introducido anteriormente.
+      </p>
+      <img class="img-fluid mb-2" src="/assets/Manuales/registro-empresas/breadcrum.png"
+        alt="Captura de pantalla: barra de progreso.">
+      <p>Si quiere cambiar el correo electrónico de la empresa que ha descrito anteriormente, clickee en "Empresa", y ahí le establece un nuevo valor al correo electrónico:</p>
+      <img class="img-fluid mb-2" src="/assets/Manuales/registro-empresas/cambio_correo.png"
+      alt="Captura de pantalla: cambio de correo en el apartado 'Empresa'.">
+      <p>Deberá darle al botón "Continuar y Aceptar" cada vez que termine de modificar los datos que desee de los correspondientes apartados hasta llegar de nuevo al resumen, para comprobar de nuevo los valores. </p>
+      <p>Una vez revisados todos los datos, pulsar el botón "Registrar empresa" para guardar los datos insertados y registrar la empresa.</p>
+      <img class="img-fluid mb-2" src="/assets/Manuales/registro-empresas/boton_registrar.png"
+      alt="Captura de pantalla: Boton Registrar empresa en la vista resumen.">
+      <p>El último paso es elegir si se quiere descargar o no el Anexo generado.</p>
+      <img class="img-fluid mb-2" src="/assets/Manuales/registro-empresas/confirmacion.png"
+      alt="Captura de pantalla: Modal para confirmar si descargar o no el documento.">
+      <p>Si decidimos descargar el documento, aparecerá el archivo listo para guardarlo.</p>
+      <img class="img-fluid mb-2" src="/assets/Manuales/registro-empresas/anexo_descargado.png"
+      alt="Captura de pantalla: Imagen del archivo descargado.">
+    </li>
+  </ul>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-outline-primary" (click)="closeModal()">Volver</button>
+</div>

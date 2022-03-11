@@ -5,7 +5,13 @@ import { Router } from '@angular/router';
 import { AsociarAlumnoEmpresaService } from '../../../services/asociar-alumno-empresa.service';
 import { ToastrService } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import * as FileSaver from 'file-saver';
+import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
+import { DialogService } from 'src/app/services/dialog.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ManualAsigAlumComponent } from '../../manuales/manual-asig-alum/manual-asig-alum.component';
 
 @Component({
   selector: 'app-asociar-emp-alu',
@@ -13,30 +19,38 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag
   styleUrls: ['./asociar-emp-alu.component.scss']
 })
 export class AsociarEmpAluComponent implements OnInit {
+
+  usuario;
   alumnos: Alumno[] = [];
   empresas: Empresa[] = [];
-  respuesta: any =[];
+  respuesta: any = [];
   nombreCiclo: string = '';
-  dniTutor: string = '117372673';
+  dniTutor?: string;
 
   constructor(
     private alumnosEmpresas: AsociarAlumnoEmpresaService,
     private router: Router,
-    private toastr: ToastrService,)
-     { }
+    private toastr: ToastrService,
+    private storageUser: LoginStorageUserService,
+    public dialogService: DialogService,
+    private modal: NgbModal,
+  ) {
+    this.usuario = storageUser.getUser();
+    this.dniTutor = this.usuario?.dni
+  }
 
   ngOnInit(): void {
     this.getNombreCiclo();
     this.getAlumnos();
     this.getEmpresas();
-    // this.eventosCasillas();
-    // this.eventosFichas();
-
-    // this.eventosCasillas();
-    // this.eventosFichas();
   }
 
-  drop(event: CdkDragDrop<string[]>) {
+  /**
+   * Esta función se encarga de hacer el drag and drop de los alumnos.
+   * @author Alvaro <alvarosantosmartin6@gmail.com>
+   * @param event
+   */
+  drop(event: CdkDragDrop<any>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
@@ -48,137 +62,121 @@ export class AsociarEmpAluComponent implements OnInit {
       );
     }
   }
-  getAlumnos(): void {
-    this.alumnosEmpresas.solicitarAlumnos(this.dniTutor).subscribe(Alumno => this.alumnos = Alumno);
-  }
-  getEmpresas(): void {
-    this.alumnosEmpresas.solicitarEmpresas(this.dniTutor).subscribe(Empresa => this.empresas = Empresa);
-  }
-  getNombreCiclo(): void {
-    this.alumnosEmpresas.solicitarNombreCiclo(this.dniTutor).subscribe(
-      {
-        next: (response: any) => {
-          this.nombreCiclo = response[0]['nombre'];
-        }
-      });
-  }
-  setCambiosEmpresas(){
-    this.alumnosEmpresas.asignarAlumnos(this.dniTutor, this.empresas).subscribe(Empresa => console.log(Empresa));
-  }
-
-  // drag(ev: any) {
-  //   console.log("entra");
-  //   ev.dataTransfer.setData("alumno", ev.target.id);
-  // }
-
-  // allowDrop(ev: any) {
-  //   ev.preventDefault();
-  // }
-
-  // drop(ev: any) {
-  //   var data = ev.dataTransfer.getData("alumno");
-  //   console.log(ev.target.className);
-  //   if (ev.target.className == "empresa" || ev.target.className == "listaAlumnos") {
-  //     data.parentNode.removeChild(data);
-  //     ev.target.appendChild(document.getElementById(data));
-  //   }
-  // }
 
   /**
-   * Cuando arrastramos una ficha recogemos su id en el evento
+   * Esta función se encarga de obtener los alumnos del tutor logueado del servidor.
+   * @author Alvaro <alvarosantosmartin6@gmail.com>
+   * @param event
    */
-  // eventosFichas() {
+  getAlumnos(): void {
+    this.alumnosEmpresas.solicitarAlumnos(this.dniTutor!).subscribe(resultado => {
+      this.alumnos = resultado
+    });
+  }
 
-  //   var fichas = document.querySelectorAll(".listaAlumnos div");
+  /**
+   * Esta función se encarga de obtener las empresas con sus alumnos asignados del tutor logueado del servidor.
+   * @author Alvaro <alvarosantosmartin6@gmail.com>
+   * @param event
+   */
+  getEmpresas(): void {
+    this.alumnosEmpresas.solicitarEmpresas(this.dniTutor!).subscribe(resultado => {
+      this.empresas = resultado
+    });
+  }
 
-  //   for (let i = 0; i < fichas.length; i++) {
-  //     fichas[i].addEventListener("dragstart",
-  //       function (event: any) {
-  //         event.dataTransfer.setData("text", event.target.id);
-  //       });
-  //   }
-  // }
+  /**
+   * Esta función se encarga de obtener el nombre del curso el tutor logueado.
+   * @author Alvaro <alvarosantosmartin6@gmail.com>
+   * @param event
+   */
+  getNombreCiclo(): void {
+    this.alumnosEmpresas.solicitarNombreCiclo(this.dniTutor!).subscribe(
+      {
+        next: (response: any) => {
+          this.nombreCiclo = response;
+        }
+      }
+    );
+  }
 
-  // eventosCasillas() {
+  /**
+   * Esta función se encarga de enviar los cambios a la base de datos
+   * y comprueba que todos los datos sean correctos antes de enviar los cambios al server.
+   * @author Alvaro <alvarosantosmartin6@gmail.com>
+   * @param event
+   */
+   async setCambiosEmpresas() {
+    let hacerlo = await this.dialogService.confirmacion(
+      'Generar y Descargar',
+      `¿Está seguro de que desea generar y descargar el anexo?`
+    );
+    if (hacerlo) {
+    var bandera = true;
+    var menor = true;
+    var msg = '';
+    this.empresas.forEach(empresa => {
+      if (empresa.nombre_responsable && bandera) {
+        empresa.alumnos?.forEach(alumno => {
+          if (!alumno.fecha_fin || !alumno.fecha_ini || !alumno.horario || !menor) {
+            bandera = false;
+          };
+          if (alumno.fecha_ini! >= alumno.fecha_fin! || !bandera && menor) {
+            menor = false;
+            msg += `${alumno.nombre} tiene la fecha de inicio mayor que la fecha de fin.\n`;
+          }
+        });
+      } else {
+        bandera = false;
+      }
+    });
+    if (bandera && menor) {
+      var datos = {
+        'empresas': this.empresas,
+        'alumnos_solos': this.alumnos,
+        'dni_tutor': this.dniTutor
+      }
+      this.alumnosEmpresas.asignarAlumnos(datos).subscribe();
+      this.toastr.success('Cambios realizados con exito.', 'Guardado')
+      this.GenerarAnexos();
+    } else if (!bandera) {
+      this.toastr.error('No pueden haber campos vacíos, o las fechas son incorrectas', 'Rellena campos');
+    }
+    if (msg != '') {
+      this.toastr.error(msg, 'Fechas incorrectas')
+    }
+  }else{
+    this.toastr.info('Has decidido no generar y descargar el Anexo', 'Generacion y Descarga');
+  }
 
-  //   var casillas = document.querySelectorAll(".empresa div");
+  }
 
-  //   for (let i = 0; i < casillas.length; i++) {
-
-  //     // Evitamos el comportamiento por defecto
-  //     casillas[i].addEventListener("dragover",
-  //       function (event) {
-  //         event.preventDefault();
-  //       }
-  //     );
-
-  //     casillas[i].addEventListener("drop",
-  //       function (event: any) {
-  //         event.preventDefault();
-  //         var data = event.dataTransfer.getData("alumno");
-  //         if (event.target.className == "empresa" || event.target.className == "listaAlumnos") {
-  //           data.parentNode.removeChild(data);
-  //           event.target.appendChild(document.getElementById(data));
-  //         }
-
-  //       });
-  //   }
-  // }
-
-
+/**
+ * @author Laura <lauramorenoramos97@gmail.com>
+ * Esta funcion te permite descargar los anexos que se han generado
+ */
   GenerarAnexos(){
-    /* this.alumnosEmpresas.generarAnexo('451266566Y').subscribe((response)=>{
-       this.respuesta=response;
-     });*/
-
-     this.alumnosEmpresas.generarAnexo('451266566Y').subscribe({
-      next:(user)=>{
+     this.alumnosEmpresas.generarAnexo(this.dniTutor!).subscribe({
+      next:(res)=>{
+        const current= new Date();
+        const blob = new Blob([res], {type: 'application/octet-stream'});
+      FileSaver.saveAs(blob,'backup_'+current.getTime()+'.zip');
         this.toastr.success('Anexo Generado', 'Título');
       },
       error: e =>{
-        this.toastr.error('El anexo no ha podido generarse', 'Título');
+        console.log(e);
+        this.toastr.error('El anexo no ha podido generarse', 'Generado');
       }
     })
-     this.router.navigate(['/data-management/asig-alum-empresa']);
-   }
+    this.router.navigate(['/data-management/asig-alum-empresa']);
+  }
 
-  // eventosFichas() {
-
-  //   var fichas = document.querySelectorAll(".arrastrables div");
-
-  //   for (let i = 0; i < fichas.length; i++) {
-  //     fichas[i].addEventListener("dragstart",
-  //       function (event: any) {
-  //         event.dataTransfer.setData("text", event.target.id);
-  //       });
-  //   }
-  // }
-
-  // eventosCasillas() {
-
-  //   var casillas = document.querySelectorAll(".tablero div") as NodeListOf <HTMLElement>;
-
-  //   for (let i = 0; i < casillas.length; i++) {
-
-  //     // Evitamos el comportamiento por defecto
-  //     casillas[i].addEventListener("dragover",
-  //       function (event: any) {
-  //         event.preventDefault();
-  //       }
-  //     );
-
-  //     casillas[i].addEventListener("drop",
-  //       function (event: any) {
-  //         event.preventDefault();
-
-  //         this.appendChild(
-  //           document.getElementById(
-  //             event.dataTransfer.getData("text")
-  //           )
-  //         );
-
-  //       });
-  //   }
-  // }
+  /**
+   * Abre un modal de ayuda
+   * @author Alvaro <alvarosantosmartin6@gmail.com>
+   */
+   public abrirAyuda(): void {
+    this.modal.open(ManualAsigAlumComponent, { size: 'lg' });
+  }
 
 }
