@@ -99,19 +99,19 @@
             <div class="row g-3 pb-2">
                 <div class="col-md-4">
                     <label for="password1" class="form-label"><b>Contraseña:</b></label>
-                    <input type="password" class="form-control" id="password1" formControlName="password1">
+                    <input type="password" class="form-control" id="password1" formControlName="password1" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}">
                     <div *ngIf="submitted && formulario['password1'].errors" class="text-danger bg-white rounded border border-2 border-danger p-2">
                         <div *ngIf="formulario['password1'].errors['required']"> La contraseña no puede estar vacia</div>
-                        <div *ngIf="formulario['password1'].errors['pattern']">La contraseña debe tener al menos un dígito, una minúscula, una mayúscula y tener como mínimo 8 caracteres</div>
+                        <div *ngIf="formulario['password1'].errors['pattern']">La contraseña debe tener al menos un dígito, una minúscula, una mayúscula y tener como mínimo 5 caracteres</div>
                     </div>
                 </div>
 
                 <div class="col-md-8 pb-2">
                     <label for="password2" class="form-label"><b>Repite la Contraseña:</b></label>
                     <input type="password" class="form-control" id="password2" formControlName="password2">
-                    <div *ngIf="submitted && formulario['password2'].errors" class="text-danger bg-white rounded border border-2 border-danger p-2">
+                    <div *ngIf="submitted && formulario['password2'].errors" class="text-danger bg-white rounded border border-2 border-danger p-2" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}">
                         <div *ngIf="formulario['password2'].errors['required']"> La contraseña no puede estar vacia</div>
-                        <div *ngIf="formulario['password2'].errors['pattern']">La contraseña debe tener al menos un dígito, una minúscula, una mayúscula y tener como mínimo 8 caracteres</div>
+                        <div *ngIf="formulario['password2'].errors['pattern']">La contraseña debe tener al menos un dígito, una minúscula, una mayúscula y tener como mínimo 5 caracteres</div>
                     </div>
                 </div>
 
