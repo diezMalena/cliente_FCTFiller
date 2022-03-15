@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ManualRegistroEmpresasComponent } from 'src/app/modules/manuales/manual-registro-empresas/manual-registro-empresas.component';
 
 @Component({
   selector: 'app-representante',
@@ -19,7 +21,8 @@ export class RepresentanteComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+    public modal: NgbModal
   ) {
 
     var representante:string = '';
@@ -81,5 +84,13 @@ export class RepresentanteComponent implements OnInit {
     this.submitted = false;
     this.representante.reset();
   }
+
+    /**
+   * Abre un modal de ayuda
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+     public abrirAyuda(): void {
+      this.modal.open(ManualRegistroEmpresasComponent, { size: 'lg' });
+    }
 
 }
