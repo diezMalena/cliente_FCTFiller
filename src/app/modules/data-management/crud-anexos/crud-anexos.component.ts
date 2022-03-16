@@ -109,6 +109,7 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
        public verAnexosDirector() {
         this.anexoService.getAnexos(this.dniAux!).subscribe({
           next: (res) => {
+            console.log(res);
             this.anexosArray = res;
             this.toastr.info('Anexos de: '+this.dniAux, 'Vistas Anexos');
             res = (this.anexosArray as any).data;
@@ -293,9 +294,8 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
      *@author Laura <lauramorenoramos97@gmail.com>
      * @param dni es el dni del tutor a buscar para mostrar sus anexos
      */
-    public buscar(dni : string){
-      this.dniAux= dni;
+    public buscar(event: any){
+      this.dniAux = event.target.value;
       this.verAnexosDirector();
     }
-
 }

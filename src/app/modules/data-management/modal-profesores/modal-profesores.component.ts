@@ -41,8 +41,8 @@ export class ModalProfesoresComponent implements OnInit {
       email:['',[Validators.required, Validators.email]],
       nombre:['',[Validators.required]],
       apellido:['',[Validators.required]],
-      password1:['',[Validators.required]],
-      password2:['',[Validators.required]],
+      password1:['',[Validators.required, Validators.pattern]],
+      password2:['',[Validators.required, Validators.pattern]],
     });
   }
 

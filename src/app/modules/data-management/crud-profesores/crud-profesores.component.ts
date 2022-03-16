@@ -7,6 +7,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 import { Subject } from 'rxjs';
 import { DataTableDirective } from 'angular-datatables';
+import { DialogService } from 'src/app/services/dialog.service';
 
 @Component({
   selector: 'app-crud-profesores',
@@ -33,6 +34,7 @@ export class CrudProfesoresComponent implements AfterViewInit, OnDestroy, OnInit
     private toastr: ToastrService,
     private modal: NgbModal,
     private storageUser: LoginStorageUserService,
+    public dialogService: DialogService
   ) {
     this.usuario = storageUser.getUser();
     this.dni = this.usuario?.dni
@@ -120,7 +122,14 @@ export class CrudProfesoresComponent implements AfterViewInit, OnDestroy, OnInit
    * @author Laura <lauramorenoramos97@gmail.com>
    * Esta funcion sirve para llamar al modal que nos va a permitir eliminar un profesor
    */
-  public eliminarProfesor(dni_profesor: string){
+  public async eliminarProfesor(dni_profesor: string){
+    let hacerlo = await this.dialogService.confirmacion(
+      'Eiminar',
+      `¿Está seguro de que desea eliminar este profesor?`
+    );
+
+    if (hacerlo) {
+
     this.profesoresService.eliminarProfesor(dni_profesor).subscribe({
       next:(res)=>{
         this.toastr.success('Profesor Eliminado', 'Eliminado');
@@ -131,6 +140,7 @@ export class CrudProfesoresComponent implements AfterViewInit, OnDestroy, OnInit
         this.toastr.error('El profesor no ha podido eliminarse', 'Fallo');
       }
     })
+  }
   }
 
   /**
