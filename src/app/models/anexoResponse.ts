@@ -5,4 +5,5 @@ export interface anexoResponse {
   empresa: string;
   firma_empresa: number;
   firma_centro: number;
+  fecha: string;
 }
