@@ -12,12 +12,11 @@ import {ManualCrudAnexosComponent} from '../../manuales/manual-crud-anexos/manua
 import { DataTableDirective } from 'angular-datatables';
 
 @Component({
-  selector: 'app-crud-anexos',
-  templateUrl: './crud-anexos.component.html',
-  styleUrls: ['./crud-anexos.component.scss']
+  selector: 'app-historial-anexos',
+  templateUrl: './historial-anexos.component.html',
+  styleUrls: ['./historial-anexos.component.scss']
 })
-export class CrudAnexosComponent implements OnDestroy, OnInit {
-
+export class HistorialAnexosComponent implements OnInit {
   @ViewChild(DataTableDirective, {static: false})
   dtElement: DataTableDirective | undefined;
   dtOptions: DataTables.Settings = {};
@@ -76,7 +75,7 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
    * @author Pablo y Laura <lauramorenoramos97@gmail.com>
    */
   public verAnexos() {
-    this.anexoService.getAnexos(this.dni_tutor!).subscribe((response) => {
+    this.anexoService.getAnexosHistory(this.dni_tutor!).subscribe((response) => {
       this.anexosArray = response;
       response = (this.anexosArray as any).data;
       // Calling the DT trigger to manually render the table
@@ -107,7 +106,7 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
    * @author Laura <lauramorenoramos97@gmail.com>
    */
        public verAnexosDirector() {
-        this.anexoService.getAnexos(this.dniAux!).subscribe({
+        this.anexoService.getAnexosHistory(this.dniAux!).subscribe({
           next: (res) => {
             console.log(res);
             this.anexosArray = res;
@@ -135,7 +134,7 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
    */
      public verAnexosEliminar() {
 
-      this.anexoService.getAnexos(this.dni_tutor!).subscribe((response) => {
+      this.anexoService.getAnexosHistory(this.dni_tutor!).subscribe((response) => {
         this.anexosArray = response;
         response = (this.anexosArray as any).data;
       });
@@ -177,7 +176,7 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
       }
     })
     // this.router.navigate(['/data-management/curd-anexos']);
-    this.router.navigate(['/data-management/crud-anexos']);
+    this.router.navigate(['/data-management/historial-anexos']);
   }else{
     this.toastr.info('No has descargado el anexo', 'Descarga');
   }
@@ -205,7 +204,7 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
         dni = this.dniAux!;
       }
 
-    this.anexoService.descargarTodo(dni).subscribe({
+    this.anexoService.descargarTodoHistorial(dni).subscribe({
       next: (res) => {
         const current = new Date();
         const blob = new Blob([res], { type: 'application/octet-stream' });
@@ -218,7 +217,7 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
       }
     })
     // this.router.navigate(['/data-management/curd-anexos']);
-    this.router.navigate(['/data-management/crud-anexos']);
+    this.router.navigate(['/data-management/historial-anexos']);
   }else{
     this.toastr.info('No has descargado los anexos', 'Descarga');
   }
@@ -226,15 +225,15 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
 
   /**
    *  @author Laura <lauramorenoramos97@gmail.com>
-   *Esta funcion te permite deshabilitar un anexo, suscribiendote al metodo deshabilitar anexo del servicio
+   *Esta funcion te permite eliminar un anexo, suscribiendote al metodo eliminar anexo del servicio
    Ademas, te avisa si todo ha salido bien o mal, por ultimo, vuelve a llamar a la funcion para
    que se refresque la vista
    */
-  public async deshabilitarAnexo(codigo: string) {
+  public async eliminarAnexo(codigo: string) {
 
     let hacerlo = await this.dialogService.confirmacion(
-      'Deshabilitar',
-      `¿Está seguro de que desea Deshabilitar el anexo?: `+codigo
+      'Eliminar',
+      `¿Está seguro de que desea eliminar el anexo?: `+codigo
     );
 
     if (hacerlo) {
@@ -245,9 +244,9 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
       }else{
         dni = this.dniAux!;
       }
-    this.anexoService.deshabilitarAnexo(codigo).subscribe({
+    this.anexoService.eliminarAnexo(dni, codigo).subscribe({
       next: (res) => {
-        this.toastr.success('Anexo Deshabilitado', 'Deshabilitado');
+        this.toastr.success('Anexo Eliminado', 'Eliminado');
 
         if(this.usuario?.isTutor()){
           this.verAnexos();
@@ -258,11 +257,11 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
       },
       error: e => {
         console.log(e);
-        this.toastr.error('El anexo no ha podido deshabilitarse', 'Fallo');
+        this.toastr.error('El anexo no ha podido eliminarse', 'Fallo');
       }
     })
   }else{
-    this.toastr.info('Has decidido no deshabilitar el anexo', 'No deshabilitado');
+    this.toastr.info('Has decidido no eliminar el anexo', 'No eliminado');
   }
   }
 
@@ -281,9 +280,53 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
   }
 
 
+
+    /**
+   *  @author Laura <lauramorenoramos97@gmail.com>
+   *Esta funcion te permite habilitar un anexo, suscribiendote al metodo deshabilitar anexo del servicio
+   Ademas, te avisa si todo ha salido bien o mal, por ultimo, vuelve a llamar a la funcion para
+   que se refresque la vista
+   */
+   public async habilitarAnexo(codigo: string) {
+
+    let hacerlo = await this.dialogService.confirmacion(
+      'Habilitar',
+      `¿Está seguro de que desea Habilitar el anexo?: `+codigo
+    );
+
+    if (hacerlo) {
+      let dni : string;
+
+      if(this.usuario?.isTutor()){
+        dni = this.dni_tutor!;
+      }else{
+        dni = this.dniAux!;
+      }
+
+    this.anexoService.habilitarAnexo(dni, codigo).subscribe({
+      next: (res) => {
+        this.toastr.success('Anexo Habilitado', 'Habilitado');
+
+        if(this.usuario?.isTutor()){
+          this.verAnexos();
+        }else{
+          this.verGrupos();
+        }
+
+      },
+      error: e => {
+        console.log(e);
+        this.toastr.error('El anexo no ha podido habilitarse', 'Fallo');
+      }
+    })
+  }else{
+    this.toastr.info('Has decidido no habilitar el anexo', 'No habilitado');
+  }
+  }
+
   /**
    * @author Laura <lauramorenoramos97@gmail.com>
-   * Esta funcion abre el manual de ayuda del crud de anexos
+   * Esta funcion abre el manual de ayuda del historial de anexos
    */
     public abrirAyuda(){
       this.modal.open(ManualCrudAnexosComponent, {size: 'lg'});

@@ -10,6 +10,7 @@ export class Anexo {
       obj['empresa'],
       obj['firma_empresa'],
       obj['firma_centro'],
+      obj['fecha'],
     );
   }
 
@@ -20,6 +21,7 @@ export class Anexo {
     public empresa: string,
     public firma_empresa: number,
     public firma_centro: number,
+    public fecha: string,
     //public anexos?: Anexo[]
   ) { }
 }
