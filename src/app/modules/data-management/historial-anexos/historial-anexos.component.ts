@@ -280,6 +280,50 @@ export class HistorialAnexosComponent implements OnInit {
   }
 
 
+
+    /**
+   *  @author Laura <lauramorenoramos97@gmail.com>
+   *Esta funcion te permite habilitar un anexo, suscribiendote al metodo deshabilitar anexo del servicio
+   Ademas, te avisa si todo ha salido bien o mal, por ultimo, vuelve a llamar a la funcion para
+   que se refresque la vista
+   */
+   public async habilitarAnexo(codigo: string) {
+
+    let hacerlo = await this.dialogService.confirmacion(
+      'Habilitar',
+      `¿Está seguro de que desea Habilitar el anexo?: `+codigo
+    );
+
+    if (hacerlo) {
+      let dni : string;
+
+      if(this.usuario?.isTutor()){
+        dni = this.dni_tutor!;
+      }else{
+        dni = this.dniAux!;
+      }
+
+    this.anexoService.habilitarAnexo(dni, codigo).subscribe({
+      next: (res) => {
+        this.toastr.success('Anexo Habilitado', 'Habilitado');
+
+        if(this.usuario?.isTutor()){
+          this.verAnexos();
+        }else{
+          this.verGrupos();
+        }
+
+      },
+      error: e => {
+        console.log(e);
+        this.toastr.error('El anexo no ha podido habilitarse', 'Fallo');
+      }
+    })
+  }else{
+    this.toastr.info('Has decidido no habilitar el anexo', 'No habilitado');
+  }
+  }
+
   /**
    * @author Laura <lauramorenoramos97@gmail.com>
    * Esta funcion abre el manual de ayuda del historial de anexos

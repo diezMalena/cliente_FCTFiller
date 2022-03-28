@@ -99,4 +99,36 @@ export class AnexoService {
     return this.http.delete<anexoResponse>(url,{headers});
   }
 
+
+  public deshabilitarAnexo(cod_anexo: string){
+    cod_anexo = cod_anexo.replace('/', "*");
+    cod_anexo = cod_anexo.replace('/', "*");
+
+    let url: string = this.ruta+'deshabilitarAnexo';
+
+    let headers= new HttpHeaders({
+      'Content-Type' : 'application/json',
+      //'x-access-token': `${sessionStorage.getItem('token')}`,
+    });
+
+  let dato={cod_anexo:cod_anexo};
+    return this.http.post<anexoResponse>(url,dato,{headers});
+  }
+
+  public habilitarAnexo(dni_tutor: string, cod_anexo: string){
+    cod_anexo = cod_anexo.replace('/', "*");
+    cod_anexo = cod_anexo.replace('/', "*");
+
+    let url: string = this.ruta+'habilitarAnexo';
+    let headers= new HttpHeaders({
+      'Content-Type' : 'application/json',
+      //'x-access-token': `${sessionStorage.getItem('token')}`,
+    });
+
+
+  let dato={cod_anexo:cod_anexo, dni_tutor:dni_tutor};
+    return this.http.post<anexoResponse>(url,dato,{headers});
+  }
+
+
 }
