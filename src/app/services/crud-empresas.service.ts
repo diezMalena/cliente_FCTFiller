@@ -5,17 +5,22 @@ import { Empresa } from '../models/empresa';
 import { EmpresaResponse } from '../models/empresaResponse';
 import { Trabajador } from '../models/trabajador';
 import { TrabajadorResponse } from '../models/trabajadorResponse';
+import { environment } from 'src/environments/environment';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class CrudEmpresasService {
   @Output() empresaTrigger: EventEmitter<any> = new EventEmitter();
 
-  public URLAPI: string = 'http://127.0.0.1:8000/api/';
+  public URLAPI: string = environment.apiUrl;
   public empresasArray = new BehaviorSubject<Empresa[]>([]);
 
   constructor(private http: HttpClient) {}
+
+  /***********************************************************************/
+  //#region Gestión de empresas - CRUD
+
+  /***********************************************************************/
+  //#region CRUD - Read
 
   /**
    * Devuelve una lista de empresas asociadas a un profesor mediante el centro de estudios
@@ -48,6 +53,12 @@ export class CrudEmpresasService {
     );
   }
 
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region CRUD - Update
+
   /**
    * Actualiza los datos de una empresa, devolviendo una respuesta del servidor
    * @param empresa La empresa a actualizar
@@ -59,7 +70,7 @@ export class CrudEmpresasService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
-    return this.http.put(url, JSON.stringify(empresa), {headers});
+    return this.http.put(url, JSON.stringify(empresa), { headers });
   }
 
   /**
@@ -73,8 +84,14 @@ export class CrudEmpresasService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
-    return this.http.put(url, JSON.stringify(representante), {headers});
+    return this.http.put(url, JSON.stringify(representante), { headers });
   }
+
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region CRUD - Delete
 
   /**
    * Elimina una empresa de la base de datos
@@ -85,16 +102,28 @@ export class CrudEmpresasService {
     const url: string = this.URLAPI + 'delete_empresa/id=' + idEmpresa;
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-    })
-    return this.http.delete(url, {headers});
+    });
+    return this.http.delete(url, { headers });
   }
 
+  //#endregion
+  /***********************************************************************/
+
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Funciones auxiliares
+
   /**
-   * Establece el array de empresas
+   * Función auxiliar datatables - Establece el array de empresas
    * @param empresasArray array de empresas
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
   public getEmpresasArray(empresasArray: Empresa[]) {
     this.empresasArray.next(empresasArray);
   }
+
+  //#endregion
+  /***********************************************************************/
 }
