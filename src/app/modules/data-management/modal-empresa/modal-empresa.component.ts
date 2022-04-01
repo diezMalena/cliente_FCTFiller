@@ -19,6 +19,9 @@ import { LoginStorageUserService } from 'src/app/services/login.storageUser.serv
   styleUrls: ['./modal-empresa.component.scss'],
 })
 export class ModalEmpresaComponent implements OnInit {
+  /***********************************************************************/
+  //#region Inicialización de variables y formulario
+
   public empresa: Empresa | undefined;
   public editar: boolean | undefined;
   public datosEmpresa: FormGroup;
@@ -36,8 +39,6 @@ export class ModalEmpresaComponent implements OnInit {
     public toastr: ToastrService
   ) {
     this.usuario = storageUser.getUser();
-    //Atención a la ñapa
-    //He tenido que crear un formGroup vacío para que se rellenase con la información asíncrona dentro del subscribe
     this.datosEmpresa = this.formBuilder.group({});
 
     this.crudEmpresasService.empresaTrigger.subscribe({
@@ -54,6 +55,12 @@ export class ModalEmpresaComponent implements OnInit {
     this.getEmpresas();
     this.onChanges();
   }
+
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Gestión del formulario
 
   get formulario() {
     return this.datosEmpresa.controls;
@@ -98,35 +105,6 @@ export class ModalEmpresaComponent implements OnInit {
         this.empresa?.representante?.email,
         [Validators.required],
       ],
-    });
-  }
-
-  /**
-   * Inicializa las empresas del componente mediante el servicio correspondiente
-   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
-   */
-  public getEmpresas(): void {
-    this.crudEmpresasService.getEmpresas(this.usuario?.dni!).subscribe({
-      next: async (empresas) => {
-        this.empresas = empresas;
-        await this.meterRepresentantesEmpresas(empresas);
-        this.crudEmpresasService.getEmpresasArray(this.empresas);
-      },
-    });
-  }
-
-  /**
-   * Mete los representantes en las empresas correspondientes
-   * @param empresas el vector de empresas
-   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
-   */
-  public async meterRepresentantesEmpresas(empresas: Empresa[]) {
-    empresas.forEach((empresa) => {
-      this.crudEmpresasService.getRepresentante(empresa.id).subscribe({
-        next: (representante) => {
-          empresa.representante = representante;
-        },
-      });
     });
   }
 
@@ -178,6 +156,38 @@ export class ModalEmpresaComponent implements OnInit {
     }
   }
 
+  //#endregion
+  /***********************************************************************/
+
+  /**
+   * Inicializa las empresas del componente mediante el servicio correspondiente
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public getEmpresas(): void {
+    this.crudEmpresasService.getEmpresas(this.usuario?.dni!).subscribe({
+      next: async (empresas) => {
+        this.empresas = empresas;
+        await this.meterRepresentantesEmpresas(empresas);
+        this.crudEmpresasService.getEmpresasArray(this.empresas);
+      },
+    });
+  }
+
+  /**
+   * Mete los representantes en las empresas correspondientes
+   * @param empresas el vector de empresas
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public async meterRepresentantesEmpresas(empresas: Empresa[]) {
+    empresas.forEach((empresa) => {
+      this.crudEmpresasService.getRepresentante(empresa.id).subscribe({
+        next: (representante) => {
+          empresa.representante = representante;
+        },
+      });
+    });
+  }
+
   /**
    * Actualiza los datos de la empresa en la base de datos
    * @param empresa La empresa a actualizar
@@ -189,11 +199,11 @@ export class ModalEmpresaComponent implements OnInit {
         this.empresa = empresa;
         await this.updateRepresentante(empresa.representante!);
         this.getEmpresas();
-        this.toastr.success(response.message, response.title)
+        this.toastr.success(response.message, response.title);
       },
       error: (err: any) => {
         this.toastr.error(err.error.message, err.error.title);
-      }
+      },
     });
   }
 
@@ -206,11 +216,11 @@ export class ModalEmpresaComponent implements OnInit {
     this.crudEmpresasService.updateRepresentante(representante).subscribe({
       next: (response: any) => {
         this.empresa!.representante = representante;
-        this.toastr.success(response.message, response.title)
+        this.toastr.success(response.message, response.title);
       },
       error: (err: any) => {
         this.toastr.error(err.error.message, err.error.title);
-      }
+      },
     });
   }
 
