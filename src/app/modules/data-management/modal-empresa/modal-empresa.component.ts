@@ -159,6 +159,12 @@ export class ModalEmpresaComponent implements OnInit {
   //#endregion
   /***********************************************************************/
 
+  /***********************************************************************/
+  //#region Servicios - Peticiones al servidor
+
+  /***********************************************************************/
+  //#region Obtención de datos - Empresas, representantes
+
   /**
    * Inicializa las empresas del componente mediante el servicio correspondiente
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
@@ -187,6 +193,12 @@ export class ModalEmpresaComponent implements OnInit {
       });
     });
   }
+
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Actualización de datos - Empresas, representantes
 
   /**
    * Actualiza los datos de la empresa en la base de datos
@@ -224,6 +236,15 @@ export class ModalEmpresaComponent implements OnInit {
     });
   }
 
+  //#endregion
+  /***********************************************************************/
+
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Funciones auxiliares y otros
+
   /**
    * Cierra el modal sólo si no hay cambios sin guardar
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
@@ -242,4 +263,7 @@ export class ModalEmpresaComponent implements OnInit {
       this.modalActive.close();
     }
   }
+
+  //#endregion
+  /***********************************************************************/
 }
