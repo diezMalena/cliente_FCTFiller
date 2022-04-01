@@ -12,9 +12,12 @@ import { ManualRegistroEmpresasComponent } from 'src/app/modules/manuales/manual
 @Component({
   selector: 'app-resumen',
   templateUrl: './resumen.component.html',
-  styleUrls: ['./resumen.component.scss'],
+  styleUrls: ['./resumen.component.scss']
 })
 export class ResumenComponent implements OnInit {
+  /***********************************************************************/
+  //#region Inicialización de variables y formulario
+
   public static readonly dni_tutor: string = 'dni_tutor';
   public static repre: string = 'representante';
   public static empresa: string = 'empresa';
@@ -49,20 +52,20 @@ export class ResumenComponent implements OnInit {
     private storageUser: LoginStorageUserService,
     public modal: NgbModal
   ) {
-    this.correoRep = 'hola';
-    this.nombreRep = 'hola';
-    this.apellidosRep = 'hola';
-    this.dniRep = 'hola';
+    this.correoRep = ' ';
+    this.nombreRep = ' ';
+    this.apellidosRep = ' ';
+    this.dniRep = ' ';
 
-    this.correoEmp = 'hola';
-    this.nombreEmp = 'hola';
+    this.correoEmp = ' ';
+    this.nombreEmp = ' ';
     this.telefonoEmp = 0;
-    this.cifEmp = 'hola';
+    this.cifEmp = ' ';
     this.tipoEmpresa = '0';
 
-    this.localidad = 'hola';
-    this.direccion = 'hola';
-    this.provincia = 'hola';
+    this.localidad = ' ';
+    this.direccion = ' ';
+    this.provincia = ' ';
     this.cp = 0;
 
     this.dniTutor = storageUser.getUser()?.dni;
@@ -84,6 +87,10 @@ export class ResumenComponent implements OnInit {
     });
   }
 
+  /**
+   * Inicializa los campos del formulario, rescatando los datos de la sesión
+   * @author Malena
+   */
   ngOnInit(): void {
     var representante: string = sessionStorage.getItem(ResumenComponent.repre)!;
     var empresa = sessionStorage.getItem(ResumenComponent.empresa)!;
@@ -114,11 +121,18 @@ export class ResumenComponent implements OnInit {
     this.cp = datosUbicacion['cp'];
   }
 
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Gestión del formulario
+
   get formulario() {
     return this.resumen.controls;
   }
 
   /**
+   * Valida el formulario y envía los datos al servidor, registrándolos en la base de datos
    * @author Malena
    */
   onSubmit() {
@@ -177,11 +191,16 @@ export class ResumenComponent implements OnInit {
     this.resumen.reset();
   }
 
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Funciones auxiliares y otros
+
   /**
    * Metodo que abre el Modal Dialog y si elegimos la opcion afirmativa, descargará el anexo 0.
-   *
+   * @param ruta ruta del anexo generado
    * @author Malena
-   * @param ruta
    */
   public async abrirModalDialog(ruta: string) {
     let descargar = await this.dialogService.confirmacion(
@@ -221,4 +240,7 @@ export class ResumenComponent implements OnInit {
   public abrirAyuda(): void {
     this.modal.open(ManualRegistroEmpresasComponent, { size: 'lg' });
   }
+
+  //#endregion
+  /***********************************************************************/
 }

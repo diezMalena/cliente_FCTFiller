@@ -10,6 +10,9 @@ import { ManualRegistroEmpresasComponent } from 'src/app/modules/manuales/manual
   styleUrls: ['./ubicacion.component.scss'],
 })
 export class UbicacionComponent implements OnInit {
+  /***********************************************************************/
+  //#region Inicialización de variables y formulario
+
   public static readonly ubicacion: string = 'ubicacion';
   ubicacion: FormGroup;
   submitted: boolean = false;
@@ -51,10 +54,20 @@ export class UbicacionComponent implements OnInit {
 
   ngOnInit(): void {}
 
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Gestión del formulario
+
   get formulario() {
     return this.ubicacion.controls;
   }
 
+  /**
+   * Valida el formulario y guarda los datos en sesión
+   * @author Malena
+   */
   onSubmit() {
     this.submitted = true;
     if (!this.ubicacion.valid) return;
@@ -87,6 +100,12 @@ export class UbicacionComponent implements OnInit {
     this.ubicacion.reset();
   }
 
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Funciones auxiliares y otros
+
   /**
    * Abre un modal de ayuda
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
@@ -94,4 +113,7 @@ export class UbicacionComponent implements OnInit {
   public abrirAyuda(): void {
     this.modal.open(ManualRegistroEmpresasComponent, { size: 'lg' });
   }
+
+  //#endregion
+  /***********************************************************************/
 }

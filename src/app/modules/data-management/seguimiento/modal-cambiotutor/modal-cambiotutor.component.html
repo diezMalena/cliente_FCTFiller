@@ -1,6 +1,5 @@
 <div class="modal-header">
   <h2 class="text-center modal-title">Cambiar tutor empresa</h2>
-
   <a (click)="closeModel()">
     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-x-square"
       viewBox="0 0 16 16">
@@ -11,10 +10,8 @@
     </svg>
   </a>
 </div>
+<!-- Cuerpo del modal -->
 <div class="modal-body">
-  <!-- Aqui va a ir un select options con todos los dni + nombre de los trabajadores con roles 2 y 3
-      El alumno podrá elegir a uno, y cuando acepte los cambios, estará sincronizada con la ventana
-      padre y se va a cambiar el tutor cuando se cierre el modal, como están hechas las jornadas.-->
   <div class="row">
     <form class="col-12" [formGroup]="nuevo_tutor" (ngSubmit)="actualizarTutor()">
       <div class="row d-flex align-items-center">
@@ -27,12 +24,11 @@
               {{tutor.dni}}</option>
           </select>
         </div>
+        <!-- Botones -->
         <div class="row d-flex justify-content-center p-3">
           <input type="submit" value="Guardar" class="btn btn-outline-primary col-3">
         </div>
       </div>
     </form>
   </div>
-
-
 </div>
