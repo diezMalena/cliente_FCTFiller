@@ -67,11 +67,12 @@
                                                 </svg>
                                             </button>
 
-                                                <button (click)="eliminarAnexo(anexo.codigo)" class="btn btn-outline-danger px-2 py-1 me-2" type="submit" aria-label="eliminar">
+                                                <button (click)="deshabilitarAnexo(anexo.codigo)" class="btn btn-outline-danger px-2 py-1 me-2" type="submit" aria-label="eliminar">
                                                 <svg class="bi" width="16" height="16">
-                                                    <use xlink:href="#papelera" />
+                                                    <use xlink:href="#deshabilitar" />
                                                 </svg>
                                             </button>
+
                                             </td>
                                         </tr>
                                     </tbody>
@@ -106,8 +107,8 @@
                                     <div class="row mb-2">
                                         <div class="col-12 col-lg-10 d-flex justify-content-start pb-2">
                                             <label class="m-1" for="grupos">Grupos </label>
-                                            <select id="grupos" class="form-select select" name="Grupos">
-                                                    <option *ngFor="let g of gruposArr; index as i" value="{{g.dni_profesor}}" (click)="buscar(g.dni_profesor)">{{g.cod_grupo}}</option>
+                                            <select (change)="buscar($event)" id="grupos" class="form-select select" name="Grupos">
+                                                    <option *ngFor="let g of gruposArr; index as i" value="{{g.dni_profesor}}">{{g.cod_grupo}}</option>
                                                 </select>
                                         </div>
                                         <div class="col-12 col-lg-2 d-flex justify-content-start justify-content-lg-end pb-2">
@@ -168,11 +169,12 @@
                                             </svg>
                                         </button>
 
-                                            <button (click)="eliminarAnexo(anexo.codigo) " class="btn btn-outline-danger px-2 py-1 me-2 " type="submit " aria-label="eliminar ">
+                                            <button (click)="deshabilitarAnexo(anexo.codigo) " class="btn btn-outline-danger px-2 py-1 me-2 " type="submit " aria-label="deshabilitar ">
                                             <svg class="bi " width="16 " height="16 ">
-                                                <use xlink:href="#papelera" />
+                                                <use xlink:href="#deshabilitar" />
                                             </svg>
                                         </button>
+
                                         </td>
                                     </tr>
                                 </tbody>

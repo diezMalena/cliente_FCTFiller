@@ -109,6 +109,7 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
        public verAnexosDirector() {
         this.anexoService.getAnexos(this.dniAux!).subscribe({
           next: (res) => {
+            console.log(res);
             this.anexosArray = res;
             this.toastr.info('Anexos de: '+this.dniAux, 'Vistas Anexos');
             res = (this.anexosArray as any).data;
@@ -225,15 +226,15 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
 
   /**
    *  @author Laura <lauramorenoramos97@gmail.com>
-   *Esta funcion te permite eliminar un anexo, suscribiendote al metodo eliminar anexo del servicio
+   *Esta funcion te permite deshabilitar un anexo, suscribiendote al metodo deshabilitar anexo del servicio
    Ademas, te avisa si todo ha salido bien o mal, por ultimo, vuelve a llamar a la funcion para
    que se refresque la vista
    */
-  public async eliminarAnexo(codigo: string) {
+  public async deshabilitarAnexo(codigo: string) {
 
     let hacerlo = await this.dialogService.confirmacion(
-      'Eliminar',
-      `¿Está seguro de que desea eliminar el anexo?: `+codigo
+      'Deshabilitar',
+      `¿Está seguro de que desea Deshabilitar el anexo?: `+codigo
     );
 
     if (hacerlo) {
@@ -244,9 +245,9 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
       }else{
         dni = this.dniAux!;
       }
-    this.anexoService.eliminarAnexo(dni, codigo).subscribe({
+    this.anexoService.deshabilitarAnexo(codigo).subscribe({
       next: (res) => {
-        this.toastr.success('Anexo Eliminado', 'Eliminado');
+        this.toastr.success('Anexo Deshabilitado', 'Deshabilitado');
 
         if(this.usuario?.isTutor()){
           this.verAnexos();
@@ -257,11 +258,11 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
       },
       error: e => {
         console.log(e);
-        this.toastr.error('El anexo no ha podido eliminarse', 'Fallo');
+        this.toastr.error('El anexo no ha podido deshabilitarse', 'Fallo');
       }
     })
   }else{
-    this.toastr.info('Has decidido no eliminar el anexo', 'No eliminado');
+    this.toastr.info('Has decidido no deshabilitar el anexo', 'No deshabilitado');
   }
   }
 
@@ -293,9 +294,8 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
      *@author Laura <lauramorenoramos97@gmail.com>
      * @param dni es el dni del tutor a buscar para mostrar sus anexos
      */
-    public buscar(dni : string){
-      this.dniAux= dni;
+    public buscar(event: any){
+      this.dniAux = event.target.value;
       this.verAnexosDirector();
     }
-
 }

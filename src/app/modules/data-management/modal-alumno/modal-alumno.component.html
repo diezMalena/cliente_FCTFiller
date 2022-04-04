@@ -1,0 +1,184 @@
+<div class="card" *ngIf="alumno">
+  <div class="modal-header">
+    <h1 class="modal-title fs-4">{{this.modo == this.modosEdicion.nuevo ? 'Nuevo alumno' : 'Detalles de ' + alumno.nombreCompleto }}</h1>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModal()"></button>
+  </div>
+  <div class="modal-body">
+    <form class="needs-validation" novalidate="" [formGroup]="datosAlumno!" (ngSubmit)="onSubmit()">
+      <div class="row g-3">
+        <div class="col-md-12">
+          <h2 class="fs-5">Datos del alumno</h2>
+        </div>
+        <div class="col-md-6">
+          <label for="cod_alumno"
+            class="form-label fw-bold {{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'required' : ''}}">Código
+            de alumno</label>
+          <input type="text"
+            class="{{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'form-control' : 'form-control-plaintext'}}"
+            id="cod_alumno" placeholder="12345" formControlName="cod_alumno"
+            [attr.readonly]="this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? null : true">
+          <div *ngIf="this.formulario['cod_alumno'].invalid && this.submitted"
+            class="text-danger bg-white rounded border border-2 border-danger p-2">
+            Este campo es obligatorio
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label for="dni"
+            class="form-label fw-bold {{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'required' : ''}}">DNI</label>
+          <input type="text"
+            class="{{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'form-control' : 'form-control-plaintext'}}"
+            id="dni" placeholder="00000000X" formControlName="dni"
+            [attr.readonly]="this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? null : true">
+          <div *ngIf="this.formulario['dni'].invalid && this.submitted"
+            class="text-danger bg-white rounded border border-2 border-danger p-2">
+            Este campo es obligatorio (un DNI válido tiene 8 números y una letra)
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label for="nombre"
+            class="form-label fw-bold {{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'required' : ''}}">Nombre</label>
+          <input type="text"
+            class="{{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'form-control' : 'form-control-plaintext'}}"
+            id="nombre" placeholder="Nombre" formControlName="nombre"
+            [attr.readonly]="this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? null : true">
+          <div *ngIf="this.formulario['nombre'].invalid && this.submitted"
+            class="text-danger bg-white rounded border border-2 border-danger p-2">
+            Este campo es obligatorio
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label for="apellidos"
+            class="form-label fw-bold {{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'required' : ''}}">Apellidos</label>
+          <input type="text"
+            class="{{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'form-control' : 'form-control-plaintext'}}"
+            id="apellidos" placeholder="Apellidos" formControlName="apellidos"
+            [attr.readonly]="this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? null : true">
+          <div *ngIf="this.formulario['apellidos'].invalid && this.submitted"
+            class="text-danger bg-white rounded border border-2 border-danger p-2">
+            Este campo es obligatorio
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label for="email"
+            class="form-label fw-bold {{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'required' : ''}}">Email</label>
+          <input type="text"
+            class="{{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'form-control' : 'form-control-plaintext'}}"
+            id="email" placeholder="user@mail.com" formControlName="email"
+            [attr.readonly]="this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? null : true">
+          <div *ngIf="this.formulario['email'].invalid && this.submitted"
+            class="text-danger bg-white rounded border border-2 border-danger p-2">
+            Este campo es obligatorio
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label for="password"
+            class="form-label fw-bold {{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'required' : ''}}">Contraseña</label>
+          <input type="password"
+            class="{{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'form-control' : 'form-control-plaintext'}}"
+            id="password" placeholder="******" formControlName="password"
+            [attr.readonly]="this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? null : true">
+          <div *ngIf="this.formulario['password'].invalid && this.submitted"
+            class="text-danger bg-white rounded border border-2 border-danger p-2">
+            Este campo es obligatorio
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label for="provincia"
+            class="form-label fw-bold {{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'required' : ''}}">Provincia</label>
+          <select
+            class="form-select"
+            [attr.disabled]="this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? null : true"
+            id="provincia" (change)="cambiarProvincia($event)">
+            <option *ngFor="let p of this.listadoProvincias" [value]="p"
+              [selected]="this.datosAlumno?.value.provincia == p ? true : null">
+              {{ p }}
+            </option>
+          </select>
+          <div *ngIf="this.formulario['provincia'].invalid && this.submitted"
+            class="text-danger bg-white rounded border border-2 border-danger p-2">
+            Este campo es obligatorio
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label for="localidad"
+            class="form-label fw-bold {{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'required' : ''}} ">Localidad</label>
+          <select
+            class="form-select"
+            [attr.disabled]="this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? null : true"
+            id="localidad" (change)="cambiarCiudad($event)">
+            <option *ngFor="let c of this.listadoCiudades" [value]="c"
+              [selected]="this.datosAlumno?.value.localidad == c ? true : null">
+              {{ c }}
+            </option>
+          </select>
+          <div *ngIf="this.formulario['localidad'].invalid && this.submitted"
+            class="text-danger bg-white rounded border border-2 border-danger p-2">
+            Este campo es obligatorio
+          </div>
+        </div>
+
+        <hr class="my-3">
+        <div class="col-md-12">
+          <h2 class="fs-5">Datos de matriculación en el curso actual</h2>
+        </div>
+
+        <div class="col-md-4">
+          <label for="matricula_cod"
+            class="form-label fw-bold {{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'required' : ''}}">Código
+            de matrícula</label>
+          <input type="text"
+            class="{{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'form-control' : 'form-control-plaintext'}}"
+            id="matricula_cod" placeholder="1234" formControlName="matricula_cod"
+            [attr.readonly]="this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? null : true">
+          <div *ngIf="this.formulario['matricula_cod'].invalid && this.submitted"
+            class="text-danger bg-white rounded border border-2 border-danger p-2">
+            Este campo es obligatorio
+          </div>
+        </div>
+
+        <div class="col-md-8">
+          <label for="matricula_cod_grupo"
+            class="form-label fw-bold {{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'required' : ''}} ">Grupo</label>
+          <select
+            class="form-select"
+            [attr.disabled]="this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? null : true"
+            id="matricula_cod_grupo" (change)="cambiarGrupo($event)">
+            <option *ngFor="let grupo of this.listadoGrupos" [value]="grupo.cod"
+              [selected]="this.datosAlumno?.value.matricula_cod_grupo == grupo.cod ? true : null">
+              {{ grupo.nombre_ciclo }}
+            </option>
+          </select>
+          <div *ngIf="this.formulario['matricula_cod_grupo'].invalid && this.submitted"
+            class="text-danger bg-white rounded border border-2 border-danger p-2">
+            Este campo es obligatorio
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-check">
+            <input formControlName="va_a_fct"
+              [attr.readonly]="this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? null : true"
+              class="form-check-input" type="checkbox" id="va_a_fct" checked>
+            <label class="form-check-label" for="va_a_fct">
+              Va a FCT
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <ng-container *ngIf="this.modo !== this.modosEdicion.detalle">
+        <div class="row d-flex align-items-center justify-content-center modal-footer mt-3">
+          <input class="w-50 btn btn-primary btn-md" type="submit" value="Guardar cambios"
+            [disabled]="!modified ? true : null">
+        </div>
+      </ng-container>
+    </form>
+  </div>
+</div>
