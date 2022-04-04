@@ -151,7 +151,6 @@ export class GestionEmpresasComponent
           this.toastr.success(response.message, response.title);
         },
         error: (err: any) => {
-          console.log(err);
           this.toastr.error(err.error.message, err.error.title);
         },
       });

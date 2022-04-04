@@ -18,7 +18,6 @@ export class FirmaService {
    * @author Pablo
    */
   add(storage: FirmaAnexoModel): Observable<any> {
-    console.log(storage);
     return this.http.post(`${API_STORAGE_URL}`, storage).pipe(
       map((res) => {
         return res || {};

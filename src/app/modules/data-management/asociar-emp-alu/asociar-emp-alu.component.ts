@@ -205,7 +205,6 @@ export class AsociarEmpAluComponent implements OnInit {
         this.toastr.success('Anexo Generado', 'Título');
       },
       error: (e) => {
-        console.log(e);
         this.toastr.error('El anexo no ha podido generarse', 'Generado');
       },
     });

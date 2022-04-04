@@ -96,7 +96,6 @@ export class RepresentanteComponent implements OnInit {
       RepresentanteComponent.representante,
       JSON.stringify(datosRepresentante)
     );
-    //console.log(datosRepresentante);
 
     this.router.navigateByUrl('data-management/registro-empresa/empresa');
 

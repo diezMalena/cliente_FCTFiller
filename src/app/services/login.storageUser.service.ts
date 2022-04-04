@@ -19,9 +19,6 @@ export class LoginStorageUserService {
       LoginStorageUserService.SESSION_STORAGE_KEY,
       JSON.stringify(this.usuario)
     );
-    console.log(
-      sessionStorage.getItem(LoginStorageUserService.SESSION_STORAGE_KEY)
-    );
   }
 
   /**

@@ -132,7 +132,6 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
   public verAnexosDirector() {
     this.anexoService.getAnexos(this.dniAux!).subscribe({
       next: (res) => {
-        console.log(res);
         this.anexosArray = res;
         this.toastr.info('Anexos de: ' + this.dniAux, 'Vistas Anexos');
         res = (this.anexosArray as any).data;
@@ -141,7 +140,6 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
         $.fn.dataTable.ext.errMode = 'throw';
       },
       error: (e) => {
-        console.log(e);
         this.toastr.error(
           'Los anexos afiliados a este grupo no han podido visualizarse',
           'Fallo'
@@ -201,11 +199,9 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
           this.toastr.success('Anexo Descargado', 'Descarga');
         },
         error: (e) => {
-          console.log(e);
           this.toastr.error('El anexo no ha podido descargarse', 'Fallo');
         },
       });
-      // this.router.navigate(['/data-management/curd-anexos']);
       this.router.navigate(['/data-management/crud-anexos']);
     } else {
       this.toastr.info('No has descargado el anexo', 'Descarga');
@@ -239,11 +235,9 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
           this.toastr.success('Anexos Descargados', 'Descarga');
         },
         error: (e) => {
-          console.log(e);
           this.toastr.error('Los anexos no han podido descargarse', 'Fallo');
         },
       });
-      // this.router.navigate(['/data-management/curd-anexos']);
       this.router.navigate(['/data-management/crud-anexos']);
     } else {
       this.toastr.info('No has descargado los anexos', 'Descarga');
@@ -287,7 +281,6 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
           }
         },
         error: (e) => {
-          console.log(e);
           this.toastr.error('El anexo no ha podido eliminarse', 'Fallo');
         },
       });

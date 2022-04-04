@@ -37,7 +37,6 @@ export class CrudAlumnosService {
    */
   public registrarAlumno(alumno: Alumno) {
     const url: string = this.urlBase + this.urlAddAlumno;
-    console.log(url);
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });

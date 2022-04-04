@@ -168,7 +168,6 @@ export class ResumenComponent implements OnInit {
     this.registroEmpresaService.enviarDatos(datos).subscribe({
       next: (response: any) => {
         let ruta = response.ruta_anexo;
-        console.log(ruta);
         this.abrirModalDialog(ruta);
         this.toastr.success(
           'Datos guardados correctamente.',

@@ -55,7 +55,6 @@ export class CsvUploadComponent implements OnInit {
    * Elimina un fichero del vector de ficheros CSV de alunmnos
    */
   onRemoveAlumnos(event: any) {
-    console.log(event);
     this.filesAlumnos.splice(this.filesAlumnos.indexOf(event), 1);
   }
 
@@ -83,7 +82,6 @@ export class CsvUploadComponent implements OnInit {
    * Elimina un fichero del vector de ficheros CSV de materias
    */
   onRemoveMaterias(event: any) {
-    console.log(event);
     this.filesMaterias.splice(this.filesMaterias.indexOf(event), 1);
   }
 
@@ -111,7 +109,6 @@ export class CsvUploadComponent implements OnInit {
    * Elimina un fichero del vector de ficheros CSV de matrículas
    */
   onRemoveMatriculas(event: any) {
-    console.log(event);
     this.filesMatriculas.splice(this.filesMatriculas.indexOf(event), 1);
   }
 
@@ -139,7 +136,6 @@ export class CsvUploadComponent implements OnInit {
    * Elimina un fichero del vector de ficheros CSV de notas
    */
   onRemoveNotas(event: any) {
-    console.log(event);
     this.filesNotas.splice(this.filesNotas.indexOf(event), 1);
   }
 
@@ -167,7 +163,6 @@ export class CsvUploadComponent implements OnInit {
    * Elimina un fichero del vector de ficheros CSV de unidades
    */
   onRemoveUnidades(event: any) {
-    console.log(event);
     this.filesUnidades.splice(this.filesUnidades.indexOf(event), 1);
   }
 
@@ -195,7 +190,6 @@ export class CsvUploadComponent implements OnInit {
    * Elimina un fichero del vector de ficheros CSV de profesores
    */
   onRemoveProfesores(event: any) {
-    console.log(event);
     this.filesProfesores.splice(this.filesProfesores.indexOf(event), 1);
   }
 
@@ -287,15 +281,12 @@ export class CsvUploadComponent implements OnInit {
       filesUploadList.push(file);
     }
 
-    // console.log(filesUploadList);
-
     if (filesUploadList.length > 0) {
       const storageSub = this.storageService
         .add(filesUploadList)
         .pipe(
           first(),
           catchError((e) => {
-            console.log(e);
             const modalRef = this.modalService.open(ModalInfoComponent);
             modalRef.componentInstance.content =
               'No se ha podido establecer una conexión con el servidor';
@@ -303,7 +294,6 @@ export class CsvUploadComponent implements OnInit {
           })
         )
         .subscribe((storage: FileUploadModel[]) => {
-          // console.log(storage)
           if (storage) {
             //David Sánchez Barragán
             //Cambio para incluir mensaje del servidor
@@ -314,10 +304,7 @@ export class CsvUploadComponent implements OnInit {
               .replaceAll('\\n', '\n');
             const modalRef = this.modalService.open(ModalInfoComponent);
             modalRef.componentInstance.content = mensaje;
-            //console.log(mensaje);
-            //this.closeModalEvent.emit('closeModal');
           } else {
-            // console.log(storage)
             this.hasError = true;
           }
         });
@@ -356,12 +343,10 @@ export class CsvUploadComponent implements OnInit {
       };
 
       reader.onerror = (e) => {
-        console.error(`FileReader failed on file ${file.name}.`);
         return reject(null);
       };
 
       if (!file) {
-        console.error('No file to read.');
         return reject(null);
       }
       reader.readAsDataURL(file);

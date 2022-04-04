@@ -53,7 +53,6 @@ export class ModalFirmaComponent implements OnInit {
   }
 
   drawStart() {
-    // console.log('begin drawing');
   }
 
   /**
@@ -81,7 +80,6 @@ export class ModalFirmaComponent implements OnInit {
       .pipe(
         first(),
         catchError((e) => {
-          console.log(e);
           this.toastr.error('El anexo no ha podido ser firmado', 'Fallo');
           return throwError(new Error(e));
         })

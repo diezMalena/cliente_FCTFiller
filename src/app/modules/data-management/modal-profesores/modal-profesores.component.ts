@@ -197,8 +197,6 @@ export class ModalProfesoresComponent implements OnInit {
         this.dni
       );
 
-      console.log(usuario);
-
       this.profesorService.registrarProfesor(usuario).subscribe({
         next: () => {
           this.toastr.success('Profesor Creado', 'Logrado!');

@@ -59,7 +59,6 @@ export class ModalCambiotutorComponent implements OnInit {
     this.seguimientoService.getTutoresResponsables(id_empresa).subscribe({
       next: (response) => {
         this.arrayTutores = response;
-        console.log(this.arrayTutores);
       },
       error: (e) => {
         this.toastr.error(
@@ -92,7 +91,6 @@ export class ModalCambiotutorComponent implements OnInit {
           this.closeModel();
         },
         error: (e) => {
-          console.log(e);
           this.toastr.error(
             'Error al actualizar el tutor de la empresa.',
             'Error al actualizar tutor'

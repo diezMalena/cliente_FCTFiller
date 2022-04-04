@@ -144,7 +144,6 @@ export class CrudProfesoresComponent
           this.verProfesores();
         },
         error: (e) => {
-          console.log(e);
           this.toastr.error('El profesor no ha podido eliminarse', 'Fallo');
         },
       });

@@ -88,7 +88,6 @@ export class UbicacionComponent implements OnInit {
       UbicacionComponent.ubicacion,
       JSON.stringify(datosUbicacion)
     );
-    console.log(datosUbicacion);
 
     this.router.navigateByUrl('data-management/registro-empresa/resumen');
 
