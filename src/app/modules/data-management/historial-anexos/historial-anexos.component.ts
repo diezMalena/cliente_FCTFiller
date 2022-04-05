@@ -8,8 +8,8 @@ import { ModalFirmaComponent } from '../modal-firma/modal-firma.component';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 import { Subject } from 'rxjs';
 import { DialogService } from 'src/app/services/dialog.service';
-import {ManualCrudAnexosComponent} from '../../manuales/manual-crud-anexos/manual-crud-anexos.component';
 import { DataTableDirective } from 'angular-datatables';
+import { ManualHistorialAnexosComponent } from '../../manuales/manual-historial-anexos/manual-historial-anexos.component';
 
 @Component({
   selector: 'app-historial-anexos',
@@ -329,7 +329,7 @@ export class HistorialAnexosComponent implements OnInit {
    * Esta funcion abre el manual de ayuda del historial de anexos
    */
     public abrirAyuda(){
-      this.modal.open(ManualCrudAnexosComponent, {size: 'lg'});
+      this.modal.open(ManualHistorialAnexosComponent, {size: 'lg'});
     }
 
 
