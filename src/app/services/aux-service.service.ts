@@ -1,18 +1,15 @@
 import { Injectable, Output, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuxService {
   @Output() alumnoTrigger: EventEmitter<any> = new EventEmitter();
 
-  private urlBase: string = 'http://localhost:8000/api/';
+  private urlBase: string = environment.apiUrl;
 
-  constructor(
-    private http: HttpClient,
-  ) { }
+  constructor(private http: HttpClient) {}
 
   /**
    * Obtiene un listado de provincias

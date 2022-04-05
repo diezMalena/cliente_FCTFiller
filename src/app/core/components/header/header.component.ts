@@ -4,25 +4,19 @@ import { LoginStorageUserService } from 'src/app/services/login.storageUser.serv
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
-
   public imgLogo: string;
 
-  constructor(
-    private storageUser: LoginStorageUserService
-  ) {
-    this.imgLogo = "./assets/images/logo.png";
+  constructor(private storageUser: LoginStorageUserService) {
+    this.imgLogo = './assets/images/logo.png';
   }
 
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void {}
 
   salir() {
-    this.storageUser.removeUser()
-    window.location.href = "auth/login"
+    this.storageUser.removeUser();
+    window.location.href = 'auth/login';
   }
-
 }

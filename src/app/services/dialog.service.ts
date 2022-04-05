@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class DialogService {
   constructor(public dialog: MatDialog) {}
 
@@ -26,10 +24,12 @@ export class DialogService {
       dialogRef.afterClosed().subscribe((res) => {
         resolve(res.respuesta);
       });
-    }).then( respuesta => {
-      return respuesta;
-    }).catch( err => {
-      return;
-    });
+    })
+      .then((respuesta) => {
+        return respuesta;
+      })
+      .catch((err) => {
+        return;
+      });
   }
 }
