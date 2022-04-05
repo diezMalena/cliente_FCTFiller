@@ -4,6 +4,8 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import {FileUploadModel} from "../models/file-upload.model";
+import { LoginStorageUserService } from "../services/login.storageUser.service";
+
 
 const API_STORAGE_URL = `${environment.apiUrl}`;
 //falta la url del servidor
@@ -13,11 +15,19 @@ const API_STORAGE_URL = `${environment.apiUrl}`;
 })
 export class FileUploadService {
 
-  constructor(private http: HttpClient,) { }
+  constructor(
+    private http: HttpClient,
+    public loginStorageUser: LoginStorageUserService
+  ) { }
 
   add(storage: FileUploadModel[]): Observable<any> {
-    console.log(storage);
-    return this.http.post(`${API_STORAGE_URL}`, storage).pipe(
+    let data : any = {
+      ficheros : storage,
+      dni : this.loginStorageUser.getUser()?.dni
+    };
+//    console.log(data);
+
+    return this.http.post(`${API_STORAGE_URL}`, data).pipe(
       map((res) => {
         return res || {};
       }),
