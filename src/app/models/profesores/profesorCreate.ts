@@ -1,7 +1,6 @@
-import { profesorCreateResponse } from "./profesorCreateResponse";
+import { profesorCreateResponse } from './profesorCreateResponse';
 
 export class ProfesorCreate {
-
   static userJSON(obj: profesorCreateResponse) {
     return new ProfesorCreate(
       obj['dni'],
@@ -11,18 +10,18 @@ export class ProfesorCreate {
       obj['password1'],
       obj['password2'],
       obj['roles'],
-      obj['personaAux'],
+      obj['personaAux']
     );
   }
 
   constructor(
     public dni: string,
-    public  email: string,
-    public  nombre: string,
-    public  apellidos: string,
-    public  password1: string,
-    public  password2: string,
+    public email: string,
+    public nombre: string,
+    public apellidos: string,
+    public password1: string,
+    public password2: string,
     public roles?: number[],
-    public  personaAux?: string,
-  ) { }
+    public personaAux?: string
+  ) {}
 }

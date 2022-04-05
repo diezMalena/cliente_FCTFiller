@@ -3,8 +3,10 @@
     <h1 class="modal-title fs-4">Detalles de {{empresa.nombre}} </h1>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModal()"></button>
   </div>
+  <!-- Cuerpo del modal -->
   <div class="modal-body">
     <form class="needs-validation" novalidate="" [formGroup]="datosEmpresa" (ngSubmit)="onSubmit()">
+      <!-- Datos de la empresa -->
       <div class="row g-3">
         <h2 class="fs-5">Datos de la empresa</h2>
         <div class="col-md-4">
@@ -51,6 +53,7 @@
 
       <hr class="my-3">
 
+      <!-- Domicilio del centro de trabajo -->
       <div class="row g-3">
         <h2 class="fs-5">Domicilio de la empresa</h2>
         <!-- Los dos inputs siguientes ideal extraerlos de la base de datos y hacerlos con un select->option -->
@@ -98,6 +101,7 @@
 
       <hr class="my-3">
 
+      <!-- Datos del representante legal -->
       <div class="row g-3" *ngIf="empresa.representante">
         <h2 class="fs-5">Datos del representante legal</h2>
         <div class="col-md-4">
@@ -146,6 +150,7 @@
 
       </div>
 
+      <!-- Botones (si la edición está activa) -->
       <ng-container *ngIf="editar">
         <div class="row mt-3 d-flex align-items-center justify-content-center modal-footer">
           <input class="w-50 btn btn-primary btn-md" type="submit" value="Guardar cambios"
