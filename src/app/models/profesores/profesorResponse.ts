@@ -1,5 +1,4 @@
 export interface profesorResponse {
-
   dni: string;
   email: string;
   nombre: string;

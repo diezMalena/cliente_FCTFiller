@@ -1,7 +1,6 @@
-import { alumnoResponse } from "./alumnoResponse";
+import { alumnoResponse } from './alumnoResponse';
 
 export class Alumno {
-
   static alumnoJSON(obj: alumnoResponse) {
     return new Alumno(
       obj['nombre'],
@@ -9,7 +8,7 @@ export class Alumno {
       obj['va_a_fct'],
       obj['horario'],
       obj['fecha_ini'],
-      obj['fecha_fin'],
+      obj['fecha_fin']
     );
   }
 
@@ -32,7 +31,7 @@ export class Alumno {
       obj['dni_antiguo'],
       obj['matricula_cod'],
       obj['matricula_cod_centro'],
-      obj['matricula_cod_grupo'],
+      obj['matricula_cod_grupo']
     );
   }
 
@@ -55,9 +54,14 @@ export class Alumno {
     public dni_antiguo?: string,
     public matricula_cod?: string,
     public matricula_cod_centro?: string,
-    public matricula_cod_grupo?: string,
-  ) { }
+    public matricula_cod_grupo?: string
+  ) {}
 
+  /**
+   * Devuelve el nombre completo de un alumno
+   * @returns nombre y apellidos del alumno
+   * @author David Sánchez Barragán
+   */
   get nombreCompleto() {
     return this.nombre + ' ' + this.apellidos;
   }

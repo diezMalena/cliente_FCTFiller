@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: "http://localhost:8000/api/jefatura/recibirCSV",
+  apiUrl: "http://localhost:8000/api/",
   alumnos: "alumnos",
   materias: "materias",
   matriculas: "matriculas",

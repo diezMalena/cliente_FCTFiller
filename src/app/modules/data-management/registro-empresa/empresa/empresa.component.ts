@@ -10,6 +10,8 @@ import { ManualRegistroEmpresasComponent } from 'src/app/modules/manuales/manual
   styleUrls: ['./empresa.component.scss'],
 })
 export class EmpresaComponent implements OnInit {
+  /***********************************************************************/
+  //#region Inicialización de variables y formulario
   public static readonly empresa: string = 'empresa';
   empresa: FormGroup;
   submitted: boolean = false;
@@ -62,10 +64,20 @@ export class EmpresaComponent implements OnInit {
 
   ngOnInit(): void {}
 
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Gestión del formulario
+
   get formulario() {
     return this.empresa.controls;
   }
 
+  /**
+   * Valida el formulario, guardando los datos en sesión
+   * @author Malena
+   */
   onSubmit() {
     this.submitted = true;
     if (!this.empresa.valid) return;
@@ -75,7 +87,6 @@ export class EmpresaComponent implements OnInit {
     var telefono = this.empresa.value.telefono;
     var cif = this.empresa.value.cif;
     var tipoEmpresa = this.empresa.value.tipoEmpresa;
-    // console.log(tipoEmpresa);
 
     var datosEmpresa = {
       correo: correo,
@@ -89,7 +100,6 @@ export class EmpresaComponent implements OnInit {
       EmpresaComponent.empresa,
       JSON.stringify(datosEmpresa)
     );
-    console.log(datosEmpresa);
 
     this.router.navigateByUrl('data-management/registro-empresa/ubicacion');
 
@@ -101,6 +111,12 @@ export class EmpresaComponent implements OnInit {
     this.empresa.reset();
   }
 
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Funciones auxiliares y otros
+
   /**
    * Abre un modal de ayuda
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
@@ -108,4 +124,7 @@ export class EmpresaComponent implements OnInit {
   public abrirAyuda(): void {
     this.modal.open(ManualRegistroEmpresasComponent, { size: 'lg' });
   }
+
+  //#endregion
+  /***********************************************************************/
 }
