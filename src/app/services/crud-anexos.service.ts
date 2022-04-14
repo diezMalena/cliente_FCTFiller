@@ -121,6 +121,19 @@ export class AnexoService {
     return this.http.post(url, dato, { responseType: 'arraybuffer' });
   }
 
+
+  /**
+   * Este metodo hace una llamada a la api y descargar un anexo en concreto
+   * @param dni_tutor Es el dni del tutor
+   * @returns Un observable con la respuesta de descarga del servidor
+   * @author Laura <lauramorenoramos97@gmail.com>
+   */
+   public descargarTodoAlumnos(dni_alumno: string) {
+    let dato = { dni_alumno: dni_alumno};
+    const url: string = this.ruta + 'descargarTodoAlumnos';
+    return this.http.post(url, dato, { responseType: 'arraybuffer' });
+  }
+
   /**
    * @param dni_tutor  es el dni del tutor
    * @returns Un observable con la respuesta del descarga del servidor
@@ -181,5 +194,26 @@ export class AnexoService {
   }
 
   //#endregion
+  /***********************************************************************/
+
+
+  /***********************************************************************/
+  //#region Rellenar Anexos
+
+  public rellenarAnexoXV(dni_alumno: string, cod_anexo: string) {
+    cod_anexo = cod_anexo.replace('/', '*');
+    cod_anexo = cod_anexo.replace('/', '*');
+
+    let url: string = this.ruta + 'rellenarAnexoXV';
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      //'x-access-token': `${sessionStorage.getItem('token')}`,
+    });
+
+    let dato = { cod_anexo: cod_anexo, dni: dni_alumno };
+    return this.http.post(url, dato, { headers });
+  }
+
+   //#endregion
   /***********************************************************************/
 }

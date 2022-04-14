@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { CrudProfesoresService } from 'src/app/services/crud-profesores.service';
+import { AnexoService } from 'src/app/services/crud-anexos.service';
 import {
   FormBuilder,
   FormControl,
@@ -23,27 +23,26 @@ export class ModalTipoAnexoComponent implements OnInit {
   //#region Inicialización de variables y formulario
 
   tipoAnexo: any = [];
+  codAnexo: any = [];
+
   usuario;
   dni?: string;
-  AnexoXV: FormGroup;
   submitted: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
     private modalActive: NgbActiveModal,
-    private profesorService: CrudProfesoresService,
+    private anexoService: AnexoService,
     private toastr: ToastrService,
     private storageUser: LoginStorageUserService,
     private modal: NgbModal
   ) {
     this.tipoAnexo = sessionStorage.getItem('tipoAnexo');
+    this.codAnexo= sessionStorage.getItem('codigo');
 
     this.usuario = storageUser.getUser();
     this.dni = this.usuario?.dni;
 
-    this.AnexoXV = this.formBuilder.group({
-      firma: ['', [Validators.required]],
-    });
   }
 
   ngOnInit(): void {
@@ -58,14 +57,23 @@ export class ModalTipoAnexoComponent implements OnInit {
     /***********************************************************************/
   //#region Gestión del formulario
 
-  get formulario() {
+  /*get formulario() {
     return this.AnexoXV.controls;
-  }
+  }*/
 
   public onSubmit() {
     this.submitted = true;
     if(this.tipoAnexo=='AnexoXV'){
-
+      this.anexoService.rellenarAnexoXV(this.dni!,this.codAnexo).subscribe({
+        next: (response: any) => {
+          this.toastr.success('El AnexoXV se ha generado!', 'Hecho!');
+          //this.profesoresArray = response;
+          //this.profesorService.getProfesoresInArray(this.profesoresArray);
+        },
+        error: (e) => {
+          this.toastr.error('El AnexoXV no ha podido generarse', 'Fallo');
+        },
+      });
     }
   }
     //#endregion

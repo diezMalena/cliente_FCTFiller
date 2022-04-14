@@ -125,10 +125,8 @@ export class AnexosAlumnosComponent implements OnDestroy, OnInit{
     );
 
     if (hacerlo) {
-
       this.anexoService.descargarAnexo(this.dni_alumno!, codigo).subscribe({
         next: (res) => {
-          const current = new Date();
           const blob = new Blob([res], { type: 'application/octet-stream' });
           FileSaver.saveAs(blob, codigo);
           this.toastr.success('Anexo Descargado', 'Descarga');
@@ -154,7 +152,7 @@ export class AnexosAlumnosComponent implements OnDestroy, OnInit{
     );
 
     if (hacerlo) {
-      this.anexoService.descargarTodo(this.dni_alumno!).subscribe({
+      this.anexoService.descargarTodoAlumnos(this.dni_alumno!).subscribe({
         next: (res) => {
           const current = new Date();
           const blob = new Blob([res], { type: 'application/octet-stream' });
@@ -187,8 +185,9 @@ export class AnexosAlumnosComponent implements OnDestroy, OnInit{
 
 
 
-  public abrirRelleno(nombre : string){
+  public abrirRelleno(nombre : string, codigo : string){
     sessionStorage.setItem('tipoAnexo', nombre);
+    sessionStorage.setItem('codigo', codigo);
      this.modal.open(ModalTipoAnexoComponent, { size: 'md' });
   }
   //#endregion
