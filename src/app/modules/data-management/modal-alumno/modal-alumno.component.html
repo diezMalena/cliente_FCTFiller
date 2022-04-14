@@ -1,11 +1,14 @@
 <div class="card" *ngIf="alumno">
   <div class="modal-header">
-    <h1 class="modal-title fs-4">{{this.modo == this.modosEdicion.nuevo ? 'Nuevo alumno' : 'Detalles de ' + alumno.nombreCompleto }}</h1>
+    <h1 class="modal-title fs-4">{{this.modo == this.modosEdicion.nuevo ? 'Nuevo alumno' : 'Detalles de ' +
+      alumno.nombreCompleto }}</h1>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModal()"></button>
   </div>
+  <!-- Cuerpo del modal -->
   <div class="modal-body">
     <form class="needs-validation" novalidate="" [formGroup]="datosAlumno!" (ngSubmit)="onSubmit()">
       <div class="row g-3">
+        <!-- #region Datos del alumno -->
         <div class="col-md-12">
           <h2 class="fs-5">Datos del alumno</h2>
         </div>
@@ -91,8 +94,7 @@
         <div class="col-md-6">
           <label for="provincia"
             class="form-label fw-bold {{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'required' : ''}}">Provincia</label>
-          <select
-            class="form-select"
+          <select class="form-select"
             [attr.disabled]="this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? null : true"
             id="provincia" (change)="cambiarProvincia($event)">
             <option *ngFor="let p of this.listadoProvincias" [value]="p"
@@ -109,8 +111,7 @@
         <div class="col-md-6">
           <label for="localidad"
             class="form-label fw-bold {{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'required' : ''}} ">Localidad</label>
-          <select
-            class="form-select"
+          <select class="form-select"
             [attr.disabled]="this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? null : true"
             id="localidad" (change)="cambiarCiudad($event)">
             <option *ngFor="let c of this.listadoCiudades" [value]="c"
@@ -123,7 +124,8 @@
             Este campo es obligatorio
           </div>
         </div>
-
+        <!-- #endregion -->
+        <!-- #region Datos de matriculación en el curso actual -->
         <hr class="my-3">
         <div class="col-md-12">
           <h2 class="fs-5">Datos de matriculación en el curso actual</h2>
@@ -146,8 +148,7 @@
         <div class="col-md-8">
           <label for="matricula_cod_grupo"
             class="form-label fw-bold {{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'required' : ''}} ">Grupo</label>
-          <select
-            class="form-select"
+          <select class="form-select"
             [attr.disabled]="this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? null : true"
             id="matricula_cod_grupo" (change)="cambiarGrupo($event)">
             <option *ngFor="let grupo of this.listadoGrupos" [value]="grupo.cod"
@@ -171,8 +172,10 @@
             </label>
           </div>
         </div>
+        <!-- #endregion -->
       </div>
 
+      <!-- Botones (si la edición está activa) -->
       <ng-container *ngIf="this.modo !== this.modosEdicion.detalle">
         <div class="row d-flex align-items-center justify-content-center modal-footer mt-3">
           <input class="w-50 btn btn-primary btn-md" type="submit" value="Guardar cambios"

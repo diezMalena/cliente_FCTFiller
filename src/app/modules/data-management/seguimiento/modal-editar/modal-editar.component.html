@@ -1,6 +1,5 @@
 <div class="modal-header">
   <h2 class="text-center modal-title">Editar jornada</h2>
-
   <a (click)="closeModel()">
     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-x-square"
       viewBox="0 0 16 16">
@@ -11,6 +10,7 @@
     </svg>
   </a>
 </div>
+<!-- Cuerpo del modal -->
 <div class="modal-body">
   <form [formGroup]="editarJornada" (ngSubmit)="editJornada()" class="col-12 border border-dark">
     <div class="row py-4 px-2" *ngIf="jornada != undefined">
@@ -64,7 +64,7 @@
           <div class="col-8">
             <input type="number" formControlName="horas" [(ngModel)]="jornada.tiempo_empleado" name=""
               id="tiempo_empleado" class="col-8 form-control" (ngModelChange)="onChanges()">
-              <div class="col-12 col-xl-12 text-danger bg-white rounded border border-2 border-danger p-2"
+            <div class="col-12 col-xl-12 text-danger bg-white rounded border border-2 border-danger p-2"
               *ngIf="submitted && formulario['horas'].errors && formulario['horas'].errors['required']">
               Las horas no pueden estar vacías.
             </div>
@@ -74,7 +74,7 @@
             </div>
           </div>
         </div>
-
+        <!-- Botones -->
         <div class="row d-flex justify-content-center pt-2">
           <div class="col-xl-5 col-5">
             <div class="row">

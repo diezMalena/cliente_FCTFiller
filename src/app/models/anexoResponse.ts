@@ -1,5 +1,4 @@
 export interface anexoResponse {
-  // dni: string;
   nombre: string;
   codigo: string;
   empresa: string;

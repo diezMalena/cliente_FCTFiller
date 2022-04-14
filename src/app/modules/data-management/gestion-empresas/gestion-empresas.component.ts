@@ -25,6 +25,10 @@ export class GestionEmpresasComponent
   implements AfterViewInit, OnDestroy, OnInit
 {
   @ViewChild(DataTableDirective, { static: false })
+
+  /***********************************************************************/
+  //#region Inicialización de variables
+
   dtElement?: DataTableDirective;
   dtOptions: DataTables.Settings = {};
   dtTrigger = new Subject<any>();
@@ -44,14 +48,20 @@ export class GestionEmpresasComponent
     this.dniTutor = this.usuario?.dni;
   }
 
-  ngAfterViewInit(): void {
-    this.dtTrigger.next(this.empresas);
-  }
-
   ngOnInit(): void {
     delete this.dtOptions['language'];
     this.getEmpresas();
     this.getEmpresasFromModal();
+  }
+
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Gestión de datatables
+
+  ngAfterViewInit(): void {
+    this.dtTrigger.next(this.empresas);
   }
 
   ngOnDestroy(): void {
@@ -67,6 +77,15 @@ export class GestionEmpresasComponent
     });
   }
 
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Servicios - Peticiones al servidor
+
+  /***********************************************************************/
+  //#region Obtención de información: empresas y representantes
+
   /**
    * Inicializa las empresas del componente mediante el servicio correspondiente
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
@@ -76,6 +95,7 @@ export class GestionEmpresasComponent
       next: async (empresas) => {
         this.empresas = empresas;
         await this.meterRepresentantesEmpresas(this.empresas);
+        //#region Datatables
         this.rerender();
         $.fn.dataTable.ext.errMode = 'throw';
         this.dtTrigger.next(this.empresas);
@@ -89,6 +109,7 @@ export class GestionEmpresasComponent
           orderable: false,
         },
       ],
+      //#endregion
     });
   }
 
@@ -107,6 +128,44 @@ export class GestionEmpresasComponent
     });
   }
 
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Eliminación
+
+  /**
+   * Elimina una empresa de la base de datos, previa confirmación
+   * @param empresa la empresa a eliminar
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+   public async deleteEmpresa(empresa: Empresa) {
+    let eliminar = await this.dialogService.confirmacion(
+      'Eliminar registro',
+      `¿Está seguro de que quiere eliminar el registro de la empresa ${empresa.nombre}?`
+    );
+    if (eliminar) {
+      this.crudEmpresasService.deleteEmpresa(empresa.id).subscribe({
+        next: (response: any) => {
+          this.getEmpresas();
+          this.toastr.success(response.message, response.title);
+        },
+        error: (err: any) => {
+          this.toastr.error(err.error.message, err.error.title);
+        },
+      });
+    }
+  }
+
+  //#endregion
+  /***********************************************************************/
+
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Invocación de modales
+
   /**
    * Abre un modal con los detalles de la empresa, editable o no según la variable booleana
    * @param empresa la empresa en cuestión
@@ -120,30 +179,6 @@ export class GestionEmpresasComponent
       keyboard: false,
     });
     this.crudEmpresasService.empresaTrigger.emit([empresa, editar]);
-  }
-
-  /**
-   * Elimina una empresa de la base de datos, previa confirmación
-   * @param empresa la empresa a eliminar
-   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
-   */
-  public async deleteEmpresa(empresa: Empresa) {
-    let eliminar = await this.dialogService.confirmacion(
-      'Eliminar registro',
-      `¿Está seguro de que quiere eliminar el registro de la empresa ${empresa.nombre}?`
-    );
-    if (eliminar) {
-      this.crudEmpresasService.deleteEmpresa(empresa.id).subscribe({
-        next: (response: any) => {
-          this.getEmpresas();
-          this.toastr.success(response.message, response.title);
-        },
-        error: (err: any) => {
-          console.log(err);
-          this.toastr.error(err.error.message, err.error.title);
-        },
-      });
-    }
   }
 
   /**
@@ -164,4 +199,7 @@ export class GestionEmpresasComponent
   public abrirAyuda(): void {
     this.modal.open(ManualGestionEmpresasComponent, { size: 'lg' });
   }
+
+  //#endregion
+  /***********************************************************************/
 }

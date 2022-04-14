@@ -1,9 +1,11 @@
+<!-- Título de las secciones -->
 <div class="row">
   <div class="page-header d-flex justify-content-between pb-3">
     <h1 class="h2">Registro de empresas</h1>
     <button type="button" class="btn btn-outline-default mr-2" placement="left"
       ngbTooltip="Haga clic para acceder a la ayuda de esta sección" (click)="abrirAyuda()">?</button>
   </div>
+  <!-- Breadcrumb -->
   <div class="col-12 p-2">
     <div class="breadcrumb">
       <a routerLink="/data-management/registro-empresa/representante" class="item completed">
@@ -29,6 +31,7 @@
   </div>
 </div>
 
+<!-- Cuerpo del formulario -->
 <form [formGroup]="empresa" (ngSubmit)="onSubmit()" class="row px-4 py-4 d-flex justify-content-center">
   <div class="col-12 col-lg-8 card p-3">
     <div class="mb-3">
@@ -126,6 +129,7 @@
         </div>
       </fieldset>
     </div>
+    <!-- Botones -->
     <div class="row py-2 d-flex justify-content-center">
       <div class="col-6 d-flex justify-content-center">
         <input type="submit" value="Aceptar y continuar" class="btn btn-outline-primary">
