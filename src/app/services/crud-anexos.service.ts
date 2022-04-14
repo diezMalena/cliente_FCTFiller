@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Anexo } from '../models/anexo';
 import { anexoResponse } from '../models/anexoResponse';
+import { anexoAlumnoResponse } from '../models/anexoAlumnoResponse';
 import { tutoriaResponse } from '../models/tutoriaResponse';
 import { environment } from 'src/environments/environment';
 
@@ -19,9 +20,9 @@ export class AnexoService {
 
   /**
    * Este metodo hace una llamada a la api y listar los anexos
-   * @author Pablo y Laura <lauramorenoramos97@gmail.com>
    * @param dni_tutor Es el dni del tutor
    * @returns Un observable con un vector de anexos
+   *@author Laura <lauramorenoramos97@gmail.com>
    */
   public getAnexosHistory(dni_tutor: string) {
     let url: string = this.ruta + 'listarHistorial/' + dni_tutor;
@@ -39,10 +40,22 @@ export class AnexoService {
     return this.http.get<anexoResponse>(url);
   }
 
+    /**
+   * @param dni_tutor Es el dni del alumno
+   * @returns Observable con una lista de anexos
+   * Este metodo hace una llamada a la api y listar los anexos de los alumnos
+   *@author Laura <lauramorenoramos97@gmail.com>
+   */
+  public getAnexosAlumno(dni_alumno: string) {
+    let url: string = this.ruta + 'listaAnexosAlumno/' + dni_alumno;
+    return this.http.get<anexoAlumnoResponse>(url);
+  }
+
   /**
    * Devuelve los grupos de un centro de estudios asociado al usuario loggeado
    * @param dni_tutor DNI del usuario loggeado
    * @returns Observable con una lista de grupos
+   * @author Laura <lauramorenoramos97@gmail.com>
    */
   public getGrupos(dni_tutor: string) {
     let url: string = this.ruta + 'listarGrupos/' + dni_tutor;
@@ -109,10 +122,10 @@ export class AnexoService {
   }
 
   /**
-   * @author Pablo
    * @param dni_tutor  es el dni del tutor
    * @returns Un observable con la respuesta del descarga del servidor
    * Este metodo hace una llamada a la api y descarga todos los anexos
+   * @author Laura <lauramorenoramos97@gmail.com>
    */
   public descargarTodoHistorial(dni_tutor: string) {
     let dato = { dni_tutor: dni_tutor, habilitado: 0 };
@@ -130,6 +143,7 @@ export class AnexoService {
    * Hace una llamada a la API para deshabilitar un anexo
    * @param cod_anexo Código del anexo a deshabilitar
    * @returns Un observable con la respuesta del servidor
+   * @author Laura <lauramorenoramos97@gmail.com>
    */
   public deshabilitarAnexo(cod_anexo: string) {
     cod_anexo = cod_anexo.replace('/', '*');
@@ -146,6 +160,12 @@ export class AnexoService {
     return this.http.post<anexoResponse>(url, dato, { headers });
   }
 
+  /**
+   * Hace una llamada a la API para habilitar un anexo
+   * @param cod_anexo Código del anexo a deshabilitar
+   * @returns Un observable con la respuesta del servidor
+   * @author Laura <lauramorenoramos97@gmail.com>
+   */
   public habilitarAnexo(dni_tutor: string, cod_anexo: string) {
     cod_anexo = cod_anexo.replace('/', '*');
     cod_anexo = cod_anexo.replace('/', '*');

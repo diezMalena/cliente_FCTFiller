@@ -1,0 +1,24 @@
+<!-- Ver Usuario -->
+<div class="card" *ngIf="this.tipoAnexo == 'AnexoXV'">
+    <div class="modal-header">
+        <h1 class="modal-title fs-4">AnexoXV: </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="CloseModal()"></button>
+    </div>
+    <div class="modal-body">
+        <form class="needs-validation" novalidate="" [formGroup]="AnexoXV" (ngSubmit)="onSubmit()">
+            <!-- #region Datos -->
+            <div class="row g-3">
+                <div class="col-md-8 pb-2">
+                    <button (click)="abrirModalFirma()" class="btn btn-outline-primary px-2 py-1 me-2" type="submit" aria-label="firma">
+                      Firmar
+                </button>
+                </div>
+            </div>
+
+            <hr class="my-3">
+            <div class="row d-flex align-items-center justify-content-center modal-footer">
+                <input class="w-50 btn btn-primary btn-md" type="submit" value="Generar Anexo">
+            </div>
+        </form>
+    </div>
+</div>
