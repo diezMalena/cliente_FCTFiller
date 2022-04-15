@@ -27,6 +27,8 @@ import { ModalAlumnoComponent } from './modal-alumno/modal-alumno.component';
 import { DataTablesModule } from 'angular-datatables';
 import { ModalCambiotutorComponent } from './seguimiento/modal-cambiotutor/modal-cambiotutor.component';
 import { HistorialAnexosComponent } from './historial-anexos/historial-anexos.component';
+import { AnexosAlumnosComponent } from './anexos-alumnos/anexos-alumnos.component';
+import { ModalTipoAnexoComponent } from './modal-tipo-anexo/modal-tipo-anexo.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +53,8 @@ import { HistorialAnexosComponent } from './historial-anexos/historial-anexos.co
     GestionAlumnosComponent,
     ModalAlumnoComponent,
     HistorialAnexosComponent,
+    AnexosAlumnosComponent,
+    ModalTipoAnexoComponent,
   ],
   imports: [
     CommonModule,

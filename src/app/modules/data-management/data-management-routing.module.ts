@@ -12,6 +12,7 @@ import { SeguimientoComponent } from './seguimiento/seguimiento.component';
 import { CrudProfesoresComponent } from './crud-profesores/crud-profesores.component';
 import { GestionAlumnosComponent } from './gestion-alumnos/gestion-alumnos.component';
 import { HistorialAnexosComponent } from './historial-anexos/historial-anexos.component';
+import { AnexosAlumnosComponent } from './anexos-alumnos/anexos-alumnos.component';
 //import { SectionEmpresaComponent } from './components/section-empresa/section-empresa.component';
 
 
@@ -59,6 +60,10 @@ const routes: Routes = [
   {
     path:'historial-anexos',
     component: HistorialAnexosComponent
+  },
+  {
+    path:'anexos-alumnos',
+    component: AnexosAlumnosComponent
   },
   {
     path:'crud-profesores',
