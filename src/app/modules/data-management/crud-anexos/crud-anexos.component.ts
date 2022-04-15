@@ -273,6 +273,12 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
       this.anexoService.deshabilitarAnexo(codigo).subscribe({
         next: (res) => {
           this.toastr.success('Anexo Deshabilitado', 'Deshabilitado');
+
+          if(this.usuario?.isTutor()){
+            this.verAnexos();
+          }else{
+            this.verGrupos();
+          }
         },
         error: (e) => {
           console.log(e);
