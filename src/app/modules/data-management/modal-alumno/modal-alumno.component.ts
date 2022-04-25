@@ -29,6 +29,8 @@ export class ModalAlumnoComponent implements OnInit {
   public listadoAlumnos?: Alumno[];
   public submitted: boolean = false;
   public modified: boolean = false;
+  public nombre_curriculum: string = '';
+  public fotoPorDefecto = './assets/images/defaultProfilePicture.png';
 
   constructor(
     private modalActive: NgbActiveModal,
@@ -77,7 +79,7 @@ export class ModalAlumnoComponent implements OnInit {
       email: [this.alumno?.email, [Validators.required, Validators.email]],
       password: [
         this.alumno?.password,
-        this.modo !== this.modosEdicion.detalle ? [] : [Validators.required],
+        this.modo !== this.modosEdicion.nuevo ? [] : [Validators.required],
       ],
       nombre: [this.alumno?.nombre, [Validators.required]],
       apellidos: [this.alumno?.apellidos, [Validators.required]],
@@ -89,6 +91,10 @@ export class ModalAlumnoComponent implements OnInit {
         this.alumno?.matricula_cod_grupo,
         [Validators.required],
       ],
+      foto: [this.alumno?.foto],
+      curriculum: [this.alumno?.curriculum],
+      cuenta_bancaria: [this.alumno?.cuenta_bancaria],
+      matricula_coche: [this.alumno?.matricula_coche],
     });
   }
 
@@ -121,7 +127,11 @@ export class ModalAlumnoComponent implements OnInit {
       this.alumno?.dni,
       datos.matricula_cod,
       this.alumno?.matricula_cod_centro,
-      datos.matricula_cod_grupo
+      datos.matricula_cod_grupo,
+      datos.foto,
+      datos.curriculum,
+      datos.cuenta_bancaria,
+      datos.matricula_coche
     );
 
     if (this.datosAlumno.invalid) {
@@ -227,6 +237,8 @@ export class ModalAlumnoComponent implements OnInit {
       });
   }
 
+
+
   //#endregion
   /***********************************************************************/
 
@@ -254,7 +266,7 @@ export class ModalAlumnoComponent implements OnInit {
   /***********************************************************************/
 
   /***********************************************************************/
-  //#region Eliminación - DELETE
+  //#region Alta de datos - CREATE
 
   /**
    * Registra un alumno en la base de datos
@@ -272,6 +284,28 @@ export class ModalAlumnoComponent implements OnInit {
       },
     });
   }
+
+  // /**
+  //    * Método sube al servidor la foto seleccionada y la recupera
+  //    * para mostrarla en el elemento img
+  //    */
+  // public subirFoto(event: any) {
+  //   if (event.target.files.length > 0) {
+
+  //     let formData = new FormData();
+  //     formData.append('file', event.target.files[0])
+
+  //     this.crudAlumnosService.subirFoto(formData).subscribe({
+  //       next: (resp: any) => {
+  //         this.formulario['foto'].setValue(resp.mensaje);
+  //         //this.usuario.foto = resp.mensaje;
+  //       },
+  //       error: (error) => {
+  //         this.toastr.error('No se pueden subir imágenes de perfil en estos momentos');
+  //       }
+  //     })
+  //   }
+  // }
 
   //#endregion
   /***********************************************************************/
@@ -319,6 +353,46 @@ export class ModalAlumnoComponent implements OnInit {
     this.formulario['va_a_fct'].setValue(event.target.checked);
   }
 
+  /**
+   * Cambia la imagen en el elemento <img> y en el objeto alumno
+   * @param event Evento change del input type=file de la foto de perfil
+   */
+  cambiarFoto(event: any) {
+    let files = event.target.files[0];
+    let resultado : any = '';
+    if (files) {
+      let fileReader = new FileReader();
+      fileReader.readAsDataURL(files);
+      fileReader.addEventListener("load", function () {
+        let element: any = document.getElementById('foto');
+        resultado = this.result;
+        element.src = resultado;
+      });
+
+      if(this.alumno != undefined) {
+        this.alumno.foto = resultado;
+      }
+    }
+  }
+
+  cambiarCurriculum(event: any) {
+    let files = event.target.files[0];
+    let resultado : any = '';
+    if (files) {
+      let fileReader = new FileReader();
+      fileReader.readAsDataURL(files);
+      fileReader.addEventListener("load", function () {
+        resultado = this.result;
+      });
+
+      if(this.alumno != undefined) {
+        this.alumno.curriculum = resultado;
+      }
+
+      this.nombre_curriculum = files.name;
+    }
+  }
+
   //#endregion
   /***********************************************************************/
 
@@ -344,6 +418,22 @@ export class ModalAlumnoComponent implements OnInit {
         this.modalActive.close();
       }
     }
+  }
+
+  /**
+   * Abre la foto de perfil en una nueva pestaña del navegador
+   * @param event URL de la imagen en el lado servidor
+   */
+  public abrirFoto(url: any) {
+    window.open(url);
+  }
+
+  /**
+   * Descarga el currículum del alumno
+   * @param url URL del servidor del CV del alumno
+   */
+  public descargarCV(url: string) {
+    alert(url);
   }
 
   //#endregion

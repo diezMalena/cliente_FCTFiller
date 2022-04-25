@@ -43,6 +43,12 @@ export class CrudAlumnosService {
     return this.http.post(url, JSON.stringify(alumno), { headers });
   }
 
+  public subirFoto(formData: FormData){
+    let url =  environment.apiUrl + '/api/subirFoto';
+
+    return this.http.post(url, formData)
+  }
+
   //#endregion
   /***********************************************************************/
 
