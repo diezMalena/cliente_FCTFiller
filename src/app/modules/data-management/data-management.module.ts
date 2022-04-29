@@ -29,6 +29,7 @@ import { ModalCambiotutorComponent } from './seguimiento/modal-cambiotutor/modal
 import { HistorialAnexosComponent } from './historial-anexos/historial-anexos.component';
 import { AnexosAlumnosComponent } from './anexos-alumnos/anexos-alumnos.component';
 import { ModalTipoAnexoComponent } from './modal-tipo-anexo/modal-tipo-anexo.component';
+import { ProgramaFormativoComponent } from './programa-formativo/programa-formativo.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { ModalTipoAnexoComponent } from './modal-tipo-anexo/modal-tipo-anexo.com
     HistorialAnexosComponent,
     AnexosAlumnosComponent,
     ModalTipoAnexoComponent,
+    ProgramaFormativoComponent,
   ],
   imports: [
     CommonModule,
