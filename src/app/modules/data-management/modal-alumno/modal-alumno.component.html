@@ -20,7 +20,7 @@
             role="button">
             <a class="btn btn-outline-primary ms-3">Elegir nueva imagen de perfil</a>
           </label>
-          <input (change)="this.cambiarFoto($event)" hidden role="button" type="file" id="file" accept="image/*">
+          <input (change)="this.cambiarFoto($event, this.formulario)" hidden role="button" type="file" id="file" accept="image/*">
         </div>
 
         <div class="col-md-6">
@@ -140,7 +140,7 @@
           <label for="curriculum" class="form-label fw-bold">Curriculum</label>
           <input
             *ngIf="this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo;else templateCurriculum"
-            class="form-control" type="file" id="curriculum">
+            class="form-control" (change)="this.cambiarCurriculum($event, this.formulario)"  type="file" id="curriculum">
 
           <ng-template #templateCurriculum>
             <!--Esto es un label porque un button cierra el formulario :c-->

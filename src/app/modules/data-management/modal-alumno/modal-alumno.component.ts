@@ -314,7 +314,7 @@ export class ModalAlumnoComponent implements OnInit {
   /***********************************************************************/
 
   /***********************************************************************/
-  //#region Suscripción a cambios: provincia, ciudad, grupo, FCT
+  //#region Suscripción a cambios: provincia, ciudad, grupo, FCT, foto, curriculum
 
   /**
    * Cambia la provincia y refresca las localidades
@@ -354,42 +354,36 @@ export class ModalAlumnoComponent implements OnInit {
   }
 
   /**
-   * Cambia la imagen en el elemento <img> y en el objeto alumno
+   * Cambia la imagen en el elemento <img> del html y en el FormBuilder
    * @param event Evento change del input type=file de la foto de perfil
+   * @param formulario Formulario para asignar el contenido en base64 del fichero
    */
-  cambiarFoto(event: any) {
+  cambiarFoto(event: any, formulario: any) {
     let files = event.target.files[0];
-    let resultado : any = '';
     if (files) {
       let fileReader = new FileReader();
       fileReader.readAsDataURL(files);
-      fileReader.addEventListener("load", function () {
+      fileReader.onload = function() {
         let element: any = document.getElementById('foto');
-        resultado = this.result;
-        element.src = resultado;
-      });
-
-      if(this.alumno != undefined) {
-        this.alumno.foto = resultado;
-      }
+        element.src = this.result;
+        formulario['foto'].setValue(this.result)
+      };
     }
   }
 
-  cambiarCurriculum(event: any) {
+  /**
+   * Cambia el curriculum del alumno en el FormBuilder
+   * @param event Evento change del input type=file del curriculum
+   * @param formulario Formulario para asignar el contenido en base64 del fichero
+   */
+  cambiarCurriculum(event: any, formulario: any) {
     let files = event.target.files[0];
-    let resultado : any = '';
     if (files) {
       let fileReader = new FileReader();
       fileReader.readAsDataURL(files);
       fileReader.addEventListener("load", function () {
-        resultado = this.result;
+        formulario['curriculum'].setValue(this.result);
       });
-
-      if(this.alumno != undefined) {
-        this.alumno.curriculum = resultado;
-      }
-
-      this.nombre_curriculum = files.name;
     }
   }
 
@@ -433,7 +427,7 @@ export class ModalAlumnoComponent implements OnInit {
    * @param url URL del servidor del CV del alumno
    */
   public descargarCV(url: string) {
-    alert(url);
+    window.open(url);
   }
 
   //#endregion

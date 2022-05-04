@@ -15,7 +15,6 @@ export class CrudAlumnosService {
 
   private urlBase: string = environment.apiUrl + 'jefatura/';
   private urlListarAlumnos: string = 'listarAlumnos/';
-  private urlVerAlumno: string = 'verAlumno/';
   private urlAddAlumno: string = 'addAlumno';
   private urlModificarAlumno: string = 'modificarAlumno';
   private urlEliminarAlumno: string = 'eliminarAlumno/';
