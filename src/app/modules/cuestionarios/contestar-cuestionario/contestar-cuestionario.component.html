@@ -1,0 +1,64 @@
+
+<div class="container">
+
+  <!--Títulos de las secciones-->
+  <div class="row">
+    <div class="page-header d-flex justify-content-between pb-3">
+      <h1 class="h2">Contestar cuestionario</h1>
+      <!-- <button type="button" class="btn btn-outline-default mr-2" placement="left"
+        ngbTooltip="Haga clic para acceder a la ayuda de esta sección" (click)="abrirAyuda()">?</button> -->
+    </div>
+  </div>
+
+  <!--Contenido de las secciones-->
+  <div class="p-3" >
+    <div class="row">
+      <div class="col-sm-12">
+
+
+
+        <form [formGroup]="respuestasForm" (ngSubmit)="onSubmit()">
+
+          <div class="row bg-primary p-2 border border-primary rounded text-white">
+            <p>
+              Cuestionario {{respuestasForm.value.titulo}} para {{respuestasForm.value.destinatario}}
+            </p>
+          </div>
+
+          <br>
+
+          <div class="row mb-2 p-4 border border-primary rounded">
+            <table class="table-insertar-respuestas" formArrayName="respuestas">
+
+
+              <tr *ngFor="let respuesta of respuestas().controls; let i=index" [formGroupName]="i">
+
+                <td class="mb-2 p-2">
+
+                  {{respuesta.value.pregunta}}
+
+                </td>
+                <td>
+                    Respuesta:
+                    <!-- {{respuesta.pregunta}} -->
+                    <input type="text" formControlName="respuesta" class="form-control">
+                </td>
+
+              </tr>
+
+            </table>
+          </div>
+
+          <br>
+          <hr>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </form>
+
+
+
+      </div>
+    </div>
+  </div>
+
+
+</div>

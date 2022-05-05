@@ -11,7 +11,11 @@ export const environment = {
   notas: "notas",
   unidades: "unidades",
   profesores: "profesores",
-  apiUrlFirma: "http://localhost:8000/api/"
+  apiUrlFirma: "http://localhost:8000/api/",
+  apiUrlCuestionario: "http://localhost:8000/api/jefatura/",
+  crearCuestionario: "crearCuestionario",
+  contestarCuestionario: "contestarCuestionario",
+  obtenerCuestionarioURL: "obtenerCuestionario",
 };
 
 
