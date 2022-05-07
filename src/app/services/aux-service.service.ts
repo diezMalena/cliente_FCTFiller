@@ -11,6 +11,9 @@ export class AuxService {
 
   constructor(private http: HttpClient) {}
 
+  /***********************************************************************/
+  //#region Listado de provincias y ciudades
+
   /**
    * Obtiene un listado de provincias
    * @returns `Observable` de la `HttpResponse`.
@@ -41,4 +44,7 @@ export class AuxService {
       })
     );
   }
+
+  //#endregion
+  /***********************************************************************/
 }
