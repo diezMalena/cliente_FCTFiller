@@ -15,7 +15,6 @@ export class CrudAlumnosService {
 
   private urlBase: string = environment.apiUrl + 'jefatura/';
   private urlListarAlumnos: string = 'listarAlumnos/';
-  private urlVerAlumno: string = 'verAlumno/';
   private urlAddAlumno: string = 'addAlumno';
   private urlModificarAlumno: string = 'modificarAlumno';
   private urlEliminarAlumno: string = 'eliminarAlumno/';
@@ -41,6 +40,12 @@ export class CrudAlumnosService {
       'Content-Type': 'application/json',
     });
     return this.http.post(url, JSON.stringify(alumno), { headers });
+  }
+
+  public subirFoto(formData: FormData){
+    let url =  environment.apiUrl + '/api/subirFoto';
+
+    return this.http.post(url, formData)
   }
 
   //#endregion
