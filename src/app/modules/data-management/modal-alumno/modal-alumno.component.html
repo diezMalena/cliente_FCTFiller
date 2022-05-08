@@ -12,6 +12,17 @@
         <div class="col-md-12">
           <h2 class="fs-5">Datos del alumno</h2>
         </div>
+        <div class="col-md-12 d-flex justify-content-center align-items-center">
+          <img id="foto" (click)="this.abrirFoto(this.formulario['foto'].value != undefined ? this.formulario['foto'].value : this.fotoPorDefecto)" class="rounded-circle"
+            [src]="this.formulario['foto'].value != undefined ? this.formulario['foto'].value : this.fotoPorDefecto"
+            role="button" alt="" height="100" width="100">
+          <label [hidden]="!(this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo)" for="file"
+            role="button">
+            <a class="btn btn-outline-primary ms-3">Elegir nueva imagen de perfil</a>
+          </label>
+          <input (change)="this.cambiarFoto($event, this.formulario)" hidden role="button" type="file" id="file" accept="image/*">
+        </div>
+
         <div class="col-md-6">
           <label for="cod_alumno"
             class="form-label fw-bold {{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'required' : ''}}">Código
@@ -124,6 +135,37 @@
             Este campo es obligatorio
           </div>
         </div>
+
+        <div class="col-md-6">
+          <label for="curriculum" class="form-label fw-bold">Curriculum</label>
+          <input
+            *ngIf="this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo;else templateCurriculum"
+            class="form-control" (change)="this.cambiarCurriculum($event, this.formulario)"  type="file" id="curriculum">
+
+          <ng-template #templateCurriculum>
+            <!--Esto es un label porque un button cierra el formulario :c-->
+            <label
+            (click)="this.descargarCV(this.formulario['curriculum'].value)"
+            class="form-control btn btn-outline-primary">
+              <svg class="bi me-2" width="16" height="16">
+                <use xlink:href="#descarga" />
+              </svg>Descargar</label>
+          </ng-template>
+
+        </div>
+
+        <div class="col-md-6">
+          <label for="cuenta_bancaria" class="form-label fw-bold">Cuenta bancaria</label>
+          <input type="text" id="cuenta_bancaria" formControlName="cuenta_bancaria"
+            class="{{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'form-control' : 'form-control-plaintext'}}"
+            [attr.readonly]="this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? null : true">
+        </div>
+        <div class="col-md-6">
+          <label for="matricula_coche" class="form-label fw-bold">Matrícula coche</label>
+          <input type="text" id="matricula_coche" formControlName="matricula_coche"
+            class="{{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'form-control' : 'form-control-plaintext'}}"
+            [attr.readonly]="this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? null : true">
+        </div>
         <!-- #endregion -->
         <!-- #region Datos de matriculación en el curso actual -->
         <hr class="my-3">
@@ -178,7 +220,7 @@
       <!-- Botones (si la edición está activa) -->
       <ng-container *ngIf="this.modo !== this.modosEdicion.detalle">
         <div class="row d-flex align-items-center justify-content-center modal-footer mt-3">
-          <input class="w-50 btn btn-primary btn-md" type="submit" value="Guardar cambios"
+          <input class="w-50 btn btn-outline-primary btn-md" type="submit" value="Guardar cambios"
             [disabled]="!modified ? true : null">
         </div>
       </ng-container>

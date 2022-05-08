@@ -31,7 +31,12 @@ export class Alumno {
       obj['dni_antiguo'],
       obj['matricula_cod'],
       obj['matricula_cod_centro'],
-      obj['matricula_cod_grupo']
+      obj['matricula_cod_grupo'],
+      obj['foto'],
+      obj['curriculum'],
+      obj['cuenta_bancaria'],
+      obj['matricula_coche']
+
     );
   }
 
@@ -54,7 +59,14 @@ export class Alumno {
     public dni_antiguo?: string,
     public matricula_cod?: string,
     public matricula_cod_centro?: string,
-    public matricula_cod_grupo?: string
+    public matricula_cod_grupo?: string,
+
+    //Cambio 11-04-2022 David Sánchez Barragán
+    //Incorporación de cambios para Anexo FEM05
+    public foto?: string,
+    public curriculum?: string,
+    public cuenta_bancaria?: string,
+    public matricula_coche?: string
   ) {}
 
   /**
