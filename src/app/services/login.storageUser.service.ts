@@ -37,8 +37,10 @@ export class LoginStorageUserService {
     );
     if (user) {
       this.usuario = Usuario.usuarioJSON(JSON.parse(user));
+      return this.usuario;
+    } else {
+      return undefined;
     }
-    return this.usuario;
   }
 
   /**
@@ -47,6 +49,16 @@ export class LoginStorageUserService {
    */
   public removeUser() {
     sessionStorage.removeItem(LoginStorageUserService.SESSION_STORAGE_USER_KEY);
+  }
+
+  /**
+   * Comprueba si hay un usuario logueado
+   *
+   * @returns `boolean` true si hay usuario, false si no lo hay
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public isLogged() {
+    return this.getUser() != undefined;
   }
 
   //#endregion
