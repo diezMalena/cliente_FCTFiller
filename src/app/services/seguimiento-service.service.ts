@@ -4,12 +4,18 @@ import { Tutor } from '../models/tutor';
 import { map, Observable } from 'rxjs';
 import { tutorResponse } from '../models/tutorResponse';
 import { environment } from 'src/environments/environment';
+import { FileUploadModel } from '../models/file-upload.model';
+import { LoginStorageUserService } from '../services/login.storageUser.service';
 
 @Injectable({ providedIn: 'root' })
 export class SeguimientoServiceService {
   public ruta: string = environment.apiUrl;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    public loginStorageUser: LoginStorageUserService
+    )
+    {}
 
   /***********************************************************************/
   //#region Cabeceras: departamento, alumno, horas y tutor
@@ -168,6 +174,15 @@ export class SeguimientoServiceService {
     return this.http.post(url, dato, { headers: headers });
   }
 
+  public devolverSemanas(dni:string){
+    let url: string = this.ruta + 'devolverSemanas';
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    let dato = { dni: dni };
+    return this.http.post(url, dato, { headers: headers });
+  }
+
   //#endregion
   /***********************************************************************/
 
@@ -180,10 +195,35 @@ export class SeguimientoServiceService {
    * @returns Un observable con la descarga del Anexo III
    * @author Malena
    */
-  public descargarPDF(dni: string) {
-    let dato = { dni: dni };
+  public descargarPDF(id_quinto_dia: string, dni:string) {
+    let dato = { id_quinto_dia: id_quinto_dia , dni: dni };
     const url: string = this.ruta + 'generarAnexo3';
     return this.http.post(url, dato, { responseType: 'arraybuffer' });
+  }
+
+
+
+
+
+  /**
+   *
+   * @param storage
+   * @returns
+   */
+  subirAnexo3(storage: File): Observable<any> {
+    const url: string = this.ruta + 'subirAnexo3';
+    let data: any = {
+      ficheros: storage,
+      dni: this.loginStorageUser.getUser()?.dni,
+    };
+    console.log(data);
+
+    return this.http.post(url, data).pipe(
+      map((res) => {
+        return res || {};
+      }),
+      // catchError(this.handleError)
+    );
   }
 
   //#endregion
