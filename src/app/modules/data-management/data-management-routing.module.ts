@@ -12,62 +12,107 @@ import { SeguimientoComponent } from './seguimiento/seguimiento.component';
 import { CrudProfesoresComponent } from './crud-profesores/crud-profesores.component';
 import { GestionAlumnosComponent } from './gestion-alumnos/gestion-alumnos.component';
 import { HistorialAnexosComponent } from './historial-anexos/historial-anexos.component';
+import { PerfilesGuard } from 'src/app/guards/perfiles.guard';
+import { RolesGuard } from 'src/app/guards/roles.guard';
 //import { SectionEmpresaComponent } from './components/section-empresa/section-empresa.component';
-
 
 const routes: Routes = [
   {
-    path:'asig-alum-empresa',
-    component: AsociarEmpAluComponent
+    path: 'asig-alum-empresa',
+    component: AsociarEmpAluComponent,
+    canActivate: [PerfilesGuard, RolesGuard],
+    data: {
+      perfiles: ['profesor'],
+      roles: [3],
+    },
   },
   {
-    path:'registro-empresa',
-    component: RegistroEmpresaComponent
+    path: 'registro-empresa',
+    component: RegistroEmpresaComponent,
+    canActivate: [PerfilesGuard],
+    data: {
+      perfiles: ['profesor'],
+    },
   },
   {
     path: 'registro-empresa/representante',
-    component: RepresentanteComponent
+    component: RepresentanteComponent,
+    canActivate: [PerfilesGuard],
+    data: {
+      perfiles: ['profesor'],
+    },
   },
   {
     path: 'registro-empresa/empresa',
-    component: EmpresaComponent
+    component: EmpresaComponent,
+    canActivate: [PerfilesGuard],
+    data: {
+      perfiles: ['profesor'],
+    },
   },
   {
-    path:'registro-empresa/ubicacion',
-    component: UbicacionComponent
+    path: 'registro-empresa/ubicacion',
+    component: UbicacionComponent,
+    canActivate: [PerfilesGuard],
+    data: {
+      perfiles: ['profesor'],
+    },
   },
   {
-    path:'registro-empresa/resumen',
-    component: ResumenComponent
+    path: 'registro-empresa/resumen',
+    component: ResumenComponent,
+    canActivate: [PerfilesGuard],
+    data: {
+      perfiles: ['profesor'],
+    },
   },
   {
-    path:'seguimiento',
-    component: SeguimientoComponent
+    path: 'seguimiento',
+    component: SeguimientoComponent,
+    canActivate: [PerfilesGuard, RolesGuard],
+    data: {
+      perfiles: ['profesor', 'alumno'],
+      roles: [3],
+    },
   },
   {
     path: 'gestion-empresas',
-    component: GestionEmpresasComponent
+    component: GestionEmpresasComponent,
+    canActivate: [PerfilesGuard],
+    data: {
+      perfiles: ['profesor'],
+    },
   },
   {
     path: 'gestion-alumnos',
-    component: GestionAlumnosComponent
+    component: GestionAlumnosComponent,
+    canActivate: [PerfilesGuard, RolesGuard],
+    data: {
+      perfiles: ['profesor'],
+      roles: [1, 2],
+    },
   },
   {
-    path:'crud-anexos',
-    component: CrudAnexosComponent
+    path: 'crud-anexos',
+    component: CrudAnexosComponent,
   },
   {
-    path:'historial-anexos',
-    component: HistorialAnexosComponent
+    path: 'historial-anexos',
+    component: HistorialAnexosComponent,
   },
   {
-    path:'crud-profesores',
-    component: CrudProfesoresComponent
+    path: 'crud-profesores',
+    component: CrudProfesoresComponent,
+    canActivate: [PerfilesGuard, RolesGuard],
+    data: {
+      perfiles: ['profesor'],
+      roles: [1, 2],
+    },
   },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class DataManagementRoutingModule { }
+export class DataManagementRoutingModule {}

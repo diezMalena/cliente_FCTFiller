@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { LoggedGuard } from './guards/logged.guard';
 import { LoginStorageUserService } from './services/login.storageUser.service';
 
 const storage = new LoginStorageUserService();
@@ -10,6 +11,7 @@ const routes: Routes = [
       import('./modules/data-upload/data-upload.module').then(
         (m) => m.DataUploadModule
       ),
+    canActivateChild: [LoggedGuard],
   },
   {
     path: '',
@@ -24,6 +26,7 @@ const routes: Routes = [
       import('./modules/data-management/data-management.module').then(
         (m) => m.DataManagementModule
       ),
+    canActivateChild: [LoggedGuard],
   },
   {
     path: '**',

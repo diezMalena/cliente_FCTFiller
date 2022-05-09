@@ -26,7 +26,7 @@
             </svg> Alumnos
           </a>
         </li>
-        <li *ngIf="usuario.isProfesor()">
+        <li *ngIf="usuario.isTutor()">
           <a routerLink="data-management/asig-alum-empresa" routerLinkActive="active" class="nav-link link-white">
             <svg width="20" height="20" class="bi me-2">
               <use xlink:href="#A1" />

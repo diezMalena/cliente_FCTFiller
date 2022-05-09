@@ -58,7 +58,9 @@ export class LoginStorageUserService {
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
   public isLogged() {
-    return this.getUser() != undefined;
+    return (
+      this.getUser() != undefined && this.getTokenFromSession() != undefined
+    );
   }
 
   //#endregion
