@@ -1,4 +1,1 @@
-<input type="file" (change)="uploadAndProgressSingle($event)"> Upload Percent: {{percentDone}}% <br />
-<ng-container *ngIf="uploadSuccess">
-    Upload Successful
-</ng-container>
+<input type="file" (change)="upload($event,http,nombreArchivo,ficheroCodificado)" />
