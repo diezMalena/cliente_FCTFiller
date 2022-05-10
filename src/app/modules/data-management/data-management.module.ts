@@ -23,6 +23,7 @@ import { CrudProfesoresComponent } from './crud-profesores/crud-profesores.compo
 import { ModalProfesoresComponent } from './modal-profesores/modal-profesores.component';
 import { ModalDescargaComponent } from './registro-empresa/modal-descarga/modal-descarga.component';
 import { GestionAlumnosComponent } from './gestion-alumnos/gestion-alumnos.component';
+import { GestionGastosAlumnoComponent } from './gestion-gastos-alumno/gestion-gastos-alumno.component';
 import { ModalAlumnoComponent } from './modal-alumno/modal-alumno.component';
 import { DataTablesModule } from 'angular-datatables';
 import { ModalCambiotutorComponent } from './seguimiento/modal-cambiotutor/modal-cambiotutor.component';
@@ -49,6 +50,7 @@ import { HistorialAnexosComponent } from './historial-anexos/historial-anexos.co
     ModalDescargaComponent,
     ModalCambiotutorComponent,
     GestionAlumnosComponent,
+    GestionGastosAlumnoComponent,
     ModalAlumnoComponent,
     HistorialAnexosComponent,
   ],

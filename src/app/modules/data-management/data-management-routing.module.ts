@@ -11,6 +11,7 @@ import { UbicacionComponent } from './registro-empresa/ubicacion/ubicacion.compo
 import { SeguimientoComponent } from './seguimiento/seguimiento.component';
 import { CrudProfesoresComponent } from './crud-profesores/crud-profesores.component';
 import { GestionAlumnosComponent } from './gestion-alumnos/gestion-alumnos.component';
+import { GestionGastosAlumnoComponent } from './gestion-gastos-alumno/gestion-gastos-alumno.component';
 import { HistorialAnexosComponent } from './historial-anexos/historial-anexos.component';
 //import { SectionEmpresaComponent } from './components/section-empresa/section-empresa.component';
 
@@ -64,6 +65,10 @@ const routes: Routes = [
     path:'crud-profesores',
     component: CrudProfesoresComponent
   },
+  {
+    path: 'gestion-gastos-alumno',
+    component: GestionGastosAlumnoComponent
+  }
 ];
 
 @NgModule({
