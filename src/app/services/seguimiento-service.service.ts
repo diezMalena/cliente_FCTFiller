@@ -210,20 +210,10 @@ export class SeguimientoServiceService {
    * @param storage
    * @returns
    */
-  subirAnexo3(storage: File): Observable<any> {
+  subirAnexo3(formData: FormData){
     const url: string = this.ruta + 'subirAnexo3';
-    let data: any = {
-      ficheros: storage,
-      dni: this.loginStorageUser.getUser()?.dni,
-    };
-    console.log(data);
 
-    return this.http.post(url, data).pipe(
-      map((res) => {
-        return res || {};
-      }),
-      // catchError(this.handleError)
-    );
+    return this.http.post(url, formData);
   }
 
   //#endregion
