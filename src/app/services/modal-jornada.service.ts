@@ -3,15 +3,19 @@ import { Jornada } from '../models/Jornada/jornada';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { HttpHeadersService } from './http-headers.service';
 
 @Injectable({ providedIn: 'root' })
 export class ModalJornadaService {
   public ruta: string = environment.apiUrl;
   public jornadasArray = new BehaviorSubject<string>('');
+  private headers: HttpHeaders;
 
   @Output() jornadaTrigger: EventEmitter<Jornada> = new EventEmitter();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private headersService: HttpHeadersService) {
+    this.headers = headersService.getHeadersWithToken();
+  }
 
   /***********************************************************************/
   //#region Gestión de jornadas
@@ -24,15 +28,13 @@ export class ModalJornadaService {
    */
   public addJornada(jornada: Jornada, dni: string) {
     let url: string = this.ruta + 'addJornada';
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
+    const headers = this.headers;
     let datos = {
       jornada: jornada,
       dni_alumno: dni,
     };
 
-    return this.http.post(url, datos, { headers: headers });
+    return this.http.post(url, datos, { headers });
   }
 
   /**
@@ -43,15 +45,14 @@ export class ModalJornadaService {
    */
   public updateJornada(jornada: Jornada, dni: string) {
     let url: string = this.ruta + 'updateJornada';
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
+    const headers = this.headers;
+
     let datos = {
       jornada: jornada,
       dni_alumno: dni,
     };
 
-    return this.http.post(url, datos, { headers: headers });
+    return this.http.post(url, datos, { headers });
   }
 
   //#endregion

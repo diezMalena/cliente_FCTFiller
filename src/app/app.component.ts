@@ -12,10 +12,6 @@ export class AppComponent {
   constructor(
     private storageUser: LoginStorageUserService,
   ) {
-    // let aux = sessionStorage.getItem(LoginComponent.usuario);
-    // let usuario = JSON.parse(aux!)
-    // this.usuario = Usuario.usuarioJSON(usuario)
     this.usuario = storageUser.getUser();
-    console.log(this.usuario)
   }
 }
