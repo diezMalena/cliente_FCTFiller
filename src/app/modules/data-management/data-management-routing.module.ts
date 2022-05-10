@@ -13,82 +13,60 @@ import { CrudProfesoresComponent } from './crud-profesores/crud-profesores.compo
 import { GestionAlumnosComponent } from './gestion-alumnos/gestion-alumnos.component';
 import { HistorialAnexosComponent } from './historial-anexos/historial-anexos.component';
 import { PerfilesGuard } from 'src/app/guards/perfiles.guard';
-import { RolesGuard } from 'src/app/guards/roles.guard';
-//import { SectionEmpresaComponent } from './components/section-empresa/section-empresa.component';
+import { ProfesoresGuard } from 'src/app/guards/profesores.guard';
 
 const routes: Routes = [
   {
     path: 'asig-alum-empresa',
     component: AsociarEmpAluComponent,
-    canActivate: [PerfilesGuard, RolesGuard],
+    canActivate: [ProfesoresGuard],
     data: {
-      perfiles: ['profesor'],
-      roles: [3],
+      roles: [1, 3],
     },
   },
   {
     path: 'registro-empresa',
     component: RegistroEmpresaComponent,
-    canActivate: [PerfilesGuard],
-    data: {
-      perfiles: ['profesor'],
-    },
+    canActivate: [ProfesoresGuard],
   },
   {
     path: 'registro-empresa/representante',
     component: RepresentanteComponent,
-    canActivate: [PerfilesGuard],
-    data: {
-      perfiles: ['profesor'],
-    },
+    canActivate: [ProfesoresGuard],
   },
   {
     path: 'registro-empresa/empresa',
     component: EmpresaComponent,
-    canActivate: [PerfilesGuard],
-    data: {
-      perfiles: ['profesor'],
-    },
+    canActivate: [ProfesoresGuard],
   },
   {
     path: 'registro-empresa/ubicacion',
     component: UbicacionComponent,
-    canActivate: [PerfilesGuard],
-    data: {
-      perfiles: ['profesor'],
-    },
+    canActivate: [ProfesoresGuard],
   },
   {
     path: 'registro-empresa/resumen',
     component: ResumenComponent,
-    canActivate: [PerfilesGuard],
-    data: {
-      perfiles: ['profesor'],
-    },
+    canActivate: [ProfesoresGuard],
   },
   {
     path: 'seguimiento',
     component: SeguimientoComponent,
-    canActivate: [PerfilesGuard, RolesGuard],
+    canActivate: [PerfilesGuard],
     data: {
       perfiles: ['profesor', 'alumno'],
-      roles: [3],
     },
   },
   {
     path: 'gestion-empresas',
     component: GestionEmpresasComponent,
-    canActivate: [PerfilesGuard],
-    data: {
-      perfiles: ['profesor'],
-    },
+    canActivate: [ProfesoresGuard],
   },
   {
     path: 'gestion-alumnos',
     component: GestionAlumnosComponent,
-    canActivate: [PerfilesGuard, RolesGuard],
+    canActivate: [ProfesoresGuard],
     data: {
-      perfiles: ['profesor'],
       roles: [1, 2],
     },
   },
@@ -103,9 +81,8 @@ const routes: Routes = [
   {
     path: 'crud-profesores',
     component: CrudProfesoresComponent,
-    canActivate: [PerfilesGuard, RolesGuard],
+    canActivate: [ProfesoresGuard],
     data: {
-      perfiles: ['profesor'],
       roles: [1, 2],
     },
   },

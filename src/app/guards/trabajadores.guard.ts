@@ -13,14 +13,15 @@ import { LoginStorageUserService } from '../services/login.storageUser.service';
 @Injectable({
   providedIn: 'root',
 })
-export class RolesGuard implements CanActivate {
+export class TrabajadoresGuard implements CanActivate {
   constructor(
     private storage: LoginStorageUserService,
     private router: Router
   ) {}
 
   /**
-   * Permite pasar al usuario si tiene uno de los roles que especifican
+   * Permite pasar al usuario si es trabajador y tiene uno de los roles que se pasa como dato
+   * Si no se pasa ningún rol, permite pasar a todos los trabajadores
    *
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
@@ -33,20 +34,26 @@ export class RolesGuard implements CanActivate {
     | boolean
     | UrlTree {
     const user: Usuario = this.storage.getUser()!;
-    const roles: [number] = route.data['roles'];
+    const roles: [number] | undefined = route.data['roles'];
 
-    if (user.tipo === 'alumno') {
-      return true;
-    } else {
-      for (let i = 0; i < roles.length; i++) {
-        for (let j = 0; j < user.roles!.length; j++) {
-          if (roles[i] === user.roles![j].id_rol) {
-            return true;
+    if (user.isTrabajador()) {
+      if (roles != undefined) {
+        if (roles.length > 0) {
+          for (let i = 0; i < roles.length; i++) {
+            for (let j = 0; j < user.roles!.length; j++) {
+              if (roles[i] === user.roles![j].id_rol) {
+                return true;
+              }
+            }
           }
+        } else {
+          return true;
         }
+      } else {
+        return true;
       }
-      this.router.navigateByUrl('');
-      return false;
     }
+    this.router.navigateByUrl('');
+    return false;
   }
 }

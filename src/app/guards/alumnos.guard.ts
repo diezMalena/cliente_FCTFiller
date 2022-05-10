@@ -13,14 +13,14 @@ import { LoginStorageUserService } from '../services/login.storageUser.service';
 @Injectable({
   providedIn: 'root',
 })
-export class PerfilesGuard implements CanActivate {
+export class AlumnosGuard implements CanActivate {
   constructor(
     private storage: LoginStorageUserService,
     private router: Router
   ) {}
 
   /**
-   * Permite pasar al usuario si tiene uno de los perfiles que especifican
+   * Permite pasar al usuario si es alumno
    *
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
@@ -33,13 +33,11 @@ export class PerfilesGuard implements CanActivate {
     | boolean
     | UrlTree {
     const user: Usuario = this.storage.getUser()!;
-    const perfiles: [string] = route.data['perfiles'];
 
-    if (perfiles.find((perfil) => perfil === user!.tipo) != undefined) {
+    if (user.isAlumno()) {
       return true;
-    } else {
-      this.router.navigateByUrl('');
-      return false;
     }
+    this.router.navigateByUrl('');
+    return false;
   }
 }
