@@ -21,7 +21,7 @@ const routes: Routes = [
     component: AsociarEmpAluComponent,
     canActivate: [ProfesoresGuard],
     data: {
-      roles: [1, 3],
+      roles: [3],
     },
   },
   {
@@ -73,10 +73,12 @@ const routes: Routes = [
   {
     path: 'crud-anexos',
     component: CrudAnexosComponent,
+    canActivate: [ProfesoresGuard],
   },
   {
     path: 'historial-anexos',
     component: HistorialAnexosComponent,
+    canActivate: [ProfesoresGuard],
   },
   {
     path: 'crud-profesores',
