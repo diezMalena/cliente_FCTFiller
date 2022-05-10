@@ -67,20 +67,20 @@ export class LoginComponent implements OnInit {
 
     var datos = {
       email: this.login.value.email,
-      pass: this.login.value.password,
+      password: this.login.value.password,
     };
 
     this.LoginService.login(datos).subscribe({
-      next: (usuario: any) => {
-        this.usuario = usuario;
+      next: (response: any) => {
+        this.usuario = response.usuario;
         this.storageUser.setUser(this.usuario);
-        sessionStorage.setItem(LoginComponent.usuario, JSON.stringify(usuario));
+        sessionStorage.setItem('access_token', response.access_token);
         this.toastr.success('Login realizado con éxito.', 'Login');
-        if (this.usuario.tipo == 'trabajador') {
+        if (this.usuario.tipo === 'trabajador') {
           window.location.href = '';
-        } else if (this.usuario.tipo == 'profesor') {
+        } else if (this.usuario.tipo === 'profesor') {
           window.location.href = '';
-        } else {
+        } else if (this.usuario.tipo === 'alumno') {
           window.location.href = '';
         }
       },

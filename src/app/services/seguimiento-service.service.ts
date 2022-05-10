@@ -6,16 +6,21 @@ import { tutorResponse } from '../models/tutorResponse';
 import { environment } from 'src/environments/environment';
 import { FileUploadModel } from '../models/file-upload.model';
 import { LoginStorageUserService } from '../services/login.storageUser.service';
+import { HttpHeadersService } from './http-headers.service';
 
 @Injectable({ providedIn: 'root' })
 export class SeguimientoServiceService {
   public ruta: string = environment.apiUrl;
+  private headers: HttpHeaders;
 
   constructor(
     private http: HttpClient,
-    public loginStorageUser: LoginStorageUserService
+    public loginStorageUser: LoginStorageUserService,
+    private headersService: HttpHeadersService
     )
-    {}
+    {
+      this.headers = headersService.getHeadersWithToken();
+    }
 
   /***********************************************************************/
   //#region Cabeceras: departamento, alumno, horas y tutor
@@ -31,12 +36,10 @@ export class SeguimientoServiceService {
    */
   public gestionarDepartamento(dni: string) {
     let url: string = this.ruta + 'gestionarDepartamento';
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
+    const headers = this.headers;
     let dato = { dni: dni };
 
-    return this.http.post(url, dato, { headers: headers });
+    return this.http.post(url, dato, { headers });
   }
 
   /**
@@ -48,15 +51,14 @@ export class SeguimientoServiceService {
    */
   public addDepartamento(dni: string, departamento: string) {
     let url: string = this.ruta + 'addDepartamento';
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
+    const headers = this.headers;
+
     let datos = {
       dni: dni,
       departamento: departamento,
     };
 
-    return this.http.put(url, datos, { headers: headers });
+    return this.http.put(url, datos, { headers });
   }
 
   //#endregion
@@ -73,12 +75,11 @@ export class SeguimientoServiceService {
    */
   public recogerTutorEmpresa(dni: string) {
     let url: string = this.ruta + 'recogerTutorEmpresa';
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
+    const headers = this.headers;
+
     let dato = { dni: dni };
 
-    return this.http.post(url, dato, { headers: headers });
+    return this.http.post(url, dato, { headers });
   }
 
   /**
@@ -89,8 +90,9 @@ export class SeguimientoServiceService {
    */
   public getTutoresResponsables(id_empresa: string): Observable<Tutor[]> {
     let url: string = this.ruta + 'getTutoresResponsables/id=' + id_empresa;
+    const headers = this.headers;
 
-    return this.http.get<tutorResponse[]>(url).pipe(
+    return this.http.get<tutorResponse[]>(url, { headers }).pipe(
       map((resp: tutorResponse[]) => {
         return resp.map((tutor) => Tutor.tutorJSON(tutor));
       })
@@ -106,15 +108,14 @@ export class SeguimientoServiceService {
    */
   public guardarTutorSeleccionado(dni_tutor_nuevo: string, dni_alumno: string) {
     let url: string = this.ruta + 'actualizarTutorEmpresa';
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
+    const headers = this.headers;
+
     let dato = {
       dni_tutor_nuevo: dni_tutor_nuevo,
       dni_alumno: dni_alumno,
     };
 
-    return this.http.put(url, dato, { headers: headers });
+    return this.http.put(url, dato, { headers });
   }
 
   //#endregion
@@ -128,12 +129,11 @@ export class SeguimientoServiceService {
    */
   public escribirDatos(dni: string) {
     let url: string = this.ruta + 'devolverDatosAlumno';
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
+    const headers = this.headers;
+
     let dato = { dni: dni };
 
-    return this.http.post(url, dato, { headers: headers });
+    return this.http.post(url, dato, { headers });
   }
 
   /**
@@ -144,12 +144,11 @@ export class SeguimientoServiceService {
    */
   public sumatorioHorasTotales(dni: string) {
     let url: string = this.ruta + 'sumatorioHorasTotales';
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
+    const headers = this.headers;
+
     let dato = { dni: dni };
 
-    return this.http.post(url, dato, { headers: headers });
+    return this.http.post(url, dato, { headers });
   }
 
   //#endregion
@@ -166,12 +165,11 @@ export class SeguimientoServiceService {
    */
   public devolverJornadas(dni: string) {
     let url: string = this.ruta + 'devolverJornadas';
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
+    const headers = this.headers;
+
     let dato = { dni: dni };
 
-    return this.http.post(url, dato, { headers: headers });
+    return this.http.post(url, dato, { headers });
   }
 
   public devolverSemanas(dni:string){
@@ -198,7 +196,9 @@ export class SeguimientoServiceService {
   public descargarPDF(id_quinto_dia: string, dni:string) {
     let dato = { id_quinto_dia: id_quinto_dia , dni: dni };
     const url: string = this.ruta + 'generarAnexo3';
-    return this.http.post(url, dato, { responseType: 'arraybuffer' });
+    const HTTPOptions = this.headersService.getHeadersWithTokenArrayBuffer();
+
+    return this.http.post(url, dato, HTTPOptions);
   }
 
 
