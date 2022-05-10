@@ -64,19 +64,10 @@ export class FileUploadService {
   }
 
   public subirAnexo(file : any) {
+    const headers = this.headers;
     const url: string = API_STORAGE_URL + 'subirAnexo';
     let dato= {dni: '20a', tipo_anexo: 'Anexo0', documento: file};
 
-      return this.http.post(url, dato, { responseType: 'arraybuffer' });
-  }
-
-  basicUpload(files: File[]){
-    var formData = new FormData();
-    const url: string = API_STORAGE_URL + 'subirAnexo';
-    Array.from(files).forEach(f => formData.append('file', f))
-    this.http.post(url, formData)
-      .subscribe(event => {
-        console.log('done')
-      })
+      return this.http.post(url, file, { headers });
   }
 }
