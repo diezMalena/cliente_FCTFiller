@@ -18,4 +18,11 @@ export interface alumnoResponse {
   matricula_cod?: string;
   matricula_cod_centro?: string;
   matricula_cod_grupo?: string;
+
+  //Cambio 11-04-2022 David Sánchez Barragán
+  //Incorporación de cambios para Anexo FEM05
+  foto?: string;
+  curriculum?: string;
+  cuenta_bancaria?: string;
+  matricula_coche?: string;
 }

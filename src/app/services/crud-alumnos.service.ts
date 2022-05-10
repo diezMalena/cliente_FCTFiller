@@ -7,6 +7,7 @@ import { BehaviorSubject, map } from 'rxjs';
 import { Grupo } from '../models/grupo';
 import { grupoResponse } from '../models/grupoResponse';
 import { environment } from 'src/environments/environment';
+import { HttpHeadersService } from './http-headers.service';
 
 @Injectable({ providedIn: 'root' })
 export class CrudAlumnosService {
@@ -15,13 +16,15 @@ export class CrudAlumnosService {
 
   private urlBase: string = environment.apiUrl + 'jefatura/';
   private urlListarAlumnos: string = 'listarAlumnos/';
-  private urlVerAlumno: string = 'verAlumno/';
   private urlAddAlumno: string = 'addAlumno';
   private urlModificarAlumno: string = 'modificarAlumno';
   private urlEliminarAlumno: string = 'eliminarAlumno/';
   private urlListarGrupos: string = 'listarGrupos';
+  public headers: HttpHeaders;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, headersService: HttpHeadersService) {
+    this.headers = headersService.getHeadersWithToken();
+  }
 
   /***********************************************************************/
   //#region Gestión de alumnos - CRUD
@@ -31,16 +34,22 @@ export class CrudAlumnosService {
 
   /**
    * Registra a un alumno en la base de datos
+   *
    * @param alumno Un vector con los datos del alumno a registrar
    * @returns Un observable con la respuesta del servidor
    * @author David Sánchez Barragán
    */
   public registrarAlumno(alumno: Alumno) {
     const url: string = this.urlBase + this.urlAddAlumno;
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
+    const headers = this.headers;
+
     return this.http.post(url, JSON.stringify(alumno), { headers });
+  }
+
+  public subirFoto(formData: FormData){
+    let url =  environment.apiUrl + '/api/subirFoto';
+
+    return this.http.post(url, formData)
   }
 
   //#endregion
@@ -51,13 +60,15 @@ export class CrudAlumnosService {
 
   /**
    * Obtiene un listado de grupos
+   *
    * @returns `Observable` de la `HttpResponse`.
    * @author David Sánchez Barragán
    */
   public listarGrupos() {
     let url = this.urlBase + this.urlListarGrupos;
+    const headers = this.headers;
 
-    return this.http.get<Grupo[]>(url).pipe(
+    return this.http.get<Grupo[]>(url, { headers }).pipe(
       map((resp: grupoResponse[]) => {
         return resp.map((grupo) => Grupo.grupoJSON(grupo));
       })
@@ -73,8 +84,9 @@ export class CrudAlumnosService {
    */
   public listarAlumnos(dni: any) {
     let url = this.urlBase + this.urlListarAlumnos + dni;
+    const headers = this.headers;
 
-    return this.http.get<Alumno[]>(url).pipe(
+    return this.http.get<Alumno[]>(url, { headers }).pipe(
       map((resp: alumnoResponse[]) => {
         return resp.map((alumno) => Alumno.alumnoCompletoJSON(alumno));
       })
@@ -89,15 +101,15 @@ export class CrudAlumnosService {
 
   /**
    * Actualiza los datos de un alumno en la base de datos
+   *
    * @param alumno Un objeto con los datos del alumno
    * @returns Un observable con la respuesta del servidor
    * @author David Sánchez Barragán
    */
   public actualizarAlumno(alumno: Alumno) {
     const url: string = this.urlBase + this.urlModificarAlumno;
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
+    const headers = this.headers;
+
     return this.http.put(url, JSON.stringify(alumno), { headers });
   }
 
@@ -110,14 +122,16 @@ export class CrudAlumnosService {
   /**
    * Función que obtiene la lista de alumnos correspondiente al centro de estudios
    * de la persona que se ha logueado en el sistema
+   *
    * @param dni `string` DNI del usuario que se ha logueado en el sistema
    * @returns `Observable` de la `HttpResponse`.
    * @author David Sánchez Barragán
    */
   public borrarAlumno(dni: any) {
     let url = this.urlBase + this.urlEliminarAlumno + dni;
+    const headers = this.headers;
 
-    return this.http.delete<any>(url).pipe(
+    return this.http.delete<any>(url, { headers }).pipe(
       map((resp: any) => {
         return resp;
       })
@@ -135,6 +149,7 @@ export class CrudAlumnosService {
 
   /**
    * Establece el array de empresas
+   *
    * @param alumnosArray array de alumnos
    * @author David Sánchez Barragán
    */

@@ -5,12 +5,16 @@ import { anexoResponse } from '../models/anexoResponse';
 import { anexoAlumnoResponse } from '../models/anexoAlumnoResponse';
 import { tutoriaResponse } from '../models/tutoriaResponse';
 import { environment } from 'src/environments/environment';
+import { HttpHeadersService } from './http-headers.service';
 
 @Injectable({ providedIn: 'root' })
 export class AnexoService {
-  constructor(private http: HttpClient) {}
-
   public ruta = environment.apiUrl;
+  public headers: HttpHeaders;
+
+  constructor(private http: HttpClient, private headersService: HttpHeadersService) {
+    this.headers = headersService.getHeadersWithToken();
+  }
 
   /***********************************************************************/
   //#region Gestión de anexos - CRUD
@@ -26,7 +30,9 @@ export class AnexoService {
    */
   public getAnexosHistory(dni_tutor: string) {
     let url: string = this.ruta + 'listarHistorial/' + dni_tutor;
-    return this.http.get<anexoResponse>(url);
+    const headers = this.headers;
+
+    return this.http.get<anexoResponse>(url, { headers });
   }
 
   /**
@@ -37,7 +43,9 @@ export class AnexoService {
    */
   public getAnexos(dni_tutor: string) {
     let url: string = this.ruta + 'listarAnexos/' + dni_tutor;
-    return this.http.get<anexoResponse>(url);
+    const headers = this.headers;
+
+    return this.http.get<anexoResponse>(url, { headers });
   }
 
     /**
@@ -59,7 +67,9 @@ export class AnexoService {
    */
   public getGrupos(dni_tutor: string) {
     let url: string = this.ruta + 'listarGrupos/' + dni_tutor;
-    return this.http.get<tutoriaResponse>(url);
+    const headers = this.headers;
+
+    return this.http.get<tutoriaResponse>(url, { headers });
   }
 
   //#endregion
@@ -81,9 +91,8 @@ export class AnexoService {
 
     let url: string =
       this.ruta + 'eliminarAnexo/' + dni_tutor + '/' + cod_anexo;
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
+    const headers = this.headers;
+
     return this.http.delete<anexoResponse>(url, { headers });
   }
 
@@ -106,7 +115,9 @@ export class AnexoService {
   public descargarAnexo(dni_tutor: string, codigo: string) {
     let dato = { dni_tutor: dni_tutor, codigo: codigo };
     const url: string = this.ruta + 'descargarAnexo';
-    return this.http.post(url, dato, { responseType: 'arraybuffer' });
+    const HTTPOptions = this.headersService.getHeadersWithTokenArrayBuffer();
+
+    return this.http.post(url, dato, HTTPOptions);
   }
 
   /**
@@ -118,7 +129,9 @@ export class AnexoService {
   public descargarTodo(dni_tutor: string) {
     let dato = { dni_tutor: dni_tutor, habilitado: 1 };
     const url: string = this.ruta + 'descargarTodo';
-    return this.http.post(url, dato, { responseType: 'arraybuffer' });
+    const HTTPOptions = this.headersService.getHeadersWithTokenArrayBuffer();
+
+    return this.http.post(url, dato, HTTPOptions);
   }
 
 
@@ -143,7 +156,9 @@ export class AnexoService {
   public descargarTodoHistorial(dni_tutor: string) {
     let dato = { dni_tutor: dni_tutor, habilitado: 0 };
     const url: string = this.ruta + 'descargarTodo';
-    return this.http.post(url, dato, { responseType: 'arraybuffer' });
+    const HTTPOptions = this.headersService.getHeadersWithTokenArrayBuffer();
+
+    return this.http.post(url, dato, HTTPOptions);
   }
 
   //#endregion
@@ -161,15 +176,10 @@ export class AnexoService {
   public deshabilitarAnexo(cod_anexo: string) {
     cod_anexo = cod_anexo.replace('/', '*');
     cod_anexo = cod_anexo.replace('/', '*');
-
     let url: string = this.ruta + 'deshabilitarAnexo';
-
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      //'x-access-token': `${sessionStorage.getItem('token')}`,
-    });
-
     let dato = { cod_anexo: cod_anexo };
+    const headers = this.headers;
+
     return this.http.post<anexoResponse>(url, dato, { headers });
   }
 
@@ -182,14 +192,10 @@ export class AnexoService {
   public habilitarAnexo(dni_tutor: string, cod_anexo: string) {
     cod_anexo = cod_anexo.replace('/', '*');
     cod_anexo = cod_anexo.replace('/', '*');
-
-    let url: string = this.ruta + 'habilitarAnexo';
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      //'x-access-token': `${sessionStorage.getItem('token')}`,
-    });
-
     let dato = { cod_anexo: cod_anexo, dni_tutor: dni_tutor };
+    let url: string = this.ruta + 'habilitarAnexo';
+    const headers = this.headers;
+
     return this.http.post<anexoResponse>(url, dato, { headers });
   }
 

@@ -6,13 +6,17 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { HttpHeadersService } from './http-headers.service';
 
 @Injectable({ providedIn: 'root' })
 export class CrudProfesoresService {
-  constructor(private http: HttpClient) {}
-
   public ruta = environment.apiUrl;
   public profesoresArray = new BehaviorSubject<string>('');
+  private headers: HttpHeaders;
+
+  constructor(private http: HttpClient, private headersService: HttpHeadersService) {
+    this.headers = headersService.getHeadersWithToken();
+  }
 
   /***********************************************************************/
   //#region Gestión de profesores - CRUD
@@ -28,12 +32,10 @@ export class CrudProfesoresService {
    */
   public registrarProfesor(usuario: ProfesorCreate) {
     let url: string = this.ruta + 'addProfesor';
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
+    const headers = this.headers;
 
     return this.http
-      .post<profesorCreateResponse>(url, usuario, { headers: headers })
+      .post<profesorCreateResponse>(url, usuario, { headers })
       .pipe(
         map((resp: ProfesorCreate) => {
           return ProfesorCreate.userJSON(usuario);
@@ -56,7 +58,9 @@ export class CrudProfesoresService {
    */
   public getProfesores(dni_profesor: string) {
     let url: string = this.ruta + 'listarProfesores/' + dni_profesor;
-    return this.http.get<profesorResponse>(url);
+    const headers = this.headers;
+
+    return this.http.get<profesorResponse>(url, { headers });
   }
 
   /**
@@ -67,7 +71,9 @@ export class CrudProfesoresService {
    */
   public getProfesor(dni_profesor: string) {
     let url: string = this.ruta + 'listarProfesor/' + dni_profesor;
-    return this.http.get<profesorResponse>(url);
+    const headers = this.headers;
+
+    return this.http.get<profesorResponse>(url, { headers });
   }
 
   /**
@@ -79,7 +85,9 @@ export class CrudProfesoresService {
    */
   public getProfesorEdit(dni_profesor: string) {
     let url: string = this.ruta + 'listarProfesorEditar/' + dni_profesor;
-    return this.http.get<profesorCreateResponse>(url);
+    const headers = this.headers;
+
+    return this.http.get<profesorCreateResponse>(url, { headers });
   }
 
   //#endregion
@@ -96,11 +104,10 @@ export class CrudProfesoresService {
    */
   public editarUser(usuario: ProfesorCreate) {
     let url: string = this.ruta + 'modificarProfesor';
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
+    const headers = this.headers;
+
     return this.http
-      .post<profesorCreateResponse>(url, usuario, { headers: headers })
+      .post<profesorCreateResponse>(url, usuario, { headers })
       .pipe(
         map((resp: ProfesorCreate) => {
           return ProfesorCreate.userJSON(usuario);
@@ -123,10 +130,8 @@ export class CrudProfesoresService {
    */
   public eliminarProfesor(dni_profesor: string) {
     let url: string = this.ruta + 'eliminarProfesor/' + dni_profesor;
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      //'x-access-token': `${sessionStorage.getItem('token')}`,
-    });
+    const headers = this.headers;
+
     return this.http.delete(url, { headers });
   }
 

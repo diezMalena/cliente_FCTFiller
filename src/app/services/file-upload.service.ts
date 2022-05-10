@@ -1,19 +1,29 @@
 import { catchError, map } from 'rxjs/operators';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { FileUploadModel } from '../models/file-upload.model';
 import { LoginStorageUserService } from '../services/login.storageUser.service';
+import { HttpHeadersService } from './http-headers.service';
 
 const API_STORAGE_URL = environment.apiUrl;
 
 @Injectable({ providedIn: 'root' })
 export class FileUploadService {
+  private headers: HttpHeaders;
+
   constructor(
     private http: HttpClient,
-    public loginStorageUser: LoginStorageUserService
-  ) {}
+    public loginStorageUser: LoginStorageUserService,
+    private headersService: HttpHeadersService
+  ) {
+    this.headers = headersService.getHeadersWithToken();
+  }
 
   /**
    * Sube una serie de archivos al servidor
@@ -23,12 +33,13 @@ export class FileUploadService {
    */
   add(storage: FileUploadModel[]): Observable<any> {
     const API_CSVUPLOAD_URL = API_STORAGE_URL + 'jefatura/recibirCSV';
+    const headers = this.headers;
     let data: any = {
       ficheros: storage,
       dni: this.loginStorageUser.getUser()?.dni,
     };
 
-    return this.http.post(API_CSVUPLOAD_URL, data).pipe(
+    return this.http.post(API_CSVUPLOAD_URL, data, { headers }).pipe(
       map((res) => {
         return res || {};
       }),
