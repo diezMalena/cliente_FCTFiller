@@ -3,34 +3,94 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Anexo } from '../models/anexo';
 import { anexoResponse } from '../models/anexoResponse';
 import { tutoriaResponse } from '../models/tutoriaResponse';
+import { environment } from 'src/environments/environment';
+import { HttpHeadersService } from './http-headers.service';
 
-@Injectable({
-  providedIn: 'root'
-})
-
-
+@Injectable({ providedIn: 'root' })
 export class AnexoService {
+  public ruta = environment.apiUrl;
+  public headers: HttpHeaders;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private headersService: HttpHeadersService) {
+    this.headers = headersService.getHeadersWithToken();
+  }
 
-  public ruta='http://127.0.0.1:8000/api/';
+  /***********************************************************************/
+  //#region Gestión de anexos - CRUD
+
+  /***********************************************************************/
+  //#region CRUD - Read
+
+  /**
+   * Este metodo hace una llamada a la api y listar los anexos
+   * @author Pablo y Laura <lauramorenoramos97@gmail.com>
+   * @param dni_tutor Es el dni del tutor
+   * @returns Un observable con un vector de anexos
+   */
+  public getAnexosHistory(dni_tutor: string) {
+    let url: string = this.ruta + 'listarHistorial/' + dni_tutor;
+    const headers = this.headers;
+
+    return this.http.get<anexoResponse>(url, { headers });
+  }
 
   /**
    * @author Pablo y Laura <lauramorenoramos97@gmail.com>
    * @param dni_tutor Es el dni del tutor
-   * @returns
-   *  Este metodo hace una llamada a la api y listar los anexos
+   * @returns Observable con una lista de anexos
+   * Este metodo hace una llamada a la api y listar los anexos
    */
-  public getAnexos(dni_tutor: string){
-    let url: string = this.ruta+'listarAnexos/'+dni_tutor;
-    return this.http.get<anexoResponse>(url);
+  public getAnexos(dni_tutor: string) {
+    let url: string = this.ruta + 'listarAnexos/' + dni_tutor;
+    const headers = this.headers;
+
+    return this.http.get<anexoResponse>(url, { headers });
   }
 
-  public getGrupos(dni_tutor: string){
-    let url: string = this.ruta+'listarGrupos/'+dni_tutor;
-    return this.http.get<tutoriaResponse>(url);
+  /**
+   * Devuelve los grupos de un centro de estudios asociado al usuario loggeado
+   * @param dni_tutor DNI del usuario loggeado
+   * @returns Observable con una lista de grupos
+   */
+  public getGrupos(dni_tutor: string) {
+    let url: string = this.ruta + 'listarGrupos/' + dni_tutor;
+    const headers = this.headers;
+
+    return this.http.get<tutoriaResponse>(url, { headers });
   }
 
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region CRUD - Delete
+
+  /**
+   * Este metodo hace una llamada a la api y elimina un anexo
+   * @author Laura <lauramorenoramos97@gmail.com>
+   * @param dni_tutor  Es el dni del tutor
+   * @param cod_anexo  Es el nombre del anexo que se va a eliminar
+   * @returns Un observable con la respuesta del servidor
+   */
+  public eliminarAnexo(dni_tutor: string, cod_anexo: string) {
+    cod_anexo = cod_anexo.replace('/', '*');
+    cod_anexo = cod_anexo.replace('/', '*');
+
+    let url: string =
+      this.ruta + 'eliminarAnexo/' + dni_tutor + '/' + cod_anexo;
+    const headers = this.headers;
+
+    return this.http.delete<anexoResponse>(url, { headers });
+  }
+
+  //#endregion
+  /***********************************************************************/
+
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Descarga de anexos
 
   /**
    * @author Pablo
@@ -39,43 +99,73 @@ export class AnexoService {
    * @returns
    * Este metodo hace una llamada a la api y descargar un anexo en concreto
    */
-  public descargarAnexo(dni_tutor: string, codigo: string){
-    let dato= {dni_tutor:dni_tutor, codigo: codigo};
-    const url: string= this.ruta+"descargarAnexo";
-    return this.http.post(url,dato, {responseType:'arraybuffer'});
+  public descargarAnexo(dni_tutor: string, codigo: string) {
+    let dato = { dni_tutor: dni_tutor, codigo: codigo };
+    const url: string = this.ruta + 'descargarAnexo';
+    const HTTPOptions = this.headersService.getHeadersWithTokenArrayBuffer();
+
+    return this.http.post(url, dato, HTTPOptions);
   }
 
+  /**
+   * Este metodo hace una llamada a la api y descargar un anexo en concreto
+   * @author Pablo
+   * @param dni_tutor Es el dni del tutor
+   * @returns Un observable con la respuesta de descarga del servidor
+   */
+  public descargarTodo(dni_tutor: string) {
+    let dato = { dni_tutor: dni_tutor, habilitado: 1 };
+    const url: string = this.ruta + 'descargarTodo';
+    const HTTPOptions = this.headersService.getHeadersWithTokenArrayBuffer();
+
+    return this.http.post(url, dato, HTTPOptions);
+  }
 
   /**
    * @author Pablo
    * @param dni_tutor  es el dni del tutor
-   * @returns
+   * @returns Un observable con la respuesta del descarga del servidor
    * Este metodo hace una llamada a la api y descarga todos los anexos
    */
-  public descargarTodo(dni_tutor: string){
-    let dato= {dni_tutor:dni_tutor};
-    const url: string= this.ruta+"descargarTodo";
-    return this.http.post(url,dato, {responseType:'arraybuffer'});
+  public descargarTodoHistorial(dni_tutor: string) {
+    let dato = { dni_tutor: dni_tutor, habilitado: 0 };
+    const url: string = this.ruta + 'descargarTodo';
+    const HTTPOptions = this.headersService.getHeadersWithTokenArrayBuffer();
+
+    return this.http.post(url, dato, HTTPOptions);
   }
 
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Habilitar y deshabilitar anexos
 
   /**
-   * @author Laura <lauramorenoramos97@gmail.com>
-   * @param dni_tutor  Es el dni del tutor
-   * @param cod_anexo  Es el nombre del anexo que se va a eliminar
-   * @returns
-   * Este metodo hace una llamada a la api y elimina un anexo
+   * Hace una llamada a la API para deshabilitar un anexo
+   * @param cod_anexo Código del anexo a deshabilitar
+   * @returns Un observable con la respuesta del servidor
    */
-  public eliminarAnexo(dni_tutor: string, cod_anexo: string){
-    cod_anexo = cod_anexo.replace('/', "*");
-    cod_anexo = cod_anexo.replace('/', "*");
+  public deshabilitarAnexo(cod_anexo: string) {
+    cod_anexo = cod_anexo.replace('/', '*');
+    cod_anexo = cod_anexo.replace('/', '*');
+    let url: string = this.ruta + 'deshabilitarAnexo';
+    let dato = { cod_anexo: cod_anexo };
+    const headers = this.headers;
 
-    let url: string = this.ruta+'eliminarAnexo/'+dni_tutor+'/'+cod_anexo;
-    let headers= new HttpHeaders({
-      'Content-Type' : 'application/json',
-      //'x-access-token': `${sessionStorage.getItem('token')}`,
-    });
-    return this.http.delete<anexoResponse>(url,{headers});
+    return this.http.post<anexoResponse>(url, dato, { headers });
   }
 
+  public habilitarAnexo(dni_tutor: string, cod_anexo: string) {
+    cod_anexo = cod_anexo.replace('/', '*');
+    cod_anexo = cod_anexo.replace('/', '*');
+    let dato = { cod_anexo: cod_anexo, dni_tutor: dni_tutor };
+    let url: string = this.ruta + 'habilitarAnexo';
+    const headers = this.headers;
+
+    return this.http.post<anexoResponse>(url, dato, { headers });
+  }
+
+  //#endregion
+  /***********************************************************************/
 }
