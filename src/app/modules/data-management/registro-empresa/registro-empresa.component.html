@@ -15,7 +15,7 @@
           <span class="show-mobile">{{ fase.abreviatura }}</span>
         </a>
       </ng-container>
-      <button class="btn-primary" (click)="nextFase()">Siguiente</button>
+      <button class="btn btn-primary" (click)="nextFase()">Siguiente</button>
     </div>
   </div>
 </div>
@@ -136,14 +136,17 @@
     <div class="mb-3">
       <div class="row d-flex align-items-center">
         <div class="col-12 col-lg-4 d-lg-flex justify-content-end">
-          <label for="localidad" class="form-label fw-bold m-0">Localidad</label>
+          <label for="provincia" class="form-label fw-bold m-0">Provincia</label>
         </div>
         <div class="col-12 col-lg-8">
-          <input type="text" id="localidad" class="form-control" formControlName="localidad"
-            placeholder="Localidad del centro de trabajo">
-          <ng-container *ngIf="submitted && formUbicacion['localidad'].errors">
+          <select class="form-select" formControlName="provincia" id="provincia" (change)="cambiarProvincia($event)">
+            <option *ngFor="let provincia of this.provincias" [value]="provincia">
+              {{ provincia }}
+            </option>
+          </select>
+          <ng-container *ngIf="submitted && formUbicacion['provincia'].errors">
             <div class="text-danger bg-white rounded border border-2 border-danger p-2"
-              *ngIf="formUbicacion['localidad'].errors['required']">No puede estar vacía</div>
+              *ngIf="formUbicacion['provincia'].errors['required']">No puede estar vacía</div>
           </ng-container>
         </div>
       </div>
@@ -151,14 +154,17 @@
     <div class="mb-3">
       <div class="row d-flex align-items-center">
         <div class="col-12 col-lg-4 d-lg-flex justify-content-end">
-          <label for="provincia" class="form-label fw-bold m-0">Provincia</label>
+          <label for="localidad" class="form-label fw-bold m-0">Localidad</label>
         </div>
         <div class="col-12 col-lg-8">
-          <input type="text" class="form-control" id="provincia" formControlName="provincia"
-            placeholder="Provincia del centro de trabajo">
-          <ng-container *ngIf="submitted && formUbicacion['provincia'].errors">
+          <select class="form-select" formControlName="localidad" id="localidad" (change)="cambiarCiudad($event)">
+            <option *ngFor="let localidad of this.localidades" [value]="localidad">
+              {{ localidad }}
+            </option>
+          </select>
+          <ng-container *ngIf="submitted && formUbicacion['localidad'].errors">
             <div class="text-danger bg-white rounded border border-2 border-danger p-2"
-              *ngIf="formUbicacion['provincia'].errors['required']">No puede estar vacía</div>
+              *ngIf="formUbicacion['localidad'].errors['required']">No puede estar vacía</div>
           </ng-container>
         </div>
       </div>
@@ -286,8 +292,15 @@
 </form>
 
 <!-- Ciclos formativos en los que la empresa está interesada -->
-<div *ngIf="faseActual === 4">
-
+<div *ngIf="faseActual === 4" class="row">
+  <select class="form-select" id="familia" (change)="cambiarFamilia($event)">
+    <option *ngFor="let familia of this.familias" [value]="familia.id" class="{{ familia.id === 0 ? 'fw-bold' : '' }}">
+      {{ familia.descripcion }}
+    </option>
+  </select>
+  <div class="col-4" *ngFor="let grupo of gruposFiltrados">
+    {{grupo.nombre_ciclo}}
+  </div>
 </div>
 
 <!-- Resumen del registro -->
