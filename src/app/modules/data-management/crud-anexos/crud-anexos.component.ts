@@ -44,6 +44,7 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
     this.usuario = storageUser.getUser();
     this.dni_tutor = this.usuario?.dni
   }
+
   ngAfterViewInit(): void {
     this.dtTrigger.next(this.anexosArray);
   }

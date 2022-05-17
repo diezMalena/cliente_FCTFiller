@@ -8,6 +8,8 @@ import { CuestionarioModel } from 'src/app/models/cuestionarios/cuestionario.mod
 const API_STORAGE_URL = `${environment.apiUrlCuestionario}`;
 const crearCuestionarioURL = API_STORAGE_URL+environment.crearCuestionario;
 const obtenerCuestionarioURL = API_STORAGE_URL+environment.obtenerCuestionarioURL;
+const obtenerCuestionariosURL = API_STORAGE_URL+environment.obtenerCuestionariosURL;
+const eliminarCuestionarioURL = API_STORAGE_URL+environment.eliminarCuestionarioURL;
 //falta la url del servidor en las variables de entorno
 
 @Injectable({
@@ -34,6 +36,22 @@ export class CuestionarioService {
         return cuestionario || {};
       })
     )
+  }
+
+
+  getCuestionarios(): Observable<any> {
+    return this.http.get<Array<CuestionarioModel>>(`${obtenerCuestionariosURL}`).pipe(
+      map((cuestionarios: Array<CuestionarioModel>) => {
+        cuestionarios = <Array<CuestionarioModel>>cuestionarios.map((cuestionario: CuestionarioModel) => {
+          return cuestionario
+        });
+        return cuestionarios || [];
+      })
+    )
+  }
+
+  eliminarCuestionario(id: number): Observable<void> {
+    return this.http.delete<void>(`${eliminarCuestionarioURL}/${id}`).pipe()
   }
 
 

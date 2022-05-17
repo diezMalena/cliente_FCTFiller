@@ -14,8 +14,10 @@ export const environment = {
   apiUrlFirma: "http://localhost:8000/api/",
   apiUrlCuestionario: "http://localhost:8000/api/jefatura/",
   crearCuestionario: "crearCuestionario",
-  contestarCuestionario: "contestarCuestionario",
+  contestarCuestionario: "crearCuestionarioRespondido",
   obtenerCuestionarioURL: "obtenerCuestionario",
+  obtenerCuestionariosURL: "listarCuestionarios",
+  eliminarCuestionarioURL: "eliminarCuestionario",
 };
 
 

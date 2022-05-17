@@ -9,8 +9,7 @@ import { VisualizarRespuestaComponent } from './visualizar-respuesta/visualizar-
 import { VisualizarCuestionarioComponent } from './visualizar-cuestionario/visualizar-cuestionario.component';
 import { CuestionariosRoutingModule } from './cuestionarios-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
-
-
+import { DataTablesModule } from 'angular-datatables';
 
 @NgModule({
   declarations: [
@@ -26,6 +25,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     CuestionariosRoutingModule,
     ReactiveFormsModule,
+    DataTablesModule
   ]
 })
 export class CuestionariosModule { }
