@@ -1,10 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
 import { FaseForm } from 'src/app/classes/fase-form';
 import { FamiliaProfesional } from 'src/app/models/familiaProfesional';
 import { Grupo } from 'src/app/models/grupo';
 import { AuxService } from 'src/app/services/aux-service.service';
+import { DialogService } from 'src/app/services/dialog.service';
+import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
+import { RegistroEmpresaService } from 'src/app/services/registro-empresa.service';
 import { ManualRegistroEmpresasComponent } from '../../manuales/manual-registro-empresas/manual-registro-empresas.component';
 
 @Component({
@@ -23,21 +33,24 @@ export class RegistroEmpresaComponent implements OnInit {
   public empresa!: FormGroup;
   private datosEmpresa: any;
   public ubicacion!: FormGroup;
-  private datosUbicacion: any;
   public provincias!: string[];
   public localidades?: string[];
   public representante!: FormGroup;
   private datosRepresentante: any;
   public familias!: FamiliaProfesional[];
   public grupos?: Grupo[];
-  public gruposFiltrados?: Grupo[];
+  public familiaSelected?: number;
   public ciclos!: FormGroup;
   private datosCiclos: any;
 
   constructor(
     private formBuilder: FormBuilder,
     private modal: NgbModal,
-    private auxService: AuxService
+    private auxService: AuxService,
+    private storage: LoginStorageUserService,
+    private registroEmpresa: RegistroEmpresaService,
+    private toastr: ToastrService,
+    public dialog: DialogService
   ) {
     this.fases = new Array<FaseForm>(5);
     this.faseActual = 1;
@@ -53,6 +66,12 @@ export class RegistroEmpresaComponent implements OnInit {
   ngOnInit(): void {
     this.inicializarFases();
   }
+
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Gestión de formularios
 
   /***********************************************************************/
   //#region Construcción de formularios
@@ -130,16 +149,14 @@ export class RegistroEmpresaComponent implements OnInit {
    *
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
-  private construirFormCiclos(): void {}
+  public construirFormCiclos(): void {
+    this.ciclos = this.formBuilder.group({
+      cod_ciclos_selected: this.formBuilder.array([], [Validators.required]),
+    });
+  }
 
   //#endregion
   /***********************************************************************/
-
-  //#endregion
-  /***********************************************************************/
-
-  /***********************************************************************/
-  //#region Gestión de formularios
 
   /***********************************************************************/
   //#region Getters
@@ -158,6 +175,62 @@ export class RegistroEmpresaComponent implements OnInit {
 
   get formCiclos() {
     return this.ciclos.controls;
+  }
+
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Gestión de cambios y eventos
+
+  /**
+   * Cambia la provincia y refresca las localidades
+   *
+   * @param event
+   * @author David Sánchez Barragán
+   */
+  cambiarProvincia(event: any) {
+    this.formUbicacion['provincia'].setValue(event.target.value);
+    this.getLocalidades(event.target.value);
+  }
+
+  /**
+   * Cambia la ciudad
+   *
+   * @param event
+   * @author David Sánchez Barragán
+   */
+  cambiarCiudad(event: any) {
+    this.formUbicacion['localidad'].setValue(event.target.value);
+  }
+
+  /**
+   * Cambia la familia profesional, filtrando los ciclos
+   *
+   * @param event
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  cambiarFamilia(event: any) {
+    this.familiaSelected = parseInt(event.target.value);
+  }
+
+  onCheckboxChange(event: any) {
+    const checkArray: FormArray = this.ciclos.get(
+      'cod_ciclos_selected'
+    ) as FormArray;
+    if (event.target.checked) {
+      checkArray.push(new FormControl(event.target.value));
+      console.table(this.ciclos.value);
+    } else {
+      let i: number = 0;
+      checkArray.controls.forEach((item) => {
+        if (item.value == event.target.value) {
+          checkArray.removeAt(i);
+          return;
+        }
+        i++;
+      });
+    }
   }
 
   //#endregion
@@ -194,7 +267,11 @@ export class RegistroEmpresaComponent implements OnInit {
     this.submitted = true;
     if (!this.ubicacion.valid) return;
 
-    this.datosUbicacion = this.ubicacion.value;
+    let datosUbicacion = this.ubicacion.value;
+    this.datosEmpresa.localidad = datosUbicacion.localidad;
+    this.datosEmpresa.provincia = datosUbicacion.provincia;
+    this.datosEmpresa.direccion = datosUbicacion.direccion;
+    this.datosEmpresa.cp = datosUbicacion.cp;
 
     this.nextFase();
     this.submitted = false;
@@ -223,7 +300,15 @@ export class RegistroEmpresaComponent implements OnInit {
    *
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
-  onSubmitCiclos(): void {}
+  onSubmitCiclos(): void {
+    this.submitted = true;
+    if (!this.ciclos.valid) return;
+
+    this.datosCiclos = this.ciclos.value;
+
+    this.nextFase();
+    this.submitted = false;
+  }
 
   //#endregion
   /***********************************************************************/
@@ -233,6 +318,38 @@ export class RegistroEmpresaComponent implements OnInit {
 
   /***********************************************************************/
   //#region Servicios - Peticiones al servidor
+
+  /***********************************************************************/
+  //#region Inserción de datos - Create
+
+  public finalizarRegistro(): void {
+    this.datosEmpresa.localidad;
+    var datos = {
+      empresa: this.datosEmpresa,
+      representante: this.datosRepresentante,
+      dni: this.storage.getUser()?.dni,
+    };
+
+    this.registroEmpresa.enviarDatos(datos).subscribe({
+      next: (response: any) => {
+        let ruta = response.ruta_anexo;
+        this.toastr.success(
+          'Datos guardados correctamente.',
+          'Registro de empresa.'
+        );
+        this.askConvenio();
+      },
+      error: (e) => {
+        this.toastr.error(
+          'No se han guardado los datos correctamente.',
+          'Error al registrar empresa'
+        );
+      },
+    });
+  }
+
+  //#endregion
+  /***********************************************************************/
 
   /***********************************************************************/
   //#region Obtención de datos - Read
@@ -291,7 +408,6 @@ export class RegistroEmpresaComponent implements OnInit {
     this.auxService.getGrupos().subscribe({
       next: (response) => {
         this.grupos = response;
-        this.gruposFiltrados = this.grupos;
       },
     });
   }
@@ -381,37 +497,6 @@ export class RegistroEmpresaComponent implements OnInit {
   //#region Funciones auxiliares y otros
 
   /**
-   * Cambia la provincia y refresca las localidades
-   *
-   * @param event
-   * @author David Sánchez Barragán
-   */
-  cambiarProvincia(event: any) {
-    this.formUbicacion['provincia'].setValue(event.target.value);
-    this.getLocalidades(event.target.value);
-  }
-
-  /**
-   * Cambia la ciudad
-   *
-   * @param event
-   * @author David Sánchez Barragán
-   */
-  cambiarCiudad(event: any) {
-    this.formUbicacion['localidad'].setValue(event.target.value);
-  }
-
-  /**
-   * Cambia la familia profesional, filtrando los ciclos
-   *
-   * @param event
-   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
-   */
-  cambiarFamilia(event: any) {
-    this.filtrarGrupos(parseInt(event.target.value));
-  }
-
-  /**
    * Filtra los grupos según la familia profesional
    * Recibe 0 como parámetro si se quieren obtener todos los grupos
    *
@@ -421,21 +506,59 @@ export class RegistroEmpresaComponent implements OnInit {
   filtrarGrupos(familia: number) {
     switch (familia) {
       case 0:
-        this.gruposFiltrados = this.grupos;
-        break;
+        return this.grupos;
+      case undefined:
+        return this.grupos;
       default:
-        this.gruposFiltrados = this.grupos!.filter((grupo) => {
+        return this.grupos!.filter((grupo) => {
           return grupo.familias!.some((fam) => fam.id === familia);
         });
     }
   }
 
   /**
+   * Devuelve un objeto de grupo a partir de su código
+   * @param cod código del grupo
+   * @returns `Grupo` correspondiente al código
+   *
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public getGrupo(cod: string) {
+    return this.grupos?.find((grupo) => grupo.cod === cod);
+  }
+
+  /**
+   * Comprueba si un grupo está seleccionado
+   * @param cod Código del grupo
+   * @returns true si está seleccionado, false si no
+   *
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public isChecked(cod: string) {
+    return this.ciclos.value.cod_ciclos_selected.includes(cod);
+  }
+
+  /**
    * Abre un modal de ayuda
+   *
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
   public abrirAyuda(): void {
     this.modal.open(ManualRegistroEmpresasComponent, { size: 'lg' });
+  }
+
+  /**
+   * Metodo que abre el Modal Dialog y si elegimos la opcion afirmativa, descargará el anexo 0.
+   *
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  private async askConvenio() {
+    let hacerlo = await this.dialog.confirmacion(
+      'Establecer Convenio / Acuerdo',
+      'Se ha registrado correctamente ' +
+        this.datosEmpresa.nombre +
+        '. ¿Quiere establecer los datos del convenio ahora? Puede hacerlo más adelante en Gestión de Empresas'
+    );
   }
 
   //#endregion
