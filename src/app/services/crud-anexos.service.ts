@@ -36,10 +36,10 @@ export class AnexoService {
   }
 
   /**
-   * @author Pablo y Laura <lauramorenoramos97@gmail.com>
    * @param dni_tutor Es el dni del tutor
    * @returns Observable con una lista de anexos
    * Este metodo hace una llamada a la api y listar los anexos
+   * @author Pablo y Laura <lauramorenoramos97@gmail.com>
    */
   public getAnexos(dni_tutor: string) {
     let url: string = this.ruta + 'listarAnexos/' + dni_tutor;
@@ -52,11 +52,12 @@ export class AnexoService {
    * @param dni_tutor Es el dni del alumno
    * @returns Observable con una lista de anexos
    * Este metodo hace una llamada a la api y listar los anexos de los alumnos
-   *@author Laura <lauramorenoramos97@gmail.com>
+   * @author Laura <lauramorenoramos97@gmail.com>
    */
   public getAnexosAlumno(dni_alumno: string) {
     let url: string = this.ruta + 'listaAnexosAlumno/' + dni_alumno;
-    return this.http.get<anexoAlumnoResponse>(url);
+    const headers = this.headers;
+    return this.http.get<anexoAlumnoResponse>(url, { headers });
   }
 
   /**
@@ -144,7 +145,9 @@ export class AnexoService {
    public descargarTodoAlumnos(dni_alumno: string) {
     let dato = { dni_alumno: dni_alumno};
     const url: string = this.ruta + 'descargarTodoAlumnos';
-    return this.http.post(url, dato, { responseType: 'arraybuffer' });
+    const HTTPOptions = this.headersService.getHeadersWithTokenArrayBuffer();
+
+    return this.http.post(url, dato, HTTPOptions);
   }
 
   /**
@@ -206,20 +209,39 @@ export class AnexoService {
   /***********************************************************************/
   //#region Rellenar Anexos
 
+  /**
+   * Esta funcion te permite rellenar el anexo XV
+   * @param dni_alumno es el dni del alumno
+   * @param cod_anexo  es el nombre completo del archivo a rellenar
+   * @returns
+   * @author Laura <lauramorenoramos97@gmail.com>
+   */
   public rellenarAnexoXV(dni_alumno: string, cod_anexo: string) {
     cod_anexo = cod_anexo.replace('/', '*');
     cod_anexo = cod_anexo.replace('/', '*');
 
     let url: string = this.ruta + 'rellenarAnexoXV';
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      //'x-access-token': `${sessionStorage.getItem('token')}`,
-    });
-
     let dato = { cod_anexo: cod_anexo, dni: dni_alumno };
-    return this.http.post(url, dato, { headers });
+    const HTTPOptions = this.headersService.getHeadersWithTokenArrayBuffer();
+
+    return this.http.post(url, dato, HTTPOptions);
   }
 
+/**
+ *Esta funcion permite, segun si se selecciona el anexo 2 o 4, que se rellene
+  dicho anexo y que se descargue para el usuario
+ * @param tipo_anexo es el tipo de anexo que se va a rellenar
+ * @param dni_tutor es el dni del tutor que hace la petición
+ * @author Laura <lauramorenoramos97@gmail.com>
+ */
+  public rellenarAnexoIIyIV(tipo_anexo : string, dni_tutor:string) {
+    let url: string = this.ruta + 'rellenarAnexoIIYIV';
+    let dato = { anexo: tipo_anexo, dni_tutor: dni_tutor };
+    const headers = this.headers;
+
+    return this.http.post(url, dato, { headers });
+  }
    //#endregion
   /***********************************************************************/
+
 }

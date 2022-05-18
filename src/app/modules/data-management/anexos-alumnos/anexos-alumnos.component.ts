@@ -16,6 +16,8 @@ import { DialogService } from 'src/app/services/dialog.service';
 import { ManualCrudAnexosComponent } from '../../manuales/manual-crud-anexos/manual-crud-anexos.component';
 import { DataTableDirective } from 'angular-datatables';
 import { ModalTipoAnexoComponent } from '../modal-tipo-anexo/modal-tipo-anexo.component';
+import { AnexoUpload } from 'src/app/models/anexo-upload';
+import { FileUploadService } from 'src/app/services/file-upload.service';
 
 @Component({
   selector: 'app-anexos-alumnos',
@@ -35,8 +37,11 @@ export class AnexosAlumnosComponent implements OnDestroy, OnInit{
   usuario;
   anexosArray: any = [];
   dni_alumno?: string;
+  public evento: any = null;
+  tipoAnexo: any;
 
   constructor(
+    private uploadService: FileUploadService,
     private anexoService: AnexoService,
     private router: Router,
     private toastr: ToastrService,
@@ -46,6 +51,7 @@ export class AnexosAlumnosComponent implements OnDestroy, OnInit{
   ) {
     this.usuario = storageUser.getUser();
     this.dni_alumno = this.usuario?.dni;
+    this.tipoAnexo = '';
   }
 
   ngOnInit(): void {
@@ -123,7 +129,6 @@ export class AnexosAlumnosComponent implements OnDestroy, OnInit{
       'Descargar',
       `¿Está seguro de que desea descargar el anexo?`
     );
-
     if (hacerlo) {
       this.anexoService.descargarAnexo(this.dni_alumno!, codigo).subscribe({
         next: (res) => {
@@ -184,7 +189,14 @@ export class AnexosAlumnosComponent implements OnDestroy, OnInit{
   }
 
 
-
+/**
+ * Esta función te permite abrir el modal correcto para el tipo de anexo
+ * que se quiere rellenar/observar
+ * @param nombre  es el tipo de anexo que se va a rellenar
+ * @param codigo  es el nombre de archivo que tiene el anexo, es un simple decorador
+ * para el modal
+ * @author Laura <lauramorenoramos97@gmail.com>
+ */
   public abrirRelleno(nombre : string, codigo : string){
     sessionStorage.setItem('tipoAnexo', nombre);
     sessionStorage.setItem('codigo', codigo);
@@ -192,4 +204,44 @@ export class AnexosAlumnosComponent implements OnDestroy, OnInit{
   }
   //#endregion
   /***********************************************************************/
+
+
+
+
+  /**
+   *
+   * @param event
+   */
+     public upload(event: any) {
+      this.evento = event.target.files[0];
+      let fileReader = new FileReader();
+      fileReader.readAsDataURL(this.evento);
+      fileReader.onload = function (e: any) {
+        sessionStorage.setItem('cosa', e.target.result);
+      };
+    }
+
+    public enviarAnexo() {
+      if(this.evento.name=='plantilla.docx'){
+      let datos = new AnexoUpload(
+        sessionStorage.getItem('cosa')!,
+        this.tipoAnexo,
+        this.evento.name,
+        this.dni_alumno!
+      );
+      console.log(this.evento.name);
+
+      this.uploadService.subirAnexo(datos).subscribe({
+        next: (res) => {
+          this.toastr.success('Anexo Subido', 'Hecho!');
+        },
+        error: (e) => {
+          console.log(e);
+          this.toastr.error('El anexo no ha podido subirse', 'Fallo');
+        },
+      });
+    }else{
+      this.toastr.error('El anexo debe llamarse plantilla.docx', 'Fallo');
+    }
+    }
 }

@@ -11,6 +11,7 @@ import { ModalFirmaComponent } from '../modal-firma/modal-firma.component';
 import { ToastrService } from 'ngx-toastr';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import * as FileSaver from 'file-saver';
 
 @Component({
   selector: 'app-modal-tipo-anexo',
@@ -67,8 +68,9 @@ export class ModalTipoAnexoComponent implements OnInit {
       this.anexoService.rellenarAnexoXV(this.dni!,this.codAnexo).subscribe({
         next: (response: any) => {
           this.toastr.success('El AnexoXV se ha generado!', 'Hecho!');
-          //this.profesoresArray = response;
-          //this.profesorService.getProfesoresInArray(this.profesoresArray);
+          const blob = new Blob([response], { type: 'application/octet-stream' });
+          FileSaver.saveAs(blob, this.codAnexo);
+          this.toastr.success('Anexo Descargado', 'Descarga');
         },
         error: (e) => {
           this.toastr.error('El AnexoXV no ha podido generarse', 'Fallo');
@@ -90,19 +92,6 @@ export class ModalTipoAnexoComponent implements OnInit {
    CloseModal() {
     this.modalActive.dismiss();
   }
-
-    /**
-   * Abre un modal para la firma del anexo
-   * @author Pablo
-   */
-     public abrirModalFirma() {
-      const modalFirma = this.modal.open(ModalFirmaComponent, {
-        size: 'md',
-        backdrop: 'static',
-        keyboard: false,
-      });
-      //modalFirma.componentInstance.codigo_anexo = codigo_anexo;
-    }
   //#endregion
   /***********************************************************************/
 }

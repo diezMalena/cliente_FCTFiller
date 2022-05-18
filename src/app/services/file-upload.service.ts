@@ -63,11 +63,9 @@ export class FileUploadService {
     return throwError(msg);
   }
 
-  public subirAnexo(file : any) {
+  public subirAnexo(datos : any) {
     const headers = this.headers;
     const url: string = API_STORAGE_URL + 'subirAnexo';
-    let dato= {dni: '20a', tipo_anexo: 'Anexo0', documento: file};
-
-      return this.http.post(url, file, { headers });
+      return this.http.post(url, JSON.stringify(datos), { headers });
   }
 }

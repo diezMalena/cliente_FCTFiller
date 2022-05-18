@@ -17,6 +17,7 @@ import { ProgramaFormativoComponent } from './programa-formativo/programa-format
 //import { SectionEmpresaComponent } from './components/section-empresa/section-empresa.component';
 import { PerfilesGuard } from 'src/app/guards/perfiles.guard';
 import { ProfesoresGuard } from 'src/app/guards/profesores.guard';
+import { AlumnosGuard } from 'src/app/guards/alumnos.guard';
 
 const routes: Routes = [
   {
@@ -85,7 +86,8 @@ const routes: Routes = [
   },
   {
     path:'anexos-alumnos',
-    component: AnexosAlumnosComponent
+    component: AnexosAlumnosComponent,
+    canActivate: [AlumnosGuard],
   },
   {
     path:'programa-formativo',

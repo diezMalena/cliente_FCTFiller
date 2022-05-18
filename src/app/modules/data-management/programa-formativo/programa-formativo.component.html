@@ -1,1 +1,35 @@
-<input (change)="this.upload($event,'')" role="button" type="file" id="file" accept="pdf/*">
+<!--Vista del tutor-->
+<div class="row" *ngIf="usuario!.isTutor()">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-12  pb-3 page-header d-flex justify-content-between">
+                <h1 class="h2">Anexos II y IV</h1>
+                <button type="button" class="btn btn-outline-default mr-2 float-end" placement="left" ngbTooltip="Haga clic para acceder a la ayuda de esta sección" (click)="abrirAyuda()">?</button>
+            </div>
+        </div>
+        <div class="row bg-white">
+            <h2 class="h4 col-12 d-flex justify-content-center">Antes de cualquier accion, seguir el manual</h2>
+            <div class="row d-flex justify-content-center">
+                <form class="col-6 text-center">
+                    <div class="row">
+                        <h2 class="h4 col-12">Tipo de Anexo a subir:</h2>
+                    </div>
+                    <div class="row pt-3">
+                        <select class="form-select select" (change)="cogerTipoAnexo($event)">
+                      <option>Anexo2</option>
+                      <option>Anexo4</option>
+                    </select>
+                    </div>
+                    <div class="row pt-3">
+                        <input type="file" id="file" (change)="upload($event)" class="col-4" aria-label=" Enviar documento">
+                    </div>
+                    <div class="row pt-3">
+                        <button tittle="aceptar " (click)="enviarAnexo() " class="col-4 text-center btn btn-outline-info " ngbTooltip="Aceptar " aria-label="Aceptar ">
+                      Aceptar
+                    </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
