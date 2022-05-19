@@ -19,7 +19,7 @@ export class ModalCambiotutorComponent implements OnInit {
   public static readonly id_empresa: string = 'id_empresa';
   public arrayTutores: Tutor[] = [];
   public dni_alumno?: string;
-  public dni_tutor?: string;
+  public mail_tutor?: string;
   nuevo_tutor: FormGroup;
 
   constructor(
@@ -33,12 +33,11 @@ export class ModalCambiotutorComponent implements OnInit {
     this.dni_alumno = this.usuario?.dni;
 
     this.nuevo_tutor = this.formBuilder.group({
-      nuevoTu: [0],
+      nuevoTu: [""],
     });
   }
 
   ngOnInit(): void {
-    this.recogerTotalTutoresRespon();
   }
 
   //#endregion
@@ -48,36 +47,14 @@ export class ModalCambiotutorComponent implements OnInit {
   //#region Servicios - Peticiones al servidor: registro y actualización del tutor
 
   /**
-   * Método que recoge de la BBDD los tutores que pertenecen a la empresa a la que
-   * está asignado el alumno.
-   * @author Malena
-   */
-  public recogerTotalTutoresRespon() {
-    let id_empresa = sessionStorage.getItem(
-      ModalCambiotutorComponent.id_empresa
-    )!;
-    this.seguimientoService.getTutoresResponsables(id_empresa).subscribe({
-      next: (response) => {
-        this.arrayTutores = response;
-      },
-      error: (e) => {
-        this.toastr.error(
-          'No se han recogido los tutores.',
-          'Error recogida tutores'
-        );
-      },
-    });
-  }
-
-  /**
    * Método que actualiza en la BBDD y en la interfaz del Anexo III el dni del tutor
    * al que está asociado el alumno.
    * @author Malena
    */
   public actualizarTutor() {
-    this.dni_tutor = this.nuevo_tutor.value.nuevoTu;
+    this.mail_tutor = this.nuevo_tutor.value.nuevoTu;
     this.seguimientoService
-      .guardarTutorSeleccionado(this.dni_tutor!, this.dni_alumno!)
+      .guardarTutorSeleccionado(this.mail_tutor!, this.dni_alumno!)
       .subscribe({
         next: (response) => {
           this.toastr.success(
@@ -92,9 +69,10 @@ export class ModalCambiotutorComponent implements OnInit {
         },
         error: (e) => {
           this.toastr.error(
-            'Error al actualizar el tutor de la empresa.',
+            'No se ha encontrado al tutor seleccionado.',
             'Error al actualizar tutor'
           );
+          this.closeModel();
         },
       });
   }

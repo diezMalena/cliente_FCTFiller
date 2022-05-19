@@ -40,8 +40,10 @@ export class SeguimientoComponent implements OnInit {
   public botonVer: boolean = false;
   public static readonly id_empresa: string = 'id_empresa';
   public tutor_empresa: string = '';
-  public arraySemanas: any =[];
+  public arraySemanas: any = [];
   public totalSemanas: number = 0;
+  public static readonly id_fct: string = 'id_fct';
+  public static readonly id_quinto_dia: string = 'id_quinto_dia';
 
   // public fileToUpload: File
 
@@ -97,8 +99,7 @@ export class SeguimientoComponent implements OnInit {
   public recogerTutorEmpresa() {
     this.seguimientoService.recogerTutorEmpresa(this.dni_alumno!).subscribe({
       next: (response: any) => {
-        this.tutor_empresa =
-          response[0]['dni_tutor'] + ' - ' + response[0]['nombre_tutor'];
+        this.tutor_empresa = response[0];
         /*La empresa a la que pertenece el alumno, me la llevo al modal de cambiar tutor para poder
           sacar los tutores/responsables de dicha empresa:*/
         let id_empresa = response[1];
@@ -277,15 +278,15 @@ export class SeguimientoComponent implements OnInit {
     return this.arrayJornadas;
   }
 
-  public devolverSemanas(){
+  public devolverSemanas() {
     this.seguimientoService.devolverSemanas(this.dni_alumno!).subscribe({
-      next: (response:any) => {
+      next: (response: any) => {
         this.arraySemanas = response;
         /*
         si la ultima semana tiene menos de 5 dias, es decir, no esta completa, no tendremos la información de las firmas(tabla "semana"), asique
         añadimos una semana vacía en el arraySemanas, para que la semana incompleta hace referencia a la semana[0] y la semana completa a la semana[1]
         */
-        if(this.arrayJornadas[this.arrayJornadas.length - 1].length < 5){
+        if (this.arrayJornadas[this.arrayJornadas.length - 1].length < 5) {
           //La semana no está completa:
           var semanaVacia = {};
           this.arraySemanas.unshift(semanaVacia);
@@ -345,13 +346,13 @@ export class SeguimientoComponent implements OnInit {
    * caso descargaría la hoja de seguimiento correspondiente.
    * @author Malena
    */
-  public async descargarPDF(semana:any) {
-    if(Object.keys(semana).length == 0){
+  public async generarDocumento(semana: any) {
+    if (Object.keys(semana).length == 0) {
       this.toastr.error(
         'No puedes descargar el documento sin añadir primero 5 jornadas.',
         'Error al descargar el documento'
       );
-    }else{
+    } else {
       if (this.departamentoEstablecido == false) {
         this.toastr.error(
           'No puedes descargar el documento sin añadir el departamento.',
@@ -359,16 +360,17 @@ export class SeguimientoComponent implements OnInit {
         );
       } else {
         let descargar = await this.dialogService.confirmacion(
-          'Descargar Anexo III',
-          'Se ha generado tu hoja de seguimiento, ¿Quiere descargarla?'
+          'Generar Word Anexo III',
+          'Se ha generado tu hoja de seguimiento, ¿Quiere descargarla? (Se eliminarán las firmas registradas)'
         );
         if (descargar) {
-          this.seguimientoService.descargarPDF(semana.id_quinto_dia, this.dni_alumno!).subscribe({
+          this.seguimientoService.generarDocumento(semana.id_quinto_dia, this.dni_alumno!).subscribe({
             next: (res: any) => {
               const blob = new Blob([res], { type: 'application/octet-stream' });
               var hoy = new Date(Date.now());
               var nombre = 'Hoja_seguimiento_' + this.dni_alumno + '_' + hoy.toISOString() + '.docx';
               FileSaver.saveAs(blob, nombre);
+              // location.reload();
               this.toastr.success(
                 'Se ha descargado la hoja de seguimiento correctamente.',
                 'Generación de Anexo III'
@@ -387,38 +389,86 @@ export class SeguimientoComponent implements OnInit {
   }
 
 
+  public async descargarPDF(semana: any) {
+    this.seguimientoService.hayDocumento(semana.id_quinto_dia, semana.id_fct).subscribe({
+      next: (response: any) => {
+        let ruta_hoja = response.ruta_hoja;
+        if (ruta_hoja != "" && ruta_hoja != null) {
+          var ruta = ruta_hoja.split("\\").pop();
+          // console.log(ruta);
+          this.seguimientoService.descargarPDF(ruta_hoja).subscribe({
+            next: (res:any)=> {
+              const blob = new Blob([res], { type: 'application/octet-stream' });
+              FileSaver.saveAs(blob, ruta);
+              this.toastr.success(
+                'Se ha descargado la hoja de seguimiento en PDF correctamente.',
+                'Descarga PDF de Anexo III'
+              );
+            }
+          })
+        }else{
+          this.toastr.error(
+            'No se ha podido descargar el PDF debido a que no se ha subido un fichero previamente.',
+            'Error en la descarga del PDF del Anexo III'
+            );
+        }
+      }
+    })
+  }
+
+
 
   /**
    * Método para que la semana de arriba se  muestre nada más entrar y no salga comprimida
    */
-  public mostrarSemana(i: number){
+  public mostrarSemana(i: number) {
     var clase = "accordion-collapse collapse";
-    if(i == 0){
+    if (i == 0) {
       clase = "accordion-collapse collapse show";
     }
     return clase;
   }
 
-  // public devolverFirmas(){
-  //   this.seguimientoService.devolverFirmas(this.).subscribe({
-  //     next: (response: any) => {
-  //       this.horasTotales = response;
-  //     },
-  //     error: (e) => {
-  //       this.toastr.error(
-  //         'No se ha podido mostrar las horas totales.',
-  //         'Error al mostrar horas totales'
-  //       );
-  //     },
-  //   });
-  // }
 
-
-
-  public abrirModalSubirArchivo(){
-    this.modal.open(ModalSubirficheroComponent, { size: 'm' });
+  public abrirModalSubirArchivo(semana: any) {
+    let id_fct = semana.id_fct;
+    let id_quinto_dia = semana.id_quinto_dia;
+    sessionStorage.setItem(SeguimientoComponent.id_fct, id_fct);
+    sessionStorage.setItem(SeguimientoComponent.id_quinto_dia, id_quinto_dia);
+    if (Object.keys(semana).length == 0) {
+      this.toastr.error(
+        'No puedes subir el documento sin añadir primero 5 jornadas.',
+        'Error al subir el documento'
+      );
+    } else {
+      this.modal.open(ModalSubirficheroComponent, { size: 's' });
+    }
   }
 
+
+  public mostrarCheckAlumno(semana: any) {
+    var mostrar = false;
+    if (semana != undefined && semana.firmado_alumno == 1) {
+      mostrar = true;
+    }
+    return mostrar;
+  }
+
+  public mostrarCheckTutorEstudios(semana: any) {
+    var mostrar = false;
+    if (semana != undefined && semana.firmado_tutor_estudios == 1) {
+      mostrar = true;
+    }
+    return mostrar;
+  }
+
+  public mostrarCheckTutorEmpresa(semana: any) {
+    var mostrar = false;
+    if (semana != undefined && semana.firmado_tutor_empresa == 1) {
+      mostrar = true;
+    }
+    return mostrar;
+  }
 
 
 

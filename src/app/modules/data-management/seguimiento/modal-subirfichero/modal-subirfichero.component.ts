@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { SeguimientoServiceService } from 'src/app/services/seguimiento-service.service';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
+import { ToastrService } from 'ngx-toastr';
+import { SeguimientoComponent } from '../seguimiento.component';
 
 
 @Component({
@@ -21,6 +23,7 @@ export class ModalSubirficheroComponent implements OnInit {
     private modalActive: NgbActiveModal,
     private seguimientoService: SeguimientoServiceService,
     private storageUser: LoginStorageUserService,
+    private toastr: ToastrService,
 
   ) {
     this.usuario = storageUser.getUser();
@@ -46,9 +49,26 @@ export class ModalSubirficheroComponent implements OnInit {
     formData.append('dni', this.dni_usuario!);
     formData.append('file_name', this.evento.name);
     formData.append('file', sessionStorage.getItem(ModalSubirficheroComponent.anexoBase64)!);
+    formData.append('id_fct', sessionStorage.getItem(SeguimientoComponent.id_fct)!);
+    formData.append('id_quinto_dia', sessionStorage.getItem(SeguimientoComponent.id_quinto_dia)!);
+
     this.seguimientoService
-      .subirAnexo3(formData).subscribe((response: any) => {
-        console.log("Holiwis");
+      .subirAnexo3(formData).subscribe({
+        next: (res: any) => {
+          this.toastr.success(
+            'Se ha subido el documento correctamente.',
+            'Subida de documento'
+          );
+          // this.closeModel();
+          location.reload();
+        },
+        error: (e) => {
+          this.toastr.error(
+            'No se ha podido subir el documento.',
+            'Error en la subida del documento'
+          );
+          this.closeModel();
+        },
       });
 
   }

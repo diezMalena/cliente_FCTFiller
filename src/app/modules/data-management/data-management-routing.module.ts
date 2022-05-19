@@ -14,6 +14,8 @@ import { GestionAlumnosComponent } from './gestion-alumnos/gestion-alumnos.compo
 import { HistorialAnexosComponent } from './historial-anexos/historial-anexos.component';
 import { PerfilesGuard } from 'src/app/guards/perfiles.guard';
 import { ProfesoresGuard } from 'src/app/guards/profesores.guard';
+import { AlumnosGuard } from 'src/app/guards/alumnos.guard';
+import { SeguimientoGuard } from 'src/app/guards/seguimiento.guard';
 
 const routes: Routes = [
   {
@@ -52,10 +54,7 @@ const routes: Routes = [
   {
     path: 'seguimiento',
     component: SeguimientoComponent,
-    canActivate: [PerfilesGuard],
-    data: {
-      perfiles: ['profesor', 'alumno'],
-    },
+    canActivate: [SeguimientoGuard],
   },
   {
     path: 'gestion-empresas',

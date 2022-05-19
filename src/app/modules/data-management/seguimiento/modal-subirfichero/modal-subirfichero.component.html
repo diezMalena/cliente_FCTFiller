@@ -12,9 +12,10 @@
 </div>
 <!-- Cuerpo del modal -->
 <div class="modal-body">
-  <form class="col-12 border border-dark">
-    <div class="row">
-      <input type="file" id="file" (change)="subirArchivo($event)">
+  <p class="text-center">Recuerda subir el documento en formato PDF.</p>
+  <form class="col-12">
+    <div class="row d-flex justify-content-center">
+      <input type="file" id="file" (change)="subirArchivo($event)" accept=".pdf" class="col-12 text-center">
     </div>
 
     <div class="row  d-flex justify-content-center">
