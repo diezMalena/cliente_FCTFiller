@@ -24,8 +24,4 @@ export class FacturaTransporte {
     public destino: string,
     public imagen_ticket: string
   ){}
-
-  get trayecto() {
-    return `${this.origen} - ${this.destino}`;
-  }
 }

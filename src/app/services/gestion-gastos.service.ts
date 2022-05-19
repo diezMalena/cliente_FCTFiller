@@ -3,20 +3,28 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LoginStorageUserService } from './login.storageUser.service';
 import { alumnoResponse } from '../models/alumnoResponse';
 import { Alumno } from '../models/alumno';
-import { BehaviorSubject, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { FacturaTransporte } from '../models/facturaTransporte';
 import { facturaTransporteResponse } from '../models/facturaTransporteResponse';
+import { HttpHeadersService } from './http-headers.service';
+import { Gasto } from '../models/gasto';
+import { gastoResponse } from '../models/gastoResponse';
+import { map } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class GestionGastosService {
-  //@Output() alumnoTrigger: EventEmitter<any> = new EventEmitter();
-  //public alumnosArray = new BehaviorSubject<Alumno[]>([]);
+  @Output() gastoTrigger: EventEmitter<any> = new EventEmitter();
+  public gastoBS = new BehaviorSubject<Gasto>(new Gasto());
 
   private urlBase: string = environment.apiUrl;
-  private urlListarFacturasTransporte: string = 'listarFacturasTransporte/';
+  private urlGestionGastosAlumno: string = 'gestionGastosAlumno/';
+  private urlActualizarDatosGastoAlumno: string = 'actualizarDatosGastoAlumno/';
+  public headers: HttpHeaders;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, headersService: HttpHeadersService) {
+    this.headers = headersService.getHeadersWithToken();
+  }
 
   /***********************************************************************/
   //#region Gestión de alumnos - CRUD
@@ -33,17 +41,18 @@ export class GestionGastosService {
   //#region CRUD - Read
 
   /**
-   * Realiza una petición al servidor y obtiene un listado de facturas de transporte
+   * Realiza una petición al servidor y obtiene la información necesaria para cargar la pantalla inicial
    * @param dni DNI del alumno
    * @returns `Observable` de la `HttpResponse`.
    * @author David Sánchez Barragán
    */
-  public listarFacturasTransporte(dni: any) {
-    let url = this.urlBase + this.urlListarFacturasTransporte + dni;
+  public gestionGastosAlumno(dni: any) {
+    let url = this.urlBase + this.urlGestionGastosAlumno + dni;
+    const headers = this.headers;
 
-    return this.http.get<FacturaTransporte[]>(url).pipe(
-      map((resp: facturaTransporteResponse[]) => {
-        return resp.map((fT) => FacturaTransporte.facturaTransporteJSON(fT));
+    return this.http.get<Gasto>(url, { headers }).pipe(
+      map((resp: gastoResponse) => {
+        return Gasto.gastoJSON(resp);
       })
     );
   }
@@ -56,6 +65,12 @@ export class GestionGastosService {
   /***********************************************************************/
   //#region CRUD - Update
 
+  public actualizarDatosGastoAlumno(gasto: Gasto) {
+    let url = this.urlBase + this.urlActualizarDatosGastoAlumno;
+    const headers = this.headers;
+
+    return this.http.put(url, JSON.stringify(gasto), { headers });
+  }
 
   //#endregion
   /***********************************************************************/

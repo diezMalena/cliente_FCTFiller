@@ -17,6 +17,9 @@ import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
 import { FacturaTransporte } from 'src/app/models/facturaTransporte';
 import { GestionGastosService } from 'src/app/services/gestion-gastos.service';
+import { Gasto } from 'src/app/models/gasto';
+import { FacturaManutencion } from 'src/app/models/facturaManutencion';
+import { ModalGestionGastosAlumnoComponent } from '../modal-gestion-gastos-alumno/modal-gestion-gastos-alumno.component';
 // import { ManualGestionAlumnosComponent } from '../../manuales/manual-gestion-gastos-alumno/manual-gestion-gastos-alumno.component';
 
 @Component({
@@ -25,8 +28,7 @@ import { GestionGastosService } from 'src/app/services/gestion-gastos.service';
   styleUrls: ['./gestion-gastos-alumno.component.scss'],
 })
 export class GestionGastosAlumnoComponent
-  implements AfterViewInit, OnDestroy, OnInit
-{
+  implements AfterViewInit, OnDestroy, OnInit {
   @ViewChild(DataTableDirective, { static: false })
 
   /***********************************************************************/
@@ -35,8 +37,10 @@ export class GestionGastosAlumnoComponent
   dtOptions: DataTables.Settings = {};
   dtTrigger = new Subject<any>();
 
-  public listaFacturasTransporte: FacturaTransporte [] = [];
+  public gasto?: Gasto;
   public modosEdicion: typeof ModoEdicion = ModoEdicion;
+  public isVisible: number = 1;
+  public isSelected: boolean = true;
 
   constructor(
     private gestionGastosService: GestionGastosService,
@@ -44,15 +48,17 @@ export class GestionGastosAlumnoComponent
     private toastr: ToastrService,
     private modal: NgbModal,
     private dialog: MatDialog
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     $.extend(true, $.fn.dataTable.defaults, {
       language: { url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json' },
     });
-    this.cargarFacturasTransporte();
-    this.obtenerFacturasDesdeModal();
+    this.cargarGasto();
+    //this.obtenerFacturasDesdeModal();
   }
+
+
 
   //#endregion
   /***********************************************************************/
@@ -61,7 +67,7 @@ export class GestionGastosAlumnoComponent
   //#region Gestión de datatables
 
   ngAfterViewInit(): void {
-    this.dtTrigger.next(this.listaFacturasTransporte);
+    this.dtTrigger.next(this.gasto);
   }
 
   ngOnDestroy(): void {
@@ -87,17 +93,18 @@ export class GestionGastosAlumnoComponent
    * Llama al servicio que realiza la petición al servidor y gestiona la respuesta
    * @author David Sánchez Barragán
    */
-  cargarFacturasTransporte() {
+  cargarGasto() {
     this.gestionGastosService
-      .listarFacturasTransporte(this.loginStorageUser.getUser()?.dni)
+      .gestionGastosAlumno(this.loginStorageUser.getUser()?.dni)
       .subscribe({
         next: (result) => {
-          this.listaFacturasTransporte = result;
+          this.gasto = result;
           this.rerender();
-          this.dtTrigger.next(this.listaFacturasTransporte);
+          this.dtTrigger.next(this.gasto);
           $.fn.dataTable.ext.errMode = 'throw';
         },
         error: (error) => {
+          console.log(error);
           this.toastr.error('No se han podido recuperar los datos', 'Error');
         },
       });
@@ -114,7 +121,7 @@ export class GestionGastosAlumnoComponent
    * @param id ID del objeto a eliminar
    * @author David Sánchez Barragán
    */
-   borrarFacturaTransporte(id: any) {
+  borrarFacturaTransporte(id: any) {
     // this.dialog
     //   .open(ConfirmDialogComponent, {
     //     data: {
@@ -154,7 +161,22 @@ export class GestionGastosAlumnoComponent
    * @param modoEdicion 0 -> edición, 1 -> creación, 2 -> sólo lectura
    * @author David Sánchez Barragán
    */
-   mostrarFacturaTransporte(factura: FacturaTransporte, modoEdicion: ModoEdicion) {
+  mostrarFacturaTransporte(factura: FacturaTransporte, modoEdicion: ModoEdicion) {
+    // this.modal.open(ModalAlumnoComponent, {
+    //   size: 'md',
+    //   backdrop: 'static',
+    //   keyboard: false,
+    // });
+    // this.crudAlumnosService.alumnoTrigger.emit([alumno, modoEdicion]);
+  }
+
+  /**
+     * Abre un modal para ver o editar una factura de manutención
+     * @param factura Objeto con los datos de la factura
+     * @param modoEdicion 0 -> edición, 1 -> creación, 2 -> sólo lectura
+     * @author David Sánchez Barragán
+     */
+  mostrarFacturaManutencion(factura: FacturaManutencion, modoEdicion: ModoEdicion) {
     // this.modal.open(ModalAlumnoComponent, {
     //   size: 'md',
     //   backdrop: 'static',
@@ -167,20 +189,18 @@ export class GestionGastosAlumnoComponent
    * Abre un modal para editar los datos del alumno
    * @author David Sánchez Barragán
    */
-   editarDatosAlumno() {
-    // this.modal.open(ModalAlumnoComponent, {
-    //   size: 'md',
-    //   backdrop: 'static',
-    //   keyboard: false,
-    // });
+  editarDatosAlumno() {
+    this.modal.open(ModalGestionGastosAlumnoComponent, {
+      size: 'lg',
+      backdrop: 'static',
+      keyboard: false,
+    });
 
-    // let alumno = new Alumno('', '', 0);
-    // alumno.matricula_cod_centro = this.loginStorageUser.getUser()?.cod_centro;
+    let gasto = this.gasto;
 
-    // this.crudAlumnosService.alumnoTrigger.emit([
-    //   alumno,
-    //   this.modosEdicion.nuevo,
-    // ]);
+    this.gestionGastosService.gastoTrigger.emit([
+      gasto,
+    ]);
   }
 
   /**
