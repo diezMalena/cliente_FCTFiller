@@ -6,6 +6,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { FaseForm } from 'src/app/classes/fase-form';
@@ -50,7 +51,8 @@ export class RegistroEmpresaComponent implements OnInit {
     private storage: LoginStorageUserService,
     private registroEmpresa: RegistroEmpresaService,
     private toastr: ToastrService,
-    public dialog: DialogService
+    public dialog: DialogService,
+    private router: Router
   ) {
     this.fases = new Array<FaseForm>(5);
     this.faseActual = 1;
@@ -323,16 +325,15 @@ export class RegistroEmpresaComponent implements OnInit {
   //#region Inserción de datos - Create
 
   public finalizarRegistro(): void {
-    this.datosEmpresa.localidad;
     var datos = {
       empresa: this.datosEmpresa,
       representante: this.datosRepresentante,
+      ciclos: this.datosCiclos.cod_ciclos_selected,
       dni: this.storage.getUser()?.dni,
     };
 
     this.registroEmpresa.enviarDatos(datos).subscribe({
       next: (response: any) => {
-        let ruta = response.ruta_anexo;
         this.toastr.success(
           'Datos guardados correctamente.',
           'Registro de empresa.'
@@ -548,7 +549,9 @@ export class RegistroEmpresaComponent implements OnInit {
   }
 
   /**
-   * Metodo que abre el Modal Dialog y si elegimos la opcion afirmativa, descargará el anexo 0.
+   * Invoca un modal en el que se pregunta al usuario si quiere establecer convenio / acuerdo con esa empresa
+   * En caso afirmativo, se invoca otro modal en el que se pregunta si se quiere hacer automático o manual
+   * En caso negativo, navega a la vista del CRUD de empresas
    *
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
@@ -559,6 +562,31 @@ export class RegistroEmpresaComponent implements OnInit {
         this.datosEmpresa.nombre +
         '. ¿Quiere establecer los datos del convenio ahora? Puede hacerlo más adelante en Gestión de Empresas'
     );
+    if (!hacerlo) {
+      this.router.navigateByUrl('data-management/gestion-empresas');
+    } else {
+      this.dialog.dialog.closeAll();
+      this.hacerConvenioAuto();
+    }
+  }
+
+  /**
+   * Invoca un modal en el que se pregunta al usuario si quiere hacer el convenio automático
+   * En caso afirmativo, los datos del convenio se generan automáticamente y se registran en la base de datos
+   * En caso negativo, se redirige a otra ruta para que el usuario los introduzca manualmente
+   *
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  private async hacerConvenioAuto() {
+    let hacerlo = await this.dialog.confirmacion(
+      'Hacer Convenio / Acuerdo automático',
+      '¿Desea que los datos del convenio se introduzcan automáticamente? Seleccione "No" para introducirlos manualmente'
+    );
+    if (hacerlo) {
+      // Hacer el convenio automáticamente
+    } else {
+      // Invocar un modal o ventana de introducir datos de convenio
+    }
   }
 
   //#endregion
