@@ -16,7 +16,10 @@ export class CrudEmpresasService {
   public empresasArray = new BehaviorSubject<Empresa[]>([]);
   private headers: HttpHeaders;
 
-  constructor(private http: HttpClient, private headersService: HttpHeadersService) {
+  constructor(
+    private http: HttpClient,
+    private headersService: HttpHeadersService
+  ) {
     this.headers = headersService.getHeadersWithToken();
   }
 
@@ -27,10 +30,12 @@ export class CrudEmpresasService {
   //#region CRUD - Read
 
   /**
-   * Devuelve una lista de empresas asociadas a un profesor mediante el centro de estudios
+   * Devuelve una lista de empresas.
+   * Si se pasa el DNI del profesor como parámetro, devuelve las asociadas mediante el centro de estudios
+   * Si no, devuelve todas las empresas de la base de datos
    *
-   * @param dniProfesor el DNI del profesor logueado
-   * @returns un observable del vector de empresas asociadas al profesor
+   * @param dniProfesor `string|undefined` el DNI del profesor logueado
+   * @returns un observable del vector de empresas
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
   public getEmpresas(dniProfesor: string): Observable<Empresa[]> {

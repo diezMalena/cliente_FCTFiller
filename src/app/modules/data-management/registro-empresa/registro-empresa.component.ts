@@ -17,6 +17,7 @@ import { DialogService } from 'src/app/services/dialog.service';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 import { RegistroEmpresaService } from 'src/app/services/registro-empresa.service';
 import { ManualRegistroEmpresasComponent } from '../../manuales/manual-registro-empresas/manual-registro-empresas.component';
+import { ModalConvenioComponent } from '../modal-convenio/modal-convenio.component';
 
 @Component({
   selector: 'app-registro-empresa',
@@ -566,26 +567,11 @@ export class RegistroEmpresaComponent implements OnInit {
       this.router.navigateByUrl('data-management/gestion-empresas');
     } else {
       this.dialog.dialog.closeAll();
-      this.hacerConvenioAuto();
-    }
-  }
-
-  /**
-   * Invoca un modal en el que se pregunta al usuario si quiere hacer el convenio automático
-   * En caso afirmativo, los datos del convenio se generan automáticamente y se registran en la base de datos
-   * En caso negativo, se redirige a otra ruta para que el usuario los introduzca manualmente
-   *
-   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
-   */
-  private async hacerConvenioAuto() {
-    let hacerlo = await this.dialog.confirmacion(
-      'Hacer Convenio / Acuerdo automático',
-      '¿Desea que los datos del convenio se introduzcan automáticamente? Seleccione "No" para introducirlos manualmente'
-    );
-    if (hacerlo) {
-      // Hacer el convenio automáticamente
-    } else {
-      // Invocar un modal o ventana de introducir datos de convenio
+      this.modal.open(ModalConvenioComponent, {
+        size: 'lg',
+        backdrop: 'static',
+        keyboard: false,
+      })
     }
   }
 

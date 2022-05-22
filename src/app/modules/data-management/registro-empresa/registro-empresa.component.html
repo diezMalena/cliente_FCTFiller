@@ -15,7 +15,6 @@
           <span class="show-mobile">{{ fase.abreviatura }}</span>
         </a>
       </ng-container>
-      <button class="btn btn-primary" (click)="nextFase()">Siguiente</button>
     </div>
   </div>
 </div>
@@ -336,6 +335,7 @@
     </div>
   </div>
 </form>
+<!-- #endregion -->
 
 <!-- Resumen del registro -->
 <div class="row px-4 py-4 d-flex justify-content-center" *ngIf="faseActual === 5">
@@ -518,7 +518,8 @@
         <div class="row border border-dark border-1 rounded p-2 d-flex align-items-center">
           <div class="d-inline-block col-12">
             <div class="pe-2 py-2 d-inline-block" *ngFor="let codGrupo of ciclos.value.cod_ciclos_selected">
-              <span class="btn btn-dark" ngbTooltip="{{getGrupo(codGrupo)?.nombre_ciclo}}" placement="top">{{codGrupo}}</span>
+              <span class="btn btn-dark" ngbTooltip="{{getGrupo(codGrupo)?.nombre_ciclo}}"
+                placement="top">{{codGrupo}}</span>
             </div>
           </div>
         </div>
@@ -532,5 +533,3 @@
     </div>
   </div>
 </div>
-
-<!-- #endregion -->

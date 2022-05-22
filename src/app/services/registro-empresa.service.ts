@@ -17,7 +17,8 @@ export class RegistroEmpresaService {
   }
 
   /**
-   * Registra en la base de datos a una empresa y su representante legal
+   * Registra en la base de datos a una empresa, su representante legal
+   * y la asignación de ciclos de interés para la empresa
    * @param datos Contiene los datos necesarios para realizar el registro
    * @returns Un observable con la respuesta del servidor
    * @author Malena
