@@ -65,7 +65,7 @@ export class FileUploadService {
 
   public subirAnexo(datos : any) {
     const headers = this.headers;
-    const url: string = API_STORAGE_URL + 'subirAnexo';
+    const url: string = API_STORAGE_URL + 'subirAnexoEspecifico';
       return this.http.post(url, JSON.stringify(datos), { headers });
   }
 }

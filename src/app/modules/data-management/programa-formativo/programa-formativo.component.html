@@ -8,28 +8,28 @@
             </div>
         </div>
         <div class="row bg-white">
-            <h2 class="h4 col-12 d-flex justify-content-center">Antes de cualquier accion, seguir el manual</h2>
-            <div class="row d-flex justify-content-center">
-                <form class="col-6 text-center">
-                    <div class="row">
-                        <h2 class="h4 col-12">Tipo de Anexo a subir:</h2>
+            <h2 class="h4 col-12 text-center">Antes de cualquier accion, seguir el manual</h2>
+            <form class="col-12">
+                <div class="row pt-3 d-flex justify-content-center">
+                    <div class="col-lg-3">
+                        <label class="form-label" for="tipoAnexo">Tipo de Anexo a subir:</label>
+                        <select id="tipoAnexo" class="form-select select" (change)="cogerTipoAnexo($event)">
+                              <option value="Anexo2" selected>Anexo2</option>
+                              <option value="Anexo4">Anexo4</option>
+                            </select>
                     </div>
-                    <div class="row pt-3">
-                        <select class="form-select select" (change)="cogerTipoAnexo($event)">
-                      <option>Anexo2</option>
-                      <option>Anexo4</option>
-                    </select>
+                    <div class="row pt-3 pb-3 d-flex justify-content-center">
+                        <div class="col-lg-3">
+                            <input type="file" id="file " (change)="upload($event) " aria-label=" Enviar documento ">
+                        </div>
                     </div>
-                    <div class="row pt-3">
-                        <input type="file" id="file" (change)="upload($event)" class="col-4" aria-label=" Enviar documento">
+                    <div class="row d-flex justify-content-center">
+                        <button class="col-lg-3 text-center btn btn-outline-info " tittle="aceptar " (click)="enviarAnexo() " ngbTooltip="Aceptar " aria-label="Aceptar ">
+                          Aceptar
+                      </button>
                     </div>
-                    <div class="row pt-3">
-                        <button tittle="aceptar " (click)="enviarAnexo() " class="col-4 text-center btn btn-outline-info " ngbTooltip="Aceptar " aria-label="Aceptar ">
-                      Aceptar
-                    </button>
-                    </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>

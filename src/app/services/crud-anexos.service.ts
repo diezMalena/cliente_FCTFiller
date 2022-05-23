@@ -22,27 +22,15 @@ export class AnexoService {
   /***********************************************************************/
   //#region CRUD - Read
 
-  /**
-   * Este metodo hace una llamada a la api y listar los anexos
-   * @param dni_tutor Es el dni del tutor
-   * @returns Un observable con un vector de anexos
-   *@author Laura <lauramorenoramos97@gmail.com>
-   */
-  public getAnexosHistory(dni_tutor: string) {
-    let url: string = this.ruta + 'listarHistorial/' + dni_tutor;
-    const headers = this.headers;
-
-    return this.http.get<anexoResponse>(url, { headers });
-  }
 
   /**
    * @param dni_tutor Es el dni del tutor
-   * @returns Observable con una lista de anexos
+   * @returns Observable con una lista de anexos, tanto del crud de anexos, como del historial
    * Este metodo hace una llamada a la api y listar los anexos
    * @author Pablo y Laura <lauramorenoramos97@gmail.com>
    */
-  public getAnexos(dni_tutor: string) {
-    let url: string = this.ruta + 'listarAnexos/' + dni_tutor;
+  public getAnexos(dni_tutor: string,habilitado: number) {
+    let url: string = this.ruta + 'listarAnexos/' + dni_tutor+'/'+habilitado;
     const headers = this.headers;
 
     return this.http.get<anexoResponse>(url, { headers });

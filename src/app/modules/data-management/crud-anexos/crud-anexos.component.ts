@@ -15,6 +15,7 @@ import { Subject } from 'rxjs';
 import { DialogService } from 'src/app/services/dialog.service';
 import { ManualCrudAnexosComponent } from '../../manuales/manual-crud-anexos/manual-crud-anexos.component';
 import { DataTableDirective } from 'angular-datatables';
+import { ModalUploadAnexoComponent } from '../modal-upload-anexo/modal-upload-anexo.component';
 
 @Component({
   selector: 'app-crud-anexos',
@@ -97,7 +98,7 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
    * @author Pablo y Laura <lauramorenoramos97@gmail.com>
    */
   public verAnexos() {
-    this.anexoService.getAnexos(this.dni_tutor!).subscribe((response) => {
+    this.anexoService.getAnexos(this.dni_tutor!,1).subscribe((response) => {
       this.anexosArray = response;
       //#region Datatable
       response = (this.anexosArray as any).data;
@@ -129,7 +130,7 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
    * @author Laura <lauramorenoramos97@gmail.com>
    */
   public verAnexosDirector() {
-    this.anexoService.getAnexos(this.dniAux!).subscribe({
+    this.anexoService.getAnexos(this.dniAux!,1).subscribe({
       next: (res) => {
         this.anexosArray = res;
         this.toastr.info('Anexos de: ' + this.dniAux, 'Vistas Anexos');
@@ -156,7 +157,7 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
    * @author Laura <lauramorenoramos97@gmail.com>
    */
   public verAnexosEliminar() {
-    this.anexoService.getAnexos(this.dni_tutor!).subscribe((response) => {
+    this.anexoService.getAnexos(this.dni_tutor!,1).subscribe((response) => {
       this.anexosArray = response;
       response = (this.anexosArray as any).data;
     });
@@ -334,4 +335,13 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
 
   //#endregion
   /***********************************************************************/
+
+   /**
+   * Esta funcion abre el manual de ayuda del crud de anexos
+   * @author Laura <lauramorenoramos97@gmail.com>
+   */
+    public abrirModalUpload(nombre : string) {
+      sessionStorage.setItem('tipoAnexo', nombre);
+      this.modal.open(ModalUploadAnexoComponent, { size: 'md' });
+    }
 }

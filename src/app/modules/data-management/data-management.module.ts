@@ -30,6 +30,7 @@ import { HistorialAnexosComponent } from './historial-anexos/historial-anexos.co
 import { AnexosAlumnosComponent } from './anexos-alumnos/anexos-alumnos.component';
 import { ModalTipoAnexoComponent } from './modal-tipo-anexo/modal-tipo-anexo.component';
 import { ProgramaFormativoComponent } from './programa-formativo/programa-formativo.component';
+import { ModalUploadAnexoComponent } from './modal-upload-anexo/modal-upload-anexo.component';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import { ProgramaFormativoComponent } from './programa-formativo/programa-format
     AnexosAlumnosComponent,
     ModalTipoAnexoComponent,
     ProgramaFormativoComponent,
+    ModalUploadAnexoComponent,
   ],
   imports: [
     CommonModule,

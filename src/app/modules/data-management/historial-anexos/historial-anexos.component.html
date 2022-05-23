@@ -37,8 +37,14 @@
                                                 <p style="display: none;">{{ anexo.codigo }}</p>
                                             </td>
 
-                                            <td scope="col">
+                                            <td scope="col" *ngIf="anexo.nombre!='AnexoXV'">
                                                 <p>{{ anexo.empresa }}</p>
+                                            </td>
+                                            <td scope="col" *ngIf="anexo.nombre=='AnexoXV'">
+                                                <p> <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
+                                            <path
+                                              d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8Z" />
+                                          </svg></p>
                                             </td>
 
                                             <td scope="col">
@@ -155,8 +161,14 @@
                                             <p style="display: none; ">{{ anexo.codigo }}</p>
                                         </td>
 
-                                        <td scope="col ">
+                                        <td scope="col" *ngIf="anexo.nombre!='AnexoXV'">
                                             <p>{{ anexo.empresa }}</p>
+                                        </td>
+                                        <td scope="col" *ngIf="anexo.nombre=='AnexoXV'">
+                                            <p> <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
+                                        <path
+                                          d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8Z" />
+                                      </svg></p>
                                         </td>
 
                                         <td scope="col ">

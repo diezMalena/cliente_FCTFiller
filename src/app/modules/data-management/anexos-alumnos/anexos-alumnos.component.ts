@@ -1,6 +1,5 @@
 import {
   Component,
-  AfterViewInit,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -16,8 +15,9 @@ import { DialogService } from 'src/app/services/dialog.service';
 import { ManualCrudAnexosComponent } from '../../manuales/manual-crud-anexos/manual-crud-anexos.component';
 import { DataTableDirective } from 'angular-datatables';
 import { ModalTipoAnexoComponent } from '../modal-tipo-anexo/modal-tipo-anexo.component';
-import { AnexoUpload } from 'src/app/models/anexo-upload';
+import { ModalUploadAnexoComponent } from '../modal-upload-anexo/modal-upload-anexo.component';
 import { FileUploadService } from 'src/app/services/file-upload.service';
+import { ManualCrudAnexosAlumnosComponent } from '../../manuales/manual-crud-anexos-alumnos/manual-crud-anexos-alumnos.component';
 
 @Component({
   selector: 'app-anexos-alumnos',
@@ -185,7 +185,7 @@ export class AnexosAlumnosComponent implements OnDestroy, OnInit{
    * @author Laura <lauramorenoramos97@gmail.com>
    */
   public abrirAyuda() {
-    this.modal.open(ManualCrudAnexosComponent, { size: 'lg' });
+    this.modal.open(ManualCrudAnexosAlumnosComponent, { size: 'lg' });
   }
 
 
@@ -205,43 +205,13 @@ export class AnexosAlumnosComponent implements OnDestroy, OnInit{
   //#endregion
   /***********************************************************************/
 
-
-
-
-  /**
-   *
-   * @param event
+   /**
+   * Esta funcion abre el manual de ayuda del crud de anexos
+   * @author Laura <lauramorenoramos97@gmail.com>
    */
-     public upload(event: any) {
-      this.evento = event.target.files[0];
-      let fileReader = new FileReader();
-      fileReader.readAsDataURL(this.evento);
-      fileReader.onload = function (e: any) {
-        sessionStorage.setItem('cosa', e.target.result);
-      };
+    public abrirModalUpload(nombre : string) {
+      sessionStorage.setItem('tipoAnexo', nombre);
+      this.modal.open(ModalUploadAnexoComponent, { size: 'md' });
     }
 
-    public enviarAnexo() {
-      if(this.evento.name=='plantilla.docx'){
-      let datos = new AnexoUpload(
-        sessionStorage.getItem('cosa')!,
-        this.tipoAnexo,
-        this.evento.name,
-        this.dni_alumno!
-      );
-      console.log(this.evento.name);
-
-      this.uploadService.subirAnexo(datos).subscribe({
-        next: (res) => {
-          this.toastr.success('Anexo Subido', 'Hecho!');
-        },
-        error: (e) => {
-          console.log(e);
-          this.toastr.error('El anexo no ha podido subirse', 'Fallo');
-        },
-      });
-    }else{
-      this.toastr.error('El anexo debe llamarse plantilla.docx', 'Fallo');
-    }
-    }
 }

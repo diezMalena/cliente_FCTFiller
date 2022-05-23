@@ -6,21 +6,13 @@ import { AnexoUpload } from 'src/app/models/anexo-upload';
 import { AnexoService } from 'src/app/services/crud-anexos.service';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 import { ManualCrudAnexosComponent } from '../../manuales/manual-crud-anexos/manual-crud-anexos.component';
-
-import {
-  HttpClientModule,
-  HttpClient,
-  HttpRequest,
-  HttpResponse,
-  HttpEventType,
-  HttpHeaders,
-} from '@angular/common/http';
 import {
   FormBuilder,
   FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { ManualAnexo2y4Component } from '../../manuales/manual-anexo2y4/manual-anexo2y4.component';
 
 @Component({
   selector: 'app-programa-formativo',
@@ -32,7 +24,9 @@ export class ProgramaFormativoComponent implements OnInit {
   dni_usuario;
   public evento: any = null;
   tipoAnexo: any;
+
   constructor(
+    private formBuilder: FormBuilder,
     private uploadService: FileUploadService,
     private toastr: ToastrService,
     private modal: NgbModal,
@@ -41,10 +35,11 @@ export class ProgramaFormativoComponent implements OnInit {
   ) {
     this.usuario = storageUser.getUser();
     this.dni_usuario = this.usuario?.dni;
-    this.tipoAnexo = '';
+    this.tipoAnexo = 'Anexo2';
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   /**
    * Esta funcion se encarga de coger el tipo de Anexo del desplegable
@@ -61,6 +56,7 @@ export class ProgramaFormativoComponent implements OnInit {
    * @param event
    */
   public upload(event: any) {
+    console.log(this.tipoAnexo);
     this.evento = event.target.files[0];
     let fileReader = new FileReader();
     fileReader.readAsDataURL(this.evento);
@@ -73,14 +69,13 @@ export class ProgramaFormativoComponent implements OnInit {
    *
    */
   public enviarAnexo() {
-    if(this.evento.name=='plantilla.docx'){
+    if(this.evento.name=='plantilla.docx' || this.evento.name=='plantilla.pdf'){
     let datos = new AnexoUpload(
       sessionStorage.getItem('cosa')!,
       this.tipoAnexo,
       this.evento.name,
       this.dni_usuario!
     );
-    console.log(this.evento.name);
 
     this.uploadService.subirAnexo(datos).subscribe({
       next: (res) => {
@@ -119,6 +114,6 @@ export class ProgramaFormativoComponent implements OnInit {
    * @author Laura <lauramorenoramos97@gmail.com>
    */
   public abrirAyuda() {
-    this.modal.open(ManualCrudAnexosComponent, { size: 'lg' });
+    this.modal.open(ManualAnexo2y4Component, { size: 'lg' });
   }
 }
