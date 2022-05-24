@@ -69,7 +69,12 @@ export class ProgramaFormativoComponent implements OnInit {
    *
    */
   public enviarAnexo() {
-    if(this.evento.name=='plantilla.docx' || this.evento.name=='plantilla.pdf'){
+    if(this.evento.name=='Anexo2.docx' || this.evento.name=='Anexo2.pdf'|| this.evento.name=='Anexo4.docx'|| this.evento.name=='Anexo4.pdf'){
+      if(this.evento.name=='Anexo2.docx' || this.evento.name=='Anexo2.pdf'){
+        this.tipoAnexo='Anexo2'
+      }else{
+        this.tipoAnexo='Anexo4'
+      }
     let datos = new AnexoUpload(
       sessionStorage.getItem('cosa')!,
       this.tipoAnexo,
@@ -98,7 +103,7 @@ export class ProgramaFormativoComponent implements OnInit {
    * @author Laura <lauramorenoramos97@gmail.com>
    */
    public rellenarAnexo() {
-    this.anexoService.rellenarAnexoIIyIV(this.tipoAnexo,this.dni_usuario!).subscribe({
+    this.anexoService.rellenarAnexoIIyIV(this.evento.name,this.dni_usuario!).subscribe({
       next: (res) => {
         this.toastr.success('Anexo Descargado', 'Hecho!');
       },

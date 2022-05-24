@@ -3,6 +3,7 @@ import { Alumno } from '../../../models/alumno';
 import { Empresa } from '../../../models/empresa';
 import { Router } from '@angular/router';
 import { AsociarAlumnoEmpresaService } from '../../../services/asociar-alumno-empresa.service';
+import { ModalUploadAnexoComponent } from '../modal-upload-anexo/modal-upload-anexo.component';
 import { ToastrService } from 'ngx-toastr';
 import {
   CdkDragDrop,
@@ -30,6 +31,7 @@ export class AsociarEmpAluComponent implements OnInit {
   respuesta: any = [];
   nombreCiclo: string = '';
   dniTutor?: string;
+  hayAlumnosEnEmpresas : any;
 
   constructor(
     private alumnosEmpresas: AsociarAlumnoEmpresaService,
@@ -41,6 +43,7 @@ export class AsociarEmpAluComponent implements OnInit {
   ) {
     this.usuario = storageUser.getUser();
     this.dniTutor = this.usuario?.dni;
+    this.hayAlumnosEnEmpresas=false;
   }
 
   ngOnInit(): void {
@@ -101,6 +104,8 @@ export class AsociarEmpAluComponent implements OnInit {
 
   /**
    * Esta función se encarga de obtener las empresas con sus alumnos asignados del tutor logueado del servidor.
+   * this.hayAlumnosEnEmpresas mira si hay alumnos en la empresa, por que así afirmamos que el tutor ya tiene
+   * generado un anexo con sus uniones entre alumnos y empresas ya establecidas
    * @author Alvaro <alvarosantosmartin6@gmail.com>
    * @param event
    */
@@ -109,6 +114,13 @@ export class AsociarEmpAluComponent implements OnInit {
       .solicitarEmpresas(this.dniTutor!)
       .subscribe((resultado) => {
         this.empresas = resultado;
+
+        this.empresas.forEach(element => {
+          if(element.alumnos?.length! > 0){
+            this.hayAlumnosEnEmpresas= true;
+          }
+        });
+
       });
   }
 
@@ -203,6 +215,9 @@ export class AsociarEmpAluComponent implements OnInit {
         const blob = new Blob([res], { type: 'application/octet-stream' });
         FileSaver.saveAs(blob, 'backup_' + current.getTime() + '.zip');
         this.toastr.success('Anexo Generado', 'Título');
+        this.getNombreCiclo();
+        this.getAlumnos();
+        this.getEmpresas();
       },
       error: (e) => {
         this.toastr.error('El anexo no ha podido generarse', 'Generado');
@@ -230,4 +245,13 @@ export class AsociarEmpAluComponent implements OnInit {
 
   //#endregion
   /***********************************************************************/
+
+   /**
+   * Esta funcion abre el manual de ayuda del crud de anexos
+   * @author Laura <lauramorenoramos97@gmail.com>
+   */
+    public abrirModalUpload() {
+      sessionStorage.setItem('tipoAnexo','Anexo1');
+      this.modal.open(ModalUploadAnexoComponent, { size: 'md' });
+    }
 }
