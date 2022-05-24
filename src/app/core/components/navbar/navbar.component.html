@@ -33,7 +33,14 @@
             </svg> FCT
           </a>
         </li>
-        <li *ngIf="usuario.isTutor() || usuario.isAlumno()">
+        <li *ngIf="usuario.isResponsable() || usuario.isProfesor() || usuario.isTutorEmpresa() || usuario.isTrabajador()">
+          <a routerLink="data-management/seguimiento_tutores" routerLinkActive="active" class="nav-link link-white">
+            <svg width="20" height="20" class="bi me-2">
+              <use xlink:href="#A3" />
+            </svg> Seguimiento
+          </a>
+        </li>
+        <li *ngIf="usuario.isAlumno()">
           <a routerLink="data-management/seguimiento" routerLinkActive="active" class="nav-link link-white">
             <svg width="20" height="20" class="bi me-2">
               <use xlink:href="#A3" />

@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 import { FileUploadModel } from '../models/file-upload.model';
 import { LoginStorageUserService } from '../services/login.storageUser.service';
 import { HttpHeadersService } from './http-headers.service';
+import { Alumno } from '../models/alumno';
 
 @Injectable({ providedIn: 'root' })
 export class SeguimientoServiceService {
@@ -58,6 +59,18 @@ export class SeguimientoServiceService {
     };
 
     return this.http.put(url, datos, { headers });
+  }
+
+
+  public getAlumnosAsociados(dni: string){
+    let url: string = this.ruta + 'getAlumnosAsociados';
+    const headers = this.headers;
+
+    let datos = {
+      dni_tutor: dni,
+    };
+
+    return this.http.post(url, datos, { headers });
   }
 
   //#endregion

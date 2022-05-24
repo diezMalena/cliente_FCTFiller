@@ -33,10 +33,6 @@ export class SeguimientoGuard implements CanActivate {
       }
     }
 
-    if (user.isAlumno()) {
-      return true;
-    }
-
     if (user.isTrabajador()) {
       for (let j = 0; j < user.roles!.length; j++) {
         console.log(user.roles);
