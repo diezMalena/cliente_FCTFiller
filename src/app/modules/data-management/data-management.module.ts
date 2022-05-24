@@ -28,6 +28,7 @@ import { DataTablesModule } from 'angular-datatables';
 import { ModalCambiotutorComponent } from './seguimiento/modal-cambiotutor/modal-cambiotutor.component';
 import { HistorialAnexosComponent } from './historial-anexos/historial-anexos.component';
 import { ModalSubirficheroComponent } from './seguimiento/modal-subirfichero/modal-subirfichero.component';
+import { SeguimientoTutoresComponent } from './seguimiento-tutores/seguimiento-tutores.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { ModalSubirficheroComponent } from './seguimiento/modal-subirfichero/mod
     ModalAlumnoComponent,
     HistorialAnexosComponent,
     ModalSubirficheroComponent,
+    SeguimientoTutoresComponent,
   ],
   imports: [
     CommonModule,

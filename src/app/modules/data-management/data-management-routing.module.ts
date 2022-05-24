@@ -16,6 +16,7 @@ import { PerfilesGuard } from 'src/app/guards/perfiles.guard';
 import { ProfesoresGuard } from 'src/app/guards/profesores.guard';
 import { AlumnosGuard } from 'src/app/guards/alumnos.guard';
 import { SeguimientoGuard } from 'src/app/guards/seguimiento.guard';
+import { SeguimientoTutoresComponent } from './seguimiento-tutores/seguimiento-tutores.component';
 
 const routes: Routes = [
   {
@@ -54,6 +55,11 @@ const routes: Routes = [
   {
     path: 'seguimiento',
     component: SeguimientoComponent,
+    canActivate: [AlumnosGuard],
+  },
+  {
+    path: 'seguimiento_tutores',
+    component: SeguimientoTutoresComponent,
     canActivate: [SeguimientoGuard],
   },
   {
