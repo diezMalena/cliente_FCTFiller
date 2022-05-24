@@ -4,12 +4,23 @@ import { Tutor } from '../models/tutor';
 import { map, Observable } from 'rxjs';
 import { tutorResponse } from '../models/tutorResponse';
 import { environment } from 'src/environments/environment';
+import { FileUploadModel } from '../models/file-upload.model';
+import { LoginStorageUserService } from '../services/login.storageUser.service';
+import { HttpHeadersService } from './http-headers.service';
+import { Alumno } from '../models/alumno';
 
 @Injectable({ providedIn: 'root' })
 export class SeguimientoServiceService {
   public ruta: string = environment.apiUrl;
+  private headers: HttpHeaders;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    public loginStorageUser: LoginStorageUserService,
+    private headersService: HttpHeadersService
+  ) {
+    this.headers = headersService.getHeadersWithToken();
+  }
 
   /***********************************************************************/
   //#region Cabeceras: departamento, alumno, horas y tutor
@@ -25,12 +36,10 @@ export class SeguimientoServiceService {
    */
   public gestionarDepartamento(dni: string) {
     let url: string = this.ruta + 'gestionarDepartamento';
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
+    const headers = this.headers;
     let dato = { dni: dni };
 
-    return this.http.post(url, dato, { headers: headers });
+    return this.http.post(url, dato, { headers });
   }
 
   /**
@@ -42,15 +51,26 @@ export class SeguimientoServiceService {
    */
   public addDepartamento(dni: string, departamento: string) {
     let url: string = this.ruta + 'addDepartamento';
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
+    const headers = this.headers;
+
     let datos = {
       dni: dni,
       departamento: departamento,
     };
 
-    return this.http.put(url, datos, { headers: headers });
+    return this.http.put(url, datos, { headers });
+  }
+
+
+  public getAlumnosAsociados(dni: string){
+    let url: string = this.ruta + 'getAlumnosAsociados';
+    const headers = this.headers;
+
+    let datos = {
+      dni_tutor: dni,
+    };
+
+    return this.http.post(url, datos, { headers });
   }
 
   //#endregion
@@ -67,12 +87,11 @@ export class SeguimientoServiceService {
    */
   public recogerTutorEmpresa(dni: string) {
     let url: string = this.ruta + 'recogerTutorEmpresa';
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
+    const headers = this.headers;
+
     let dato = { dni: dni };
 
-    return this.http.post(url, dato, { headers: headers });
+    return this.http.post(url, dato, { headers });
   }
 
   /**
@@ -83,8 +102,9 @@ export class SeguimientoServiceService {
    */
   public getTutoresResponsables(id_empresa: string): Observable<Tutor[]> {
     let url: string = this.ruta + 'getTutoresResponsables/id=' + id_empresa;
+    const headers = this.headers;
 
-    return this.http.get<tutorResponse[]>(url).pipe(
+    return this.http.get<tutorResponse[]>(url, { headers }).pipe(
       map((resp: tutorResponse[]) => {
         return resp.map((tutor) => Tutor.tutorJSON(tutor));
       })
@@ -93,22 +113,21 @@ export class SeguimientoServiceService {
 
   /**
    * Establece un trabajador de la empresa como tutor seleccionado
-   * @param dni_tutor_nuevo DNI del tutor a establecer
+   * @param mail_tutor_nuevo DNI del tutor a establecer
    * @param dni_alumno DNI del alumno
    * @returns Un observable con la respuesta del servidor
    * @author Malena
    */
-  public guardarTutorSeleccionado(dni_tutor_nuevo: string, dni_alumno: string) {
+  public guardarTutorSeleccionado(mail_tutor_nuevo: string, dni_alumno: string) {
     let url: string = this.ruta + 'actualizarTutorEmpresa';
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
+    const headers = this.headers;
+
     let dato = {
-      dni_tutor_nuevo: dni_tutor_nuevo,
+      mail_tutor_nuevo: mail_tutor_nuevo,
       dni_alumno: dni_alumno,
     };
 
-    return this.http.put(url, dato, { headers: headers });
+    return this.http.put(url, dato, { headers });
   }
 
   //#endregion
@@ -122,12 +141,11 @@ export class SeguimientoServiceService {
    */
   public escribirDatos(dni: string) {
     let url: string = this.ruta + 'devolverDatosAlumno';
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
+    const headers = this.headers;
+
     let dato = { dni: dni };
 
-    return this.http.post(url, dato, { headers: headers });
+    return this.http.post(url, dato, { headers });
   }
 
   /**
@@ -138,12 +156,11 @@ export class SeguimientoServiceService {
    */
   public sumatorioHorasTotales(dni: string) {
     let url: string = this.ruta + 'sumatorioHorasTotales';
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
+    const headers = this.headers;
+
     let dato = { dni: dni };
 
-    return this.http.post(url, dato, { headers: headers });
+    return this.http.post(url, dato, { headers });
   }
 
   //#endregion
@@ -160,19 +177,30 @@ export class SeguimientoServiceService {
    */
   public devolverJornadas(dni: string) {
     let url: string = this.ruta + 'devolverJornadas';
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
+    const headers = this.headers;
+
     let dato = { dni: dni };
 
-    return this.http.post(url, dato, { headers: headers });
+    return this.http.post(url, dato, { headers });
+  }
+
+  /**
+   *
+   * @param dni
+   * @returns
+   */
+  public devolverSemanas(dni: string) {
+    let url: string = this.ruta + 'devolverSemanas';
+    const headers = this.headers;
+    let dato = { dni: dni };
+    return this.http.post(url, dato, { headers });
   }
 
   //#endregion
   /***********************************************************************/
 
   /***********************************************************************/
-  //#region Descarga del Anexo III
+  //#region Generación del Anexo III
 
   /**
    * Envía al servidor una señal de descarga del Anexo III
@@ -180,12 +208,69 @@ export class SeguimientoServiceService {
    * @returns Un observable con la descarga del Anexo III
    * @author Malena
    */
-  public descargarPDF(dni: string) {
-    let dato = { dni: dni };
+  public generarDocumento(id_quinto_dia: string, dni: string) {
+    let dato = { id_quinto_dia: id_quinto_dia, dni: dni };
     const url: string = this.ruta + 'generarAnexo3';
-    return this.http.post(url, dato, { responseType: 'arraybuffer' });
+    const HTTPOptions = this.headersService.getHeadersWithTokenArrayBuffer();
+
+    return this.http.post(url, dato, HTTPOptions);
   }
 
   //#endregion
   /***********************************************************************/
+
+
+  /***********************************************************************/
+  //#region Descarga del Anexo III
+
+  public hayDocumento(id_quinto_dia: number, id_fct: number){
+    let dato = { id_quinto_dia: id_quinto_dia, id_fct: id_fct };
+    const url: string = this.ruta + 'hayDocumento';
+    const headers = this.headers;
+    return this.http.post(url, dato, { headers });
+  }
+
+
+  /**
+   * Envía al servidor una señal de descarga del Anexo III
+   * @param dni DNI del tutor
+   * @returns Un observable con la descarga del Anexo III
+   * @author Malena
+   */
+  public descargarPDF(ruta_hoja: string) {
+    let dato = { ruta_hoja: ruta_hoja};
+    const url: string = this.ruta + 'descargarAnexo3';
+    const HTTPOptions = this.headersService.getHeadersWithTokenArrayBuffer();
+    return this.http.post(url, dato, HTTPOptions);
+  }
+
+  //#endregion
+  /***********************************************************************/
+
+
+  /***********************************************************************/
+  //#region Subir el documento pdf del Anexo III
+
+  /**
+   *
+   * @param storage
+   * @returns
+   */
+  subirAnexo3(formData: FormData) {
+    let dato = {
+      dni: formData.get('dni'),
+      file: formData.get('file'),
+      file_name: formData.get('file_name'),
+      id_fct: formData.get('id_fct'),
+      id_quinto_dia: formData.get('id_quinto_dia')
+    };
+    const url: string = this.ruta + 'subirAnexo3';
+    const headers = this.headers;
+    return this.http.post(url, dato, { headers });
+  }
+
+  //#endregion
+  /***********************************************************************/
+
+
 }

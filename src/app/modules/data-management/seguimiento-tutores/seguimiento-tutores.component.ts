@@ -4,8 +4,6 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ModalAddComponent } from './modal-add/modal-add.component';
-import { ModalEditarComponent } from './modal-editar/modal-editar.component';
 import { Jornada } from '../../../models/Jornada/jornada';
 import { ModalJornadaService } from '../../../services/modal-jornada.service';
 import { SeguimientoServiceService } from 'src/app/services/seguimiento-service.service';
@@ -14,20 +12,21 @@ import * as FileSaver from 'file-saver';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 import { ToastrService } from 'ngx-toastr';
 import { DialogService } from 'src/app/services/dialog.service';
-import { ModalCambiotutorComponent } from './modal-cambiotutor/modal-cambiotutor.component';
 import { ManualAnexo3Component } from '../../manuales/manual-anexo3/manual-anexo3.component';
 import { FileUploadModel } from 'src/app/models/file-upload.model';
-import { ModalSubirficheroComponent } from './modal-subirfichero/modal-subirfichero.component';
+import { ModalSubirficheroComponent } from '../seguimiento/modal-subirfichero/modal-subirfichero.component';
+import { Alumno } from 'src/app/models/alumno';
 
 @Component({
-  selector: 'app-seguimiento',
-  templateUrl: './seguimiento.component.html',
-  styleUrls: ['./seguimiento.component.scss'],
+  selector: 'app-seguimiento-tutores',
+  templateUrl: './seguimiento-tutores.component.html',
+  styleUrls: ['./seguimiento-tutores.component.scss']
 })
-export class SeguimientoComponent implements OnInit {
+export class SeguimientoTutoresComponent implements OnInit {
 
   usuario;
   public arrayJornadas: any = [];
+  public dni_tutor?: string;
   public dni_alumno?: string;
   public nombre_alumno: any;
   public nombre_empresa: any;
@@ -44,8 +43,7 @@ export class SeguimientoComponent implements OnInit {
   public totalSemanas: number = 0;
   public static readonly id_fct: string = 'id_fct';
   public static readonly id_quinto_dia: string = 'id_quinto_dia';
-
-  // public fileToUpload: File
+  public arrayAlumnos: any = [];
 
 
   constructor(
@@ -57,22 +55,16 @@ export class SeguimientoComponent implements OnInit {
     private storageUser: LoginStorageUserService,
     private toastr: ToastrService,
     public dialogService: DialogService,
-
   ) {
     this.usuario = storageUser.getUser();
-    this.dni_alumno = this.usuario?.dni;
+    this.dni_tutor = this.usuario?.dni;
     this.deptoForm = this.formBuilder.group({
       depto: ['', [Validators.required]],
     });
   }
 
   ngOnInit(): void {
-    this.arrayJornadas = this.rellenarArray();
-    this.ponerNombre();
-    this.recogerTutorEmpresa();
-    this.gestionDepartamento();
-    this.sumatorioHorasTotales();
-    this.getArrayJornadas();
+    this.arrayAlumnos = this.getAlumnosAsociados();
   }
 
   //#endregion
@@ -92,6 +84,34 @@ export class SeguimientoComponent implements OnInit {
     return this.deptoForm.controls;
   }
 
+
+  public getAlumnosAsociados() {
+    this.seguimientoService.getAlumnosAsociados(this.dni_tutor!).subscribe({
+      next: (response: any) => {
+        this.arrayAlumnos = response;
+      },
+      error: (e) => {
+
+      }
+    })
+    return this.arrayAlumnos;
+  }
+
+  public elegirAlumno(event: any) {
+    console.clear();
+    this.dni_alumno = event.target.value;
+    //Una vez elijamos el alumno, entonces se llamarán todas sus funciones:
+
+    this.arrayJornadas = this.rellenarArray();
+    this.recogerTutorEmpresa();
+    this.gestionDepartamento();
+    this.sumatorioHorasTotales();
+    this.getArrayJornadas();
+    this.ponerNombre();
+  }
+
+
+
   /**
    * Método que recoge el tutor que tiene asignado el alumno en la empresa.
    * @author Malena
@@ -104,7 +124,7 @@ export class SeguimientoComponent implements OnInit {
           sacar los tutores/responsables de dicha empresa:*/
         let id_empresa = response[1];
         sessionStorage.setItem(
-          SeguimientoComponent.id_empresa,
+          SeguimientoTutoresComponent.id_empresa,
           JSON.stringify(id_empresa)
         );
       },
@@ -124,8 +144,6 @@ export class SeguimientoComponent implements OnInit {
   public ponerNombre() {
     this.seguimientoService.escribirDatos(this.dni_alumno!).subscribe({
       next: (response: any) => {
-        this.nombre_alumno =
-          response[0]['nombre_alumno'] + ' ' + response[0]['apellidos_alumno'];
         this.nombre_empresa = response[0]['nombre_empresa'];
       },
       error: (e) => {
@@ -161,30 +179,6 @@ export class SeguimientoComponent implements OnInit {
     });
   }
 
-  /**
-   * Este método recoge el valor del Departamento y se añade a la BBDD en la tabla FCT de
-   * su correspondiente alumno.
-   * @author Malena
-   */
-  public guardarDepartamento() {
-    this.submitted = true;
-    if (!this.deptoForm.valid) return;
-    this.departamento = this.deptoForm.value.depto;
-
-    this.seguimientoService
-      .addDepartamento(this.dni_alumno!, this.departamento)
-      .subscribe({
-        next: (response: any) => {
-          this.departamentoEstablecido = true;
-        },
-        error: (e) => {
-          this.toastr.error(
-            'No se ha podido añadir el departamento.',
-            'Error al añadir departamento'
-          );
-        },
-      });
-  }
 
   /**
    * Este método se encarga de recoger el sumatorio de las horas totales que el alumno ha estado
@@ -224,7 +218,6 @@ export class SeguimientoComponent implements OnInit {
       this.sumatorioHorasTotales();
       this.devolverSemanas();
 
-
       //Cuando se inserten 5 nuevas jornadas, se habilita el boton Descargar PDF:
       if (cuantasJornadasHay >= 5 && cuantasJornadasHay % 5 == 0) {
         this.botonDescargar = true;
@@ -245,28 +238,12 @@ export class SeguimientoComponent implements OnInit {
    * @author Malena.
    */
   public rellenarArray() {
+    console.log(this.dni_alumno);
     this.seguimientoService.devolverJornadas(this.dni_alumno!).subscribe({
       next: (response: any) => {
         this.arrayJornadas = response;
         this.totalSemanas = this.arrayJornadas.length;
         this.devolverSemanas();
-
-        /*
-        this.arrayJornadas = response;
-        var cuantasJornadasHay = this.arrayJornadas.length;
-
-        //Cuando se inserten 5 nuevas jornadas, se habilita el boton Descargar PDF:
-        if (cuantasJornadasHay >= 5 && cuantasJornadasHay % 5 == 0) {
-          this.botonDescargar = true;
-          this.botonVer = false;
-        }
-
-        //Cuando haya más de 5 jornadas añadidas, se mostrará el boton Ver PDF:
-        if (cuantasJornadasHay > 5 && cuantasJornadasHay % 5 != 0) {
-          this.botonVer = true;
-          this.botonDescargar = false;
-        }
-      */
       },
       error: (e) => {
         this.toastr.error(
@@ -277,6 +254,7 @@ export class SeguimientoComponent implements OnInit {
     });
     return this.arrayJornadas;
   }
+
 
   public devolverSemanas() {
     this.seguimientoService.devolverSemanas(this.dni_alumno!).subscribe({
@@ -302,32 +280,6 @@ export class SeguimientoComponent implements OnInit {
   //#region Invocación de modales y otros
 
   /**
-   * Método que abre un modal para seleccionar el nuevo tutor del alumno en la empresa.
-   * @author Malena
-   */
-  public modalCambiarTutor() {
-    this.modal.open(ModalCambiotutorComponent, { size: 'xs' });
-  }
-
-  /**
-   * Mostrará un modal para rellenar los campos para poder insertar un nuevo registro en el seguimiento.
-   * @author Malena
-   */
-  nuevaJornada() {
-    this.modal.open(ModalAddComponent, { size: 'm' });
-  }
-
-  /**
-   * Este metodo sirve para abrir el modal en la jornada correspondiente que se ha pulsado,
-   * para poder editar sus datos y actualizarlos en la BBDD.
-   * @author Malena
-   */
-  public editar(jornada: Jornada) {
-    this.modal.open(ModalEditarComponent, { size: 'm' });
-    this.modalJornadaService.jornadaTrigger.emit(jornada);
-  }
-
-  /**
    * Método para abrir el manual del anexo3.
    * @author Malena
    */
@@ -341,53 +293,6 @@ export class SeguimientoComponent implements OnInit {
   /***********************************************************************/
   //#region Descarga de Anexo(s) III
 
-  /**
-   * Método que abre el Modal Dialog y depende de la respuesta hace una cosa u otra, en este
-   * caso descargaría la hoja de seguimiento correspondiente.
-   * @author Malena
-   */
-  public async generarDocumento(semana: any) {
-    if (Object.keys(semana).length == 0) {
-      this.toastr.error(
-        'No puedes descargar el documento sin añadir primero 5 jornadas.',
-        'Error al descargar el documento'
-      );
-    } else {
-      if (this.departamentoEstablecido == false) {
-        this.toastr.error(
-          'No puedes descargar el documento sin añadir el departamento.',
-          'Error al descargar el documento'
-        );
-      } else {
-        let descargar = await this.dialogService.confirmacion(
-          'Generar Word Anexo III',
-          'Se ha generado tu hoja de seguimiento, ¿Quiere descargarla? (Se eliminarán las firmas registradas)'
-        );
-        if (descargar) {
-          this.seguimientoService.generarDocumento(semana.id_quinto_dia, this.dni_alumno!).subscribe({
-            next: (res: any) => {
-              const blob = new Blob([res], { type: 'application/octet-stream' });
-              var hoy = new Date(Date.now());
-              var nombre = 'Hoja_seguimiento_' + this.dni_alumno + '_' + hoy.toISOString() + '.docx';
-              FileSaver.saveAs(blob, nombre);
-              // location.reload();
-              this.toastr.success(
-                'Se ha descargado la hoja de seguimiento correctamente.',
-                'Generación de Anexo III'
-              );
-            },
-            error: (e) => {
-              this.toastr.error(
-                'No se ha podido generar el documento correctamente.',
-                'Error en la generación del Anexo III'
-              );
-            },
-          });
-        }
-      }
-    }
-  }
-
 
   public async descargarPDF(semana: any) {
     this.seguimientoService.hayDocumento(semana.id_quinto_dia, semana.id_fct).subscribe({
@@ -397,7 +302,7 @@ export class SeguimientoComponent implements OnInit {
           var ruta = ruta_hoja.split("\\").pop();
           // console.log(ruta);
           this.seguimientoService.descargarPDF(ruta_hoja).subscribe({
-            next: (res:any)=> {
+            next: (res: any) => {
               const blob = new Blob([res], { type: 'application/octet-stream' });
               FileSaver.saveAs(blob, ruta);
               this.toastr.success(
@@ -406,11 +311,11 @@ export class SeguimientoComponent implements OnInit {
               );
             }
           })
-        }else{
+        } else {
           this.toastr.error(
             'No se ha podido descargar el PDF debido a que no se ha subido un fichero previamente.',
             'Error en la descarga del PDF del Anexo III'
-            );
+          );
         }
       }
     })
@@ -433,8 +338,8 @@ export class SeguimientoComponent implements OnInit {
   public abrirModalSubirArchivo(semana: any) {
     let id_fct = semana.id_fct;
     let id_quinto_dia = semana.id_quinto_dia;
-    sessionStorage.setItem(SeguimientoComponent.id_fct, id_fct);
-    sessionStorage.setItem(SeguimientoComponent.id_quinto_dia, id_quinto_dia);
+    sessionStorage.setItem(SeguimientoTutoresComponent.id_fct, id_fct);
+    sessionStorage.setItem(SeguimientoTutoresComponent.id_quinto_dia, id_quinto_dia);
     if (Object.keys(semana).length == 0) {
       this.toastr.error(
         'No puedes subir el documento sin añadir primero 5 jornadas.',
@@ -474,4 +379,5 @@ export class SeguimientoComponent implements OnInit {
 
   //#endregion
   /***********************************************************************/
+
 }
