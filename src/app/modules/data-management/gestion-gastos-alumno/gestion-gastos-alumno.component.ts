@@ -33,11 +33,12 @@ export class GestionGastosAlumnoComponent
 
   /***********************************************************************/
   //#region Inicialización de variables
-  dtElement?: DataTableDirective;
-  dtOptions: DataTables.Settings = {};
-  dtTrigger = new Subject<any>();
+  public dtElement?: DataTableDirective;
+  public dtOptions: DataTables.Settings = {};
+  public dtTrigger = new Subject<any>();
 
   public gasto?: Gasto;
+  public dias_transporte_privado: number = 0;
   public modosEdicion: typeof ModoEdicion = ModoEdicion;
   public isVisible: number = 1;
   public isSelected: boolean = true;
@@ -56,6 +57,9 @@ export class GestionGastosAlumnoComponent
     $.extend(true, $.fn.dataTable.defaults, {
       language: { url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json' },
     });
+
+    $.fn.dataTable.ext.errMode = 'none';
+
   }
 
 
@@ -101,7 +105,6 @@ export class GestionGastosAlumnoComponent
           this.gasto = result;
           this.rerender();
           this.dtTrigger.next(this.gasto);
-          $.fn.dataTable.ext.errMode = 'throw';
         },
         error: (error) => {
           this.toastr.error('No se han podido recuperar los datos', 'Error');
@@ -115,6 +118,7 @@ export class GestionGastosAlumnoComponent
   /***********************************************************************/
   //#region Actualización
   actualizarDiasVehiculoPrivado() {
+    this.gasto!.dias_transporte_privado = this.dias_transporte_privado;
     this.gestionGastosService.actualizarDiasVehiculoPrivado(this.gasto!).subscribe({
       next: (result) => {
         this.cargarGasto();

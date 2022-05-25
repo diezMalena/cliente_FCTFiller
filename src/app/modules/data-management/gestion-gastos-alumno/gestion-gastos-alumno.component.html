@@ -63,7 +63,7 @@
           <label class="form-label" for="diasVehiculoPropio">Cantidad de días en los que se ha viajado en vehículo
             propio</label>
           <input type="text" class="form-control" id="diasVehiculoPropio"
-          [(ngModel)]="this.gasto!.dias_transporte_privado" [value]="this.gasto?.dias_transporte_privado" />
+          [(ngModel)]="this.dias_transporte_privado" [value]="this.gasto?.dias_transporte_privado" />
         </div>
         <div class="col-12">
           <button (click)="actualizarDiasVehiculoPrivado()" class="btn btn-outline-primary">Guardar</button>
