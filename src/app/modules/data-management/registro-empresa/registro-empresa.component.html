@@ -30,7 +30,8 @@
           <label for="cif" class="form-label fw-bold m-0">CIF</label>
         </div>
         <div class="col-12 col-lg-8">
-          <input type="text" class="form-control" id="cif" formControlName="cif" placeholder="00000000X">
+          <input type="text" class="form-control" id="cif" formControlName="cif" placeholder="00000000X"
+            (blur)="checkDato('empresa', 'cif', $event)">
           <ng-container *ngIf="submitted && formEmpresa['cif'].errors">
             <div class="text-danger bg-white rounded border border-2 border-danger p-2"
               *ngIf="formEmpresa['cif'].errors['required']">No puede estar vacío.</div>
@@ -38,7 +39,8 @@
               *ngIf="formEmpresa['cif'].errors['minlength']">Debe tener 8 números y 1 letra en
               mayúscula.</div>
             <div class="text-danger bg-white rounded border border-2 border-danger p-2"
-              *ngIf="formEmpresa['cif'].errors['maxlength']">Debe tener 9 caracteres.</div>
+              *ngIf="formEmpresa['cif'].errors['duplicate']">Este CIF ya está registrado en la aplicación
+            </div>
           </ng-container>
         </div>
       </div>
@@ -66,12 +68,16 @@
           <label for="email" class="form-label fw-bold m-0">Correo electrónico</label>
         </div>
         <div class="col-12 col-lg-8">
-          <input type="email" id="email" class="form-control" placeholder="empresa@empresa.com" formControlName="email">
+          <input type="email" id="email" class="form-control" placeholder="empresa@empresa.com" formControlName="email"
+            (blur)="checkDato('empresa', 'email', $event)">
           <ng-container *ngIf="submitted && formEmpresa['email'].errors">
             <div class="text-danger bg-white rounded border border-2 border-danger p-2"
               *ngIf="formEmpresa['email'].errors['required']">No puede estar vacío</div>
             <div class="text-danger bg-white rounded border border-2 border-danger p-2"
               *ngIf="formEmpresa['email'].errors['email']">Debe tener formato de correo electrónico
+            </div>
+            <div class="text-danger bg-white rounded border border-2 border-danger p-2"
+              *ngIf="formEmpresa['email'].errors['duplicate']">Este e-mail ya está registrado en la aplicación
             </div>
           </ng-container>
         </div>
@@ -220,7 +226,8 @@
           <label for="dni" class="form-label fw-bold m-0">DNI</label>
         </div>
         <div class="col-12 col-lg-8">
-          <input type="text" class="form-control" id="dni" placeholder="00000000X" formControlName="dni">
+          <input type="text" class="form-control" id="dni" placeholder="00000000X" formControlName="dni"
+            (blur)="checkDato('trabajador', 'dni', $event)">
           <ng-container *ngIf="submitted && formRepresentante['dni'].errors">
             <div *ngIf="formRepresentante['dni'].errors['required']"
               class="text-danger bg-white rounded border border-2 border-danger p-2">No puede estar vacío</div>
@@ -229,6 +236,9 @@
               mayúscula</div>
             <div *ngIf="formRepresentante['dni'].errors['maxlength']"
               class="text-danger bg-white rounded border border-2 border-danger p-2">Debe tener 9 caracteres</div>
+            <div class="text-danger bg-white rounded border border-2 border-danger p-2"
+              *ngIf="formRepresentante['dni'].errors['duplicate']">Este DNI ya está registrado en la aplicación
+            </div>
           </ng-container>
         </div>
       </div>
@@ -270,12 +280,15 @@
         </div>
         <div class="col-12 col-lg-8">
           <input type="email" id="email" class="form-control" placeholder="representante@empresa.com"
-            formControlName="email">
+            formControlName="email" (blur)="checkDato('trabajador', 'email', $event)">
           <ng-container *ngIf="submitted && formRepresentante['email'].errors">
             <div class="text-danger bg-white rounded border border-2 border-danger p-2"
               *ngIf="formRepresentante['email'].errors['required']">No puede estar vacío</div>
             <div class="text-danger bg-white rounded border border-2 border-danger p-2"
               *ngIf="formRepresentante['email'].errors['email']">Debe tener formato de correo electrónico
+            </div>
+            <div class="text-danger bg-white rounded border border-2 border-danger p-2"
+              *ngIf="formRepresentante['email'].errors['duplicate']">Este e-mail ya está registrado en la aplicación
             </div>
           </ng-container>
         </div>

@@ -31,6 +31,23 @@ export class RegistroEmpresaService {
   }
 
   /**
+   * Envía una petición al servidor para comprobar si el campo de un elemento
+   * está duplicado en la base de datos
+   *
+   * @param elemento objeto al que pertenece el campo. Por ejemplo: empresa, trabajador, profesor...
+   * @param campo dato que queremos comprobar. Por ejemplo: cif, dni, email...
+   * @param valor contiene el dato a comprobar
+   * @returns `Observable` de un boolean: true si está todo bien, false si está repetido
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public checkDatos(elemento: string, campo: string, valor: string | number) {
+    const url: string = this.ruta + 'check_duplicado/' + elemento + '.' + campo + '=' + valor;
+    const headers = this.headers;
+
+    return this.http.get(url, { headers });
+  }
+
+  /**
    * Envía una señal de descarga del Anexo 0 / 0A al servidor
    * @param ruta Ruta del anexo a descargar
    * @returns Un observable con la descarga del anexo

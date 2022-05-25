@@ -217,6 +217,12 @@ export class RegistroEmpresaComponent implements OnInit {
     this.familiaSelected = parseInt(event.target.value);
   }
 
+  /**
+   * Gestiona el marcado de checkbox de la selección de ciclos
+   *
+   * @param event
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
   onCheckboxChange(event: any) {
     const checkArray: FormArray = this.ciclos.get(
       'cod_ciclos_selected'
@@ -251,6 +257,7 @@ export class RegistroEmpresaComponent implements OnInit {
    */
   onSubmitEmpresa(): void {
     this.submitted = true;
+
     if (!this.empresa.valid) return;
 
     this.datosEmpresa = this.empresa.value;
@@ -417,6 +424,45 @@ export class RegistroEmpresaComponent implements OnInit {
   //#endregion
   /***********************************************************************/
 
+  /***********************************************************************/
+  //#region Auxiliares - Check duplicidados
+
+  /**
+   * Envía una petición al servidor para comprobar si un un elemento está registrado en la BBDD
+   *
+   * @param elemento nombre del objeto que se quiere comprobar
+   * (corresponde un una tabla en la BBDD). Ejemplo: 'empresa'
+   * @param campo nombre del campo a comprobar. Ejemplo: 'email'
+   * @param event
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public checkDato(elemento: string, campo: string, event: any): void {
+    if (event.target.value) {
+      this.registroEmpresa
+        .checkDatos(elemento, campo, event.target.value)
+        .subscribe({
+          next: (res) => {
+            console.log('Duplicado: ' + res);
+            if (res) {
+              switch (elemento) {
+                case 'empresa':
+                  this.empresa.controls[campo].setErrors({ duplicate: true });
+                  break;
+                case 'trabajador':
+                  this.representante.controls[campo].setErrors({
+                    duplicate: true,
+                  });
+                  break;
+              }
+            }
+          },
+        });
+    }
+  }
+
+  //#endregion
+  /***********************************************************************/
+
   //#endregion
   /***********************************************************************/
 
@@ -571,7 +617,7 @@ export class RegistroEmpresaComponent implements OnInit {
         size: 'lg',
         backdrop: 'static',
         keyboard: false,
-      })
+      });
     }
   }
 
