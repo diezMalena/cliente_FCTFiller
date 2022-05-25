@@ -20,6 +20,7 @@ export class GestionGastosService {
   private urlBase: string = environment.apiUrl;
   private urlGestionGastosAlumno: string = 'gestionGastosAlumno/';
   private urlActualizarDatosGastoAlumno: string = 'actualizarDatosGastoAlumno/';
+  private urlActualizarDiasVehiculoPrivado: string = 'actualizarDiasVehiculoPrivado/';
   public headers: HttpHeaders;
 
   constructor(private http: HttpClient, headersService: HttpHeadersService) {
@@ -46,7 +47,7 @@ export class GestionGastosService {
    * @returns `Observable` de la `HttpResponse`.
    * @author David Sánchez Barragán
    */
-  public gestionGastosAlumno(dni: any) {
+  public obtenerGastosAlumno(dni: any) {
     let url = this.urlBase + this.urlGestionGastosAlumno + dni;
     const headers = this.headers;
 
@@ -72,6 +73,18 @@ export class GestionGastosService {
     return this.http.put(url, JSON.stringify(gasto), { headers });
   }
 
+  public actualizarDiasVehiculoPrivado(gasto: Gasto) {
+    let datos = {
+      dni_alumno: gasto.dni_alumno,
+      curso_academico: gasto.curso_academico,
+      dias_transporte_privado: gasto.dias_transporte_privado
+    };
+    const url: string = this.urlBase + this.urlActualizarDiasVehiculoPrivado;
+    const headers = this.headers;
+
+    return this.http.put(url, JSON.stringify(datos), { headers });
+  }
+
   //#endregion
   /***********************************************************************/
 
@@ -88,14 +101,14 @@ export class GestionGastosService {
   /***********************************************************************/
   //#region Funciones auxiliares
 
-  // /**
-  //  * Establece el array de alumnos
-  //  * @param alumnosArray array de alumnos
-  //  * @author David Sánchez Barragán
-  //  */
-  // public setAlumnosArray(alumnosArray: Alumno[]) {
-  //   this.alumnosArray.next(alumnosArray);
-  // }
+  /**
+   * Establece al Behaviour Subject el gasto
+   * @param gasto Gasto del alumno
+   * @author David Sánchez Barragán
+   */
+  public setGastoBS(gasto: Gasto) {
+    this.gastoBS.next(gasto);
+  }
 
   //#endregion
   /***********************************************************************/

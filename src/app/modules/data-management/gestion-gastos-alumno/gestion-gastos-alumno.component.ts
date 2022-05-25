@@ -51,11 +51,11 @@ export class GestionGastosAlumnoComponent
   ) { }
 
   ngOnInit(): void {
+    this.cargarGasto();
+
     $.extend(true, $.fn.dataTable.defaults, {
       language: { url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json' },
     });
-    this.cargarGasto();
-    //this.obtenerFacturasDesdeModal();
   }
 
 
@@ -87,7 +87,7 @@ export class GestionGastosAlumnoComponent
   //#region Servicios - Peticiones al servidor
 
   /***********************************************************************/
-  //#region Obtención de información: alumnos
+  //#region Obtención de información: gasto
 
   /**
    * Llama al servicio que realiza la petición al servidor y gestiona la respuesta
@@ -95,7 +95,7 @@ export class GestionGastosAlumnoComponent
    */
   cargarGasto() {
     this.gestionGastosService
-      .gestionGastosAlumno(this.loginStorageUser.getUser()?.dni)
+      .obtenerGastosAlumno(this.loginStorageUser.getUser()?.dni)
       .subscribe({
         next: (result) => {
           this.gasto = result;
@@ -104,12 +104,27 @@ export class GestionGastosAlumnoComponent
           $.fn.dataTable.ext.errMode = 'throw';
         },
         error: (error) => {
-          console.log(error);
           this.toastr.error('No se han podido recuperar los datos', 'Error');
         },
       });
   }
 
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Actualización
+  actualizarDiasVehiculoPrivado() {
+    this.gestionGastosService.actualizarDiasVehiculoPrivado(this.gasto!).subscribe({
+      next: (result) => {
+        this.cargarGasto();
+        this.toastr.success('Días actualizados correctamente');
+      },
+      error: (error) => {
+        this.toastr.error('No se han podido actualizar los datos', 'Error');
+      }
+    })
+  }
   //#endregion
   /***********************************************************************/
 
@@ -197,10 +212,12 @@ export class GestionGastosAlumnoComponent
     });
 
     let gasto = this.gasto;
-
+    console.log(gasto);
     this.gestionGastosService.gastoTrigger.emit([
       gasto,
     ]);
+
+    this.obtenerGastoDesdeModal();
   }
 
   /**
@@ -213,6 +230,17 @@ export class GestionGastosAlumnoComponent
     //   this.rerender();
     //   this.dtTrigger.next(this.listaAlumnos);
     // });
+  }
+
+  /**
+   * Actualiza los datos del gasto respecto de las modificaciones en el modal
+   * @author David Sánchez Barragán
+   */
+  public obtenerGastoDesdeModal() {
+    this.gestionGastosService.gastoBS.subscribe((gasto) => {
+      this.gasto = gasto;
+      this.dtTrigger.next(this.gasto);
+    });
   }
 
   /**

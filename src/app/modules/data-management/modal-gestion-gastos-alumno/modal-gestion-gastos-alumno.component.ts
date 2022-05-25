@@ -64,7 +64,7 @@ export class ModalGestionGastosAlumnoComponent implements OnInit {
   construirFormulario() {
     this.datosAlumno = this.formBuilder.group({
       residencia_alumno: [this.gasto?.residencia_alumno, [Validators.required]],
-      ubicacion_centro_trabajo: [this.gasto?.ubicacion_centro_trabajo, [Validators.required]],
+      ubicacion_centro_trabajo: [this.gasto?.ubicacion_centro_trabajo],
       distancia_centroEd_centroTra: [this.gasto?.distancia_centroEd_centroTra, [Validators.min(0)]],
       distancia_centroEd_residencia: [this.gasto?.distancia_centroEd_residencia, [Validators.min(0)]],
       distancia_centroTra_residencia: [this.gasto?.distancia_centroTra_residencia, [Validators.min(0)]],
@@ -143,14 +143,13 @@ export class ModalGestionGastosAlumnoComponent implements OnInit {
    * @author David Sánchez Barragán
    */
   obtenerGastosAlumno() {
-    // this.crudAlumnosService
-    //   .listarAlumnos(this.loginService.getUser()?.dni)
-    //   .subscribe({
-    //     next: (response) => {
-    //       this.crudAlumnosService.setAlumnosArray(response);
-    //     },
-    //   }
-    //   );
+    this.gestionGastosService
+      .obtenerGastosAlumno(this.loginService.getUser()?.dni)
+      .subscribe({
+        next: (response) => {
+          this.gestionGastosService.setGastoBS(response);
+        }
+      });
   }
 
 
@@ -169,11 +168,11 @@ export class ModalGestionGastosAlumnoComponent implements OnInit {
   actualizarDatosGastoAlumno(gasto: Gasto) {
     this.gestionGastosService.actualizarDatosGastoAlumno(gasto).subscribe({
       next: (reponse: any) => {
-        this.toastr.success('Alumno actualizado correctamente');
+        this.toastr.success('Información de gastos actualizada correctamente');
         this.obtenerGastosAlumno();
       },
       error: (error) => {
-        this.toastr.error('Se produjo un error al actualizar al alumno');
+        this.toastr.error('Se produjo un error al actualizar la información de gastos');
       },
     });
   }
@@ -189,12 +188,23 @@ export class ModalGestionGastosAlumnoComponent implements OnInit {
   //#region Funciones auxiliares y otros
 
   /**
+   * Establece el valor de todos los campos de distancia a cero.
+   */
+  public restablecerCampos() {
+    this.formulario['ubicacion_centro_trabajo'].setValue('');
+    this.formulario['distancia_centroEd_centroTra'].setValue('0');
+    this.formulario['distancia_centroEd_residencia'].setValue('0');
+    this.formulario['distancia_centroTra_residencia'].setValue('0');
+  }
+
+  /**
    * Método que se ejecutará al cerrar el modal
    * @returns `void`
    * @author David Sánchez Barragán
    */
   async closeModal() {
     if (!this.modified) {
+      this.obtenerGastosAlumno();
       this.modalActive.close();
     } else {
       let guardar = await this.dialogService.confirmacion(
@@ -204,6 +214,7 @@ export class ModalGestionGastosAlumnoComponent implements OnInit {
       if (guardar) {
         this.onSubmit();
       } else {
+        this.obtenerGastosAlumno();
         this.modalActive.close();
       }
     }
