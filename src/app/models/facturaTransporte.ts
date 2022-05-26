@@ -15,13 +15,13 @@ export class FacturaTransporte {
   }
 
   constructor(
-    public id: number,
-    public dni_alumno: string,
-    public curso_academico: string,
-    public fecha: Date,
-    public importe: number,
-    public origen: string,
-    public destino: string,
-    public imagen_ticket: string
+    public id?: number,
+    public dni_alumno?: string,
+    public curso_academico?: string,
+    public fecha?: Date,
+    public importe?: number,
+    public origen?: string,
+    public destino?: string,
+    public imagen_ticket?: string
   ){}
 }

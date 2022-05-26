@@ -20,7 +20,7 @@ import { GestionGastosService } from 'src/app/services/gestion-gastos.service';
 import { Gasto } from 'src/app/models/gasto';
 import { FacturaManutencion } from 'src/app/models/facturaManutencion';
 import { ModalGestionGastosAlumnoComponent } from '../modal-gestion-gastos-alumno/modal-gestion-gastos-alumno.component';
-// import { ManualGestionAlumnosComponent } from '../../manuales/manual-gestion-gastos-alumno/manual-gestion-gastos-alumno.component';
+import { ModalTicketDesplazamiento } from '../modal-ticket-desplazamiento/modal-ticket-desplazamiento.component';
 
 @Component({
   selector: 'app-gestion-gastos-alumno',
@@ -173,37 +173,6 @@ export class GestionGastosAlumnoComponent
 
   /***********************************************************************/
   //#region Invocación de modales
-
-  /**
-   * Abre un modal para ver o editar una factura de transporte
-   * @param factura Objeto con los datos de la factura
-   * @param modoEdicion 0 -> edición, 1 -> creación, 2 -> sólo lectura
-   * @author David Sánchez Barragán
-   */
-  mostrarFacturaTransporte(factura: FacturaTransporte, modoEdicion: ModoEdicion) {
-    // this.modal.open(ModalAlumnoComponent, {
-    //   size: 'md',
-    //   backdrop: 'static',
-    //   keyboard: false,
-    // });
-    // this.crudAlumnosService.alumnoTrigger.emit([alumno, modoEdicion]);
-  }
-
-  /**
-     * Abre un modal para ver o editar una factura de manutención
-     * @param factura Objeto con los datos de la factura
-     * @param modoEdicion 0 -> edición, 1 -> creación, 2 -> sólo lectura
-     * @author David Sánchez Barragán
-     */
-  mostrarFacturaManutencion(factura: FacturaManutencion, modoEdicion: ModoEdicion) {
-    // this.modal.open(ModalAlumnoComponent, {
-    //   size: 'md',
-    //   backdrop: 'static',
-    //   keyboard: false,
-    // });
-    // this.crudAlumnosService.alumnoTrigger.emit([alumno, modoEdicion]);
-  }
-
   /**
    * Abre un modal para editar los datos del alumno
    * @author David Sánchez Barragán
@@ -216,24 +185,54 @@ export class GestionGastosAlumnoComponent
     });
 
     let gasto = this.gasto;
-    console.log(gasto);
     this.gestionGastosService.gastoTrigger.emit([
-      gasto,
+      gasto
     ]);
 
     this.obtenerGastoDesdeModal();
   }
 
   /**
-   * Actualiza los datos de alumnos respecto de las modificaciones en el modal
+   * Abre el modal para agregar una nueva factura de transporte
+   */
+  nuevoTicketTransporte() {
+    let f = new FacturaManutencion(0, '', '', new Date(), 0, '');
+    this.mostrarFacturaTransporte(f, this.modosEdicion.nuevo);
+  }
+
+  /**
+   * Abre un modal para ver o editar una factura de transporte
+   * @param factura Objeto con los datos de la factura
+   * @param modoEdicion 0 -> edición, 1 -> creación, 2 -> sólo lectura
    * @author David Sánchez Barragán
    */
-  public obtenerFacturasDesdeModal() {
-    // this.crudAlumnosService.alumnosArray.subscribe((array) => {
-    //   this.listaAlumnos = array;
-    //   this.rerender();
-    //   this.dtTrigger.next(this.listaAlumnos);
+  mostrarFacturaTransporte(fact: FacturaTransporte, modoEdicion: ModoEdicion) {
+    this.modal.open(ModalTicketDesplazamiento, {
+      size: 'md',
+      backdrop: 'static',
+      keyboard: false,
+    });
+
+    this.gestionGastosService.facturaTransporteTrigger.emit([
+      fact, modoEdicion
+    ]);
+
+    this.obtenerGastoDesdeModal();
+  }
+
+  /**
+  * Abre un modal para ver o editar una factura de transporte
+  * @param factura Objeto con los datos de la factura
+  * @param modoEdicion 0 -> edición, 1 -> creación, 2 -> sólo lectura
+  * @author David Sánchez Barragán
+  */
+  mostrarFacturaManutencion(factura: FacturaManutencion, modoEdicion: ModoEdicion) {
+    // this.modal.open(ModalAlumnoComponent, {
+    //   size: 'md',
+    //   backdrop: 'static',
+    //   keyboard: false,
     // });
+    // this.crudAlumnosService.alumnoTrigger.emit([alumno, modoEdicion]);
   }
 
   /**

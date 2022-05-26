@@ -17,10 +17,14 @@ export class GestionGastosService {
   @Output() gastoTrigger: EventEmitter<any> = new EventEmitter();
   public gastoBS = new BehaviorSubject<Gasto>(new Gasto());
 
+  @Output() facturaTransporteTrigger: EventEmitter<any> = new EventEmitter();
+  public facturaTransporteBS = new BehaviorSubject<FacturaTransporte>(new FacturaTransporte());
+
   private urlBase: string = environment.apiUrl;
   private urlGestionGastosAlumno: string = 'gestionGastosAlumno/';
   private urlActualizarDatosGastoAlumno: string = 'actualizarDatosGastoAlumno/';
   private urlActualizarDiasVehiculoPrivado: string = 'actualizarDiasVehiculoPrivado/';
+  private urlActualizarFacturaTransporte: string = 'actualizarFacturaTransporte/';
   public headers: HttpHeaders;
 
   constructor(private http: HttpClient, headersService: HttpHeadersService) {
@@ -71,6 +75,13 @@ export class GestionGastosService {
     const headers = this.headers;
 
     return this.http.put(url, JSON.stringify(gasto), { headers });
+  }
+
+  public actualizarFacturaTransporte(factura: FacturaTransporte) {
+    let url = this.urlBase + this.urlActualizarFacturaTransporte;
+    const headers = this.headers;
+
+    return this.http.put(url, JSON.stringify(factura), { headers });
   }
 
   public actualizarDiasVehiculoPrivado(gasto: Gasto) {

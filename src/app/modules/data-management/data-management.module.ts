@@ -29,6 +29,7 @@ import { DataTablesModule } from 'angular-datatables';
 import { ModalCambiotutorComponent } from './seguimiento/modal-cambiotutor/modal-cambiotutor.component';
 import { HistorialAnexosComponent } from './historial-anexos/historial-anexos.component';
 import { ModalGestionGastosAlumnoComponent } from './modal-gestion-gastos-alumno/modal-gestion-gastos-alumno.component';
+import { ModalTicketDesplazamiento } from './modal-ticket-desplazamiento/modal-ticket-desplazamiento.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { ModalGestionGastosAlumnoComponent } from './modal-gestion-gastos-alumno
     ModalAlumnoComponent,
     GestionGastosAlumnoComponent,
     ModalGestionGastosAlumnoComponent,
+    ModalTicketDesplazamiento,
     HistorialAnexosComponent,
   ],
   imports: [
