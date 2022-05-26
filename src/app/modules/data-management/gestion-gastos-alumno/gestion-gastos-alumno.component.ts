@@ -196,9 +196,20 @@ export class GestionGastosAlumnoComponent
    * Abre el modal para agregar una nueva factura de transporte
    */
   nuevoTicketTransporte() {
-    let f = new FacturaManutencion(0, '', '', new Date(), 0, '');
-    this.mostrarFacturaTransporte(f, this.modosEdicion.nuevo);
-  }
+    let facturaM = new FacturaManutencion(0, '', '', new Date(), 0, '');
+    this.modal.open(ModalTicketDesplazamiento, {
+      size: 'md',
+      backdrop: 'static',
+      keyboard: false,
+    });
+
+    //Cambiar en un futuro la obtención del DNI, porque se compartirá
+    //esta vista con la del profesor
+    this.gestionGastosService.facturaTransporteTrigger.emit([
+      facturaM, ModoEdicion.nuevo, this.loginStorageUser.getUser()?.dni
+    ]);
+
+    this.obtenerGastoDesdeModal();  }
 
   /**
    * Abre un modal para ver o editar una factura de transporte

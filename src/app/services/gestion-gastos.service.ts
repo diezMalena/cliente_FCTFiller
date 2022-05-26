@@ -25,6 +25,7 @@ export class GestionGastosService {
   private urlActualizarDatosGastoAlumno: string = 'actualizarDatosGastoAlumno/';
   private urlActualizarDiasVehiculoPrivado: string = 'actualizarDiasVehiculoPrivado/';
   private urlActualizarFacturaTransporte: string = 'actualizarFacturaTransporte/';
+  private urlNuevaFacturaTransporte: string = 'nuevaFacturaTransporte/';
   public headers: HttpHeaders;
 
   constructor(private http: HttpClient, headersService: HttpHeadersService) {
@@ -37,7 +38,12 @@ export class GestionGastosService {
   /***********************************************************************/
   //#region CRUD - Create
 
+  public nuevaFacturaTransporte(factura: FacturaTransporte) {
+    let url = this.urlBase + this.urlNuevaFacturaTransporte;
+    const headers = this.headers;
 
+    return this.http.post(url, factura, { headers });
+  }
 
   //#endregion
   /***********************************************************************/

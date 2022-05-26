@@ -29,6 +29,7 @@ export class ModalTicketDesplazamiento implements OnInit {
   public modified: boolean = false;
   public modosEdicion: typeof ModoEdicion = ModoEdicion;
   public modo?: number;
+  public dni?: string;
   //UI
   public required: string = '';
   public readonly: boolean = false;
@@ -49,13 +50,16 @@ export class ModalTicketDesplazamiento implements OnInit {
       next: (data: Array<any>) => {
         this.facturaTransporte = data[0];
         this.modo = data[1];
+        if (this.modo == ModoEdicion.nuevo) {
+          this.dni = data[3];
+        }
 
         this.construirFormulario();
 
         //UI
         this.required = 'required';
         this.readonly = !(this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo);
-        switch(this.modo){
+        switch (this.modo) {
           case ModoEdicion.detalle:
             this.titulo = 'Detalle';
             break;
@@ -87,13 +91,13 @@ export class ModalTicketDesplazamiento implements OnInit {
   construirFormulario() {
     this.datosFactura = this.formBuilder.group({
       id: [this.facturaTransporte?.id, []],
-      dni_alumno: [this.facturaTransporte?.dni_alumno , []],
-      curso_academico: [this.facturaTransporte?.curso_academico , []],
-      fecha: [this.facturaTransporte?.fecha , []],
-      importe: [this.facturaTransporte?.importe , []],
-      origen: [this.facturaTransporte?.origen , []],
-      destino: [this.facturaTransporte?.destino , []],
-      imagen_ticket: [this.facturaTransporte?.imagen_ticket , []]
+      dni_alumno: [this.facturaTransporte?.dni_alumno, []],
+      curso_academico: [this.facturaTransporte?.curso_academico, []],
+      fecha: [this.facturaTransporte?.fecha, []],
+      importe: [this.facturaTransporte?.importe, []],
+      origen: [this.facturaTransporte?.origen, []],
+      destino: [this.facturaTransporte?.destino, []],
+      imagen_ticket: [this.facturaTransporte?.imagen_ticket, []]
     });
   }
 
@@ -109,24 +113,42 @@ export class ModalTicketDesplazamiento implements OnInit {
   onSubmit() {
     this.submitted = true;
 
-    let datos = this.datosFactura.value;
-    let facturaEditada = new FacturaTransporte(
-      this.facturaTransporte?.id,
-      this.facturaTransporte?.dni_alumno,
-      this.facturaTransporte?.curso_academico,
-      this.formulario['fecha'].value,
-      this.formulario['importe'].value,
-      this.formulario['origen'].value,
-      this.formulario['destino'].value,
-      this.formulario['imagen_ticket'].value
+    let facturaPeticion = null;
+    if (this.modo == ModoEdicion.nuevo) {
+      facturaPeticion = new FacturaTransporte(
+        0,
+        this.loginService.getUser()?.dni,
+        '',
+        this.formulario['fecha'].value,
+        this.formulario['importe'].value,
+        this.formulario['origen'].value,
+        this.formulario['destino'].value,
+        this.formulario['imagen_ticket'].value
       );
+    } else {
+      facturaPeticion = new FacturaTransporte(
+        this.facturaTransporte?.id,
+        this.facturaTransporte?.dni_alumno,
+        this.facturaTransporte?.curso_academico,
+        this.formulario['fecha'].value,
+        this.formulario['importe'].value,
+        this.formulario['origen'].value,
+        this.formulario['destino'].value,
+        this.formulario['imagen_ticket'].value
+      );
+    }
+
 
 
     if (this.datosFactura.invalid) {
       return;
     } else {
       this.modified = false;
-      this.actualizarFacturaTransporte(facturaEditada);
+      if (this.modo == ModoEdicion.nuevo) {
+        this.nuevaFacturaTransporte(facturaPeticion);
+      } else {
+        this.actualizarFacturaTransporte(facturaPeticion);
+      }
       this.modalActive.close();
     }
   }
@@ -149,6 +171,26 @@ export class ModalTicketDesplazamiento implements OnInit {
 
   /***********************************************************************/
   //#region Servicios - Peticiones al servidor
+
+
+  //#region Creación de datos - CREATE
+  /**
+   * Inserta los datos del ticket de transporte en la base de datos
+   * @param alumno Objeto con los datos del ticket
+   * @author David Sánchez Barragán
+   */
+   nuevaFacturaTransporte(factura: FacturaTransporte) {
+    this.gestionGastosService.nuevaFacturaTransporte(factura).subscribe({
+      next: (reponse: any) => {
+        this.toastr.success('Ticket insertado correctamente');
+        this.obtenerGastosAlumno();
+      },
+      error: (error) => {
+        this.toastr.error('Se produjo un error al insertar el ticket');
+      },
+    });
+  }
+  //#endregion
 
   /***********************************************************************/
   //#region Obtención de datos - READ
@@ -197,7 +239,7 @@ export class ModalTicketDesplazamiento implements OnInit {
    * @param event Evento change del input type=file de la imagen del ticket
    * @param formulario Formulario para asignar el contenido en base64 del fichero
    */
-   cambiarImagenTicket(event: any, formulario: any) {
+  cambiarImagenTicket(event: any, formulario: any) {
     let files = event.target.files[0];
     if (files) {
       let fileReader = new FileReader();
