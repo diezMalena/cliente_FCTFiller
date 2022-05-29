@@ -21,6 +21,7 @@ import { Gasto } from 'src/app/models/gasto';
 import { FacturaManutencion } from 'src/app/models/facturaManutencion';
 import { ModalGestionGastosAlumnoComponent } from '../modal-gestion-gastos-alumno/modal-gestion-gastos-alumno.component';
 import { ModalTicketDesplazamiento } from '../modal-ticket-desplazamiento/modal-ticket-desplazamiento.component';
+import { ModalTicketManutencion } from '../modal-ticket-manutencion/modal-ticket-manutencion.component';
 
 @Component({
   selector: 'app-gestion-gastos-alumno',
@@ -141,28 +142,58 @@ export class GestionGastosAlumnoComponent
    * @author David Sánchez Barragán
    */
   borrarFacturaTransporte(id: any) {
-    // this.dialog
-    //   .open(ConfirmDialogComponent, {
-    //     data: {
-    //       title: 'Eliminar registro',
-    //       message: `¿Está seguro de que quiere eliminar a este alumno?`,
-    //     },
-    //     width: '400px',
-    //   })
-    //   .afterClosed()
-    //   .subscribe((res) => {
-    //     if (res.respuesta) {
-    //       this.crudAlumnosService.borrarAlumno(alumno.dni).subscribe({
-    //         next: (response: any) => {
-    //           this.cargarAlumnos();
-    //           this.toastr.success('Alumno borrado correctamente');
-    //         },
-    //         error: (error) => {
-    //           this.toastr.error('Ha ocurrido un error al eliminar al alumno');
-    //         },
-    //       });
-    //     }
-    //   });
+    this.dialog
+      .open(ConfirmDialogComponent, {
+        data: {
+          title: 'Eliminar factura',
+          message: `¿Está seguro de que quiere eliminar esta factura?`,
+        },
+        width: '400px',
+      })
+      .afterClosed()
+      .subscribe((res) => {
+        if (res.respuesta) {
+          this.gestionGastosService.eliminarFacturaTransporte(id).subscribe({
+            next: (response: any) => {
+              this.cargarGasto();
+              this.toastr.success('Factura borrada correctamente');
+            },
+            error: (error) => {
+              this.toastr.error('Ha ocurrido un error al eliminar la factura');
+            },
+          });
+        }
+      });
+  }
+
+  /**
+   * Gestiona la llamada al servicio que eliminará la factura de la base de datos
+   * @param id ID del objeto a eliminar
+   * @author David Sánchez Barragán
+   */
+   borrarFacturaManutencion(id: any) {
+    this.dialog
+      .open(ConfirmDialogComponent, {
+        data: {
+          title: 'Eliminar factura',
+          message: `¿Está seguro de que quiere eliminar esta factura?`,
+        },
+        width: '400px',
+      })
+      .afterClosed()
+      .subscribe((res) => {
+        if (res.respuesta) {
+          this.gestionGastosService.eliminarFacturaManutencion(id).subscribe({
+            next: (response: any) => {
+              this.cargarGasto();
+              this.toastr.success('Factura borrada correctamente');
+            },
+            error: (error) => {
+              this.toastr.error('Ha ocurrido un error al eliminar la factura');
+            },
+          });
+        }
+      });
   }
 
   //#endregion
@@ -196,7 +227,7 @@ export class GestionGastosAlumnoComponent
    * Abre el modal para agregar una nueva factura de transporte
    */
   nuevoTicketTransporte() {
-    let facturaM = new FacturaManutencion(0, '', '', new Date(), 0, '');
+    let facturaT = new FacturaTransporte(0, '', '', new Date(), 0, '');
     this.modal.open(ModalTicketDesplazamiento, {
       size: 'md',
       backdrop: 'static',
@@ -206,10 +237,31 @@ export class GestionGastosAlumnoComponent
     //Cambiar en un futuro la obtención del DNI, porque se compartirá
     //esta vista con la del profesor
     this.gestionGastosService.facturaTransporteTrigger.emit([
+      facturaT, ModoEdicion.nuevo, this.loginStorageUser.getUser()?.dni
+    ]);
+
+    this.obtenerGastoDesdeModal();
+  }
+
+  /**
+   * Abre el modal para agregar una nueva factura de transporte
+   */
+   nuevoTicketManutencion() {
+    let facturaM = new FacturaManutencion(0, '', '', new Date(), 0, '');
+    this.modal.open(ModalTicketManutencion, {
+      size: 'md',
+      backdrop: 'static',
+      keyboard: false,
+    });
+
+    //Cambiar en un futuro la obtención del DNI, porque se compartirá
+    //esta vista con la del profesor
+    this.gestionGastosService.facturaManutencionTrigger.emit([
       facturaM, ModoEdicion.nuevo, this.loginStorageUser.getUser()?.dni
     ]);
 
-    this.obtenerGastoDesdeModal();  }
+    this.obtenerGastoDesdeModal();
+  }
 
   /**
    * Abre un modal para ver o editar una factura de transporte
@@ -237,13 +289,18 @@ export class GestionGastosAlumnoComponent
   * @param modoEdicion 0 -> edición, 1 -> creación, 2 -> sólo lectura
   * @author David Sánchez Barragán
   */
-  mostrarFacturaManutencion(factura: FacturaManutencion, modoEdicion: ModoEdicion) {
-    // this.modal.open(ModalAlumnoComponent, {
-    //   size: 'md',
-    //   backdrop: 'static',
-    //   keyboard: false,
-    // });
-    // this.crudAlumnosService.alumnoTrigger.emit([alumno, modoEdicion]);
+  mostrarFacturaManutencion(fact: FacturaManutencion, modoEdicion: ModoEdicion) {
+    this.modal.open(ModalTicketManutencion, {
+      size: 'md',
+      backdrop: 'static',
+      keyboard: false,
+    });
+
+    this.gestionGastosService.facturaManutencionTrigger.emit([
+      fact, modoEdicion
+    ]);
+
+    this.obtenerGastoDesdeModal();
   }
 
   /**

@@ -143,7 +143,7 @@
     <section [hidden]="this.isVisible">
       <div class="row pt-4">
         <div class="col-12">
-          <button class="btn btn-outline-primary">Añadir ticket</button>
+          <button (click)="this.nuevoTicketManutencion()" class="btn btn-outline-primary">Añadir ticket</button>
         </div>
       </div>
       <div class="row">
@@ -182,7 +182,7 @@
                       <use xlink:href="#lapiz" />
                     </svg>
                   </button>
-                  <button class="btn btn-outline-danger px-2 py-1 mx-3" (click)="borrarFacturaTransporte(factura.id)"
+                  <button class="btn btn-outline-danger px-2 py-1 mx-3" (click)="borrarFacturaManutencion(factura.id)"
                     placement="left" ngbTooltip="Eliminar alumno" attr.aria-label="Eliminar factura #{{factura.id}}">
                     <svg class="bi" width="16" height="16">
                       <use xlink:href="#papelera" />

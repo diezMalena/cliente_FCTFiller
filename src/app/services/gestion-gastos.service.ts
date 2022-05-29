@@ -11,6 +11,7 @@ import { Gasto } from '../models/gasto';
 import { gastoResponse } from '../models/gastoResponse';
 import { map } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
+import { FacturaManutencion } from '../models/facturaManutencion';
 
 @Injectable({ providedIn: 'root' })
 export class GestionGastosService {
@@ -20,12 +21,19 @@ export class GestionGastosService {
   @Output() facturaTransporteTrigger: EventEmitter<any> = new EventEmitter();
   public facturaTransporteBS = new BehaviorSubject<FacturaTransporte>(new FacturaTransporte());
 
+  @Output() facturaManutencionTrigger: EventEmitter<any> = new EventEmitter();
+  public facturaManutencionBS = new BehaviorSubject<FacturaTransporte>(new FacturaTransporte());
+
   private urlBase: string = environment.apiUrl;
   private urlGestionGastosAlumno: string = 'gestionGastosAlumno/';
   private urlActualizarDatosGastoAlumno: string = 'actualizarDatosGastoAlumno/';
   private urlActualizarDiasVehiculoPrivado: string = 'actualizarDiasVehiculoPrivado/';
   private urlActualizarFacturaTransporte: string = 'actualizarFacturaTransporte/';
   private urlNuevaFacturaTransporte: string = 'nuevaFacturaTransporte/';
+  private urlActualizarFacturaManutencion: string = 'actualizarFacturaManutencion/';
+  private urlNuevaFacturaManutencion: string = 'nuevaFacturaManutencion/';
+  private urlEliminarFacturaTransporte: string = 'eliminarFacturaTransporte/';
+  private urlEliminarFacturaManutencion: string = 'eliminarFacturaManutencion/';
   public headers: HttpHeaders;
 
   constructor(private http: HttpClient, headersService: HttpHeadersService) {
@@ -40,6 +48,13 @@ export class GestionGastosService {
 
   public nuevaFacturaTransporte(factura: FacturaTransporte) {
     let url = this.urlBase + this.urlNuevaFacturaTransporte;
+    const headers = this.headers;
+
+    return this.http.post(url, factura, { headers });
+  }
+
+  public nuevaFacturaManutencion(factura: FacturaManutencion) {
+    let url = this.urlBase + this.urlNuevaFacturaManutencion;
     const headers = this.headers;
 
     return this.http.post(url, factura, { headers });
@@ -90,6 +105,13 @@ export class GestionGastosService {
     return this.http.put(url, JSON.stringify(factura), { headers });
   }
 
+  public actualizarFacturaManutencion(factura: FacturaManutencion) {
+    let url = this.urlBase + this.urlActualizarFacturaManutencion;
+    const headers = this.headers;
+
+    return this.http.put(url, JSON.stringify(factura), { headers });
+  }
+
   public actualizarDiasVehiculoPrivado(gasto: Gasto) {
     let datos = {
       dni_alumno: gasto.dni_alumno,
@@ -108,6 +130,27 @@ export class GestionGastosService {
   /***********************************************************************/
   //#region CRUD - Delete
 
+  public eliminarFacturaManutencion(id: number) {
+    let url = this.urlBase + this.urlEliminarFacturaManutencion + id;
+    const headers = this.headers;
+
+    return this.http.delete<any>(url, { headers }).pipe(
+      map((resp: any) => {
+        return resp;
+      })
+    );
+  }
+
+  public eliminarFacturaTransporte(id: number) {
+    let url = this.urlBase + this.urlEliminarFacturaTransporte + id;
+    const headers = this.headers;
+
+    return this.http.delete<any>(url, { headers }).pipe(
+      map((resp: any) => {
+        return resp;
+      })
+    );
+  }
 
   //#endregion
   /***********************************************************************/
