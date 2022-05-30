@@ -13,6 +13,7 @@ import { FaseForm } from 'src/app/classes/fase-form';
 import { FamiliaProfesional } from 'src/app/models/familiaProfesional';
 import { Grupo } from 'src/app/models/grupo';
 import { AuxService } from 'src/app/services/aux-service.service';
+import { CrudEmpresasService } from 'src/app/services/crud-empresas.service';
 import { DialogService } from 'src/app/services/dialog.service';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 import { RegistroEmpresaService } from 'src/app/services/registro-empresa.service';
@@ -53,7 +54,8 @@ export class RegistroEmpresaComponent implements OnInit {
     private registroEmpresa: RegistroEmpresaService,
     private toastr: ToastrService,
     public dialog: DialogService,
-    private router: Router
+    private router: Router,
+    private crudEmpresasService: CrudEmpresasService
   ) {
     this.fases = new Array<FaseForm>(5);
     this.faseActual = 1;
@@ -617,6 +619,11 @@ export class RegistroEmpresaComponent implements OnInit {
         size: 'lg',
         backdrop: 'static',
         keyboard: false,
+      });
+      this.crudEmpresasService.getEmpresa(this.datosEmpresa.cif).subscribe({
+        next: (empresa) => {
+          this.crudEmpresasService.empresaTrigger.emit([empresa, 0]);
+        },
       });
     }
   }

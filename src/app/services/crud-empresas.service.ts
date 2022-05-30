@@ -7,6 +7,8 @@ import { Trabajador } from '../models/trabajador';
 import { TrabajadorResponse } from '../models/trabajadorResponse';
 import { environment } from 'src/environments/environment';
 import { HttpHeadersService } from './http-headers.service';
+import { CentroEstudios } from '../models/centroEstudios';
+import { CentroEstudiosResponse } from '../models/centroEstudiosResponse';
 
 @Injectable({ providedIn: 'root' })
 export class CrudEmpresasService {
@@ -50,6 +52,16 @@ export class CrudEmpresasService {
     );
   }
 
+  public getEmpresa(cif: string): Observable<Empresa> {
+    let url: string = this.URLAPI + 'solicitar_empresa/cif=' + cif;
+    let headers = this.headers;
+
+    return this.http.get<EmpresaResponse>(url, { headers }).pipe(
+      map((empresa: EmpresaResponse) => {
+        return Empresa.empresaJSON(empresa);
+      })
+    );
+  }
   /**
    * Devuelve un objeto con la información del representante de una empresa
    *
@@ -123,6 +135,30 @@ export class CrudEmpresasService {
 
   //#endregion
   /***********************************************************************/
+
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Gestión de convenios
+
+  /**
+   * Solicita al servidor la información del centro de estudios y su director
+   *
+   * @param convenio Código del convenio
+   * @returns `Observable` del centro de estudios con la información del director
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public getCentroEstudios(convenio: string): Observable<CentroEstudios> {
+    let url: string = this.URLAPI + 'solicitar_centro_estudios/convenio=' + convenio;
+    let headers = this.headers;
+
+    return this.http.get<CentroEstudiosResponse>(url, { headers }).pipe(
+      map((centro: CentroEstudiosResponse) => {
+        return CentroEstudios.centroEstudiosJSON(centro);
+      })
+    );
+  }
 
   //#endregion
   /***********************************************************************/

@@ -15,6 +15,7 @@ import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { ManualGestionEmpresasComponent } from '../../manuales/manual-gestion-empresas/manual-gestion-empresas.component';
+import { ModalConvenioComponent } from '../modal-convenio/modal-convenio.component';
 
 @Component({
   selector: 'app-gestion-empresas',
@@ -157,6 +158,10 @@ export class GestionEmpresasComponent
     }
   }
 
+  public async anularConvenio(empresa: Empresa) {
+
+  }
+
   //#endregion
   /***********************************************************************/
 
@@ -190,6 +195,23 @@ export class GestionEmpresasComponent
       this.empresas = array;
       this.rerender();
     });
+  }
+
+  /**
+   * Abre un modal con los datos del convenio, hecho o a hacer. Según el número que se le pase
+   * como segundo argumento, el modal permitirá crearlo, verlo, editarlo o renovarlo
+   *
+   * @param empresa Empresa con la que se ha hecho o quiere hacer el convenio
+   * @param modo Funcionalidad que adoptará el modal: 0 -> crear, 1 -> ver, 2 -> editar, 3 -> renovar
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public mostrarConvenio(empresa: Empresa, modo: number) {
+    this.modal.open(ModalConvenioComponent, {
+      size: 'lg',
+      backdrop: 'static',
+      keyboard: false,
+    });
+    this.crudEmpresasService.empresaTrigger.emit([empresa, modo]);
   }
 
   /**

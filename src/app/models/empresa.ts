@@ -19,7 +19,8 @@ export class Empresa {
       obj['nombre_responsable'],
       obj['dni_responsable'],
       obj['alumnos'],
-      obj['convenio']
+      obj['convenio'],
+      obj['es_privada'],
     );
   }
 
@@ -37,7 +38,8 @@ export class Empresa {
     public nombre_responsable?: string,
     public dni_responsable?: string,
     public alumnos?: Alumno[],
-    public convenio?: Convenio | null
+    public convenio?: Convenio | null,
+    public es_privada?: boolean
   ) {}
 
   public isConvenioRenovable() {
@@ -46,7 +48,6 @@ export class Empresa {
         var diff_ms = Date.now() - new Date(this.convenio.fecha_fin).getTime();
         var age_dt = new Date(diff_ms);
 
-        console.log(Math.abs(age_dt.getUTCFullYear() - 1970) < 1);
         return Math.abs(age_dt.getUTCFullYear() - 1970) < 1;
       } else {
         return false;

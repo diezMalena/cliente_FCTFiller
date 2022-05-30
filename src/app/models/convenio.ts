@@ -1,4 +1,6 @@
+import { CentroEstudios } from './centroEstudios';
 import { ConvenioResponse } from './convenioResponse';
+import { Empresa } from './empresa';
 
 export class Convenio {
   static empresaJSON(obj: ConvenioResponse) {
@@ -7,7 +9,9 @@ export class Convenio {
       obj['cod_centro'],
       obj['id_empresa'],
       obj['fecha_ini'],
-      obj['fecha_fin']
+      obj['fecha_fin'],
+      obj['centro'],
+      obj['empresa'],
     );
   }
 
@@ -15,8 +19,10 @@ export class Convenio {
     public cod_convenio: string,
     public cod_centro: string,
     public id_empresa: number,
-    public fecha_ini: Date | null,
-    public fecha_fin: Date | null
+    public fecha_ini?: Date,
+    public fecha_fin?: Date,
+    public centro?: CentroEstudios,
+    public empresa?: Empresa
   ) {}
 
   public isRenovable(): boolean {
@@ -24,10 +30,15 @@ export class Convenio {
       var diff_ms = Date.now() - new Date(this.fecha_fin).getTime();
       var age_dt = new Date(diff_ms);
 
-      console.log(Math.abs(age_dt.getUTCFullYear() - 1970) < 1);
       return Math.abs(age_dt.getUTCFullYear() - 1970) < 1;
     } else {
       return false;
     }
+  }
+
+  public getNum(): number {
+    let part = this.cod_convenio.split('/')[0];
+    console.log(part);
+    return parseInt(part.substring(1));
   }
 }

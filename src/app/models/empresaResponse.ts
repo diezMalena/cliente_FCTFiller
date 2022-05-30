@@ -17,4 +17,5 @@ export interface EmpresaResponse {
   dni_responsable: string;
   alumnos: Alumno[];
   convenio: Convenio | null;
+  es_privada: boolean;
 }
