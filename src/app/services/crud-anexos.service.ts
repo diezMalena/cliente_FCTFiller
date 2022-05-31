@@ -225,9 +225,9 @@ export class AnexoService {
   public rellenarAnexoIIyIV(tipo_anexo : string, dni_tutor:string) {
     let url: string = this.ruta + 'rellenarAnexoIIYIV';
     let dato = { anexo: tipo_anexo, dni_tutor: dni_tutor };
-    const headers = this.headers;
+    const HTTPOptions = this.headersService.getHeadersWithTokenArrayBuffer();
 
-    return this.http.post(url, dato, { headers });
+    return this.http.post(url, dato, HTTPOptions);
   }
    //#endregion
   /***********************************************************************/

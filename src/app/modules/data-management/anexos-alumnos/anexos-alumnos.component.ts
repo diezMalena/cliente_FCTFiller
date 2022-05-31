@@ -209,8 +209,10 @@ export class AnexosAlumnosComponent implements OnDestroy, OnInit{
    * Esta funcion abre el manual de ayuda del crud de anexos
    * @author Laura <lauramorenoramos97@gmail.com>
    */
-    public abrirModalUpload(nombre : string) {
+    public abrirModalUpload(nombre : string, codigo:string) {
       sessionStorage.setItem('tipoAnexo', nombre);
+      sessionStorage.setItem('codigoAnexo',codigo);
+      sessionStorage.setItem('llamadaDesdeCrud','1');
       this.modal.open(ModalUploadAnexoComponent, { size: 'md' });
     }
 

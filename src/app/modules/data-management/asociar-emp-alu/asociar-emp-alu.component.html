@@ -57,6 +57,14 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div *ngFor="let anexo of anexos; index as i" class="row d-flex justify-content-center">
+                                                <input *ngIf="empresa.nombre==anexo.id_empresa  && this.hayAlumnosEnEmpresas==true" type="button" class="col-12 col-lg-5 btn btn-outline-light m-1" value="Subir Anexo" (click)="abrirModalUpload(anexo.codigo) ">
+                                                <input *ngIf="empresa.nombre==anexo.id_empresa  && this.hayAlumnosEnEmpresas==true" type="button" class="col-12 col-lg-5 btn btn-outline-light m-1" (click)="descargarAnexo(anexo.codigo)" value="Descargar Anexo">
+                                            </div>
+                                            <div *ngIf="this.hayAlumnosEnEmpresas==false" class="row d-flex justify-content-center">
+                                                <input type=" button" class="col-12 col-lg-5 btn btn-outline-light m-1" value="Subir Anexo" disabled>
+                                                <input type=" button" class="col-12 col-lg-5 btn btn-outline-light m-1" value="Descargar Anexo" disabled>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -65,10 +73,8 @@
                     </div>
                 </div>
                 <!--Botones-->
-                <div class="col-sm-12 mt-1 text-center">
-                    <input type="button" class="btn btn-outline-primary m-1" value="Guardar y Generar Word" (click)='setCambiosEmpresas()'>
-                    <input *ngIf="this.hayAlumnosEnEmpresas == true" type="button" class="btn btn-outline-primary m-1" value="Subir Anexo" (click)="abrirModalUpload()">
-                    <input *ngIf="this.hayAlumnosEnEmpresas == false" type=" button " class="btn btn-outline-primary m-1 " value="Subir Anexo " (click)="abrirModalUpload() " disabled>
+                <div class="col-sm-12 mt-1 text-center ">
+                    <input type="button " class="btn btn-outline-primary m-1 " value="Guardar y Generar Word " (click)='setCambiosEmpresas()'>
                 </div>
             </div>
         </div>

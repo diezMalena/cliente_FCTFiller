@@ -91,7 +91,8 @@ const routes: Routes = [
   },
   {
     path:'programa-formativo',
-    component: ProgramaFormativoComponent
+    component: ProgramaFormativoComponent,
+    canActivate: [ProfesoresGuard],
   },
   {
     path: 'crud-profesores',

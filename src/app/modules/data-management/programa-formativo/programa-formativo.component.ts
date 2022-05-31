@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import * as FileSaver from 'file-saver';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FileUploadService } from 'src/app/services/file-upload.service';
 import { ToastrService } from 'ngx-toastr';
@@ -84,16 +85,16 @@ export class ProgramaFormativoComponent implements OnInit {
 
     this.uploadService.subirAnexo(datos).subscribe({
       next: (res) => {
-        this.toastr.success('Anexo Subido', 'Hecho!');
+        this.toastr.success(this.tipoAnexo+' Subido', 'Hecho!');
         this.rellenarAnexo();
       },
       error: (e) => {
         console.log(e);
-        this.toastr.error('El anexo no ha podido subirse', 'Fallo');
+        this.toastr.error('El anexo '+this.tipoAnexo+' no ha podido subirse', 'Fallo');
       },
     });
   }else{
-    this.toastr.error('El anexo debe llamarse plantilla.docx', 'Fallo');
+    this.toastr.error('El anexo debe llamarse Anexo2.docx o .pdf o Anexo4.docx o .pdf', 'Fallo');
   }
   }
 
@@ -105,11 +106,14 @@ export class ProgramaFormativoComponent implements OnInit {
    public rellenarAnexo() {
     this.anexoService.rellenarAnexoIIyIV(this.evento.name,this.dni_usuario!).subscribe({
       next: (res) => {
-        this.toastr.success('Anexo Descargado', 'Hecho!');
+        const current = new Date();
+        const blob = new Blob([res], { type: 'application/octet-stream' });
+        FileSaver.saveAs(blob, 'backup_' + current.getTime() + '.zip');
+        this.toastr.success(this.tipoAnexo+' Descargado', 'Hecho!');
       },
       error: (e) => {
         console.log(e);
-        this.toastr.error('El anexo no ha podido descargarse', 'Fallo');
+        this.toastr.error('El '+this.tipoAnexo+' no ha podido descargarse', 'Fallo');
       },
     });
   }

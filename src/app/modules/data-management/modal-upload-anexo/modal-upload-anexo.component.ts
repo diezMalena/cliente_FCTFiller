@@ -48,14 +48,37 @@ export class ModalUploadAnexoComponent implements OnInit {
       };
     }
 
-    /**
-     *
-     */
+   /**
+    * Si la llamada es desde el crud de anexos cogeremos el nombre original del archivo
+    */
     public enviarAnexo() {
+      let llamadaDesdeCrud= sessionStorage.getItem('llamadaDesdeCrud');
+      let nombreArchivo :any;
+      let nombreSinExtension: any;
+      let extension : any;
+
+      //Si la llamada viene desde el crud de anexos
+      if(llamadaDesdeCrud == '1'){
+        nombreArchivo = sessionStorage.getItem('codigoAnexo');
+        sessionStorage.setItem('llamadaDesdeCrud','0');
+      }else{
+        //Si la llamada no es desde el crud de anexo, si es el Anexo1
+        if(this.tipoAnexo=='Anexo1'){
+          extension=this.evento.name.split('.');
+          extension='.'+extension[extension.length - 1];
+          nombreSinExtension=sessionStorage.getItem('codigoAnexo')!.split('.');
+          nombreSinExtension=nombreSinExtension[0];
+          nombreArchivo=nombreSinExtension+extension;
+          console.log(nombreArchivo);
+        }else{
+          nombreArchivo =this.evento.name;
+        }
+      }
+
       let datos = new AnexoUpload(
         sessionStorage.getItem('cosa')!,
         this.tipoAnexo,
-        this.evento.name,
+        nombreArchivo,
         this.dni_usuario!
       );
 

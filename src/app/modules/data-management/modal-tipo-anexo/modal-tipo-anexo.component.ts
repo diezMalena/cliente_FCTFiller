@@ -7,7 +7,6 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ModalFirmaComponent } from '../modal-firma/modal-firma.component';
 import { ToastrService } from 'ngx-toastr';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';

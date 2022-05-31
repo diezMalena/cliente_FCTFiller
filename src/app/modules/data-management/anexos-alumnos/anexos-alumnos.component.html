@@ -52,11 +52,16 @@
                                                         <use xlink:href="#descarga" />
                                                       </svg>
                                                 </button>
-                                                <button (click)="abrirModalUpload(anexo.nombre)" class="btn btn-outline-primary px-2 py-1 me-2" type="file" id="file" aria-label="Enviar documento">
+                                                <button *ngIf="anexo.relleno==1" (click)="abrirModalUpload(anexo.nombre, anexo.codigo)" class="btn btn-outline-primary px-2 py-1 me-2" type="file" id="file" aria-label="Enviar documento">
                                                   <svg class="bi" width="16" height="16">
                                                     <use xlink:href="#CSV" />
                                                   </svg>
                                                </button>
+                                                <button *ngIf="anexo.relleno==0" (click)="abrirModalUpload(anexo.nombre, anexo.codigo)" class="btn btn-outline-primary px-2 py-1 me-2" type="file" id="file" aria-label="Enviar documento" disabled>
+                                                <svg class="bi" width="16" height="16">
+                                                  <use xlink:href="#CSV" />
+                                                </svg>
+                                             </button>
                                                 <button (click)="abrirRelleno (anexo.nombre,anexo.codigo)" class="btn btn-outline-primary px-2 py-1 me-2" type="submit" aria-label="firma">
                                                         <svg class="bi" width="16" height="16">
                                                           <use xlink:href="#rellenar" />
