@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { CentroEstudios } from 'src/app/models/centroEstudios';
@@ -23,16 +23,14 @@ export class ModalConvenioComponent implements OnInit {
   public empresa?: Empresa;
   public centro?: CentroEstudios;
   public convenio?: Convenio;
-  public datosConvenio: FormGroup;
+  public datos: FormGroup;
   public submitted: boolean = false;
-  public modo: number = 0;
+  public modo?: number;
   public modified: boolean = false;
   public title: string = '';
   public tipo: string = '';
   public numConvenio: number = 0;
   public claseInput: string = '';
-  public provincias?: string[];
-  public localidades?: string[];
 
   constructor(
     private modalActive: NgbActiveModal,
@@ -44,15 +42,16 @@ export class ModalConvenioComponent implements OnInit {
     private datePipe: DatePipe,
     private auxService: AuxService
   ) {
-    this.datosConvenio = new FormGroup({});
+    this.datos = new FormGroup({});
 
-    this.centro = this.storageUser.getUser()?.centro;
     this.crudEmpresasService.empresaTrigger.subscribe({
       next: (data: Array<any>) => {
         this.empresa = data[0];
-        this.modo = data[1];
+        this.centro = data[1];
+        this.modo = data[2];
         this.tipo = this.empresa?.es_privada ? 'convenio' : 'acuerdo';
-        this.getProvincias();
+        this.claseInput =
+          this.modo === 1 ? 'form-control-plaintext' : 'form-control';
         // Saco el convenio y su número
         if (this.empresa?.convenio) {
           this.convenio = this.empresa.convenio;
@@ -60,15 +59,7 @@ export class ModalConvenioComponent implements OnInit {
           this.numConvenio = parseInt(part.substring(1));
         }
 
-        switch (this.modo) {
-          case 1:
-            this.claseInput = 'form-control-plaintext';
-            break;
-          default:
-            this.claseInput = 'form-control';
-        }
-
-        // this.construirFormulario();
+        this.construirFormulario();
       },
     });
   }
@@ -102,8 +93,100 @@ export class ModalConvenioComponent implements OnInit {
   /***********************************************************************/
   //#region Gestión del formulario
 
+  private construirFormulario() {
+    console.log(this.empresa); console.log(this.empresa?.representante)
+    this.datos = this.formBuilder.group({
+      convenio: this.formBuilder.group({
+        num_convenio: [
+          this.convenio ? this.numConvenio : 0,
+          [Validators.required],
+        ],
+        cod_centro_convenio: [this.centro?.cod_centro_convenio],
+        fecha_ini: [
+          this.convenio ? this.convenio.fecha_ini : this.now,
+          [Validators.required],
+        ],
+        fecha_fin: [this.convenio ? this.convenio.fecha_fin : this.now],
+        cod_convenio: [this.convenio ? this.convenio.cod_convenio : ''],
+      }),
+      director: this.formBuilder.group({
+        nombre: [this.centro?.director?.nombre, [Validators.required]],
+        apellidos: [this.centro?.director?.apellidos, [Validators.required]],
+        dni: [
+          this.centro?.director?.dni,
+          [
+            Validators.required,
+            Validators.minLength(9),
+            Validators.maxLength(9),
+          ],
+        ],
+      }),
+      centro: this.formBuilder.group({
+        cod: [this.centro?.cod, [Validators.required]],
+        nombre: [this.centro?.nombre, [Validators.required]],
+        cif: [
+          this.centro?.cif,
+          [
+            Validators.required,
+            Validators.minLength(9),
+            Validators.maxLength(9),
+          ],
+        ],
+        provincia: [this.centro?.provincia, [Validators.required]],
+        localidad: [this.centro?.localidad, [Validators.required]],
+        direccion: [this.centro?.direccion, [Validators.required]],
+        cp: [
+          this.centro?.cp,
+          [
+            Validators.required,
+            Validators.minLength(5),
+            Validators.maxLength(5),
+          ],
+        ],
+        email: [this.centro?.email, [Validators.required, Validators.email]],
+        telefono: [this.centro?.telefono, [Validators.required]],
+      }),
+      representante: this.formBuilder.group({
+        nombre: [this.empresa?.representante?.nombre, [Validators.required]],
+        apellidos: [this.empresa?.representante?.apellidos, [Validators.required]],
+        dni: [
+          this.empresa?.representante?.dni,
+          [
+            Validators.required,
+            Validators.minLength(9),
+            Validators.maxLength(9),
+          ],
+        ],
+      }),
+      empresa: this.formBuilder.group({
+        nombre: [this.empresa?.nombre, [Validators.required]],
+        cif: [
+          this.empresa?.cif,
+          [
+            Validators.required,
+            Validators.minLength(9),
+            Validators.maxLength(9),
+          ],
+        ],
+        provincia: [this.empresa?.provincia, [Validators.required]],
+        localidad: [this.empresa?.localidad, [Validators.required]],
+        direccion: [this.empresa?.direccion, [Validators.required]],
+        cp: [
+          this.empresa?.cp,
+          [
+            Validators.required,
+            Validators.minLength(5),
+            Validators.maxLength(5),
+          ],
+        ],
+        email: [this.empresa?.email, [Validators.required, Validators.email]],
+        telefono: [this.empresa?.telefono, [Validators.required]],
+      }),
+    });
+  }
+
   get formulario() {
-    return this.datosConvenio.controls;
+    return this.datos.controls;
   }
 
   onSubmit() {}
@@ -114,61 +197,11 @@ export class ModalConvenioComponent implements OnInit {
   /***********************************************************************/
   //#region Gestión de cambios y eventos
 
-  /**
-   * Cambia la provincia y refresca las localidades
-   *
-   * @param event
-   * @author David Sánchez Barragán
-   */
-  cambiarProvincia(event: any) {
-    // this.formUbicacion['provincia'].setValue(event.target.value);
-    this.getLocalidades(event.target.value);
-  }
-
-  /**
-   * Cambia la ciudad
-   *
-   * @param event
-   * @author David Sánchez Barragán
-   */
-  cambiarCiudad(event: any) {
-    // this.formUbicacion['localidad'].setValue(event.target.value);
-  }
-
   //#endregion
   /***********************************************************************/
 
   /***********************************************************************/
   //#region Servicios - Peticiones al servidor
-
-  /**
-   * Obtiene las provincias de la base de datos
-   *
-   * @author David Sánchez Barragán
-   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
-   */
-  private getProvincias(): void {
-    this.auxService.listarProvincias().subscribe({
-      next: (respuesta) => {
-        this.provincias = ['Seleccione una...'];
-        this.provincias = this.provincias.concat(respuesta);
-      },
-    });
-  }
-
-  /**
-   * Obtiene una lista de municipios filtrando por provincia
-   * @param provincia provincia por la que se filtra
-   *
-   * @author David Sánchez Barragán
-   */
-  private getLocalidades(provincia: string): void {
-    this.auxService.listarCiudades(provincia).subscribe({
-      next: (response) => {
-        this.localidades = response;
-      },
-    });
-  }
 
   //#endregion
   /***********************************************************************/
@@ -197,15 +230,19 @@ export class ModalConvenioComponent implements OnInit {
   }
 
   get now() {
-    return this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+    return this.dateToString(new Date());
   }
 
-  get fecha_ini() {
-    return this.datePipe.transform(this.convenio?.fecha_ini, 'yyyy-MM-dd');
+  private calcFechaFin(fecha: Date) {
+    return new Date(fecha.getFullYear() + 4, fecha.getMonth(), fecha.getDate());
   }
 
-  get fecha_fin() {
-    return this.datePipe.transform(this.convenio?.fecha_fin, 'yyyy-MM-dd');
+  private dateToString(fecha: Date) {
+    return this.datePipe.transform(fecha, 'yyyy-MM-dd');
+  }
+
+  private stringToDate(fecha: string) {
+    return this.datePipe.transform(fecha);
   }
 
   //#endregion

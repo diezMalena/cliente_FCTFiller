@@ -29,7 +29,6 @@ export class GestionEmpresasComponent
 
   /***********************************************************************/
   //#region Inicialización de variables
-
   dtElement?: DataTableDirective;
   dtOptions: DataTables.Settings = {};
   dtTrigger = new Subject<any>();
@@ -140,7 +139,7 @@ export class GestionEmpresasComponent
    * @param empresa la empresa a eliminar
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
-   public async deleteEmpresa(empresa: Empresa) {
+  public async deleteEmpresa(empresa: Empresa) {
     let eliminar = await this.dialogService.confirmacion(
       'Eliminar registro',
       `¿Está seguro de que quiere eliminar el registro de la empresa ${empresa.nombre}?`
@@ -158,9 +157,7 @@ export class GestionEmpresasComponent
     }
   }
 
-  public async anularConvenio(empresa: Empresa) {
-
-  }
+  public async anularConvenio(empresa: Empresa) {}
 
   //#endregion
   /***********************************************************************/
@@ -211,7 +208,11 @@ export class GestionEmpresasComponent
       backdrop: 'static',
       keyboard: false,
     });
-    this.crudEmpresasService.empresaTrigger.emit([empresa, modo]);
+    this.crudEmpresasService.empresaTrigger.emit([
+      empresa,
+      this.storageUser.getUser()?.centro,
+      modo,
+    ]);
   }
 
   /**

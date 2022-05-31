@@ -622,7 +622,11 @@ export class RegistroEmpresaComponent implements OnInit {
       });
       this.crudEmpresasService.getEmpresa(this.datosEmpresa.cif).subscribe({
         next: (empresa) => {
-          this.crudEmpresasService.empresaTrigger.emit([empresa, 0]);
+          this.crudEmpresasService.empresaTrigger.emit([
+            empresa,
+            this.storage.getUser()?.centro,
+            0,
+          ]);
         },
       });
     }
