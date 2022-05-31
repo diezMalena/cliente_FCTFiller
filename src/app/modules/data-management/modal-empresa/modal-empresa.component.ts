@@ -173,24 +173,8 @@ export class ModalEmpresaComponent implements OnInit {
     this.crudEmpresasService.getEmpresas(this.usuario?.dni!).subscribe({
       next: async (empresas) => {
         this.empresas = empresas;
-        await this.meterRepresentantesEmpresas(empresas);
         this.crudEmpresasService.getEmpresasArray(this.empresas);
       },
-    });
-  }
-
-  /**
-   * Mete los representantes en las empresas correspondientes
-   * @param empresas el vector de empresas
-   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
-   */
-  public async meterRepresentantesEmpresas(empresas: Empresa[]) {
-    empresas.forEach((empresa) => {
-      this.crudEmpresasService.getRepresentante(empresa.id).subscribe({
-        next: (representante) => {
-          empresa.representante = representante;
-        },
-      });
     });
   }
 

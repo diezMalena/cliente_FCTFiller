@@ -8,6 +8,7 @@ import { Convenio } from 'src/app/models/convenio';
 import { Empresa } from 'src/app/models/empresa';
 import { AuxService } from 'src/app/services/aux-service.service';
 import { CrudEmpresasService } from 'src/app/services/crud-empresas.service';
+import { DatesService } from 'src/app/services/dates.service';
 import { DialogService } from 'src/app/services/dialog.service';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 
@@ -40,7 +41,8 @@ export class ModalConvenioComponent implements OnInit {
     public dialogService: DialogService,
     public toastr: ToastrService,
     private datePipe: DatePipe,
-    private auxService: AuxService
+    private auxService: AuxService,
+    private datesService: DatesService
   ) {
     this.datos = new FormGroup({});
 
@@ -85,6 +87,7 @@ export class ModalConvenioComponent implements OnInit {
       this.title += 'acuerdo';
     }
     this.title += ' con ' + this.empresa?.nombre;
+    this.onChanges();
   }
 
   //#endregion
@@ -93,22 +96,47 @@ export class ModalConvenioComponent implements OnInit {
   /***********************************************************************/
   //#region Gestión del formulario
 
+  /***********************************************************************/
+  //#region Construcción del formulario
+
+  /**
+   * Construye el formulario reactivo, cargando los datos del servidor
+   *
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
   private construirFormulario() {
-    console.log(this.empresa); console.log(this.empresa?.representante)
     this.datos = this.formBuilder.group({
+      //#region Convenio
       convenio: this.formBuilder.group({
         num_convenio: [
-          this.convenio ? this.numConvenio : 0,
-          [Validators.required],
+          this.numConvenio,
+          [Validators.required, Validators.min(1)],
         ],
         cod_centro_convenio: [this.centro?.cod_centro_convenio],
         fecha_ini: [
           this.convenio ? this.convenio.fecha_ini : this.now,
           [Validators.required],
         ],
-        fecha_fin: [this.convenio ? this.convenio.fecha_fin : this.now],
-        cod_convenio: [this.convenio ? this.convenio.cod_convenio : ''],
+        fecha_fin: [
+          this.convenio
+            ? this.convenio.fecha_fin
+            : this.datesService.dateToString(
+                this.datesService.calcFechaFin(this.now)
+              ),
+        ],
+        cod_convenio: [
+          this.convenio
+            ? this.convenio.cod_convenio
+            : this.centro?.cod_centro_convenio +
+              '/' +
+              (this.empresa?.es_privada ? 'C' : 'A') +
+              this.numConvenio +
+              '/' +
+              (new Date().getUTCFullYear() % 100),
+        ],
       }),
+      //#endregion
+      //#region Director y centro de estudios
       director: this.formBuilder.group({
         nombre: [this.centro?.director?.nombre, [Validators.required]],
         apellidos: [this.centro?.director?.apellidos, [Validators.required]],
@@ -146,9 +174,14 @@ export class ModalConvenioComponent implements OnInit {
         email: [this.centro?.email, [Validators.required, Validators.email]],
         telefono: [this.centro?.telefono, [Validators.required]],
       }),
+      //#endregion
+      //#region Representante legal y empresa
       representante: this.formBuilder.group({
         nombre: [this.empresa?.representante?.nombre, [Validators.required]],
-        apellidos: [this.empresa?.representante?.apellidos, [Validators.required]],
+        apellidos: [
+          this.empresa?.representante?.apellidos,
+          [Validators.required],
+        ],
         dni: [
           this.empresa?.representante?.dni,
           [
@@ -182,20 +215,126 @@ export class ModalConvenioComponent implements OnInit {
         email: [this.empresa?.email, [Validators.required, Validators.email]],
         telefono: [this.empresa?.telefono, [Validators.required]],
       }),
+      //#endregion
     });
   }
 
-  get formulario() {
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Getters
+
+  /**
+   * Obtiene los controles del formulario
+   *
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  get formulario(): any {
     return this.datos.controls;
   }
+
+  /**
+   * Obtiene los controles de la sección de convenio del formulario
+   *
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  get formConvenio() {
+    return this.formulario.convenio.controls;
+  }
+
+  /**
+   * Obtiene los controles de la sección del director del formulario
+   *
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  get formDirector() {
+    return this.formulario.director.controls;
+  }
+
+  /**
+   * Obtiene los controles de la sección del centro de estudios del formulario
+   *
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  get formCentro() {
+    return this.formulario.centro.controls;
+  }
+
+  /**
+   * Obtiene los controles de la sección del representante legal del formulario
+   *
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  get formRepresentante() {
+    return this.formulario.representante.controls;
+  }
+
+  /**
+   * Obtiene los controles de la sección de la empresa del formulario
+   *
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  get formEmpresa() {
+    return this.formulario.empresa.controls;
+  }
+
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Submits
 
   onSubmit() {}
 
   //#endregion
   /***********************************************************************/
 
+  //#endregion
+  /***********************************************************************/
+
   /***********************************************************************/
   //#region Gestión de cambios y eventos
+
+  /**
+   * Detecta los cambios en el formulario y, si hay, pone una variable bandera a true
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  onChanges(): void {
+    this.datos.valueChanges.subscribe((val) => {
+      if (!this.modified) {
+        this.modified = true;
+      }
+    });
+  }
+
+  changeNumConvenio(event: any) {
+    let num = event.target.value;
+    this.numConvenio = num;
+    this.formConvenio['num_convenio'].setValue(num);
+    this.formConvenio['cod_convenio'].setValue(
+      this.construirCodConvenio(
+        this.datos.value.convenio.cod_centro_convenio,
+        num,
+        this.datos.value.convenio.fecha_ini
+      )
+    );
+  }
+
+  changeFechaConvenio(event: any) {
+    let fecha = event.target.value;
+    this.formConvenio['fecha_ini'].setValue(fecha);
+    this.formConvenio['fecha_fin'].setValue(
+      this.datesService.dateToString(this.datesService.calcFechaFin(fecha))
+    );
+    this.formConvenio['cod_convenio'].setValue(
+      this.construirCodConvenio(
+        this.datos.value.convenio.cod_centro_convenio,
+        this.datos.value.convenio.num_convenio,
+        fecha
+      )
+    );
+  }
 
   //#endregion
   /***********************************************************************/
@@ -229,20 +368,38 @@ export class ModalConvenioComponent implements OnInit {
     }
   }
 
-  get now() {
-    return this.dateToString(new Date());
+  /**
+   * Devuelve la fecha de hoy en string
+   *
+   * @returns `string` fecha de hoy en formato 'yyyy-mm-dd'
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  get now(): string {
+    return this.datesService.now;
   }
 
-  private calcFechaFin(fecha: Date) {
-    return new Date(fecha.getFullYear() + 4, fecha.getMonth(), fecha.getDate());
-  }
-
-  private dateToString(fecha: Date) {
-    return this.datePipe.transform(fecha, 'yyyy-MM-dd');
-  }
-
-  private stringToDate(fecha: string) {
-    return this.datePipe.transform(fecha);
+  /**
+   * Construye el código del convenio a partir de distintas variables
+   *
+   * @param codCentro Código específico del centro para los convenios
+   * @param num Número asociado al convenio
+   * @param fecha Fecha en la que se da inicio el convenio
+   * @returns El código de convenio fabricado
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  private construirCodConvenio(
+    codCentro: string,
+    num: number,
+    fecha: string | Date
+  ) {
+    let cod: string =
+      codCentro + '/' + (this.empresa?.es_privada ? 'C' : 'A') + num + '/';
+    if (fecha instanceof Date) {
+      cod += fecha.getUTCFullYear() % 100;
+    } else if (typeof fecha === 'string') {
+      cod += this.datesService.stringToDate(fecha).getUTCFullYear() % 100;
+    }
+    return cod;
   }
 
   //#endregion

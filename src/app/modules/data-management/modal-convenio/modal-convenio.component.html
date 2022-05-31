@@ -1,4 +1,4 @@
-<div class="card" *ngIf="modo">
+<div class="card" *ngIf="modo != undefined">
   <div class="modal-header">
     <h1 class="modal-title fs-4">
       {{ title }}
@@ -16,8 +16,8 @@
             Número de {{ tipo }}
           </label>
           <input type="number" class="{{ claseInput }}" id="num_convenio" placeholder="1" formControlName="num_convenio"
-            [attr.readonly]="modo != 1 ? null : true" value="{{ convenio ? numConvenio : null }}">
-          <div *ngIf="submitted && formulario['num_convenio'].errors"
+            [attr.readonly]="modo != 1 ? null : true" (change)="changeNumConvenio($event)">
+          <div *ngIf="submitted && formConvenio['num_convenio'].errors"
             class="text-danger bg-white rounded border border-2 border-danger p-2">
             Es obligatorio insertar un número de {{ tipo }}
           </div>
@@ -29,8 +29,8 @@
         <div class="col-6 col-lg-4">
           <label for="fecha_ini" class="form-label fw-bold mb-0 mt-2">Fecha de inicio</label>
           <input type="date" class="{{ claseInput }}" id="fecha_ini" placeholder="dd/mm/aaaa"
-            formControlName="fecha_ini" [attr.readonly]="modo != 1 ? null : true">
-          <div *ngIf="submitted && formulario['fecha_ini'].errors"
+            formControlName="fecha_ini" [attr.readonly]="modo != 1 ? null : true" (change)="changeFechaConvenio($event)">
+          <div *ngIf="submitted && formConvenio['fecha_ini'].errors"
             class="text-danger bg-white rounded border border-2 border-danger p-2">
             Es obligatorio insertar una fecha
           </div>
@@ -61,7 +61,7 @@
               <label for="nombre_director" class="form-label fw-bold mb-0 mt-2">Nombre</label>
               <input type="text" id="nombre_director" class="{{ claseInput }}" placeholder="Nombre"
                 formControlName="nombre" [attr.readonly]="modo != 1 ? null : true">
-              <div *ngIf="submitted && formulario['nombre'].errors"
+              <div *ngIf="submitted && formDirector['nombre'].errors"
                 class="text-danger bg-white rounded border border-2 border-danger p-2">
                 No puede estar vacío
               </div>
@@ -70,7 +70,7 @@
               <label for="apellidos_director" class="form-label fw-bold mb-0 mt-2">Apellidos</label>
               <input type="text" id="apellidos_director" class="{{ claseInput }}" placeholder="Apellidos"
                 formControlName="apellidos" [attr.readonly]="modo != 1 ? null : true">
-              <div *ngIf="submitted && formulario['apellidos'].errors"
+              <div *ngIf="submitted && formDirector['apellidos'].errors"
                 class="text-danger bg-white rounded border border-2 border-danger p-2">
                 No puede estar vacío
               </div>
@@ -79,7 +79,7 @@
               <label for="dni_director" class="form-label fw-bold mb-0 mt-2">DNI</label>
               <input type="text" id="dni_director" class="{{ claseInput }}" placeholder="00000000X"
                 formControlName="dni" [attr.readonly]="modo != 1 ? null : true">
-              <div *ngIf="submitted && formulario['dni'].errors"
+              <div *ngIf="submitted && formDirector['dni'].errors"
                 class="text-danger bg-white rounded border border-2 border-danger p-2">
                 Es obligatorio insertar un DNI válido
               </div>
@@ -96,7 +96,7 @@
                   <label for="cod_centro" class="form-label fw-bold mb-0 mt-2">Código del centro</label>
                   <input type="text" id="cod_centro" class="{{ claseInput }}" placeholder="COD1234"
                     formControlName="cod" [attr.readonly]="modo != 1 ? null : true">
-                  <div *ngIf="submitted && formulario['cod'].errors"
+                  <div *ngIf="submitted && formCentro['cod'].errors"
                     class="text-danger bg-white rounded border border-2 border-danger p-2">
                     No puede estar vacío
                   </div>
@@ -105,7 +105,7 @@
                   <label for="nombre_centro" class="form-label fw-bold mb-0 mt-2">Nombre</label>
                   <input type="text" id="nombre_centro" class="{{ claseInput }}" placeholder="Centro de Estudios"
                     formControlName="nombre" [attr.readonly]="modo != 1 ? null : true">
-                  <div *ngIf="submitted && formulario['nombre'].errors"
+                  <div *ngIf="submitted && formCentro['nombre'].errors"
                     class="text-danger bg-white rounded border border-2 border-danger p-2">
                     No puede estar vacío
                   </div>
@@ -114,7 +114,7 @@
                   <label for="cif_centro" class="form-label fw-bold mb-0 mt-2">CIF</label>
                   <input type="text" id="cif_centro" class="{{ claseInput }}" placeholder="00000000X"
                     formControlName="cif" [attr.readonly]="modo != 1 ? null : true">
-                  <div *ngIf="submitted && formulario['cif'].errors"
+                  <div *ngIf="submitted && formCentro['cif'].errors"
                     class="text-danger bg-white rounded border border-2 border-danger p-2">
                     No puede estar vacío
                   </div>
@@ -125,7 +125,7 @@
                   <label for="provincia_centro" class="form-label fw-bold mb-0 mt-2">Provincia</label>
                   <input type="text" id="provincia_centro" class="{{ claseInput }}" placeholder="Provincia"
                     formControlName="provincia" [attr.readonly]="modo != 1 ? null : true">
-                  <div *ngIf="submitted && formulario['provincia'].errors"
+                  <div *ngIf="submitted && formCentro['provincia'].errors"
                     class="text-danger bg-white rounded border border-2 border-danger p-2">
                     No puede estar vacío
                   </div>
@@ -134,7 +134,7 @@
                   <label for="localidad_centro" class="form-label fw-bold mb-0 mt-2">Localidad</label>
                   <input type="text" id="localidad_centro" class="{{ claseInput }}" placeholder="Localidad"
                     formControlName="localidad" [attr.readonly]="modo != 1 ? null : true">
-                  <div *ngIf="submitted && formulario['localidad'].errors"
+                  <div *ngIf="submitted && formCentro['localidad'].errors"
                     class="text-danger bg-white rounded border border-2 border-danger p-2">
                     No puede estar vacío
                   </div>
@@ -143,7 +143,7 @@
                   <label for="direccion_centro" class="form-label fw-bold mb-0 mt-2">Dirección</label>
                   <input type="text" id="direccion_centro" class="{{ claseInput }}" placeholder="C/ Calle, 123, 2ºN"
                     formControlName="direccion" [attr.readonly]="modo != 1 ? null : true">
-                  <div *ngIf="submitted && formulario['direccion'].errors"
+                  <div *ngIf="submitted && formCentro['direccion'].errors"
                     class="text-danger bg-white rounded border border-2 border-danger p-2">
                     No puede estar vacío
                   </div>
@@ -152,7 +152,7 @@
                   <label for="cp_centro" class="form-label fw-bold mb-0 mt-2">Código postal</label>
                   <input type="text" id="cp_centro" class="{{ claseInput }}" placeholder="00000" formControlName="cp"
                     [attr.readonly]="modo != 1 ? null : true">
-                  <div *ngIf="submitted && formulario['cp'].errors"
+                  <div *ngIf="submitted && formCentro['cp'].errors"
                     class="text-danger bg-white rounded border border-2 border-danger p-2">
                     Código postal no válido
                   </div>
@@ -161,7 +161,7 @@
                   <label for="email_centro" class="form-label fw-bold mb-0 mt-2">e-mail</label>
                   <input type="email" id="email_centro" class="{{ claseInput }}" placeholder="ejemplo@mail.com"
                     formControlName="email" [attr.readonly]="modo != 1 ? null : true">
-                  <div *ngIf="submitted && formulario['email'].errors"
+                  <div *ngIf="submitted && formCentro['email'].errors"
                     class="text-danger bg-white rounded border border-2 border-danger p-2">
                     Email no válido
                   </div>
@@ -170,7 +170,7 @@
                   <label for="telefono_centro" class="form-label fw-bold mb-0 mt-2">Teléfono</label>
                   <input type="text" id="telefono_centro" class="{{ claseInput }}" placeholder="600600600"
                     formControlName="telefono" [attr.readonly]="modo != 1 ? null : true">
-                  <div *ngIf="submitted && formulario['telefono'].errors"
+                  <div *ngIf="submitted && formCentro['telefono'].errors"
                     class="text-danger bg-white rounded border border-2 border-danger p-2">
                     No puede estar vacío
                   </div>
@@ -195,7 +195,7 @@
               <label for="nombre_representante" class="form-label fw-bold mb-0 mt-2">Nombre</label>
               <input type="text" id="nombre_representante" class="{{ claseInput }}" placeholder="Nombre"
                 formControlName="nombre" [attr.readonly]="modo != 1 ? null : true">
-              <div *ngIf="submitted && formulario['nombre'].errors"
+              <div *ngIf="submitted && formRepresentante['nombre'].errors"
                 class="text-danger bg-white rounded border border-2 border-danger p-2">
                 No puede estar vacío
               </div>
@@ -204,7 +204,7 @@
               <label for="apellidos_representante" class="form-label fw-bold mb-0 mt-2">Apellidos</label>
               <input type="text" id="apellidos_representante" class="{{ claseInput }}" placeholder="Apellidos"
                 formControlName="apellidos" [attr.readonly]="modo != 1 ? null : true">
-              <div *ngIf="submitted && formulario['apellidos'].errors"
+              <div *ngIf="submitted && formRepresentante['apellidos'].errors"
                 class="text-danger bg-white rounded border border-2 border-danger p-2">
                 No puede estar vacío
               </div>
@@ -213,7 +213,7 @@
               <label for="dni_representante" class="form-label fw-bold mb-0 mt-2">DNI</label>
               <input type="text" id="dni_representante" class="{{ claseInput }}" placeholder="00000000X"
                 formControlName="dni" [attr.readonly]="modo != 1 ? null : true">
-              <div *ngIf="submitted && formulario['dni'].errors"
+              <div *ngIf="submitted && formRepresentante['dni'].errors"
                 class="text-danger bg-white rounded border border-2 border-danger p-2">
                 DNI no válido
               </div>
@@ -228,7 +228,7 @@
               <label for="nombre_empresa" class="form-label fw-bold mb-0 mt-2">Nombre</label>
               <input type="text" id="nombre_empresa" class="{{ claseInput }}" placeholder="Empresa"
                 formControlName="nombre" [attr.readonly]="modo != 1 ? null : true">
-              <div *ngIf="submitted && formulario['nombre'].errors"
+              <div *ngIf="submitted && formEmpresa['nombre'].errors"
                 class="text-danger bg-white rounded border border-2 border-danger p-2">
                 No puede estar vacío
               </div>
@@ -237,7 +237,7 @@
               <label for="cif_empresa" class="form-label fw-bold mb-0 mt-2">CIF</label>
               <input type="text" id="cif_empresa" class="{{ claseInput }}" placeholder="00000000X" formControlName="cif"
                 [attr.readonly]="modo != 1 ? null : true">
-              <div *ngIf="submitted && formulario['cif'].errors"
+              <div *ngIf="submitted && formEmpresa['cif'].errors"
                 class="text-danger bg-white rounded border border-2 border-danger p-2">
                 CIF no válido
               </div>
@@ -246,7 +246,7 @@
               <label for="provincia_empresa" class="form-label fw-bold mb-0 mt-2">Provincia</label>
               <input type="text" id="provincia_empresa" class="{{ claseInput }}" placeholder="Provincia"
                 formControlName="provincia" [attr.readonly]="modo != 1 ? null : true">
-              <div *ngIf="submitted && formulario['provincia'].errors"
+              <div *ngIf="submitted && formEmpresa['provincia'].errors"
                 class="text-danger bg-white rounded border border-2 border-danger p-2">
                 No puede estar vacío
               </div>
@@ -255,7 +255,7 @@
               <label for="localidad_empresa" class="form-label fw-bold mb-0 mt-2">Localidad</label>
               <input type="text" id="localidad_empresa" class="{{ claseInput }}" placeholder="Localidad"
                 formControlName="localidad" [attr.readonly]="modo != 1 ? null : true">
-              <div *ngIf="submitted && formulario['localidad'].errors"
+              <div *ngIf="submitted && formEmpresa['localidad'].errors"
                 class="text-danger bg-white rounded border border-2 border-danger p-2">
                 No puede estar vacío
               </div>
@@ -264,7 +264,7 @@
               <label for="direccion_empresa" class="form-label fw-bold mb-0 mt-2">Dirección</label>
               <input type="text" id="direccion_empresa" class="{{ claseInput }}" placeholder="C/ Calle, 123, 2ºN"
                 formControlName="direccion" [attr.readonly]="modo != 1 ? null : true">
-              <div *ngIf="submitted && formulario['direccion'].errors"
+              <div *ngIf="submitted && formEmpresa['direccion'].errors"
                 class="text-danger bg-white rounded border border-2 border-danger p-2">
                 No puede estar vacío
               </div>
@@ -273,7 +273,7 @@
               <label for="cp_empresa" class="form-label fw-bold mb-0 mt-2">Código postal</label>
               <input type="text" id="cp_empresa" class="{{ claseInput }}" placeholder="00000" formControlName="cp"
                 [attr.readonly]="modo != 1 ? null : true">
-              <div *ngIf="submitted && formulario['cp'].errors"
+              <div *ngIf="submitted && formEmpresa['cp'].errors"
                 class="text-danger bg-white rounded border border-2 border-danger p-2">
                 No puede estar vacío
               </div>
@@ -282,7 +282,7 @@
               <label for="email_empresa" class="form-label fw-bold mb-0 mt-2">e-mail</label>
               <input type="email" id="email_empresa" class="{{ claseInput }}" placeholder="ejemplo@mail.com"
                 formControlName="email" [attr.readonly]="modo != 1 ? null : true">
-              <div *ngIf="submitted && formulario['email'].errors"
+              <div *ngIf="submitted && formEmpresa['email'].errors"
                 class="text-danger bg-white rounded border border-2 border-danger p-2">
                 No puede estar vacío
               </div>
@@ -291,7 +291,7 @@
               <label for="telefono_empresa" class="form-label fw-bold mb-0 mt-2">Teléfono</label>
               <input type="text" id="telefono_empresa" class="{{ claseInput }}" placeholder="600600600"
                 formControlName="telefono" [attr.readonly]="modo != 1 ? null : true">
-              <div *ngIf="submitted && formulario['telefono'].errors"
+              <div *ngIf="submitted && formEmpresa['telefono'].errors"
                 class="text-danger bg-white rounded border border-2 border-danger p-2">
                 No puede estar vacío
               </div>
@@ -305,7 +305,7 @@
       <ng-container *ngIf="modo != 1">
         <div class="row mt-3 d-flex align-items-center justify-content-center modal-footer">
           <input class="w-50 btn btn-primary btn-md" type="submit" value="Guardar cambios"
-            [disabled]="!modified ? true : null">
+            [disabled]="modo === 2 && !modified ? true : null">
         </div>
       </ng-container>
     </form>

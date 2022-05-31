@@ -94,7 +94,6 @@ export class GestionEmpresasComponent
     this.crudEmpresasService.getEmpresas(this.dniTutor!).subscribe({
       next: async (empresas) => {
         this.empresas = empresas;
-        await this.meterRepresentantesEmpresas(this.empresas);
         //#region Datatables
         this.rerender();
         $.fn.dataTable.ext.errMode = 'throw';
@@ -110,21 +109,6 @@ export class GestionEmpresasComponent
         },
       ],
       //#endregion
-    });
-  }
-
-  /**
-   * Mete los representantes en las empresas correspondientes
-   * @param empresas el vector de empresas
-   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
-   */
-  public async meterRepresentantesEmpresas(empresas: Empresa[]) {
-    empresas.forEach((empresa) => {
-      this.crudEmpresasService.getRepresentante(empresa.id).subscribe({
-        next: (representante) => {
-          empresa.representante = representante;
-        },
-      });
     });
   }
 

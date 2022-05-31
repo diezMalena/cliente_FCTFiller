@@ -52,6 +52,13 @@ export class CrudEmpresasService {
     );
   }
 
+  /**
+   * Devuelve un observable con la información de la empresa
+   *
+   * @param cif CIF de la empresa
+   * @returns `Observable` de tipo empresa
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
   public getEmpresa(cif: string): Observable<Empresa> {
     let url: string = this.URLAPI + 'solicitar_empresa/cif=' + cif;
     let headers = this.headers;
