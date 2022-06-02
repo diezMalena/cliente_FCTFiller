@@ -28,10 +28,12 @@ export class ModalConvenioComponent implements OnInit {
   public submitted: boolean = false;
   public modo?: number;
   public modified: boolean = false;
+  public subir: boolean = false;
   public title: string = '';
   public tipo: string = '';
   public numConvenio: number = 0;
   public claseInput: string = '';
+  public anexo?: any;
 
   constructor(
     private modalActive: NgbActiveModal,
@@ -40,7 +42,6 @@ export class ModalConvenioComponent implements OnInit {
     private formBuilder: FormBuilder,
     public dialogService: DialogService,
     public toastr: ToastrService,
-    private datePipe: DatePipe,
     private auxService: AuxService,
     private datesService: DatesService
   ) {
@@ -133,8 +134,12 @@ export class ModalConvenioComponent implements OnInit {
               this.numConvenio +
               '/' +
               (new Date().getUTCFullYear() % 100),
+          [],
         ],
       }),
+      //#endregion
+      //#region Anexo (archivo)
+      anexo: [''],
       //#endregion
       //#region Director y centro de estudios
       director: this.formBuilder.group({
@@ -144,8 +149,8 @@ export class ModalConvenioComponent implements OnInit {
           this.centro?.director?.dni,
           [
             Validators.required,
-            Validators.minLength(9),
-            Validators.maxLength(9),
+            // Validators.minLength(9),
+            // Validators.maxLength(9),
           ],
         ],
       }),
@@ -156,8 +161,8 @@ export class ModalConvenioComponent implements OnInit {
           this.centro?.cif,
           [
             Validators.required,
-            Validators.minLength(9),
-            Validators.maxLength(9),
+            // Validators.minLength(9),
+            // Validators.maxLength(9),
           ],
         ],
         provincia: [this.centro?.provincia, [Validators.required]],
@@ -186,8 +191,8 @@ export class ModalConvenioComponent implements OnInit {
           this.empresa?.representante?.dni,
           [
             Validators.required,
-            Validators.minLength(9),
-            Validators.maxLength(9),
+            // Validators.minLength(9),
+            // Validators.maxLength(9),
           ],
         ],
       }),
@@ -197,8 +202,8 @@ export class ModalConvenioComponent implements OnInit {
           this.empresa?.cif,
           [
             Validators.required,
-            Validators.minLength(9),
-            Validators.maxLength(9),
+            // Validators.minLength(9),
+            // Validators.maxLength(9),
           ],
         ],
         provincia: [this.empresa?.provincia, [Validators.required]],
@@ -285,7 +290,104 @@ export class ModalConvenioComponent implements OnInit {
   /***********************************************************************/
   //#region Submits
 
-  onSubmit() {}
+  /**
+   * Valida el formulario y redirige al método adecuado, según
+   * se esté en modo de creación, visualización, edición o renovación
+   *
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  onSubmit() {
+    this.submitted = true;
+
+    if (!this.datos.valid) return;
+
+    // Añado algunos datos que faltan para el servidor
+    this.datos.value.convenio.cod_centro = this.centro?.cod;
+    this.datos.value.convenio.id_empresa = this.empresa?.id;
+    this.datos.value.empresa.es_privada = this.empresa?.es_privada;
+    this.datos.value.subir_anexo = this.subir;
+    this.datos.value.anexo = this.anexo;
+
+    switch (this.modo) {
+      case 0:
+        this.onSubmitAdd();
+        break;
+      case 2:
+        this.onSubmitEdit();
+        break;
+      case 3:
+        this.onSubmitRenovar;
+        break;
+    }
+  }
+
+  /**
+   * Envía una petición al servidor para guardar los datos del convenio
+   * y generar el documento o subirlo, según haya elegido el usuario
+   *
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  private onSubmitAdd(): void {
+    console.log(this.datos.value);
+    this.crudEmpresasService.addConvenio(this.datos.value).subscribe({
+      next: (response: any) => {
+        this.toastr.success(
+          'El ' +
+            this.tipo +
+            ' con ' +
+            this.empresa?.nombre +
+            ' se ha registrado correctamente',
+          'Registro del ' + this.tipo
+        );
+        this.modalActive.close();
+      },
+      error: (e) => {
+        let title = 'Error de registro del ' + this.tipo;
+        let msg =
+          'Error al registrar el ' + this.tipo + ' con ' + this.empresa?.nombre;
+        if (e.status == 409) {
+          title = 'Código de' + this.tipo + ' duplicado';
+          msg = 'Utilice otro número de ' + this.tipo;
+        }
+        this.toastr.error(msg, title);
+      },
+    });
+  }
+
+  /**
+   * Envía una petición al servidor para modificar los datos del convenio
+   * y re-generar el documento o subirlo, según haya elegido el usuario
+   *
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  private onSubmitEdit(): void {
+    if (this.convenio?.cod_convenio != this.datos.value.convenio.cod_convenio) {
+      this.datos.value.convenio.cod_convenio_anterior =
+        this.convenio?.cod_convenio;
+    }
+    this.crudEmpresasService.editConvenio(this.datos.value).subscribe({
+      next: (response) => {
+        this.toastr.success(
+          'El ' +
+            this.tipo +
+            ' con ' +
+            this.empresa?.nombre +
+            ' se ha modificado correctamente',
+          'Modificación del ' + this.tipo
+        );
+        this.modified = false;
+        this.modalActive.close();
+      },
+      error: (e) => {
+        this.toastr.error(
+          'Error al modificar el ' + this.tipo + ' con ' + this.empresa?.nombre,
+          'Error de modificación'
+        );
+      },
+    });
+  }
+
+  private onSubmitRenovar(): void {}
 
   //#endregion
   /***********************************************************************/
@@ -308,6 +410,12 @@ export class ModalConvenioComponent implements OnInit {
     });
   }
 
+  /**
+   * Establece el valor del número del convenio y actualiza el código del convenio
+   *
+   * @param event
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
   changeNumConvenio(event: any) {
     let num = event.target.value;
     this.numConvenio = num;
@@ -321,6 +429,13 @@ export class ModalConvenioComponent implements OnInit {
     );
   }
 
+  /**
+   * Establece el valor de la fecha de inicio del convenio,
+   * actualizando tanto la fecha de fin (+4 años) como el código del convenio
+   *
+   * @param event
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
   changeFechaConvenio(event: any) {
     let fecha = event.target.value;
     this.formConvenio['fecha_ini'].setValue(fecha);
@@ -336,11 +451,42 @@ export class ModalConvenioComponent implements OnInit {
     );
   }
 
+  /**
+   * Establece la variable subir al valor del checkbox corresponsiente
+   *
+   * @param event
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public changeSubir(event: any) {
+    this.subir = event.target.checked;
+  }
+
+  /**
+   * Establece como valor del control 'anexo' del formulario
+   * la cadena en Base64 del fichero
+   *
+   * @param event
+   * @author David Sánchez Barragán
+   * @author Dani J. Coello
+   */
+  public async cargarAnexo(event: any) {
+    let file = event.target.files[0];
+    if (file) {
+      let fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+      fileReader.onload = () => {
+        this.anexo = (fileReader.result);
+      };
+    }
+  }
+
   //#endregion
   /***********************************************************************/
 
   /***********************************************************************/
   //#region Servicios - Peticiones al servidor
+
+  public downloadAnexo(): void {}
 
   //#endregion
   /***********************************************************************/
@@ -354,7 +500,7 @@ export class ModalConvenioComponent implements OnInit {
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
   async closeModal() {
-    if (!this.modified) {
+    if (!this.modified || this.modo != 2) {
       this.modalActive.close();
     } else {
       let guardar = await this.dialogService.confirmacion(

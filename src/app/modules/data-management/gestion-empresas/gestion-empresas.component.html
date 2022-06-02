@@ -69,18 +69,20 @@
           <!-- Acciones sobre el convenio -->
           <td scope="col" class="align-middle">
             <ng-container *ngIf="!empresa.convenio">
-              <button class="btn btn-outline-success p-2 py-1 m-1" ngbTooltip="Dar de alta convenio"
-                attr.aria-label="Dar de alta convenio con {{empresa.nombre}}" placement="left"
-                (click)="mostrarConvenio(empresa, 0)">
+              <button class="btn btn-outline-success p-2 py-1 m-1"
+                ngbTooltip="Dar de alta {{ empresa.es_privada ? 'convenio' : 'acuerdo'}}"
+                attr.aria-label="Dar de alta {{ empresa.es_privada ? 'convenio' : 'acuerdo'}} con {{empresa.nombre}}"
+                placement="left" (click)="mostrarConvenio(empresa, 0)">
                 <svg class="bi" width="16" height="16">
                   <use xlink:href="#A0" />
                 </svg>
               </button>
             </ng-container>
             <ng-container *ngIf="empresa.convenio">
-              <button class="btn btn-outline-primary p-2 py-1 m-1" ngbTooltip="Ver convenio en detalle"
-                attr.aria-label="Ver convenio con {{empresa.nombre}}" placement="left"
-                (click)="mostrarConvenio(empresa, 1)">
+              <button class="btn btn-outline-primary p-2 py-1 m-1"
+                ngbTooltip="Ver {{ empresa.es_privada ? 'convenio' : 'acuerdo'}} en detalle"
+                attr.aria-label="Ver {{ empresa.es_privada ? 'convenio' : 'acuerdo'}} con {{empresa.nombre}}"
+                placement="left" (click)="mostrarConvenio(empresa, 1)">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye"
                   viewBox="0 0 16 16">
                   <path
@@ -88,17 +90,19 @@
                   <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
                 </svg>
               </button>
-              <button class="btn btn-outline-warning p-2 py-1 m-1" ngbTooltip="Editar convenio"
-                attr.aria-label="Editar convenio con {{empresa.nombre}}" placement="left"
-                (click)="mostrarConvenio(empresa, 2)">
+              <button class="btn btn-outline-warning p-2 py-1 m-1"
+                ngbTooltip="Editar {{ empresa.es_privada ? 'convenio' : 'acuerdo'}}"
+                attr.aria-label="Editar {{ empresa.es_privada ? 'convenio' : 'acuerdo'}} con {{empresa.nombre}}"
+                placement="left" (click)="mostrarConvenio(empresa, 2)">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi"
                   viewBox="0 0 16 16">
                   <use xlink:href="#editar_documento" />
                 </svg>
               </button>
               <button *ngIf="empresa.isConvenioRenovable()" class="btn btn-outline-secondary p-2 py-1 m-1"
-                ngbTooltip="Renovar convenio" attr.aria-label="Renovar convenio con {{empresa.nombre}}" placement="left"
-                (click)="mostrarConvenio(empresa, 3)">
+                ngbTooltip="Renovar {{ empresa.es_privada ? 'convenio' : 'acuerdo'}}"
+                attr.aria-label="Renovar {{ empresa.es_privada ? 'convenio' : 'acuerdo'}} con {{empresa.nombre}}"
+                placement="left" (click)="mostrarConvenio(empresa, 3)">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                   class="bi bi-arrow-repeat" viewBox="0 0 16 16">
                   <path
@@ -107,9 +111,10 @@
                     d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z" />
                 </svg>
               </button>
-              <button class="btn btn-outline-danger p-2 py-1 m-1" ngbTooltip="Anular convenio"
-                attr.aria-label="Anular convenio con {{empresa.nombre}}" placement="left"
-                (click)="anularConvenio(empresa)">
+              <button class="btn btn-outline-danger p-2 py-1 m-1"
+                ngbTooltip="Anular {{ empresa.es_privada ? 'convenio' : 'acuerdo'}}"
+                attr.aria-label="Anular {{ empresa.es_privada ? 'convenio' : 'acuerdo'}} con {{empresa.nombre}}"
+                placement="left" (click)="anularConvenio(empresa)">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg"
                   viewBox="0 0 16 16">
                   <path

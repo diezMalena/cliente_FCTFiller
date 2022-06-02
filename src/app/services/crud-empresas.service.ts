@@ -157,7 +157,8 @@ export class CrudEmpresasService {
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
   public getCentroEstudios(convenio: string): Observable<CentroEstudios> {
-    let url: string = this.URLAPI + 'solicitar_centro_estudios/convenio=' + convenio;
+    let url: string =
+      this.URLAPI + 'solicitar_centro_estudios/convenio=' + convenio;
     let headers = this.headers;
 
     return this.http.get<CentroEstudiosResponse>(url, { headers }).pipe(
@@ -165,6 +166,66 @@ export class CrudEmpresasService {
         return CentroEstudios.centroEstudiosJSON(centro);
       })
     );
+  }
+
+  /**
+   * Envía al servidor los datos del convenio y los elementos a rellenar en el anexo o
+   * el archivo del anexo en sí, según haya elegido el usuario
+   *
+   * @param datos objeto con datos del convenio y los datos a rellenar en el anexo o el archivo del anexo en sí
+   * @returns `Observable` con la respuesta del servidor
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public addConvenio(datos: object): Observable<any> {
+    let url: string = this.URLAPI + 'add_convenio';
+    let headers = this.headers;
+
+    return this.http.post(url, datos, { headers });
+  }
+
+  /**
+   * Envía al servidor los datos del convenio a editar y los elementos a rellenar en el anexo o
+   * el archivo del anexo en sí, según haya elegido el usuario
+   *
+   * @param datos objeto con datos del convenio y los datos a rellenar en el anexo o el archivo del anexo en sí
+   * @returns `Observable` con la respuesta del servidor
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public editConvenio(datos: object): Observable<any> {
+    let url: string = this.URLAPI + 'editar_convenio';
+    let headers = this.headers;
+
+    return this.http.post(url, datos, { headers });
+  }
+
+  /**
+   * Envía al servidor los datos del convenio renovado y los elementos a rellenar en el anexo o
+   * el archivo del anexo en sí, según haya elegido el usuario
+   *
+   * @param datos objeto con datos del convenio y los datos a rellenar en el anexo o el archivo del anexo en sí
+   * @returns `Observable` con la respuesta del servidor
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public renovarConvenio(datos: object): Observable<any> {
+    let url: string = this.URLAPI + 'renovar_convenio';
+    let headers = this.headers;
+
+    return this.http.post(url, datos, { headers });
+  }
+
+  /**
+   * Envía al servidor una petición para eliminar un convenio, lo cual
+   * deshabilita el anexo asociado
+   *
+   * @param cod Código del convenio a eliminar
+   * @returns `Observable` con la respuesta del servidor
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public eliminarConvenio(cod: string): Observable<any> {
+    let url: string = this.URLAPI + 'eliminar_convenio/cod=' + cod;
+    let headers = this.headers;
+
+    return this.http.delete(url, { headers });
   }
 
   //#endregion
