@@ -141,7 +141,34 @@ export class GestionEmpresasComponent
     }
   }
 
-  public async anularConvenio(empresa: Empresa) {}
+  public async anularConvenio(empresa: Empresa) {
+    if (empresa.convenio?.cod_convenio) {
+      let eliminar = await this.dialogService.confirmacion(
+        `Anular ${empresa.acuerdoOConvenio}`,
+        `¿Está seguro de que desea anular el ${empresa.acuerdoOConvenio} con ${empresa.nombre}?`
+      );
+      if (eliminar) {
+        this.crudEmpresasService
+          .eliminarConvenio(empresa.convenio?.cod_convenio)
+          .subscribe({
+            next: (response) => {
+              this.toastr.success(
+                `Anulado ${empresa.acuerdoOConvenio} con ${empresa.nombre}`,
+                `Anulación del ${empresa.acuerdoOConvenio}`
+              );
+              this.empresas.find((emp) => emp.id === empresa.id)!.convenio =
+                undefined;
+            },
+            error: (err) => {
+              this.toastr.error(
+                `Error al anular el ${empresa.acuerdoOConvenio} con ${empresa.nombre}`,
+                'Error de anulación'
+              );
+            },
+          });
+      }
+    }
+  }
 
   //#endregion
   /***********************************************************************/
@@ -197,6 +224,13 @@ export class GestionEmpresasComponent
       this.storageUser.getUser()?.centro,
       modo,
     ]);
+    this.crudEmpresasService.empresaBS.subscribe((empresa) => {
+      if (empresa) {
+        let index = this.empresas.findIndex((emp) => empresa.id === emp.id);
+        this.empresas.splice(index, 1, empresa);
+      }
+      this.dtTrigger.next(this.empresas);
+    });
   }
 
   /**

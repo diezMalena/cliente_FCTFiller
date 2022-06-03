@@ -13,7 +13,7 @@ import { CentroEstudiosResponse } from '../models/centroEstudiosResponse';
 @Injectable({ providedIn: 'root' })
 export class CrudEmpresasService {
   @Output() empresaTrigger: EventEmitter<any> = new EventEmitter();
-
+  public empresaBS = new BehaviorSubject<any>('');
   public URLAPI: string = environment.apiUrl;
   public empresasArray = new BehaviorSubject<Empresa[]>([]);
   private headers: HttpHeaders;
@@ -222,7 +222,9 @@ export class CrudEmpresasService {
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
   public eliminarConvenio(cod: string): Observable<any> {
-    let url: string = this.URLAPI + 'eliminar_convenio/cod=' + cod;
+    let codAux = cod.replaceAll('/', '-');
+    codAux = codAux.replaceAll('\\', '-');
+    let url: string = `${this.URLAPI}eliminar_convenio/cod=${codAux}`;
     let headers = this.headers;
 
     return this.http.delete(url, { headers });

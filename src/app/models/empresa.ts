@@ -56,4 +56,8 @@ export class Empresa {
       return false;
     }
   }
+
+  get acuerdoOConvenio() {
+    return this.es_privada ? 'convenio' : 'acuerdo';
+  }
 }

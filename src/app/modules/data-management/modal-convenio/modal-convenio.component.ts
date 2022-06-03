@@ -334,39 +334,30 @@ export class ModalConvenioComponent implements OnInit {
   private onSubmitAdd(): void {
     this.crudEmpresasService.addConvenio(this.datos.value).subscribe({
       next: async (response: any) => {
-        console.log(response);
+        this.empresa!.convenio = this.datos.value.convenio;
         this.toastr.success(
-          'El ' +
-            this.tipo +
-            ' con ' +
-            this.empresa?.nombre +
-            ' se ha registrado correctamente',
-          'Registro del ' + this.tipo
+          `El ${this.tipo} con ${this.empresa?.nombre} se ha registrado correctamente`,
+          `Registro del ${this.tipo}`
         );
         //#region Descarga opcional del anexo
         let descargar = await this.dialogService.confirmacion(
           'Anexo generado',
-          '¿Quiere descargar el Anexo 0' +
-            (this.empresa?.es_privada ? '' : 'A') +
-            ' de ' +
-            this.tipo +
-            ' con ' +
-            this.empresa?.nombre +
-            '?'
+          `¿Quiere descargar el Anexo 0 ${
+            this.empresa?.es_privada ? '' : 'A'
+          } de ${this.tipo} con ${this.empresa?.nombre}?`
         );
         if (descargar) {
           this.downloadAnexo(response.ruta_anexo);
         }
         //#endregion
-        this.modalActive.close();
+        this.closeModal();
       },
       error: (e) => {
-        let title = 'Error de registro del ' + this.tipo;
-        let msg =
-          'Error al registrar el ' + this.tipo + ' con ' + this.empresa?.nombre;
+        let title = `Error de registro del ${this.tipo}`;
+        let msg = `Error al registrar el ${this.tipo} con ${this.empresa?.nombre}`;
         if (e.status == 409) {
-          title = 'Código de' + this.tipo + ' duplicado';
-          msg = 'Utilice otro número de ' + this.tipo;
+          title = `Código de ${this.tipo} duplicado'`;
+          msg = `Utilice otro número de ${this.tipo}`;
         }
         this.toastr.error(msg, title);
       },
@@ -387,19 +378,15 @@ export class ModalConvenioComponent implements OnInit {
     this.crudEmpresasService.editConvenio(this.datos.value).subscribe({
       next: (response) => {
         this.toastr.success(
-          'El ' +
-            this.tipo +
-            ' con ' +
-            this.empresa?.nombre +
-            ' se ha modificado correctamente',
-          'Modificación del ' + this.tipo
+          `El ${this.tipo} con ${this.empresa?.nombre} se ha modificado correctamente`,
+          `Modificación del ${this.tipo}`
         );
         this.modified = false;
-        this.modalActive.close();
+        this.closeModal();
       },
       error: (e) => {
         this.toastr.error(
-          'Error al modificar el ' + this.tipo + ' con ' + this.empresa?.nombre,
+          `Error al modificar el ${this.tipo} con ${this.empresa?.nombre}`,
           'Error de modificación'
         );
       },
@@ -557,6 +544,7 @@ export class ModalConvenioComponent implements OnInit {
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
   async closeModal() {
+    this.crudEmpresasService.empresaBS.next(this.empresa);
     if (!this.modified || this.modo != 2) {
       this.modalActive.close();
     } else {
