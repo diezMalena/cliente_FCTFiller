@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import * as FileSaver from 'file-saver';
 import { ToastrService } from 'ngx-toastr';
@@ -34,7 +35,8 @@ export class ModalGestionGastosAlumnoComponent implements OnInit {
     private loginService: LoginStorageUserService,
     private formBuilder: FormBuilder,
     public dialogService: DialogService,
-    public toastr: ToastrService
+    public toastr: ToastrService,
+    private route: ActivatedRoute
   ) {
     this.datosAlumno = this.formBuilder.group({});
 
@@ -143,13 +145,22 @@ export class ModalGestionGastosAlumnoComponent implements OnInit {
    * @author David Sánchez Barragán
    */
   obtenerGastosAlumno() {
-    this.gestionGastosService
-      .obtenerGastosAlumno(this.loginService.getUser()?.dni)
-      .subscribe({
-        next: (response) => {
-          this.gestionGastosService.setGastoBS(response);
-        }
-      });
+    let dniAlumno = '';
+    this.route.queryParams.subscribe(params => {
+      if (params['rol'] == 'Profesor') {
+        dniAlumno = params['dni'];
+      } else {
+        dniAlumno = this.loginService.getUser()!.dni;
+      }
+
+      this.gestionGastosService
+        .obtenerGastosAlumno(dniAlumno)
+        .subscribe({
+          next: (response) => {
+            this.gestionGastosService.setGastoBS(response);
+          }
+        });
+    });
   }
 
 

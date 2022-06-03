@@ -19,7 +19,8 @@ export class Gasto {
       obj['sumatorio_gasto_transporte_publico'],
       obj['sumatorio_gasto_manutencion'],
       obj['facturasTransporte'],
-      obj['facturasManutencion']
+      obj['facturasManutencion'],
+      obj['nombre_alumno']
     );
   }
 
@@ -38,6 +39,7 @@ export class Gasto {
     public sumatorio_gasto_transporte_publico?: number,
     public sumatorio_gasto_manutencion?: number,
     public facturasTransporte?: FacturaTransporte[],
-    public facturasManutencion?: FacturaManutencion[]
+    public facturasManutencion?: FacturaManutencion[],
+    public nombre_alumno?: string
   ) { }
 }

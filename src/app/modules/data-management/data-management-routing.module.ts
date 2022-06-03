@@ -13,8 +13,11 @@ import { CrudProfesoresComponent } from './crud-profesores/crud-profesores.compo
 import { GestionAlumnosComponent } from './gestion-alumnos/gestion-alumnos.component';
 import { GestionGastosAlumnoComponent } from './gestion-gastos-alumno/gestion-gastos-alumno.component';
 import { HistorialAnexosComponent } from './historial-anexos/historial-anexos.component';
+import { GestionGastosProfesorComponent } from './gestion-gastos-profesor/gestion-gastos-profesor.component';
 import { PerfilesGuard } from 'src/app/guards/perfiles.guard';
 import { ProfesoresGuard } from 'src/app/guards/profesores.guard';
+import { AlumnosGuard } from 'src/app/guards/alumnos.guard';
+import {ProfesoresAlumnosGuard} from 'src/app/guards/profesores-alumnos.guard';
 
 const routes: Routes = [
   {
@@ -91,7 +94,16 @@ const routes: Routes = [
   },
   {
     path: 'gestion-gastos-alumno',
-    component: GestionGastosAlumnoComponent
+    component: GestionGastosAlumnoComponent,
+    canActivate: [ProfesoresAlumnosGuard],
+    data : {
+      roles: [3]
+    }
+  },
+  {
+    path: 'gestion-gastos-profesor',
+    component: GestionGastosProfesorComponent,
+    canActivate: [ProfesoresGuard]
   }
 ];
 

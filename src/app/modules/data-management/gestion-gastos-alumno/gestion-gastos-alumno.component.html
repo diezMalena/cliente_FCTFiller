@@ -1,7 +1,13 @@
 <!-- Títulos de las secciones -->
 <div class="row">
   <div class="page-header d-flex justify-content-between pb-3">
-    <h1 class="h2">Gestión de gastos</h1>
+    <h1 class="h2">
+      <span role="button" (click)="volver()" *ngIf="this.loginStorageUser.getUser()?.dni != this.dniAlumno">
+        <svg width="20" height="20" class="bi me-2">
+          <use xlink:href="#flechaAtras" />
+        </svg>
+      </span>
+       Gestión de gastos<span class="h2" *ngIf="this.loginStorageUser.getUser()?.dni != this.dniAlumno"> de {{this.gasto?.nombre_alumno}}</span> </h1>
     <button type="button" class="btn btn-outline-default mr-2" placement="left"
       ngbTooltip="Haga clic para acceder a la ayuda de esta sección" (click)="abrirAyuda()">
       ?
@@ -9,8 +15,11 @@
   </div>
 </div>
 
+
 <!-- Cabecera de la sección -->
-<div class="card p-3">
+<div class="card p-3" [hidden]="this.gasto == undefined">
+
+
   <div [hidden]="this.gasto?.tipo_desplazamiento == 'No aplica'">
     <div class="row">
       <div class="col-12 d-flex align-items-center justify-content-between py-2">
@@ -23,11 +32,11 @@
         <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
           <input type="radio" class="btn-check" id="btnRadioDesplazamiento" autocomplete="off" checked [value]="1"
             [(ngModel)]="isVisible" name="isVisible" [checked]="isSelected" />
-          <label class="btn btn-outline-primary" for="btnRadioDesplazamiento">Desplazamiento</label>
+          <label class="btn btn-outline-dark" for="btnRadioDesplazamiento">Desplazamiento</label>
 
           <input type="radio" class="btn-check" id="btnRadioManutencion" autocomplete="off" [value]="0"
             [(ngModel)]="isVisible" name="isVisible" [checked]="!isSelected" />
-          <label class="btn btn-outline-primary" for="btnRadioManutencion">Manutención</label>
+          <label class="btn btn-outline-dark" for="btnRadioManutencion">Manutención</label>
         </div>
         <p>
           Total gastos:
@@ -62,8 +71,8 @@
         <div class="col-12">
           <label class="form-label" for="diasVehiculoPropio">Cantidad de días en los que se ha viajado en vehículo
             propio</label>
-          <input type="text" class="form-control" id="diasVehiculoPropio"
-          [(ngModel)]="this.dias_transporte_privado" [value]="this.gasto?.dias_transporte_privado" />
+          <input type="text" class="form-control" id="diasVehiculoPropio" [(ngModel)]="this.dias_transporte_privado"
+            [value]="this.gasto?.dias_transporte_privado" />
         </div>
         <div class="col-12">
           <button (click)="actualizarDiasVehiculoPrivado()" class="btn btn-outline-primary">Guardar</button>
@@ -214,5 +223,9 @@
       </div>
     </div>
   </div>
+</div>
 
+<div class="card p-3" [hidden]="this.gasto != undefined">
+  <h1 class="h5">Aún no tienes acceso a tu gestión de gastos. Pide a tu tutor que te añada en la sección "Gestión de
+    gastos" e inténtalo más tarde</h1>
 </div>

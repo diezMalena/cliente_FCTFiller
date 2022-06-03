@@ -8,10 +8,12 @@ import { FacturaTransporte } from '../models/facturaTransporte';
 import { facturaTransporteResponse } from '../models/facturaTransporteResponse';
 import { HttpHeadersService } from './http-headers.service';
 import { Gasto } from '../models/gasto';
+import { GastoProfesor } from '../models/gastoProfesor';
 import { gastoResponse } from '../models/gastoResponse';
 import { map } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 import { FacturaManutencion } from '../models/facturaManutencion';
+import { gastoProfesorResponse } from '../models/gastoProfesorResponse';
 
 @Injectable({ providedIn: 'root' })
 export class GestionGastosService {
@@ -34,6 +36,9 @@ export class GestionGastosService {
   private urlNuevaFacturaManutencion: string = 'nuevaFacturaManutencion/';
   private urlEliminarFacturaTransporte: string = 'eliminarFacturaTransporte/';
   private urlEliminarFacturaManutencion: string = 'eliminarFacturaManutencion/';
+  private urlGestionGastosProfesor: string = 'gestionGastosProfesor/';
+  private urlEliminarAlumnoDeGastos: string = 'eliminarAlumnoDeGastos/';
+
   public headers: HttpHeaders;
 
   constructor(private http: HttpClient, headersService: HttpHeadersService) {
@@ -41,7 +46,7 @@ export class GestionGastosService {
   }
 
   /***********************************************************************/
-  //#region Gestión de alumnos - CRUD
+  //#region Gestión de gastos de alumnos - CRUD
 
   /***********************************************************************/
   //#region CRUD - Create
@@ -158,6 +163,7 @@ export class GestionGastosService {
   //#endregion
   /***********************************************************************/
 
+
   /***********************************************************************/
   //#region Funciones auxiliares
 
@@ -172,4 +178,52 @@ export class GestionGastosService {
 
   //#endregion
   /***********************************************************************/
+
+
+  /***********************************************************************/
+  //#region Gestión de gastos de profesores - CRUD
+
+  //#region CRUD - Read
+
+  /**
+   * Realiza una petición al servidor y obtiene la información necesaria para cargar la pantalla inicial para el profesor
+   * @returns `Observable` de la `HttpResponse`.
+   * @author David Sánchez Barragán
+   */
+   public obtenerGastosProfesor() {
+    let url = this.urlBase + this.urlGestionGastosProfesor;
+    const headers = this.headers;
+
+    return this.http.get<GastoProfesor>(url, { headers }).pipe(
+      map((resp: gastoProfesorResponse) => {
+        return GastoProfesor.gastoProfesorJSON(resp);
+      })
+    );
+  }
+
+  //#endregion
+
+  //#region CRUD - Delete
+
+  /**
+   * Realiza una petición al servidor y obtiene la información necesaria para cargar la pantalla inicial para el profesor
+   * @returns `Observable` de la `HttpResponse`.
+   * @author David Sánchez Barragán
+   */
+   public eliminarAlumnoDeGastos(dni: string) {
+    let url = this.urlBase + this.urlEliminarAlumnoDeGastos + dni;
+    const headers = this.headers;
+
+    return this.http.delete<any>(url, { headers }).pipe(
+      map((resp: any) => {
+        return resp;
+      })
+    );
+  }
+
+  //#endregion
+
+  //#endregion
+  /***********************************************************************/
+
 }

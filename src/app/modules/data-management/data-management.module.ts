@@ -31,6 +31,7 @@ import { HistorialAnexosComponent } from './historial-anexos/historial-anexos.co
 import { ModalGestionGastosAlumnoComponent } from './modal-gestion-gastos-alumno/modal-gestion-gastos-alumno.component';
 import { ModalTicketDesplazamiento } from './modal-ticket-desplazamiento/modal-ticket-desplazamiento.component';
 import { ModalTicketManutencion } from './modal-ticket-manutencion/modal-ticket-manutencion.component';
+import { GestionGastosProfesorComponent } from './gestion-gastos-profesor/gestion-gastos-profesor.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +60,7 @@ import { ModalTicketManutencion } from './modal-ticket-manutencion/modal-ticket-
     ModalTicketDesplazamiento,
     ModalTicketManutencion,
     HistorialAnexosComponent,
+    GestionGastosProfesorComponent,
   ],
   imports: [
     CommonModule,

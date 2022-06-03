@@ -9,7 +9,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { Alumno } from 'src/app/models/alumno';
-import { CrudAlumnosService } from 'src/app/services/crud-alumnos.service';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 import { ModalAlumnoComponent } from '../modal-alumno/modal-alumno.component';
 import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-dialog.component';
@@ -17,14 +16,23 @@ import { ModoEdicion } from 'src/app/models/modoEdicion';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
 import { ManualGestionAlumnosComponent } from '../../manuales/manual-gestion-alumnos/manual-gestion-alumnos.component';
+import { GastoProfesor } from 'src/app/models/gastoProfesor';
+import { GestionGastosService } from 'src/app/services/gestion-gastos.service';
+import { Gasto } from 'src/app/models/gasto';
+import { Router } from '@angular/router';
+import { ModalTicketDesplazamiento } from '../modal-ticket-desplazamiento/modal-ticket-desplazamiento.component';
+import { FacturaTransporte } from 'src/app/models/facturaTransporte';
+import { FacturaManutencion } from 'src/app/models/facturaManutencion';
+import { ModalTicketManutencion } from '../modal-ticket-manutencion/modal-ticket-manutencion.component';
+
+GestionGastosService
 
 @Component({
-  selector: 'app-gestion-alumnos',
-  templateUrl: './gestion-alumnos.component.html',
-  styleUrls: ['./gestion-alumnos.component.scss'],
+  selector: 'app-gestion-gastos-profesor',
+  templateUrl: './gestion-gastos-profesor.component.html',
+  styleUrls: ['./gestion-gastos-profesor.component.scss']
 })
-export class GestionAlumnosComponent
-  implements AfterViewInit, OnDestroy, OnInit {
+export class GestionGastosProfesorComponent implements AfterViewInit, OnDestroy, OnInit {
   @ViewChild(DataTableDirective, { static: false })
 
   /***********************************************************************/
@@ -33,23 +41,28 @@ export class GestionAlumnosComponent
   dtOptions: DataTables.Settings = {};
   dtTrigger = new Subject<any>();
 
-  public listaAlumnos: Alumno[] = [];
+  public gastoProfesor?: GastoProfesor;
   public modosEdicion: typeof ModoEdicion = ModoEdicion;
+  //UI
+  public curso?: string = '';
 
   constructor(
-    private crudAlumnosService: CrudAlumnosService,
+    private gestionGastosService: GestionGastosService,
     private loginStorageUser: LoginStorageUserService,
     private toastr: ToastrService,
     private modal: NgbModal,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
     $.extend(true, $.fn.dataTable.defaults, {
       language: { url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json' },
     });
-    this.cargarAlumnos();
+    this.cargarGastoProfesor();
     this.obtenerAlumnosDesdeModal();
+
+
   }
 
   //#endregion
@@ -59,7 +72,7 @@ export class GestionAlumnosComponent
   //#region Gestión de datatables
 
   ngAfterViewInit(): void {
-    this.dtTrigger.next(this.listaAlumnos);
+    this.dtTrigger.next(this.gastoProfesor?.gastos);
   }
 
   ngOnDestroy(): void {
@@ -85,15 +98,18 @@ export class GestionAlumnosComponent
    * Envía una petición al servidor para cargar los alumnos de un grupo y los lista en la tabla
    * @author David Sánchez Barragán
    */
-  cargarAlumnos() {
-    this.crudAlumnosService
-      .listarAlumnos(this.loginStorageUser.getUser()?.dni)
+  cargarGastoProfesor() {
+    this.gestionGastosService
+      .obtenerGastosProfesor()
       .subscribe({
         next: (result) => {
-          this.listaAlumnos = result;
+          this.gastoProfesor = result;
+          console.log(result.alumnosSinGasto);
           this.rerender();
-          this.dtTrigger.next(this.listaAlumnos);
+          this.dtTrigger.next(this.gastoProfesor.gastos);
           $.fn.dataTable.ext.errMode = 'throw';
+          //UI
+          this.curso = this.gastoProfesor?.nombreGrupo;
         },
         error: (error) => {
           this.toastr.error('No se han podido recuperar los datos', 'Error');
@@ -109,10 +125,10 @@ export class GestionAlumnosComponent
 
   /**
    * Elimina un alumno de la base de datos, previa confirmación
-   * @param alumno Objeto con los datos del alumno
+   * @param dni DNI del alumno a eliminar
    * @author David Sánchez Barragán
    */
-  borrarAlumno(alumno: Alumno) {
+  borrarGastoAlumno(dni: string) {
     this.dialog
       .open(ConfirmDialogComponent, {
         data: {
@@ -124,15 +140,16 @@ export class GestionAlumnosComponent
       .afterClosed()
       .subscribe((res) => {
         if (res.respuesta) {
-          this.crudAlumnosService.borrarAlumno(alumno.dni).subscribe({
-            next: (response: any) => {
-              this.cargarAlumnos();
-              this.toastr.success('Alumno borrado correctamente');
-            },
-            error: (error) => {
-              this.toastr.error('Ha ocurrido un error al eliminar al alumno');
-            },
-          });
+          this.gestionGastosService.eliminarAlumnoDeGastos(dni)
+            .subscribe({
+              next: (response: any) => {
+                this.cargarGastoProfesor();
+                this.toastr.success('Alumno borrado correctamente');
+              },
+              error: (error) => {
+                this.toastr.error('Ha ocurrido un error al eliminar al alumno');
+              },
+            });
         }
       });
   }
@@ -146,19 +163,64 @@ export class GestionAlumnosComponent
   /***********************************************************************/
   //#region Invocación de modales
 
-  /**
-   * Abre un modal para ver o editar a un alumno
-   * @param alumno Objeto con los datos del alumno
-   * @param modoEdicion 0 -> edición, 1 -> creación, 2 -> sólo lectura
-   * @author David Sánchez Barragán
-   */
-  mostrarAlumno(alumno: Alumno, modoEdicion: ModoEdicion) {
-    this.modal.open(ModalAlumnoComponent, {
+  nuevoTicketTransporte(dni_alumno: string) {
+    let facturaT = new FacturaTransporte(0, '', '', new Date(), 0, '');
+    this.modal.open(ModalTicketDesplazamiento, {
       size: 'md',
       backdrop: 'static',
       keyboard: false,
     });
-    this.crudAlumnosService.alumnoTrigger.emit([alumno, modoEdicion]);
+
+    this.gestionGastosService.facturaTransporteTrigger.emit([
+      facturaT, ModoEdicion.nuevo, dni_alumno
+    ]);
+
+    this.obtenerGastoDesdeModal();
+  }
+
+  /**
+ * Abre el modal para agregar una nueva factura de transporte
+ */
+  nuevoTicketManutencion(dni_alumno: string) {
+    let facturaM = new FacturaManutencion(0, '', '', new Date(), 0, '');
+    this.modal.open(ModalTicketManutencion, {
+      size: 'md',
+      backdrop: 'static',
+      keyboard: false,
+    });
+
+    this.gestionGastosService.facturaManutencionTrigger.emit([
+      facturaM, ModoEdicion.nuevo, dni_alumno
+    ]);
+
+    this.obtenerGastoDesdeModal();
+  }
+
+  /**
+   * Actualiza los datos del gasto respecto de las modificaciones en el modal
+   * @author David Sánchez Barragán
+   */
+  public obtenerGastoDesdeModal() {
+    this.gestionGastosService.gastoBS.subscribe((gasto) => {
+      if (gasto.dni_alumno !== undefined) {
+        let i = this.gastoProfesor?.gastos?.findIndex(x => x.dni_alumno == gasto.dni_alumno);
+        if (i! >= 0) {
+          this.gastoProfesor?.gastos?.splice(i!, 1, gasto);
+        }
+        this.dtTrigger.next(this.gastoProfesor?.gastos);
+      }
+    });
+  }
+
+
+  /**
+   * Abre un modal para ver o editar a un alumno
+   * @param dni DNI del alumno del que se consultarán los gastos
+   * @author David Sánchez Barragán
+   */
+  mostrarGastoAlumno(dni: string) {
+    this.router.navigate(['/data-management/gestion-gastos-alumno'],
+      { queryParams: { rol: 'Profesor', dni: dni } });
   }
 
   /**
@@ -175,10 +237,10 @@ export class GestionAlumnosComponent
     let alumno = new Alumno('', '', 0);
     alumno.matricula_cod_centro = this.loginStorageUser.getUser()?.cod_centro;
 
-    this.crudAlumnosService.alumnoTrigger.emit([
-      alumno,
-      this.modosEdicion.nuevo,
-    ]);
+    // this.crudAlumnosService.alumnoTrigger.emit([
+    //   alumno,
+    //   this.modosEdicion.nuevo,
+    // ]);
   }
 
   /**
@@ -186,11 +248,11 @@ export class GestionAlumnosComponent
    * @author David Sánchez Barragán
    */
   public obtenerAlumnosDesdeModal() {
-    this.crudAlumnosService.alumnosArray.subscribe((array) => {
-      this.listaAlumnos = array;
-      this.rerender();
-      this.dtTrigger.next(this.listaAlumnos);
-    });
+    // this.crudAlumnosService.alumnosArray.subscribe((array) => {
+    //   this.listaAlumnos = array;
+    //   this.rerender();
+    //   this.dtTrigger.next(this.listaAlumnos);
+    // });
   }
 
   /**
@@ -203,4 +265,5 @@ export class GestionAlumnosComponent
 
   //#endregion
   /***********************************************************************/
+
 }

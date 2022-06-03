@@ -1,15 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import * as FileSaver from 'file-saver';
 import { ToastrService } from 'ngx-toastr';
-import { Alumno } from 'src/app/models/alumno';
 import { FacturaTransporte } from 'src/app/models/facturaTransporte';
-import { Gasto } from 'src/app/models/gasto';
-import { Grupo } from 'src/app/models/grupo';
 import { ModoEdicion } from 'src/app/models/modoEdicion';
 import { AuxService } from 'src/app/services/aux-service.service';
-import { CrudAlumnosService } from 'src/app/services/crud-alumnos.service';
 import { DialogService } from 'src/app/services/dialog.service';
 import { GestionGastosService } from 'src/app/services/gestion-gastos.service';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
@@ -50,9 +45,7 @@ export class ModalTicketDesplazamiento implements OnInit {
       next: (data: Array<any>) => {
         this.facturaTransporte = data[0];
         this.modo = data[1];
-        if (this.modo == ModoEdicion.nuevo) {
-          this.dni = data[3];
-        }
+        this.dni = data[2];
 
         this.construirFormulario();
 
@@ -117,7 +110,7 @@ export class ModalTicketDesplazamiento implements OnInit {
     if (this.modo == ModoEdicion.nuevo) {
       facturaPeticion = new FacturaTransporte(
         0,
-        this.loginService.getUser()?.dni,
+        this.dni,
         '',
         this.formulario['fecha'].value,
         this.formulario['importe'].value,
@@ -179,7 +172,7 @@ export class ModalTicketDesplazamiento implements OnInit {
    * @param alumno Objeto con los datos del ticket
    * @author David Sánchez Barragán
    */
-   nuevaFacturaTransporte(factura: FacturaTransporte) {
+  nuevaFacturaTransporte(factura: FacturaTransporte) {
     this.gestionGastosService.nuevaFacturaTransporte(factura).subscribe({
       next: (reponse: any) => {
         this.toastr.success('Ticket insertado correctamente');
@@ -201,7 +194,7 @@ export class ModalTicketDesplazamiento implements OnInit {
    */
   obtenerGastosAlumno() {
     this.gestionGastosService
-      .obtenerGastosAlumno(this.loginService.getUser()?.dni)
+      .obtenerGastosAlumno(this.dni)
       .subscribe({
         next: (response) => {
           this.gestionGastosService.setGastoBS(response);

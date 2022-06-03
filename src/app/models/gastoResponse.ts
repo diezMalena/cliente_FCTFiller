@@ -16,5 +16,6 @@ export interface gastoResponse {
   sumatorio_gasto_transporte_publico?: number,
   sumatorio_gasto_manutencion?: number,
   facturasTransporte?: FacturaTransporte[],
-  facturasManutencion?: FacturaManutencion[]
+  facturasManutencion?: FacturaManutencion[],
+  nombre_alumno?: string
 }

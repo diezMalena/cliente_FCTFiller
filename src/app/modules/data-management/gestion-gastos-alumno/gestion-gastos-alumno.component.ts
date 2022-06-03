@@ -22,6 +22,7 @@ import { FacturaManutencion } from 'src/app/models/facturaManutencion';
 import { ModalGestionGastosAlumnoComponent } from '../modal-gestion-gastos-alumno/modal-gestion-gastos-alumno.component';
 import { ModalTicketDesplazamiento } from '../modal-ticket-desplazamiento/modal-ticket-desplazamiento.component';
 import { ModalTicketManutencion } from '../modal-ticket-manutencion/modal-ticket-manutencion.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-gestion-gastos-alumno',
@@ -43,24 +44,35 @@ export class GestionGastosAlumnoComponent
   public modosEdicion: typeof ModoEdicion = ModoEdicion;
   public isVisible: number = 1;
   public isSelected: boolean = true;
+  public dniAlumno = '';
 
   constructor(
     private gestionGastosService: GestionGastosService,
-    private loginStorageUser: LoginStorageUserService,
+    public loginStorageUser: LoginStorageUserService,
     private toastr: ToastrService,
     private modal: NgbModal,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
-    this.cargarGasto();
 
-    $.extend(true, $.fn.dataTable.defaults, {
-      language: { url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json' },
+    this.route.queryParams.subscribe(params => {
+      if (params['rol'] == 'Profesor') {
+        this.dniAlumno = params['dni'];
+      } else {
+        this.dniAlumno = this.loginStorageUser.getUser()!.dni;
+      }
+
+      this.cargarGasto();
+
+      $.extend(true, $.fn.dataTable.defaults, {
+        language: { url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json' },
+      });
+
+      $.fn.dataTable.ext.errMode = 'none';
     });
-
-    $.fn.dataTable.ext.errMode = 'none';
-
   }
 
 
@@ -100,15 +112,17 @@ export class GestionGastosAlumnoComponent
    */
   cargarGasto() {
     this.gestionGastosService
-      .obtenerGastosAlumno(this.loginStorageUser.getUser()?.dni)
+      .obtenerGastosAlumno(this.dniAlumno)
       .subscribe({
         next: (result) => {
           this.gasto = result;
+          //console.log(this.gasto)
           this.rerender();
           this.dtTrigger.next(this.gasto);
         },
         error: (error) => {
           this.toastr.error('No se han podido recuperar los datos', 'Error');
+          this.gasto = undefined;
         },
       });
   }
@@ -171,7 +185,7 @@ export class GestionGastosAlumnoComponent
    * @param id ID del objeto a eliminar
    * @author David Sánchez Barragán
    */
-   borrarFacturaManutencion(id: any) {
+  borrarFacturaManutencion(id: any) {
     this.dialog
       .open(ConfirmDialogComponent, {
         data: {
@@ -237,7 +251,7 @@ export class GestionGastosAlumnoComponent
     //Cambiar en un futuro la obtención del DNI, porque se compartirá
     //esta vista con la del profesor
     this.gestionGastosService.facturaTransporteTrigger.emit([
-      facturaT, ModoEdicion.nuevo, this.loginStorageUser.getUser()?.dni
+      facturaT, ModoEdicion.nuevo, this.dniAlumno
     ]);
 
     this.obtenerGastoDesdeModal();
@@ -246,7 +260,7 @@ export class GestionGastosAlumnoComponent
   /**
    * Abre el modal para agregar una nueva factura de transporte
    */
-   nuevoTicketManutencion() {
+  nuevoTicketManutencion() {
     let facturaM = new FacturaManutencion(0, '', '', new Date(), 0, '');
     this.modal.open(ModalTicketManutencion, {
       size: 'md',
@@ -254,10 +268,8 @@ export class GestionGastosAlumnoComponent
       keyboard: false,
     });
 
-    //Cambiar en un futuro la obtención del DNI, porque se compartirá
-    //esta vista con la del profesor
     this.gestionGastosService.facturaManutencionTrigger.emit([
-      facturaM, ModoEdicion.nuevo, this.loginStorageUser.getUser()?.dni
+      facturaM, ModoEdicion.nuevo, this.dniAlumno
     ]);
 
     this.obtenerGastoDesdeModal();
@@ -277,7 +289,7 @@ export class GestionGastosAlumnoComponent
     });
 
     this.gestionGastosService.facturaTransporteTrigger.emit([
-      fact, modoEdicion
+      fact, modoEdicion, this.dniAlumno
     ]);
 
     this.obtenerGastoDesdeModal();
@@ -297,7 +309,7 @@ export class GestionGastosAlumnoComponent
     });
 
     this.gestionGastosService.facturaManutencionTrigger.emit([
-      fact, modoEdicion
+      fact, modoEdicion, this.dniAlumno
     ]);
 
     this.obtenerGastoDesdeModal();
@@ -320,6 +332,10 @@ export class GestionGastosAlumnoComponent
    */
   public abrirAyuda(): void {
     // this.modal.open(ManualGestionAlumnosComponent, { size: 'lg' });
+  }
+
+  public volver() {
+    this.router.navigate(['/data-management/gestion-gastos-profesor']);
   }
 
   //#endregion
