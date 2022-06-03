@@ -104,7 +104,6 @@ export class GestionGastosProfesorComponent implements AfterViewInit, OnDestroy,
       .subscribe({
         next: (result) => {
           this.gastoProfesor = result;
-          console.log(result.alumnosSinGasto);
           this.rerender();
           this.dtTrigger.next(this.gastoProfesor.gastos);
           $.fn.dataTable.ext.errMode = 'throw';
@@ -115,6 +114,24 @@ export class GestionGastosProfesorComponent implements AfterViewInit, OnDestroy,
           this.toastr.error('No se han podido recuperar los datos', 'Error');
         },
       });
+  }
+
+
+  /**
+   * Invoca al servicio que realiza la petición al servidor para añadir un alumno
+   * al registro de gastos del profesor
+   * @author David Sánchez Barragán
+   */
+  registrarAlumno(alumno: Alumno) {
+    this.gestionGastosService.nuevoAlumnoGestionGastos(alumno).subscribe({
+      next: (result)=>{
+        this.toastr.success('Alumno insertado correctamente');
+        this.cargarGastoProfesor();
+      },
+      error: (x) => {
+        this.toastr.error('No se ha podido insertar el alumno');
+      }
+    })
   }
 
   //#endregion
@@ -221,26 +238,6 @@ export class GestionGastosProfesorComponent implements AfterViewInit, OnDestroy,
   mostrarGastoAlumno(dni: string) {
     this.router.navigate(['/data-management/gestion-gastos-alumno'],
       { queryParams: { rol: 'Profesor', dni: dni } });
-  }
-
-  /**
-   * Abre un modal para registrar a un alumno
-   * @author David Sánchez Barragán
-   */
-  registrarAlumno() {
-    this.modal.open(ModalAlumnoComponent, {
-      size: 'md',
-      backdrop: 'static',
-      keyboard: false,
-    });
-
-    let alumno = new Alumno('', '', 0);
-    alumno.matricula_cod_centro = this.loginStorageUser.getUser()?.cod_centro;
-
-    // this.crudAlumnosService.alumnoTrigger.emit([
-    //   alumno,
-    //   this.modosEdicion.nuevo,
-    // ]);
   }
 
   /**

@@ -38,6 +38,7 @@ export class GestionGastosService {
   private urlEliminarFacturaManutencion: string = 'eliminarFacturaManutencion/';
   private urlGestionGastosProfesor: string = 'gestionGastosProfesor/';
   private urlEliminarAlumnoDeGastos: string = 'eliminarAlumnoDeGastos/';
+  private urlNuevoAlumnoGestionGastos: string = 'nuevoAlumnoGestionGastos/';
 
   public headers: HttpHeaders;
 
@@ -219,6 +220,22 @@ export class GestionGastosService {
         return resp;
       })
     );
+  }
+
+  //#endregion
+
+  //#region CRUD - Create
+
+  /**
+   * Realiza una petición al servidor para insertar un nuevo alumno en la gestión de gastos
+   * @returns `Observable` de la `HttpResponse`.
+   * @author David Sánchez Barragán
+   */
+   public nuevoAlumnoGestionGastos(alumno: Alumno) {
+    let url = this.urlBase + this.urlNuevoAlumnoGestionGastos;
+    const headers = this.headers;
+
+    return this.http.post(url, alumno, { headers });
   }
 
   //#endregion
