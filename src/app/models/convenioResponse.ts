@@ -7,6 +7,7 @@ export interface ConvenioResponse {
   id_empresa: number;
   fecha_ini: Date;
   fecha_fin: Date;
+  ruta_anexo: string;
   centro: CentroEstudios;
   empresa: Empresa;
 }

@@ -2,15 +2,18 @@ import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import * as FileSaver from 'file-saver';
 import { ToastrService } from 'ngx-toastr';
 import { CentroEstudios } from 'src/app/models/centroEstudios';
 import { Convenio } from 'src/app/models/convenio';
 import { Empresa } from 'src/app/models/empresa';
 import { AuxService } from 'src/app/services/aux-service.service';
+import { AnexoService } from 'src/app/services/crud-anexos.service';
 import { CrudEmpresasService } from 'src/app/services/crud-empresas.service';
 import { DatesService } from 'src/app/services/dates.service';
 import { DialogService } from 'src/app/services/dialog.service';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
+import { RegistroEmpresaService } from 'src/app/services/registro-empresa.service';
 
 @Component({
   selector: 'app-modal-convenio',
@@ -43,7 +46,8 @@ export class ModalConvenioComponent implements OnInit {
     public dialogService: DialogService,
     public toastr: ToastrService,
     private auxService: AuxService,
-    private datesService: DatesService
+    private datesService: DatesService,
+    private registroEmpresaService: RegistroEmpresaService
   ) {
     this.datos = new FormGroup({});
 
@@ -328,9 +332,9 @@ export class ModalConvenioComponent implements OnInit {
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
   private onSubmitAdd(): void {
-    console.log(this.datos.value);
     this.crudEmpresasService.addConvenio(this.datos.value).subscribe({
-      next: (response: any) => {
+      next: async (response: any) => {
+        console.log(response);
         this.toastr.success(
           'El ' +
             this.tipo +
@@ -339,6 +343,21 @@ export class ModalConvenioComponent implements OnInit {
             ' se ha registrado correctamente',
           'Registro del ' + this.tipo
         );
+        //#region Descarga opcional del anexo
+        let descargar = await this.dialogService.confirmacion(
+          'Anexo generado',
+          '¿Quiere descargar el Anexo 0' +
+            (this.empresa?.es_privada ? '' : 'A') +
+            ' de ' +
+            this.tipo +
+            ' con ' +
+            this.empresa?.nombre +
+            '?'
+        );
+        if (descargar) {
+          this.downloadAnexo(response.ruta_anexo);
+        }
+        //#endregion
         this.modalActive.close();
       },
       error: (e) => {
@@ -475,7 +494,7 @@ export class ModalConvenioComponent implements OnInit {
       let fileReader = new FileReader();
       fileReader.readAsDataURL(file);
       fileReader.onload = () => {
-        this.anexo = (fileReader.result);
+        this.anexo = fileReader.result;
       };
     }
   }
@@ -486,7 +505,45 @@ export class ModalConvenioComponent implements OnInit {
   /***********************************************************************/
   //#region Servicios - Peticiones al servidor
 
-  public downloadAnexo(): void {}
+  /**
+   * Descarga el anexo si la ruta es válida. Si no, imprime un mensaje de error
+   *
+   * @param ruta ruta del anexo en el servidor
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public downloadAnexo(ruta?: string): void {
+    if (ruta) {
+      this.registroEmpresaService.descargarAnexo0(ruta).subscribe({
+        next: (response) => {
+          let arr = ruta.split('\\', 3);
+          let nombre = arr.pop();
+          const blob = new Blob([response], {
+            type: 'application/octet-stream',
+          });
+          FileSaver.saveAs(blob, nombre);
+          this.toastr.success('Descargando anexo');
+        },
+        error: (err) => {
+          if (err.status === 404) {
+            this.toastr.error(
+              'Vuelva a subir o a generar el anexo en la opción de editar',
+              'Anexo no encontrado'
+            );
+          } else {
+            this.toastr.error(
+              'No se ha podido descargar el anexo',
+              'Error del servidor'
+            );
+          }
+        },
+      });
+    } else {
+      this.toastr.error(
+        'Vuelva a subir o a generar el anexo en la opción de editar',
+        'Anexo no encontrado'
+      );
+    }
+  }
 
   //#endregion
   /***********************************************************************/

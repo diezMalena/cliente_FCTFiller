@@ -10,6 +10,7 @@ export class Convenio {
       obj['id_empresa'],
       obj['fecha_ini'],
       obj['fecha_fin'],
+      obj['ruta_anexo'],
       obj['centro'],
       obj['empresa'],
     );
@@ -19,10 +20,11 @@ export class Convenio {
     public cod_convenio: string,
     public cod_centro: string,
     public id_empresa: number,
-    public fecha_ini?: Date,
-    public fecha_fin?: Date,
+    public fecha_ini: Date,
+    public fecha_fin: Date,
+    public ruta_anexo: string,
     public centro?: CentroEstudios,
-    public empresa?: Empresa
+    public empresa?: Empresa,
   ) {}
 
   public isRenovable(): boolean {

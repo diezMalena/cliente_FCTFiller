@@ -47,7 +47,7 @@
           <input type="text" class="{{ claseInput }}" id="cod_convenio" formControlName="cod_convenio"
             [attr.readonly]="true">
           <button *ngIf="modo === 1" class="btn btn-outline-primary form-control mt-3 mb-2"
-            (click)="downloadAnexo()">Descargar Anexo</button>
+            (click)="downloadAnexo(convenio?.ruta_anexo)">Descargar Anexo</button>
         </div>
       </div>
 
@@ -67,7 +67,7 @@
           </div>
           <div>
             <div class="input-group">
-              <input type="file" class="form-control" id="anexo" aria-label="Subir anexo"
+              <input type="file" class="form-control" id="anexo" aria-label="Subir anexo" accept="application/pdf"
                 [disabled]="subir ? null : true" (change)="cargarAnexo($event)">
             </div>
           </div>
