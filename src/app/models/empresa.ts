@@ -42,13 +42,22 @@ export class Empresa {
     public es_privada?: boolean
   ) {}
 
-  public isConvenioRenovable() {
+  /**
+   * Comprueba si el convenio con una empresa, de existir, es renovable.
+   * Es decir, comprueba si queda menos de un año para que el convenio caduque
+   *
+   * @returns true si el convenio se puede renovar, false si no
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public isConvenioRenovable(): boolean {
     if (this.convenio) {
       if (this.convenio.fecha_fin) {
+
         var diff_ms = Date.now() - new Date(this.convenio.fecha_fin).getTime();
         var age_dt = new Date(diff_ms);
 
-        return Math.abs(age_dt.getUTCFullYear() - 1970) < 1;
+        console.log(this.nombre + ': ' + Math.abs(age_dt.getUTCFullYear() - 1970));
+        return Math.abs(age_dt.getUTCFullYear() - 1970) < 2;
       } else {
         return false;
       }
@@ -57,7 +66,13 @@ export class Empresa {
     }
   }
 
-  get acuerdoOConvenio() {
+  /**
+   * Comprueba qué tipo de convenio se puede hacer con una empresa, según si es pública o privada
+   *
+   * @return 'convenio' si la empresa es privada, 'acuerdo' si es pública
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  get acuerdoOConvenio(): string {
     return this.es_privada ? 'convenio' : 'acuerdo';
   }
 }

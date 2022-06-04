@@ -627,6 +627,7 @@ export class RegistroEmpresaComponent implements OnInit {
             this.storage.getUser()?.centro,
             0,
           ]);
+          this.router.navigateByUrl('data-management/gestion-empresas');
         },
       });
     }
