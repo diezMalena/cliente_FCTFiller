@@ -316,6 +316,9 @@ export class ModalConvenioComponent implements OnInit {
       case 0:
         this.onSubmitAdd();
         break;
+      case 1:
+        this.downloadAnexo(this.convenio?.ruta_anexo);
+        break;
       case 2:
         this.onSubmitEdit();
         break;
@@ -340,14 +343,16 @@ export class ModalConvenioComponent implements OnInit {
           `Registro del ${this.tipo}`
         );
         //#region Descarga opcional del anexo
-        let descargar = await this.dialogService.confirmacion(
-          'Anexo generado',
-          `¿Quiere descargar el Anexo 0 ${
-            this.empresa?.es_privada ? '' : 'A'
-          } de ${this.tipo} con ${this.empresa?.nombre}?`
-        );
-        if (descargar) {
-          this.downloadAnexo(response.ruta_anexo);
+        if (!this.subir) {
+          let descargar = await this.dialogService.confirmacion(
+            'Anexo generado',
+            `¿Quiere descargar el Anexo 0 ${
+              this.empresa?.es_privada ? '' : 'A'
+            } de ${this.tipo} con ${this.empresa?.nombre}?`
+          );
+          if (descargar) {
+            this.downloadAnexo(response.ruta_anexo);
+          }
         }
         //#endregion
         this.closeModal();
@@ -376,19 +381,35 @@ export class ModalConvenioComponent implements OnInit {
         this.convenio?.cod_convenio;
     }
     this.crudEmpresasService.editConvenio(this.datos.value).subscribe({
-      next: (response) => {
+      next: async (response) => {
         this.toastr.success(
           `El ${this.tipo} con ${this.empresa?.nombre} se ha modificado correctamente`,
           `Modificación del ${this.tipo}`
         );
         this.modified = false;
+        //#region Descarga opcional del anexo
+        if (!this.subir) {
+          let descargar = await this.dialogService.confirmacion(
+            'Anexo generado',
+            `¿Quiere descargar el Anexo 0 ${
+              this.empresa?.es_privada ? '' : 'A'
+            } de ${this.tipo} con ${this.empresa?.nombre}?`
+          );
+          if (descargar) {
+            this.downloadAnexo(response.ruta_anexo);
+          }
+        }
+        //#endregion
         this.closeModal();
       },
       error: (e) => {
-        this.toastr.error(
-          `Error al modificar el ${this.tipo} con ${this.empresa?.nombre}`,
-          'Error de modificación'
-        );
+        let title = `Error de modificación del ${this.tipo}`;
+        let msg = `Error al modificar el ${this.tipo} con ${this.empresa?.nombre}`;
+        if (e.status == 409) {
+          title = `Código de ${this.tipo} duplicado'`;
+          msg = `Utilice otro número de ${this.tipo}`;
+        }
+        this.toastr.error(msg, title);
       },
     });
   }
@@ -473,7 +494,7 @@ export class ModalConvenioComponent implements OnInit {
    *
    * @param event
    * @author David Sánchez Barragán
-   * @author Dani J. Coello
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
   public async cargarAnexo(event: any) {
     let file = event.target.files[0];

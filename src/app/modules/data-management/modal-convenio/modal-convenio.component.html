@@ -46,8 +46,6 @@
           </label>
           <input type="text" class="{{ claseInput }}" id="cod_convenio" formControlName="cod_convenio"
             [attr.readonly]="true">
-          <button *ngIf="modo === 1" class="btn btn-outline-primary form-control mt-3 mb-2"
-            (click)="downloadAnexo(convenio?.ruta_anexo)">Descargar Anexo</button>
         </div>
       </div>
 
@@ -76,8 +74,8 @@
       </ng-container>
       <!-- #endregion -->
 
-      <!-- Esta parte sólo es visible si no se sube el formulario -->
-      <ng-container *ngIf="!subir">
+      <!-- Esta parte sólo es visible si no se sube el formulario y en modos que no sean sólo lectura -->
+      <ng-container *ngIf="!subir && modo != 1">
         <!-- #region Información del centro de estudios -->
         <div class="row g-3" *ngIf="centro">
           <h2 class="fs-5">Datos del centro de estudios</h2>
@@ -330,14 +328,12 @@
         <!-- #endregion -->
       </ng-container>
 
-      <!-- Botones (si la edición está activa) -->
-      <ng-container *ngIf="modo != 1">
-        <div class="row mt-3 d-flex align-items-center justify-content-center modal-footer">
-          <input class="w-50 btn btn-primary btn-md" type="submit"
-            value="{{ modo === 0 ? 'Dar de alta ' + tipo : modo === 2 ? 'Guardar cambios' : 'Renovar ' + tipo}}"
-            [disabled]="modo === 2 && !modified ? true : null">
-        </div>
-      </ng-container>
+      <!-- Botones -->
+      <div class="row mt-3 d-flex align-items-center justify-content-center modal-footer">
+        <input class="w-50 btn btn-primary btn-md" type="submit"
+          value="{{ modo === 0 ? 'Dar de alta ' + tipo : modo === 1 ? 'Descargar ' + tipo : modo === 2 ? 'Guardar cambios' : 'Renovar ' + tipo}}"
+          [disabled]="modo === 2 && !modified ? true : null">
+      </div>
     </form>
   </div>
 </div>

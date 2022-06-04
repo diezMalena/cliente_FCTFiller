@@ -120,6 +120,7 @@ export class GestionEmpresasComponent
 
   /**
    * Elimina una empresa de la base de datos, previa confirmación
+   *
    * @param empresa la empresa a eliminar
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
@@ -131,7 +132,8 @@ export class GestionEmpresasComponent
     if (eliminar) {
       this.crudEmpresasService.deleteEmpresa(empresa.id).subscribe({
         next: (response: any) => {
-          this.getEmpresas();
+          const index = this.empresas.findIndex(emp => emp.id === empresa.id);
+          this.empresas.splice(index, 1);
           this.toastr.success(response.message, response.title);
         },
         error: (err: any) => {
@@ -141,6 +143,12 @@ export class GestionEmpresasComponent
     }
   }
 
+  /**
+   * Envía una petición al servidor para anular un convenio, previa confirmación del usuario
+   *
+   * @param empresa Empresa cuyo convenio se queire anular
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
   public async anularConvenio(empresa: Empresa) {
     if (empresa.convenio?.cod_convenio) {
       let eliminar = await this.dialogService.confirmacion(

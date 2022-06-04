@@ -195,7 +195,7 @@ export class CrudEmpresasService {
     let url: string = this.URLAPI + 'editar_convenio';
     let headers = this.headers;
 
-    return this.http.post(url, datos, { headers });
+    return this.http.put(url, datos, { headers });
   }
 
   /**
