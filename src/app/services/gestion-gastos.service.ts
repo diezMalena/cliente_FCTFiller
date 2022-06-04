@@ -39,6 +39,7 @@ export class GestionGastosService {
   private urlGestionGastosProfesor: string = 'gestionGastosProfesor/';
   private urlEliminarAlumnoDeGastos: string = 'eliminarAlumnoDeGastos/';
   private urlNuevoAlumnoGestionGastos: string = 'nuevoAlumnoGestionGastos/';
+  private urlDescargarAnexoVI: string = 'descargarAnexoVI/';
 
   public headers: HttpHeaders;
 
@@ -175,6 +176,13 @@ export class GestionGastosService {
    */
   public setGastoBS(gasto: Gasto) {
     this.gastoBS.next(gasto);
+  }
+
+  public descargarAnexoVI() {
+    let url = this.urlBase + this.urlDescargarAnexoVI;
+    const headers = this.headers;
+
+    return this.http.get(url, { headers: headers, responseType: 'blob' });
   }
 
   //#endregion

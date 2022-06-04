@@ -22,10 +22,10 @@
           </li>
         </ul>
 
-      <button class="btn btn-outline-primary">Generar Anexo VI</button>
+      <button (click)="this.descargarAnexo()" class="btn btn-outline-primary">Generar Anexo VI</button>
     </div>
     <div class="col-md-6 d-flex align-items-center py-2 justify-content-end">
-      <span>Total gastos grupo: <strong>{{this.gastoProfesor?.gastoTotalGrupo}}</strong> €</span>
+      <span>Total gastos grupo: <strong>{{this.gastoProfesor?.gastoTotalGrupo?.toFixed(2)}}</strong> €</span>
     </div>
   </div>
   <!-- Tabla -->
@@ -53,7 +53,7 @@
             </td>
             <td class="align-middle" attr.aria-label="Ver en detalle a {{gastoAlumno.nombre_alumno}}">
               {{(gastoAlumno!.sumatorio_gasto_transporte_publico!
-              + gastoAlumno!.sumatorio_gasto_vehiculo_privado!)}} €
+              + gastoAlumno!.sumatorio_gasto_vehiculo_privado!).toFixed(2)}} €
               <button class="btn btn-outline-success ms-5 me-2"
                 (click)="this.nuevoTicketTransporte(gastoAlumno.dni_alumno!)">
                 <svg width="16" height="16" class="bi">
@@ -71,7 +71,7 @@
               </button>
             </td>
             <td class="align-middle" attr.aria-label="Ver en detalle a {{gastoAlumno.nombre_alumno}}">
-              {{gastoAlumno.total_gastos}} €
+              {{gastoAlumno.total_gastos?.toFixed(2)}} €
             </td>
             <!-- #endregion -->
             <!-- Acciones -->

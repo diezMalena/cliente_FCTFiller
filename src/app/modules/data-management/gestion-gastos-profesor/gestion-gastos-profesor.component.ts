@@ -24,6 +24,7 @@ import { ModalTicketDesplazamiento } from '../modal-ticket-desplazamiento/modal-
 import { FacturaTransporte } from 'src/app/models/facturaTransporte';
 import { FacturaManutencion } from 'src/app/models/facturaManutencion';
 import { ModalTicketManutencion } from '../modal-ticket-manutencion/modal-ticket-manutencion.component';
+import * as FileSaver from 'file-saver';
 
 GestionGastosService
 
@@ -60,9 +61,6 @@ export class GestionGastosProfesorComponent implements AfterViewInit, OnDestroy,
       language: { url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json' },
     });
     this.cargarGastoProfesor();
-    this.obtenerAlumnosDesdeModal();
-
-
   }
 
   //#endregion
@@ -241,23 +239,25 @@ export class GestionGastosProfesorComponent implements AfterViewInit, OnDestroy,
   }
 
   /**
-   * Actualiza los datos de alumnos respecto de las modificaciones en el modal
-   * @author David Sánchez Barragán
-   */
-  public obtenerAlumnosDesdeModal() {
-    // this.crudAlumnosService.alumnosArray.subscribe((array) => {
-    //   this.listaAlumnos = array;
-    //   this.rerender();
-    //   this.dtTrigger.next(this.listaAlumnos);
-    // });
-  }
-
-  /**
    * Abre un modal de ayuda
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
   public abrirAyuda(): void {
     this.modal.open(ManualGestionAlumnosComponent, { size: 'lg' });
+  }
+
+  public descargarAnexo() {
+    this.gestionGastosService.descargarAnexoVI().subscribe({
+      next: (res: any) => {
+        console.log(res);
+        const blob = new Blob([res], { type: 'application/octet-stream' });
+        FileSaver.saveAs(blob, `Anexo6.${res.type.toString().includes('openxml')?'xlsx':'zip'}`);
+      },
+      error: (e) => {
+        console.log(e);
+        this.toastr.error('El curriculum no ha podido descargarse', 'Error');
+      },
+    });
   }
 
   //#endregion
