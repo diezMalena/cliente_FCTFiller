@@ -11,16 +11,18 @@
 <div class="card p-3">
   <div class="row">
     <div class="col-md-6">
-        <button class="btn btn-outline-primary dropdown-toggle me-2" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-          <svg width="16" height="16" class="bi me-1">
-            <use xlink:href="#nuevo" />
-          </svg> Añadir alumno
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-          <li (click)="registrarAlumno(alumno)" role="button" class="dropdown-item" *ngFor="let alumno of this.gastoProfesor?.alumnosSinGasto">
-            {{ alumno.nombre + ' ' + alumno.apellidos }}
-          </li>
-        </ul>
+      <button class="btn btn-outline-primary dropdown-toggle me-2" type="button" id="dropdownMenuButton1"
+        data-bs-toggle="dropdown" aria-expanded="false">
+        <svg width="16" height="16" class="bi me-1">
+          <use xlink:href="#nuevo" />
+        </svg> Añadir alumno
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+        <li (click)="registrarAlumno(alumno)" role="button" class="dropdown-item"
+          *ngFor="let alumno of this.gastoProfesor?.alumnosSinGasto">
+          {{ alumno.nombre + ' ' + alumno.apellidos }}
+        </li>
+      </ul>
 
       <button (click)="this.descargarAnexo()" class="btn btn-outline-primary">Generar Anexo VI</button>
     </div>
@@ -52,9 +54,11 @@
               {{gastoAlumno.tipo_desplazamiento}}
             </td>
             <td class="align-middle" attr.aria-label="Ver en detalle a {{gastoAlumno.nombre_alumno}}">
-              {{(gastoAlumno!.sumatorio_gasto_transporte_publico!
-              + gastoAlumno!.sumatorio_gasto_vehiculo_privado!).toFixed(2)}} €
-              <button class="btn btn-outline-success ms-5 me-2"
+              <span class="float-start">
+                {{(gastoAlumno!.sumatorio_gasto_transporte_publico!
+                + gastoAlumno!.sumatorio_gasto_vehiculo_privado!).toFixed(2)}} €
+              </span>
+              <button class="btn btn-outline-success ms-5 me-2 float-end"
                 (click)="this.nuevoTicketTransporte(gastoAlumno.dni_alumno!)">
                 <svg width="16" height="16" class="bi">
                   <use xlink:href="#nuevo" />
@@ -62,8 +66,10 @@
               </button>
             </td>
             <td class="align-middle" attr.aria-label="Ver en detalle a {{gastoAlumno.nombre_alumno}}">
-              {{(gastoAlumno!.sumatorio_gasto_manutencion)}} €
-              <button class="btn btn-outline-success ms-5 me-2"
+              <span class="float-start">
+                {{(gastoAlumno!.sumatorio_gasto_manutencion)}} €
+              </span>
+              <button class="btn btn-outline-success ms-5 me-2 float-end"
                 (click)="this.nuevoTicketManutencion(gastoAlumno.dni_alumno!)">
                 <svg width="16" height="16" class="bi">
                   <use xlink:href="#nuevo" />

@@ -7,7 +7,9 @@
           <use xlink:href="#flechaAtras" />
         </svg>
       </span>
-       Gestión de gastos<span class="h2" *ngIf="this.loginStorageUser.getUser()?.dni != this.dniAlumno"> de {{this.gasto?.nombre_alumno}}</span> </h1>
+      Gestión de gastos<span class="h2" *ngIf="this.loginStorageUser.getUser()?.dni != this.dniAlumno"> de
+        {{this.gasto?.nombre_alumno}}</span>
+    </h1>
     <button type="button" class="btn btn-outline-default mr-2" placement="left"
       ngbTooltip="Haga clic para acceder a la ayuda de esta sección" (click)="abrirAyuda()">
       ?
@@ -44,7 +46,7 @@
         </p>
       </div>
     </div>
-
+    <hr>
     <div class="row">
       <div class="col-12 d-flex justify-content-end">
         <p>
@@ -57,7 +59,7 @@
       </div>
     </div>
     <!-- Vehículo propio -->
-    <section [hidden]="!this.isVisible">
+    <section class="border border-primary rounded p-2" [hidden]="!this.isVisible">
       <div class="row">
         <div class="col-12 d-flex align-items-center justify-content-between py-2">
           <h2 class="h5">Vehículo propio</h2>
@@ -67,25 +69,26 @@
           </p>
         </div>
       </div>
-      <div class="row row-cols-lg-auto align-items-end">
-        <div class="col-12">
+      <div class="row">
+        <div class="col-md-4">
           <label class="form-label" for="diasVehiculoPropio">Cantidad de días en los que se ha viajado en vehículo
             propio</label>
           <input type="text" class="form-control" id="diasVehiculoPropio" [(ngModel)]="this.dias_transporte_privado"
             [value]="this.gasto?.dias_transporte_privado" />
+          <button (click)="actualizarDiasVehiculoPrivado()" class="btn btn-outline-primary mt-1">Guardar</button>
         </div>
-        <div class="col-12">
-          <button (click)="actualizarDiasVehiculoPrivado()" class="btn btn-outline-primary">Guardar</button>
+        <div class="col-md-8">
+          <p class="float-end">&Sigma; Gastos vehículo propio = distancia hasta el centro de trabajo x 2 x 0,12</p>
         </div>
       </div>
-
+      <hr class="mt-4">
       <!-- Transporte público -->
-      <div class="row pt-4">
+      <div class="row">
         <div class="col-12 d-flex align-items-center justify-content-between py-2">
           <h2 class="h5">Transporte público</h2>
           <p>
             &Sigma; Gastos transporte público:
-            <strong>{{this.gasto?.sumatorio_gasto_transporte_publico?.toFixed(2)}}</strong>
+            <strong>{{this.gasto?.sumatorio_gasto_transporte_publico?.toFixed(2)}} €</strong>
           </p>
         </div>
         <div class="col-12">
@@ -149,7 +152,7 @@
     </section>
 
     <!-- Manutención -->
-    <section [hidden]="this.isVisible">
+    <section class="border border-primary rounded p-2" [hidden]="this.isVisible">
       <div class="row pt-4">
         <div class="col-12">
           <button (click)="this.nuevoTicketManutencion()" class="btn btn-outline-primary">Añadir ticket</button>
