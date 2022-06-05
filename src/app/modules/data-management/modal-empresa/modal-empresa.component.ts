@@ -47,6 +47,7 @@ export class ModalEmpresaComponent implements OnInit {
         this.editar = data[1];
 
         this.construirFormulario();
+        console.log(this.datosEmpresa.value.es_privada);
       },
     });
   }
@@ -82,6 +83,7 @@ export class ModalEmpresaComponent implements OnInit {
         this.empresa?.email,
         [Validators.required, Validators.email],
       ],
+      es_privada: [this.empresa?.es_privada],
       provincia: [this.empresa?.provincia, [Validators.required]],
       localidad: [this.empresa?.localidad, [Validators.required]],
       cp: [
@@ -120,6 +122,10 @@ export class ModalEmpresaComponent implements OnInit {
     });
   }
 
+  public changeEsPrivada(event: any): void {
+    this.formulario['es_privada'].setValue(event.target.value);
+  }
+
   /**
    * Valida el formulario con los datos introducidos
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
@@ -147,6 +153,7 @@ export class ModalEmpresaComponent implements OnInit {
       datos.cp,
       representanteEditado
     );
+    empresaEditada.es_privada = datos.es_privada;
 
     if (this.datosEmpresa.invalid) {
       return;
@@ -194,8 +201,10 @@ export class ModalEmpresaComponent implements OnInit {
       next: async (response: any) => {
         this.empresa = empresa;
         await this.updateRepresentante(empresa.representante!);
-        this.getEmpresas();
+        this.empresa.representante = empresa.representante;
         this.toastr.success(response.message, response.title);
+        this.modified = false;
+        this.closeModal();
       },
       error: (err: any) => {
         this.toastr.error(err.error.message, err.error.title);

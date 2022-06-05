@@ -444,7 +444,6 @@ export class RegistroEmpresaComponent implements OnInit {
         .checkDatos(elemento, campo, event.target.value)
         .subscribe({
           next: (res) => {
-            console.log('Duplicado: ' + res);
             if (res) {
               switch (elemento) {
                 case 'empresa':

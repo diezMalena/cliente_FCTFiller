@@ -195,7 +195,7 @@ export class GestionEmpresasComponent
    */
   public mostrarEmpresa(empresa: Empresa, editar: boolean) {
     this.modal.open(ModalEmpresaComponent, {
-      size: 'md',
+      size: 'lg',
       backdrop: 'static',
       keyboard: false,
     });

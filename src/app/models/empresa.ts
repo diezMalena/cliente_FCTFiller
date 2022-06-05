@@ -56,7 +56,6 @@ export class Empresa {
         var diff_ms = Date.now() - new Date(this.convenio.fecha_fin).getTime();
         var age_dt = new Date(diff_ms);
 
-        console.log(this.nombre + ': ' + Math.abs(age_dt.getUTCFullYear() - 1970));
         return Math.abs(age_dt.getUTCFullYear() - 1970) < 2;
       } else {
         return false;

@@ -53,7 +53,6 @@ export class Convenio {
    */
   public getNum(): number {
     let part = this.cod_convenio.split('/')[0];
-    console.log(part);
     return parseInt(part.substring(1));
   }
 }
