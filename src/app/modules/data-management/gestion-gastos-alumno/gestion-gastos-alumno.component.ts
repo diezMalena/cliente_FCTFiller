@@ -116,7 +116,6 @@ export class GestionGastosAlumnoComponent
       .subscribe({
         next: (result) => {
           this.gasto = result;
-          //console.log(this.gasto)
           this.rerender();
           this.dtTrigger.next(this.gasto);
         },

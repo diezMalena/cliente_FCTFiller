@@ -48,7 +48,6 @@ export class ModalAlumnoComponent implements OnInit {
       next: (data: Array<any>) => {
         this.alumno = data[0];
         this.modo = data[1];
-
         this.construirFormulario();
         this.obtenerListaGrupos();
         this.obtenerListaProvincias();

@@ -32,6 +32,7 @@
           <input class="form-control" [readonly]="this.readonly" formControlName="destino" id="destino" type="text">
         </div>
         <div class="col-12">
+          <label class="form-label fw-bold" for="destino">Imagen del ticket</label>
           <input accept="image/*" (change)="this.cambiarImagenTicket($event, this.formulario)"
             class="form-control" [hidden]="this.readonly" type="file" id="formFile">
         </div>

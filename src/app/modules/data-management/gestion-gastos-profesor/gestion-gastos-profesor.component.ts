@@ -249,13 +249,11 @@ export class GestionGastosProfesorComponent implements AfterViewInit, OnDestroy,
   public descargarAnexo() {
     this.gestionGastosService.descargarAnexoVI().subscribe({
       next: (res: any) => {
-        console.log(res);
         const blob = new Blob([res], { type: 'application/octet-stream' });
         FileSaver.saveAs(blob, `Anexo6.${res.type.toString().includes('openxml')?'xlsx':'zip'}`);
       },
       error: (e) => {
-        console.log(e);
-        this.toastr.error('El curriculum no ha podido descargarse', 'Error');
+        this.toastr.error('El anexo no ha podido descargarse', 'Error');
       },
     });
   }

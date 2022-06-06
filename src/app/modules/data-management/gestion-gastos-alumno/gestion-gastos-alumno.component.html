@@ -62,7 +62,7 @@
     <section class="border border-primary rounded p-2" [hidden]="!this.isVisible">
       <div class="row">
         <div class="col-12 d-flex align-items-center justify-content-between py-2">
-          <h2 class="h5">Vehículo propio</h2>
+          <h2 class="h4">Vehículo propio</h2>
           <p>
             &Sigma; Gastos vehículo propio:
             <strong>{{this.gasto?.sumatorio_gasto_vehiculo_privado?.toFixed(2)}}€</strong>
@@ -85,7 +85,7 @@
       <!-- Transporte público -->
       <div class="row">
         <div class="col-12 d-flex align-items-center justify-content-between py-2">
-          <h2 class="h5">Transporte público</h2>
+          <h2 class="h4">Transporte público</h2>
           <p>
             &Sigma; Gastos transporte público:
             <strong>{{this.gasto?.sumatorio_gasto_transporte_publico?.toFixed(2)}} €</strong>
@@ -153,7 +153,7 @@
 
     <!-- Manutención -->
     <section class="border border-primary rounded p-2" [hidden]="this.isVisible">
-      <div class="row pt-4">
+      <div class="row">
         <div class="col-12">
           <button (click)="this.nuevoTicketManutencion()" class="btn btn-outline-primary">Añadir ticket</button>
         </div>

@@ -252,16 +252,6 @@ export class ModalTicketManutencion implements OnInit {
   //#region Funciones auxiliares y otros
 
   /**
-   * Establece el valor de todos los campos de distancia a cero.
-   */
-  public restablecerCampos() {
-    this.formulario['ubicacion_centro_trabajo'].setValue('');
-    this.formulario['distancia_centroEd_centroTra'].setValue('0');
-    this.formulario['distancia_centroEd_residencia'].setValue('0');
-    this.formulario['distancia_centroTra_residencia'].setValue('0');
-  }
-
-  /**
    * Método que se ejecutará al cerrar el modal
    * @returns `void`
    * @author David Sánchez Barragán
