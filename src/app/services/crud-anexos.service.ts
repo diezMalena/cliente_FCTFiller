@@ -6,12 +6,14 @@ import { anexoAlumnoResponse } from '../models/anexoAlumnoResponse';
 import { tutoriaResponse } from '../models/tutoriaResponse';
 import { environment } from 'src/environments/environment';
 import { HttpHeadersService } from './http-headers.service';
+import { BehaviorSubject } from 'rxjs';
+
 
 @Injectable({ providedIn: 'root' })
 export class AnexoService {
   public ruta = environment.apiUrl;
   public headers: HttpHeaders;
-
+  public anexosArray = new BehaviorSubject<string>('');
   constructor(private http: HttpClient, private headersService: HttpHeadersService) {
     this.headers = headersService.getHeadersWithToken();
   }
@@ -37,6 +39,15 @@ export class AnexoService {
   }
 
     /**
+   * Esta funcion recoge el nuevo array de anexos en una variable
+   * @param arrayAnexos
+   * @author Laura <lauramorenoramos@gmail.com>
+   */
+     public getAnexosInArray(arrayAnexos: string) {
+      this.anexosArray.next(arrayAnexos);
+    }
+
+    /**
    * @param dni_tutor Es el dni del alumno
    * @returns Observable con una lista de anexos
    * Este metodo hace una llamada a la api y listar los anexos de los alumnos
@@ -45,6 +56,16 @@ export class AnexoService {
   public getAnexosAlumno(dni_alumno: string) {
     let url: string = this.ruta + 'listaAnexosAlumno/' + dni_alumno;
     const headers = this.headers;
+    return this.http.get<anexoAlumnoResponse>(url, { headers });
+  }
+
+  /**
+   *
+   * @param dni_tutor es el dni del tutor
+   */
+  public getAnexosProgramaFormativo(dni_tutor: string){
+    const headers = this.headers;
+    let url: string = this.ruta + 'solicitarAnexosProgramaFormativo/' + dni_tutor;
     return this.http.get<anexoAlumnoResponse>(url, { headers });
   }
 

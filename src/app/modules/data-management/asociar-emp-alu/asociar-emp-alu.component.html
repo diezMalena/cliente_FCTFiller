@@ -71,10 +71,15 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <!--Botones-->
-                <div class="col-sm-12 mt-1 text-center ">
-                    <input type="button " class="btn btn-outline-primary m-1 " value="Guardar y Generar Word " (click)='setCambiosEmpresas()'>
+                    <!--Botones-->
+                    <div *ngIf="this.hayAlumnosEnEmpresas==true" class="row d-flex justify-content-center">
+                        <input type="button " class="col-12 col-lg-4 btn btn-outline-primary m-1 " value="Guardar" (click)='setCambiosEmpresas()'>
+                        <input type="button " class="col-12 col-lg-4 btn btn-outline-primary m-1 " value="Generar Word" (click)='GenerarAnexos()'>
+                    </div>
+                    <div *ngIf="this.hayAlumnosEnEmpresas==false" class="row d-flex justify-content-center">
+                        <input type="button " class="col-12 col-lg-4 btn btn-outline-primary m-1 " value="Guardar" (click)='setCambiosEmpresas()'>
+                        <input type="button " class="col-12 col-lg-4 btn btn-outline-primary m-1 " value="Generar Word" disabled>
+                    </div>
                 </div>
             </div>
         </div>

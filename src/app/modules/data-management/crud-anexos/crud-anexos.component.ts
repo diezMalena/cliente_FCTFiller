@@ -56,8 +56,10 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
 
     if (this.usuario!.isTutor()) {
       this.verAnexos();
+      this.getArrayAnexos();
     } else {
       this.verGrupos();
+      this.getArrayAnexos();
     }
   }
 
@@ -346,4 +348,16 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
       sessionStorage.setItem('llamadaDesdeCrud','1');
       this.modal.open(ModalUploadAnexoComponent, { size: 'md' });
     }
+
+      /**
+   * @author Laura <lauramorenoramos97@gmail.com>
+   * Esta funcion es una suscripcion a una variable BehaviorSubject que recoge el nuevo
+   * array de anexos
+   */
+  public getArrayAnexos() {
+    this.anexoService.anexosArray.subscribe((array) => {
+      this.anexosArray = array;
+      this.rerender();
+    });
+  }
 }

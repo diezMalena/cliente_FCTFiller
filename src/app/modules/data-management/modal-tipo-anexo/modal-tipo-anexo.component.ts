@@ -28,6 +28,7 @@ export class ModalTipoAnexoComponent implements OnInit {
   usuario;
   dni?: string;
   submitted: boolean = false;
+  public anexosArray: any = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -70,6 +71,7 @@ export class ModalTipoAnexoComponent implements OnInit {
           const blob = new Blob([response], { type: 'application/octet-stream' });
           FileSaver.saveAs(blob, this.codAnexo);
           this.toastr.success('Anexo Descargado', 'Descarga');
+          this.recogerAnexosAlumnos();
         },
         error: (e) => {
           this.toastr.error('El AnexoXV no ha podido generarse', 'Fallo');
@@ -91,6 +93,24 @@ export class ModalTipoAnexoComponent implements OnInit {
    CloseModal() {
     this.modalActive.dismiss();
   }
+
+          /**
+   * Esta funcion recoge  el nuevo array actualizado de anexos de los alumnos para darselo
+   * a la ventana principal y que se muestre actualizada
+   * @author Laura <lauramorenoramos@gmail.com>
+   */
+           public recogerAnexosAlumnos() {
+            this.anexoService.getAnexosAlumno(this.dni!).subscribe({
+              next: (response: any) => {
+                this.anexosArray = response;
+                this.anexoService.getAnexosInArray(this.anexosArray);
+              },
+              error: (e) => {
+                this.toastr.error('Los anexos no han podido mostrarse', 'Fallo');
+              },
+            });
+          }
+
   //#endregion
   /***********************************************************************/
 }

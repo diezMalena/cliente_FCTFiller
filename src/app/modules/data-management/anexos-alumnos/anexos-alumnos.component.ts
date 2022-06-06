@@ -1,9 +1,9 @@
 import {
-  Component,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+   Component,
+   OnDestroy,
+   OnInit,
+   ViewChild
+  } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AnexoService } from 'src/app/services/crud-anexos.service';
@@ -12,11 +12,9 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 import { Subject } from 'rxjs';
 import { DialogService } from 'src/app/services/dialog.service';
-import { ManualCrudAnexosComponent } from '../../manuales/manual-crud-anexos/manual-crud-anexos.component';
 import { DataTableDirective } from 'angular-datatables';
 import { ModalTipoAnexoComponent } from '../modal-tipo-anexo/modal-tipo-anexo.component';
 import { ModalUploadAnexoComponent } from '../modal-upload-anexo/modal-upload-anexo.component';
-import { FileUploadService } from 'src/app/services/file-upload.service';
 import { ManualCrudAnexosAlumnosComponent } from '../../manuales/manual-crud-anexos-alumnos/manual-crud-anexos-alumnos.component';
 
 @Component({
@@ -24,7 +22,7 @@ import { ManualCrudAnexosAlumnosComponent } from '../../manuales/manual-crud-ane
   templateUrl: './anexos-alumnos.component.html',
   styleUrls: ['./anexos-alumnos.component.scss'],
 })
-export class AnexosAlumnosComponent implements OnDestroy, OnInit{
+export class AnexosAlumnosComponent implements OnDestroy, OnInit {
   @ViewChild(DataTableDirective, { static: false })
 
   /***********************************************************************/
@@ -41,7 +39,6 @@ export class AnexosAlumnosComponent implements OnDestroy, OnInit{
   tipoAnexo: any;
 
   constructor(
-    private uploadService: FileUploadService,
     private anexoService: AnexoService,
     private router: Router,
     private toastr: ToastrService,
@@ -56,7 +53,8 @@ export class AnexosAlumnosComponent implements OnDestroy, OnInit{
 
   ngOnInit(): void {
     delete this.dtOptions['language'];
-      this.verAnexos();
+    this.verAnexos();
+    this.getArrayAnexos();
   }
 
   //#endregion
@@ -85,8 +83,7 @@ export class AnexosAlumnosComponent implements OnDestroy, OnInit{
   //#endregion
   /***********************************************************************/
 
-
-    /***********************************************************************/
+  /***********************************************************************/
   //#region Servicios - Peticiones al servidor
 
   /***********************************************************************/
@@ -96,25 +93,39 @@ export class AnexosAlumnosComponent implements OnDestroy, OnInit{
    * Este metodo te permite ver los anexos
    * @author Laura <lauramorenoramos97@gmail.com>
    */
-   public verAnexos() {
-    this.anexoService.getAnexosAlumno(this.dni_alumno!).subscribe((response) => {
-      this.anexosArray = response;
-      //#region Datatable
-      response = (this.anexosArray as any).data;
-      // Calling the DT trigger to manually render the table
-      this.rerender();
-      this.dtTrigger.next(this.anexosArray);
-      $.fn.dataTable.ext.errMode = 'throw';
-    });
+  public verAnexos() {
+    this.anexoService
+      .getAnexosAlumno(this.dni_alumno!)
+      .subscribe((response) => {
+        this.anexosArray = response;
+        //#region Datatable
+        response = (this.anexosArray as any).data;
+        // Calling the DT trigger to manually render the table
+        this.rerender();
+        this.dtTrigger.next(this.anexosArray);
+        $.fn.dataTable.ext.errMode = 'throw';
+      });
     $.extend(true, $.fn.dataTable.defaults, {
       language: { url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json' },
       //#endregion
     });
   }
+
+  /**
+   * @author Laura <lauramorenoramos97@gmail.com>
+   * Esta funcion es una suscripcion a una variable BehaviorSubject que recoge el nuevo
+   * array de anexos
+   */
+  public getArrayAnexos() {
+    this.anexoService.anexosArray.subscribe((array) => {
+      this.anexosArray = array;
+      this.rerender();
+    });
+  }
   //#endregion
   /***********************************************************************/
 
-   /***********************************************************************/
+  /***********************************************************************/
   //#region Descarga
 
   /**
@@ -124,7 +135,7 @@ export class AnexosAlumnosComponent implements OnDestroy, OnInit{
    * @param codigo es el mnombre del anexo a descargar
    * @author Laura <lauramorenoramos97@gmail.com>
    */
-   public async descargarAnexo(codigo: string) {
+  public async descargarAnexo(codigo: string) {
     let hacerlo = await this.dialogService.confirmacion(
       'Descargar',
       `¿Está seguro de que desea descargar el anexo?`
@@ -188,32 +199,29 @@ export class AnexosAlumnosComponent implements OnDestroy, OnInit{
     this.modal.open(ManualCrudAnexosAlumnosComponent, { size: 'lg' });
   }
 
-
-/**
- * Esta función te permite abrir el modal correcto para el tipo de anexo
- * que se quiere rellenar/observar
- * @param nombre  es el tipo de anexo que se va a rellenar
- * @param codigo  es el nombre de archivo que tiene el anexo, es un simple decorador
- * para el modal
- * @author Laura <lauramorenoramos97@gmail.com>
- */
-  public abrirRelleno(nombre : string, codigo : string){
+  /**
+   * Esta función te permite abrir el modal correcto para el tipo de anexo
+   * que se quiere rellenar/observar
+   * @param nombre  es el tipo de anexo que se va a rellenar
+   * @param codigo  es el nombre de archivo que tiene el anexo, es un simple decorador
+   * para el modal
+   * @author Laura <lauramorenoramos97@gmail.com>
+   */
+  public abrirRelleno(nombre: string, codigo: string) {
     sessionStorage.setItem('tipoAnexo', nombre);
     sessionStorage.setItem('codigo', codigo);
-     this.modal.open(ModalTipoAnexoComponent, { size: 'md' });
+    this.modal.open(ModalTipoAnexoComponent, { size: 'md' });
   }
   //#endregion
   /***********************************************************************/
 
-   /**
+  /**
    * Esta funcion abre el manual de ayuda del crud de anexos
    * @author Laura <lauramorenoramos97@gmail.com>
    */
-    public abrirModalUpload(nombre : string, codigo:string) {
-      sessionStorage.setItem('tipoAnexo', nombre);
-      sessionStorage.setItem('codigoAnexo',codigo);
-      sessionStorage.setItem('llamadaDesdeCrud','1');
-      this.modal.open(ModalUploadAnexoComponent, { size: 'md' });
-    }
-
+  public abrirModalUpload(nombre: string, codigo: string) {
+    sessionStorage.setItem('tipoAnexo', nombre);
+    sessionStorage.setItem('codigoAnexo', codigo);
+    this.modal.open(ModalUploadAnexoComponent, { size: 'md' });
+  }
 }

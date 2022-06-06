@@ -116,7 +116,6 @@ export class AsociarEmpAluComponent implements OnInit {
       .solicitarAnexosFct(this.dniTutor!)
       .subscribe((resultado) => {
         this.anexos = resultado;
-        console.log(this.anexos);
       });
   }
 
@@ -203,7 +202,10 @@ export class AsociarEmpAluComponent implements OnInit {
         };
         this.alumnosEmpresas.asignarAlumnos(datos).subscribe();
         this.toastr.success('Cambios realizados con exito.', 'Guardado');
-        this.GenerarAnexos();
+        this.getNombreCiclo();
+        this.getAlumnos();
+        this.getEmpresas();
+        this.getAnexos();
       } else if (!bandera) {
         this.toastr.error(
           'No pueden haber campos vacíos, o las fechas son incorrectas',
