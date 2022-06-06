@@ -3,21 +3,23 @@ import { RouterModule, Routes } from '@angular/router';
 import { AsociarEmpAluComponent } from './asociar-emp-alu/asociar-emp-alu.component';
 import { GestionEmpresasComponent } from './gestion-empresas/gestion-empresas.component';
 import { CrudAnexosComponent } from './crud-anexos/crud-anexos.component';
-import { EmpresaComponent } from './registro-empresa/empresa/empresa.component';
 import { RegistroEmpresaComponent } from './registro-empresa/registro-empresa.component';
-import { RepresentanteComponent } from './registro-empresa/representante/representante.component';
-import { ResumenComponent } from './registro-empresa/resumen/resumen.component';
-import { UbicacionComponent } from './registro-empresa/ubicacion/ubicacion.component';
 import { SeguimientoComponent } from './seguimiento/seguimiento.component';
 import { CrudProfesoresComponent } from './crud-profesores/crud-profesores.component';
 import { GestionAlumnosComponent } from './gestion-alumnos/gestion-alumnos.component';
+import { GestionGastosAlumnoComponent } from './gestion-gastos-alumno/gestion-gastos-alumno.component';
 import { HistorialAnexosComponent } from './historial-anexos/historial-anexos.component';
 import { AnexosAlumnosComponent } from './anexos-alumnos/anexos-alumnos.component';
 import { ProgramaFormativoComponent } from './programa-formativo/programa-formativo.component';
 //import { SectionEmpresaComponent } from './components/section-empresa/section-empresa.component';
+import { GestionGastosProfesorComponent } from './gestion-gastos-profesor/gestion-gastos-profesor.component';
 import { PerfilesGuard } from 'src/app/guards/perfiles.guard';
 import { ProfesoresGuard } from 'src/app/guards/profesores.guard';
 import { AlumnosGuard } from 'src/app/guards/alumnos.guard';
+import { SeguimientoGuard } from 'src/app/guards/seguimiento.guard';
+import { SeguimientoTutoresComponent } from './seguimiento-tutores/seguimiento-tutores.component';
+import { NotificacionesComponent } from './notificaciones/notificaciones.component';
+import {ProfesoresAlumnosGuard} from 'src/app/guards/profesores-alumnos.guard';
 
 const routes: Routes = [
   {
@@ -34,32 +36,14 @@ const routes: Routes = [
     canActivate: [ProfesoresGuard],
   },
   {
-    path: 'registro-empresa/representante',
-    component: RepresentanteComponent,
-    canActivate: [ProfesoresGuard],
-  },
-  {
-    path: 'registro-empresa/empresa',
-    component: EmpresaComponent,
-    canActivate: [ProfesoresGuard],
-  },
-  {
-    path: 'registro-empresa/ubicacion',
-    component: UbicacionComponent,
-    canActivate: [ProfesoresGuard],
-  },
-  {
-    path: 'registro-empresa/resumen',
-    component: ResumenComponent,
-    canActivate: [ProfesoresGuard],
-  },
-  {
     path: 'seguimiento',
     component: SeguimientoComponent,
-    canActivate: [PerfilesGuard],
-    data: {
-      perfiles: ['profesor', 'alumno'],
-    },
+    canActivate: [AlumnosGuard],
+  },
+  {
+    path: 'seguimiento_tutores',
+    component: SeguimientoTutoresComponent,
+    canActivate: [SeguimientoGuard],
   },
   {
     path: 'gestion-empresas',
@@ -102,6 +86,23 @@ const routes: Routes = [
       roles: [1, 2],
     },
   },
+  {
+    path:'notificaciones',
+    component: NotificacionesComponent,
+  },
+  {
+    path: 'gestion-gastos-alumno',
+    component: GestionGastosAlumnoComponent,
+    canActivate: [ProfesoresAlumnosGuard],
+    data : {
+      roles: [3]
+    }
+  },
+  {
+    path: 'gestion-gastos-profesor',
+    component: GestionGastosProfesorComponent,
+    canActivate: [ProfesoresGuard]
+  }
 ];
 
 @NgModule({

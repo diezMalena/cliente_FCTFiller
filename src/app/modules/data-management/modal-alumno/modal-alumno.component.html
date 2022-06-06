@@ -140,12 +140,12 @@
           <label for="curriculum" class="form-label fw-bold">Curriculum</label>
           <input
             *ngIf="this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo;else templateCurriculum"
-            class="form-control" (change)="this.cambiarCurriculum($event, this.formulario)"  type="file" id="curriculum">
+            class="form-control" (change)="this.cambiarCurriculum($event, this.formulario)" accept="application/pdf" type="file" id="curriculum">
 
           <ng-template #templateCurriculum>
             <!--Esto es un label porque un button cierra el formulario :c-->
             <label
-            (click)="this.descargarCV(this.formulario['curriculum'].value)"
+            (click)="this.descargarCV(this.formulario['dni'].value)"
             class="form-control btn btn-outline-primary">
               <svg class="bi me-2" width="16" height="16">
                 <use xlink:href="#descarga" />

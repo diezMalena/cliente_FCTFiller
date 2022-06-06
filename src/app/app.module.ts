@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DragDropModule } from  '@angular/cdk/drag-drop';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -21,6 +21,7 @@ import { ManualCrudAnexosAlumnosComponent } from './modules/manuales/manual-crud
 import { ManualAnexo2y4Component } from './modules/manuales/manual-anexo2y4/manual-anexo2y4.component';
 // import { ModalInfoComponent } from './src/app/modules/data-upload/modal-info/modal-info.component';
 // import { NgxDropzoneModule } from 'ngx-dropzone';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -46,15 +47,11 @@ import { ManualAnexo2y4Component } from './modules/manuales/manual-anexo2y4/manu
     DragDropModule,
     NgbModule,
     FormsModule,
-    ReactiveFormsModule,
-    // NgxDropzoneModule
+    ReactiveFormsModule
   ],
-  exports: [
-    NgbModule,
-    MatDialogModule,
-  ],
+  exports: [NgbModule, MatDialogModule],
 
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [DatePipe],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
