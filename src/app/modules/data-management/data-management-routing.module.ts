@@ -17,6 +17,7 @@ import { ProfesoresGuard } from 'src/app/guards/profesores.guard';
 import { AlumnosGuard } from 'src/app/guards/alumnos.guard';
 import { SeguimientoGuard } from 'src/app/guards/seguimiento.guard';
 import { SeguimientoTutoresComponent } from './seguimiento-tutores/seguimiento-tutores.component';
+import { NotificacionesComponent } from './notificaciones/notificaciones.component';
 
 const routes: Routes = [
   {
@@ -93,6 +94,10 @@ const routes: Routes = [
       roles: [1, 2],
     },
   },
+  {
+    path:'notificaciones',
+    component: NotificacionesComponent,
+  }
 ];
 
 @NgModule({

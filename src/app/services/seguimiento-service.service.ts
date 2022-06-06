@@ -262,7 +262,8 @@ export class SeguimientoServiceService {
       file: formData.get('file'),
       file_name: formData.get('file_name'),
       id_fct: formData.get('id_fct'),
-      id_quinto_dia: formData.get('id_quinto_dia')
+      id_quinto_dia: formData.get('id_quinto_dia'),
+      firmado_tutor_empresa: formData.get('firmado_tutor_empresa')
     };
     const url: string = this.ruta + 'subirAnexo3';
     const headers = this.headers;

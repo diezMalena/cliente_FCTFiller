@@ -29,6 +29,7 @@ import { ModalCambiotutorComponent } from './seguimiento/modal-cambiotutor/modal
 import { HistorialAnexosComponent } from './historial-anexos/historial-anexos.component';
 import { ModalSubirficheroComponent } from './seguimiento/modal-subirfichero/modal-subirfichero.component';
 import { SeguimientoTutoresComponent } from './seguimiento-tutores/seguimiento-tutores.component';
+import { NotificacionesComponent } from './notificaciones/notificaciones.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { SeguimientoTutoresComponent } from './seguimiento-tutores/seguimiento-t
     HistorialAnexosComponent,
     ModalSubirficheroComponent,
     SeguimientoTutoresComponent,
+    NotificacionesComponent,
   ],
   imports: [
     CommonModule,
