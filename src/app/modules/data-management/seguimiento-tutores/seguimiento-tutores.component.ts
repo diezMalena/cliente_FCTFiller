@@ -28,6 +28,7 @@ export class SeguimientoTutoresComponent implements OnInit {
   public arrayJornadas: any = [];
   public dni_tutor?: string;
   public dni_alumno?: string;
+  public static readonly alumno_elegido: string = 'alumno_elegido';
   public nombre_alumno: any;
   public nombre_empresa: any;
   public departamento: any;
@@ -65,6 +66,12 @@ export class SeguimientoTutoresComponent implements OnInit {
 
   ngOnInit(): void {
     this.arrayAlumnos = this.getAlumnosAsociados();
+    //Cogemos el alumno que el tutor ha elegido y lo recarga:
+    let alumno_elegido = sessionStorage.getItem(SeguimientoTutoresComponent.alumno_elegido);
+    if(alumno_elegido != null){
+      this.dni_alumno = alumno_elegido;
+      this.recargarDatos();
+    }
   }
 
   //#endregion
@@ -97,11 +104,24 @@ export class SeguimientoTutoresComponent implements OnInit {
     return this.arrayAlumnos;
   }
 
+  /**
+   * Recoge al alumno que el tutor ha elegido en el select.
+   * @author Malena
+   * @param event
+   */
   public elegirAlumno(event: any) {
     console.clear();
     this.dni_alumno = event.target.value;
     //Una vez elijamos el alumno, entonces se llamarán todas sus funciones:
+    this.recargarDatos();
+  }
 
+
+  /**
+   * Relanza todas las funciones que implican al alumno que el tutor ha elegido
+   * @author Malena
+   */
+  public recargarDatos(){
     this.arrayJornadas = this.rellenarArray();
     this.recogerTutorEmpresa();
     this.gestionDepartamento();
@@ -109,7 +129,6 @@ export class SeguimientoTutoresComponent implements OnInit {
     this.getArrayJornadas();
     this.ponerNombre();
   }
-
 
 
   /**
@@ -238,7 +257,6 @@ export class SeguimientoTutoresComponent implements OnInit {
    * @author Malena.
    */
   public rellenarArray() {
-    console.log(this.dni_alumno);
     this.seguimientoService.devolverJornadas(this.dni_alumno!).subscribe({
       next: (response: any) => {
         this.arrayJornadas = response;
@@ -346,6 +364,7 @@ export class SeguimientoTutoresComponent implements OnInit {
         'Error al subir el documento'
       );
     } else {
+      sessionStorage.setItem(SeguimientoTutoresComponent.alumno_elegido,this.dni_alumno!);
       this.modal.open(ModalSubirficheroComponent, { size: 's' });
     }
   }

@@ -18,11 +18,22 @@
       <input type="file" id="file" (change)="subirArchivo($event)" accept=".pdf" class="col-12 text-center">
     </div>
 
+    <div class="row p-2" [hidden]="this.usuario?.isProfesor()">
+      <div class="col-12 form-check">
+        <input class="form-check-input" type="checkbox" value="" id="checked">
+        <label class="form-check-label" for="flexCheckChecked">
+          Adjunta firma del tutor de la empresa
+        </label>
+      </div>
+    </div>
+
     <div class="row  d-flex justify-content-center">
       <button tittle="aceptar" (click)="aceptarArchivo()" class="col-4 text-center btn btn-outline-warning"
         ngbTooltip="Aceptar" aria-label="Aceptar">
         Aceptar
       </button>
     </div>
+
+
   </form>
 </div>

@@ -18,6 +18,7 @@ import { ModalCambiotutorComponent } from './modal-cambiotutor/modal-cambiotutor
 import { ManualAnexo3Component } from '../../manuales/manual-anexo3/manual-anexo3.component';
 import { FileUploadModel } from 'src/app/models/file-upload.model';
 import { ModalSubirficheroComponent } from './modal-subirfichero/modal-subirfichero.component';
+import { isGeneratedFile } from '@angular/compiler/src/aot/util';
 
 @Component({
   selector: 'app-seguimiento',
@@ -250,23 +251,6 @@ export class SeguimientoComponent implements OnInit {
         this.arrayJornadas = response;
         this.totalSemanas = this.arrayJornadas.length;
         this.devolverSemanas();
-
-        /*
-        this.arrayJornadas = response;
-        var cuantasJornadasHay = this.arrayJornadas.length;
-
-        //Cuando se inserten 5 nuevas jornadas, se habilita el boton Descargar PDF:
-        if (cuantasJornadasHay >= 5 && cuantasJornadasHay % 5 == 0) {
-          this.botonDescargar = true;
-          this.botonVer = false;
-        }
-
-        //Cuando haya más de 5 jornadas añadidas, se mostrará el boton Ver PDF:
-        if (cuantasJornadasHay > 5 && cuantasJornadasHay % 5 != 0) {
-          this.botonVer = true;
-          this.botonDescargar = false;
-        }
-      */
       },
       error: (e) => {
         this.toastr.error(
@@ -408,7 +392,7 @@ export class SeguimientoComponent implements OnInit {
           })
         }else{
           this.toastr.error(
-            'No se ha podido descargar el PDF debido a que no se ha subido un fichero previamente.',
+            'No se ha podido descargar el PDF debido a que no se generado y subido un archivo previamente.',
             'Error en la descarga del PDF del Anexo III'
             );
         }
@@ -441,7 +425,7 @@ export class SeguimientoComponent implements OnInit {
         'Error al subir el documento'
       );
     } else {
-      this.modal.open(ModalSubirficheroComponent, { size: 's' });
+      this.modal.open(ModalSubirficheroComponent, { size: 's', });
     }
   }
 
