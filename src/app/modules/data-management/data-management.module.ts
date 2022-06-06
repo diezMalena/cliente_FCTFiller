@@ -18,6 +18,7 @@ import { SignaturePadModule } from 'angular2-signaturepad';
 import { CrudProfesoresComponent } from './crud-profesores/crud-profesores.component';
 import { ModalProfesoresComponent } from './modal-profesores/modal-profesores.component';
 import { GestionAlumnosComponent } from './gestion-alumnos/gestion-alumnos.component';
+import { GestionGastosAlumnoComponent } from './gestion-gastos-alumno/gestion-gastos-alumno.component';
 import { ModalAlumnoComponent } from './modal-alumno/modal-alumno.component';
 import { DataTablesModule } from 'angular-datatables';
 import { ModalCambiotutorComponent } from './seguimiento/modal-cambiotutor/modal-cambiotutor.component';
@@ -26,6 +27,10 @@ import { ModalSubirficheroComponent } from './seguimiento/modal-subirfichero/mod
 import { SeguimientoTutoresComponent } from './seguimiento-tutores/seguimiento-tutores.component';
 import { NotificacionesComponent } from './notificaciones/notificaciones.component';
 import { ModalConvenioComponent } from './modal-convenio/modal-convenio.component';
+import { ModalGestionGastosAlumnoComponent } from './modal-gestion-gastos-alumno/modal-gestion-gastos-alumno.component';
+import { ModalTicketDesplazamiento } from './modal-ticket-desplazamiento/modal-ticket-desplazamiento.component';
+import { ModalTicketManutencion } from './modal-ticket-manutencion/modal-ticket-manutencion.component';
+import { GestionGastosProfesorComponent } from './gestion-gastos-profesor/gestion-gastos-profesor.component';
 
 @NgModule({
   declarations: [
@@ -44,11 +49,16 @@ import { ModalConvenioComponent } from './modal-convenio/modal-convenio.componen
     ModalCambiotutorComponent,
     GestionAlumnosComponent,
     ModalAlumnoComponent,
+    GestionGastosAlumnoComponent,
+    ModalGestionGastosAlumnoComponent,
+    ModalTicketDesplazamiento,
+    ModalTicketManutencion,
     HistorialAnexosComponent,
     ModalSubirficheroComponent,
     SeguimientoTutoresComponent,
     NotificacionesComponent,
     ModalConvenioComponent,
+    GestionGastosProfesorComponent,
   ],
   imports: [
     CommonModule,
