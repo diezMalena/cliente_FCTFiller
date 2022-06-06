@@ -23,6 +23,10 @@ import { ModalAlumnoComponent } from './modal-alumno/modal-alumno.component';
 import { DataTablesModule } from 'angular-datatables';
 import { ModalCambiotutorComponent } from './seguimiento/modal-cambiotutor/modal-cambiotutor.component';
 import { HistorialAnexosComponent } from './historial-anexos/historial-anexos.component';
+import { AnexosAlumnosComponent } from './anexos-alumnos/anexos-alumnos.component';
+import { ModalTipoAnexoComponent } from './modal-tipo-anexo/modal-tipo-anexo.component';
+import { ProgramaFormativoComponent } from './programa-formativo/programa-formativo.component';
+import { ModalUploadAnexoComponent } from './modal-upload-anexo/modal-upload-anexo.component';
 import { ModalSubirficheroComponent } from './seguimiento/modal-subirfichero/modal-subirfichero.component';
 import { SeguimientoTutoresComponent } from './seguimiento-tutores/seguimiento-tutores.component';
 import { NotificacionesComponent } from './notificaciones/notificaciones.component';
@@ -54,6 +58,10 @@ import { GestionGastosProfesorComponent } from './gestion-gastos-profesor/gestio
     ModalTicketDesplazamiento,
     ModalTicketManutencion,
     HistorialAnexosComponent,
+    AnexosAlumnosComponent,
+    ModalTipoAnexoComponent,
+    ProgramaFormativoComponent,
+    ModalUploadAnexoComponent,
     ModalSubirficheroComponent,
     SeguimientoTutoresComponent,
     NotificacionesComponent,

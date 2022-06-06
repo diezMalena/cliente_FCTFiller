@@ -9,6 +9,9 @@ import { CrudProfesoresComponent } from './crud-profesores/crud-profesores.compo
 import { GestionAlumnosComponent } from './gestion-alumnos/gestion-alumnos.component';
 import { GestionGastosAlumnoComponent } from './gestion-gastos-alumno/gestion-gastos-alumno.component';
 import { HistorialAnexosComponent } from './historial-anexos/historial-anexos.component';
+import { AnexosAlumnosComponent } from './anexos-alumnos/anexos-alumnos.component';
+import { ProgramaFormativoComponent } from './programa-formativo/programa-formativo.component';
+//import { SectionEmpresaComponent } from './components/section-empresa/section-empresa.component';
 import { GestionGastosProfesorComponent } from './gestion-gastos-profesor/gestion-gastos-profesor.component';
 import { PerfilesGuard } from 'src/app/guards/perfiles.guard';
 import { ProfesoresGuard } from 'src/app/guards/profesores.guard';
@@ -63,6 +66,16 @@ const routes: Routes = [
   {
     path: 'historial-anexos',
     component: HistorialAnexosComponent,
+    canActivate: [ProfesoresGuard],
+  },
+  {
+    path:'anexos-alumnos',
+    component: AnexosAlumnosComponent,
+    canActivate: [AlumnosGuard],
+  },
+  {
+    path:'programa-formativo',
+    component: ProgramaFormativoComponent,
     canActivate: [ProfesoresGuard],
   },
   {

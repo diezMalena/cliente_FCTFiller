@@ -3,6 +3,8 @@ import { Alumno } from '../../../models/alumno';
 import { Empresa } from '../../../models/empresa';
 import { Router } from '@angular/router';
 import { AsociarAlumnoEmpresaService } from '../../../services/asociar-alumno-empresa.service';
+import { ModalUploadAnexoComponent } from '../modal-upload-anexo/modal-upload-anexo.component';
+import { AnexoService } from 'src/app/services/crud-anexos.service';
 import { ToastrService } from 'ngx-toastr';
 import {
   CdkDragDrop,
@@ -27,26 +29,31 @@ export class AsociarEmpAluComponent implements OnInit {
   usuario;
   alumnos: Alumno[] = [];
   empresas: Empresa[] = [];
+  anexos: any;
   respuesta: any = [];
   nombreCiclo: string = '';
   dniTutor?: string;
+  hayAlumnosEnEmpresas: any;
 
   constructor(
     private alumnosEmpresas: AsociarAlumnoEmpresaService,
     private router: Router,
     private toastr: ToastrService,
     private storageUser: LoginStorageUserService,
+    private anexoService: AnexoService,
     public dialogService: DialogService,
     private modal: NgbModal
   ) {
     this.usuario = storageUser.getUser();
     this.dniTutor = this.usuario?.dni;
+    this.hayAlumnosEnEmpresas = false;
   }
 
   ngOnInit(): void {
     this.getNombreCiclo();
     this.getAlumnos();
     this.getEmpresas();
+    this.getAnexos();
   }
 
   //#endregion
@@ -84,7 +91,7 @@ export class AsociarEmpAluComponent implements OnInit {
   //#region Servicios - Peticiones al servidor
 
   /***********************************************************************/
-  //#region Obtención de información: alumnos, empresas, nombre del ciclo
+  //#region Obtención de información: alumnos, empresas, nombre del ciclo, anexos
 
   /**
    * Esta función se encarga de obtener los alumnos del tutor logueado del servidor.
@@ -100,7 +107,22 @@ export class AsociarEmpAluComponent implements OnInit {
   }
 
   /**
+   * Esta función se encarga de obtener los anexos si estos existen
+   * @author Laura <lauramorenoramos97@gmail.com>
+   * @param event
+   */
+  getAnexos(): void {
+    this.alumnosEmpresas
+      .solicitarAnexosFct(this.dniTutor!)
+      .subscribe((resultado) => {
+        this.anexos = resultado;
+      });
+  }
+
+  /**
    * Esta función se encarga de obtener las empresas con sus alumnos asignados del tutor logueado del servidor.
+   * this.hayAlumnosEnEmpresas mira si hay alumnos en la empresa, por que así afirmamos que el tutor ya tiene
+   * generado un anexo con sus uniones entre alumnos y empresas ya establecidas
    * @author Alvaro <alvarosantosmartin6@gmail.com>
    * @param event
    */
@@ -109,6 +131,12 @@ export class AsociarEmpAluComponent implements OnInit {
       .solicitarEmpresas(this.dniTutor!)
       .subscribe((resultado) => {
         this.empresas = resultado;
+
+        this.empresas.forEach((element) => {
+          if (element.alumnos?.length! > 0) {
+            this.hayAlumnosEnEmpresas = true;
+          }
+        });
       });
   }
 
@@ -174,7 +202,10 @@ export class AsociarEmpAluComponent implements OnInit {
         };
         this.alumnosEmpresas.asignarAlumnos(datos).subscribe();
         this.toastr.success('Cambios realizados con exito.', 'Guardado');
-        this.GenerarAnexos();
+        this.getNombreCiclo();
+        this.getAlumnos();
+        this.getEmpresas();
+        this.getAnexos();
       } else if (!bandera) {
         this.toastr.error(
           'No pueden haber campos vacíos, o las fechas son incorrectas',
@@ -203,6 +234,10 @@ export class AsociarEmpAluComponent implements OnInit {
         const blob = new Blob([res], { type: 'application/octet-stream' });
         FileSaver.saveAs(blob, 'backup_' + current.getTime() + '.zip');
         this.toastr.success('Anexo Generado', 'Título');
+        this.getNombreCiclo();
+        this.getAlumnos();
+        this.getEmpresas();
+        this.getAnexos();
       },
       error: (e) => {
         this.toastr.error('El anexo no ha podido generarse', 'Generado');
@@ -228,6 +263,52 @@ export class AsociarEmpAluComponent implements OnInit {
     this.modal.open(ManualAsigAlumComponent, { size: 'lg' });
   }
 
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Funciones descarga y subida
+  /**
+   * Esta funcion abre el manual de ayuda del crud de anexos, almacena en sessionStorage
+   * el nombre del archivo correcto y el tipo de Anexo
+   * @author Laura <lauramorenoramos97@gmail.com>
+   */
+  public abrirModalUpload(codigo: string) {
+    sessionStorage.setItem('tipoAnexo', 'Anexo1');
+    sessionStorage.setItem('codigoAnexo',codigo);
+    this.modal.open(ModalUploadAnexoComponent, { size: 'md' });
+  }
+
+  /**
+   * Este metodo te permite descargar un anexo en concreto, comprobando si estamos
+   * intentando descargar el anexo como tutor o como director/jefe de estudios
+   * para usar una variable dni o la otra, te avisa si ha salido mal o bien
+   * @param codigo es el mnombre del anexo a descargar
+   * @author Pablo
+   */
+  public async descargarAnexo(codigo: string) {
+    let hacerlo = await this.dialogService.confirmacion(
+      'Descargar',
+      `¿Está seguro de que desea descargar el anexo?`
+    );
+
+    if (hacerlo) {
+      this.anexoService.descargarAnexo(this.dniTutor!, codigo).subscribe({
+        next: (res) => {
+          const current = new Date();
+          const blob = new Blob([res], { type: 'application/octet-stream' });
+          FileSaver.saveAs(blob, codigo);
+          this.toastr.success('Anexo Descargado', 'Descarga');
+        },
+        error: (e) => {
+          this.toastr.error('El anexo no ha podido descargarse', 'Fallo');
+        },
+      });
+      this.router.navigate(['/data-management/asig-alum-empresa']);
+    } else {
+      this.toastr.info('No has descargado el anexo', 'Descarga');
+    }
+  }
   //#endregion
   /***********************************************************************/
 }

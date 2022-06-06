@@ -1,6 +1,5 @@
 import {
   Component,
-  AfterViewInit,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -16,6 +15,7 @@ import { Subject } from 'rxjs';
 import { DialogService } from 'src/app/services/dialog.service';
 import { ManualCrudAnexosComponent } from '../../manuales/manual-crud-anexos/manual-crud-anexos.component';
 import { DataTableDirective } from 'angular-datatables';
+import { ModalUploadAnexoComponent } from '../modal-upload-anexo/modal-upload-anexo.component';
 
 @Component({
   selector: 'app-crud-anexos',
@@ -56,8 +56,10 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
 
     if (this.usuario!.isTutor()) {
       this.verAnexos();
+      this.getArrayAnexos();
     } else {
       this.verGrupos();
+      this.getArrayAnexos();
     }
   }
 
@@ -98,7 +100,7 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
    * @author Pablo y Laura <lauramorenoramos97@gmail.com>
    */
   public verAnexos() {
-    this.anexoService.getAnexos(this.dni_tutor!).subscribe((response) => {
+    this.anexoService.getAnexos(this.dni_tutor!,1).subscribe((response) => {
       this.anexosArray = response;
       //#region Datatable
       response = (this.anexosArray as any).data;
@@ -130,7 +132,7 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
    * @author Laura <lauramorenoramos97@gmail.com>
    */
   public verAnexosDirector() {
-    this.anexoService.getAnexos(this.dniAux!).subscribe({
+    this.anexoService.getAnexos(this.dniAux!,1).subscribe({
       next: (res) => {
         this.anexosArray = res;
         this.toastr.info('Anexos de: ' + this.dniAux, 'Vistas Anexos');
@@ -157,7 +159,7 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
    * @author Laura <lauramorenoramos97@gmail.com>
    */
   public verAnexosEliminar() {
-    this.anexoService.getAnexos(this.dni_tutor!).subscribe((response) => {
+    this.anexoService.getAnexos(this.dni_tutor!,1).subscribe((response) => {
       this.anexosArray = response;
       response = (this.anexosArray as any).data;
     });
@@ -273,6 +275,12 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
       this.anexoService.deshabilitarAnexo(codigo).subscribe({
         next: (res) => {
           this.toastr.success('Anexo Deshabilitado', 'Deshabilitado');
+
+          if(this.usuario?.isTutor()){
+            this.verAnexos();
+          }else{
+            this.verGrupos();
+          }
         },
         error: (e) => {
           console.log(e);
@@ -329,4 +337,27 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
 
   //#endregion
   /***********************************************************************/
+
+   /**
+   * Esta funcion abre el manual de ayuda del crud de anexos
+   * @author Laura <lauramorenoramos97@gmail.com>
+   */
+    public abrirModalUpload(nombre : string,codigo:string) {
+      sessionStorage.setItem('tipoAnexo', nombre);
+      sessionStorage.setItem('codigoAnexo',codigo);
+      sessionStorage.setItem('llamadaDesdeCrud','1');
+      this.modal.open(ModalUploadAnexoComponent, { size: 'md' });
+    }
+
+      /**
+   * @author Laura <lauramorenoramos97@gmail.com>
+   * Esta funcion es una suscripcion a una variable BehaviorSubject que recoge el nuevo
+   * array de anexos
+   */
+  public getArrayAnexos() {
+    this.anexoService.anexosArray.subscribe((array) => {
+      this.anexosArray = array;
+      this.rerender();
+    });
+  }
 }
