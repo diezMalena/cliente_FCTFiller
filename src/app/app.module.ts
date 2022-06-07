@@ -17,6 +17,7 @@ import { ManualAnexo3Component } from './modules/manuales/manual-anexo3/manual-a
 import { ManualAsigAlumComponent } from './modules/manuales/manual-asig-alum/manual-asig-alum.component';
 import { ManualGestionAlumnosComponent } from './modules/manuales/manual-gestion-alumnos/manual-gestion-alumnos.component';
 import { ManualRegistroEmpresasComponent } from './modules/manuales/manual-registro-empresas/manual-registro-empresas.component';
+import { ListarRespuestasComponent } from './cuestionarios/listar-respuestas/listar-respuestas.component';
 // import { ModalInfoComponent } from './src/app/modules/data-upload/modal-info/modal-info.component';
 // import { NgxDropzoneModule } from 'ngx-dropzone';
 
@@ -30,6 +31,7 @@ import { ManualRegistroEmpresasComponent } from './modules/manuales/manual-regis
     ManualAsigAlumComponent,
     ManualGestionAlumnosComponent,
     ManualRegistroEmpresasComponent,
+    ListarRespuestasComponent,
     // ModalInfoComponent,
   ],
   imports: [

@@ -7,5 +7,7 @@ export interface usuarioResponse {
   roles?: [];
   token?: string;
   //DSB Cambio 10-03-2022: Añadido codigo de centro de estudios
-  cod_centro?: string
+  cod_centro?: string;
+  cod_grupo?: string;
+  curso_academico?: string;
 }

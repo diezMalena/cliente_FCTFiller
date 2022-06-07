@@ -10,6 +10,10 @@ import { VisualizarCuestionarioComponent } from './visualizar-cuestionario/visua
 import { CuestionariosRoutingModule } from './cuestionarios-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DataTablesModule } from 'angular-datatables';
+import { ListarCuestionariosTutorEmpresaComponent } from './listar-cuestionarios-tutor-empresa/listar-cuestionarios-tutor-empresa.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+// import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -19,13 +23,17 @@ import { DataTablesModule } from 'angular-datatables';
     ListarRespuestasComponent,
     EdicionCuestionarioComponent,
     VisualizarRespuestaComponent,
-    VisualizarCuestionarioComponent
+    VisualizarCuestionarioComponent,
+    ListarCuestionariosTutorEmpresaComponent,
   ],
   imports: [
     CommonModule,
     CuestionariosRoutingModule,
     ReactiveFormsModule,
-    DataTablesModule
+    DataTablesModule,
+    NgbModule,
+    NgxChartsModule,
+    // BrowserAnimationsModule,
   ]
 })
 export class CuestionariosModule { }

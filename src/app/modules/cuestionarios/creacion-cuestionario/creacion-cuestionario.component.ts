@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, FormArray } from '@angular/forms';
+import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { catchError, first, Subscription, throwError } from 'rxjs';
 import { CuestionarioModel } from 'src/app/models/cuestionarios/cuestionario.model';
 import { CuestionarioService } from 'src/app/services/cuestionarios/cuestionario.service';
+import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
 import { ManualCrearCuestionario } from '../../manuales/manual-crear-cuestionario/manual-crear-cuestionario.component';
 
 @Component({
@@ -13,22 +15,30 @@ import { ManualCrearCuestionario } from '../../manuales/manual-crear-cuestionari
   styleUrls: ['./creacion-cuestionario.component.scss']
 })
 export class CreacionCuestionarioComponent implements OnInit {
-  datos!: string;
+  // datos!: string;
 
   cuestionarioForm!: FormGroup;
   hasError: boolean = false;
   private unsubscribe: Subscription[] = [];
+  usuario;
+
+
 
   constructor(
+    private storageUser: LoginStorageUserService,
     private fb:FormBuilder,
     private cuestionarioService: CuestionarioService,
     private toastr: ToastrService,
     private modal: NgbModal,
+    private router: Router,
     ) {
+
+    this.usuario = this.storageUser.getUser()
 
     this.cuestionarioForm = this.fb.group({
       titulo: '',
       destinatario: '',
+      codigo_centro: this.usuario?.cod_centro,
       preguntas: this.fb.array([]),
     });
 
@@ -65,6 +75,7 @@ export class CreacionCuestionarioComponent implements OnInit {
       if (cuestionario) {
         var o: any = cuestionario;
         this.toastr.success("Formulario añadido con éxito", 'Añadido');
+        this.router.navigate(['/cuestionarios/listar-cuestionarios']);
       } else {
         this.hasError = true;
       }

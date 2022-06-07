@@ -18,6 +18,15 @@ export const environment = {
   obtenerCuestionarioURL: "obtenerCuestionario",
   obtenerCuestionariosURL: "listarCuestionarios",
   eliminarCuestionarioURL: "eliminarCuestionario",
+  obtenerCuestionarioEdicionURL: "obtenerCuestionarioEdicion",
+  editarCuestionarioURL: "editarCuestionario",
+  verificarCuestionarioRespondidoURL: "verificarCuestionarioRespondido",
+  obtenerCuestionariosFCTURL: "obtenerCuestionariosFCT",
+  activarCuestionarioURL: "activarCuestionario",
+  desactivarCuestionarioURL: "desactivarCuestionario",
+  obtenerMediasCuestionariosRespondidosURL: "obtenerMediasCuestionariosRespondidos",
+  obtenerCursosAcademicosURL: "obtenerCursosAcademicos",
+  listarCuestionariosRespondidosURL: "listarCuestionariosRespondidos"
 };
 
 

@@ -5,15 +5,23 @@ import { CreacionCuestionarioComponent } from './creacion-cuestionario/creacion-
 import { EdicionCuestionarioComponent } from './edicion-cuestionario/edicion-cuestionario.component';
 import { ListarCuestionariosComponent } from './listar-cuestionarios/listar-cuestionarios.component';
 import { ListarRespuestasComponent } from './listar-respuestas/listar-respuestas.component';
+import { UsuarioCuestionariosGuardService } from './services/usuario.service';
 import { JefaturaCuestionariosGuardService } from './services/jefatura.service';
 import { VisualizarCuestionarioComponent } from './visualizar-cuestionario/visualizar-cuestionario.component';
 import { VisualizarRespuestaComponent } from './visualizar-respuesta/visualizar-respuesta.component';
+import { ListarCuestionariosTutorEmpresaComponent } from './listar-cuestionarios-tutor-empresa/listar-cuestionarios-tutor-empresa.component';
 
 
 const routes: Routes = [
   {
-    path:'contestar-cuestionario',
+    path:'contestar-cuestionario/:tipo',
+    canActivate: [UsuarioCuestionariosGuardService],
     component: ContestarCuestionarioComponent
+  },
+  {
+    path:'listar-cuestionarios-tutor-empresa',
+    canActivate: [UsuarioCuestionariosGuardService],
+    component: ListarCuestionariosTutorEmpresaComponent
   },
   {
     path:'creacion-cuestionario',

@@ -7,9 +7,13 @@ import { CuestionarioModel } from 'src/app/models/cuestionarios/cuestionario.mod
 
 const API_STORAGE_URL = `${environment.apiUrlCuestionario}`;
 const crearCuestionarioURL = API_STORAGE_URL+environment.crearCuestionario;
+const editarCuestionarioURL = API_STORAGE_URL+environment.editarCuestionarioURL;
 const obtenerCuestionarioURL = API_STORAGE_URL+environment.obtenerCuestionarioURL;
+const obtenerCuestionarioEdicionURL = API_STORAGE_URL+environment.obtenerCuestionarioEdicionURL;
 const obtenerCuestionariosURL = API_STORAGE_URL+environment.obtenerCuestionariosURL;
 const eliminarCuestionarioURL = API_STORAGE_URL+environment.eliminarCuestionarioURL;
+const activarCuestionarioURL = API_STORAGE_URL+environment.activarCuestionarioURL;
+const desactivarCuestionarioURL = API_STORAGE_URL+environment.desactivarCuestionarioURL;
 //falta la url del servidor en las variables de entorno
 
 @Injectable({
@@ -19,7 +23,7 @@ export class CuestionarioService {
 
   constructor(private http: HttpClient,) { }
 
-  public add(storage: CuestionarioModel): Observable<any> {
+  add(storage: CuestionarioModel): Observable<any> {
     // console.log(storage);
     return this.http.post(`${crearCuestionarioURL}`, storage,{responseType: 'text'}).pipe(
       map((res) => {
@@ -30,8 +34,16 @@ export class CuestionarioService {
     )
   }
 
-  getCuestionario(destinatario: string | null): Observable<any> {
-    return this.http.get<CuestionarioModel>(`${obtenerCuestionarioURL}/${destinatario}`).pipe(
+  getCuestionario(destinatario: string | null, codigo_centro: string|undefined|null ): Observable<any> {
+    return this.http.get<CuestionarioModel>(`${obtenerCuestionarioURL}/${destinatario}/${codigo_centro}`).pipe(
+      map((cuestionario: CuestionarioModel) => {
+        return cuestionario || {};
+      })
+    )
+  }
+
+  getCuestionarioEdicion(id: string | null): Observable<any> {
+    return this.http.get<CuestionarioModel>(`${obtenerCuestionarioEdicionURL}/${id}`).pipe(
       map((cuestionario: CuestionarioModel) => {
         return cuestionario || {};
       })
@@ -39,8 +51,8 @@ export class CuestionarioService {
   }
 
 
-  getCuestionarios(): Observable<any> {
-    return this.http.get<Array<CuestionarioModel>>(`${obtenerCuestionariosURL}`).pipe(
+  getCuestionarios(codigo_centro:string | undefined): Observable<any> {
+    return this.http.get<Array<CuestionarioModel>>(`${obtenerCuestionariosURL}/${codigo_centro}`).pipe(
       map((cuestionarios: Array<CuestionarioModel>) => {
         cuestionarios = <Array<CuestionarioModel>>cuestionarios.map((cuestionario: CuestionarioModel) => {
           return cuestionario
@@ -55,6 +67,16 @@ export class CuestionarioService {
   }
 
 
+  update(storage: CuestionarioModel): Observable<any> {
+    return this.http.post(`${editarCuestionarioURL}`, storage,{responseType: 'text'}).pipe(
+      map((res) => {
+        return res || {};
+      }),
+      catchError(this.handleError)
+    )
+  }
+
+
   handleError(error: HttpErrorResponse) {
     let msg = '';
     if (error.error instanceof ErrorEvent) {
@@ -66,4 +88,24 @@ export class CuestionarioService {
     }
     return throwError(msg);
   }
+
+
+  activarCuestionario(id_cuestionario: number , destinatario: string, cod_centro: string): Observable<any> {
+    return this.http.post(`${activarCuestionarioURL}/${id_cuestionario}/${destinatario}/${cod_centro}`,{responseType: 'text'}).pipe(
+      map((res) => {
+        return res || {};
+      }),
+      catchError(this.handleError)
+    )
+  }
+
+  desactivarCuestionario(id_cuestionario: number ): Observable<any> {
+    return this.http.post(`${desactivarCuestionarioURL}/${id_cuestionario}`,{responseType: 'text'}).pipe(
+      map((res) => {
+        return res || {};
+      }),
+      catchError(this.handleError)
+    )
+  }
+
 }

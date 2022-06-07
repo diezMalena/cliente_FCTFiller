@@ -14,16 +14,15 @@ export class JefaturaCuestionariosGuardService implements CanActivate {
     private storageUser: LoginStorageUserService,
   ) {
     this.usuario = this.storageUser.getUser();
+    console.log(this.usuario!.isJefatura());
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
 
 
     if (this.usuario!.isJefatura()) {
-      console.log("entra1");
       return true;
     }
-    console.log("entra2");
     return false;
   }
 }

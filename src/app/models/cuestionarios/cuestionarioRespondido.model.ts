@@ -7,6 +7,7 @@ export class CuestionarioRespondidoModel {
   titulo!: string;
   destinatario!: string;
   respuestas!: Array<RespuestaModel>;
+  ciclo!: string;
 
   setCuestionario(_cuestionario: unknown) {
     const cuestionarioRespondido = _cuestionario as CuestionarioRespondidoModel;
@@ -15,5 +16,6 @@ export class CuestionarioRespondidoModel {
     this.titulo = cuestionarioRespondido.titulo || '';
     this.destinatario = cuestionarioRespondido.destinatario || '';
     this.respuestas = cuestionarioRespondido.respuestas || [];
+    this.ciclo = cuestionarioRespondido.ciclo || '';
   }
 }
