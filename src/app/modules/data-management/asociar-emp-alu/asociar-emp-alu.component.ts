@@ -217,8 +217,8 @@ export class AsociarEmpAluComponent implements OnInit {
       }
     } else {
       this.toastr.info(
-        'Has decidido no generar y descargar el Anexo',
-        'Generacion y Descarga'
+        'Has decidido no generar el Anexo',
+        'Generacion'
       );
     }
   }
