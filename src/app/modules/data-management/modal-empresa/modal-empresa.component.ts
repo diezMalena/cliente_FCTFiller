@@ -6,6 +6,7 @@ import {
   FormControl,
 } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
 import { Empresa } from 'src/app/models/empresa';
 import { Trabajador } from 'src/app/models/trabajador';
 import { CrudEmpresasService } from 'src/app/services/crud-empresas.service';
@@ -18,6 +19,9 @@ import { LoginStorageUserService } from 'src/app/services/login.storageUser.serv
   styleUrls: ['./modal-empresa.component.scss'],
 })
 export class ModalEmpresaComponent implements OnInit {
+  /***********************************************************************/
+  //#region Inicialización de variables y formulario
+
   public empresa: Empresa | undefined;
   public editar: boolean | undefined;
   public datosEmpresa: FormGroup;
@@ -31,11 +35,10 @@ export class ModalEmpresaComponent implements OnInit {
     private crudEmpresasService: CrudEmpresasService,
     private storageUser: LoginStorageUserService,
     private formBuilder: FormBuilder,
-    public dialogService: DialogService
+    public dialogService: DialogService,
+    public toastr: ToastrService
   ) {
     this.usuario = storageUser.getUser();
-    //Atención a la ñapa
-    //He tenido que crear un formGroup vacío para que se rellenase con la información asíncrona dentro del subscribe
     this.datosEmpresa = this.formBuilder.group({});
 
     this.crudEmpresasService.empresaTrigger.subscribe({
@@ -44,6 +47,7 @@ export class ModalEmpresaComponent implements OnInit {
         this.editar = data[1];
 
         this.construirFormulario();
+        console.log(this.datosEmpresa.value.es_privada);
       },
     });
   }
@@ -52,6 +56,12 @@ export class ModalEmpresaComponent implements OnInit {
     this.getEmpresas();
     this.onChanges();
   }
+
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Gestión del formulario
 
   get formulario() {
     return this.datosEmpresa.controls;
@@ -73,6 +83,7 @@ export class ModalEmpresaComponent implements OnInit {
         this.empresa?.email,
         [Validators.required, Validators.email],
       ],
+      es_privada: [this.empresa?.es_privada],
       provincia: [this.empresa?.provincia, [Validators.required]],
       localidad: [this.empresa?.localidad, [Validators.required]],
       cp: [
@@ -100,35 +111,6 @@ export class ModalEmpresaComponent implements OnInit {
   }
 
   /**
-   * Inicializa las empresas del componente mediante el servicio correspondiente
-   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
-   */
-  public getEmpresas(): void {
-    this.crudEmpresasService.getEmpresas(this.usuario?.dni!).subscribe({
-      next: async (empresas) => {
-        this.empresas = empresas;
-        await this.meterRepresentantesEmpresas(empresas);
-        this.crudEmpresasService.getEmpresasArray(this.empresas);
-      },
-    });
-  }
-
-  /**
-   * Mete los representantes en las empresas correspondientes
-   * @param empresas el vector de empresas
-   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
-   */
-  public async meterRepresentantesEmpresas(empresas: Empresa[]) {
-    empresas.forEach((empresa) => {
-      this.crudEmpresasService.getRepresentante(empresa.id).subscribe({
-        next: (representante) => {
-          empresa.representante = representante;
-        },
-      });
-    });
-  }
-
-  /**
    * Detecta los cambios en el formulario y, si hay, pone una variable bandera a true
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
@@ -138,6 +120,10 @@ export class ModalEmpresaComponent implements OnInit {
         this.modified = true;
       }
     });
+  }
+
+  public changeEsPrivada(event: any): void {
+    this.formulario['es_privada'].setValue(event.target.value);
   }
 
   /**
@@ -167,16 +153,43 @@ export class ModalEmpresaComponent implements OnInit {
       datos.cp,
       representanteEditado
     );
+    empresaEditada.es_privada = datos.es_privada;
 
     if (this.datosEmpresa.invalid) {
       return;
     } else {
       this.modified = false;
       this.updateEmpresa(empresaEditada);
-      this.updateRepresentante(representanteEditado);
-      this.modalActive.close();
     }
   }
+
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Servicios - Peticiones al servidor
+
+  /***********************************************************************/
+  //#region Obtención de datos - Empresas, representantes
+
+  /**
+   * Inicializa las empresas del componente mediante el servicio correspondiente
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public getEmpresas(): void {
+    this.crudEmpresasService.getEmpresas(this.usuario?.dni!).subscribe({
+      next: async (empresas) => {
+        this.empresas = empresas;
+        this.crudEmpresasService.getEmpresasArray(this.empresas);
+      },
+    });
+  }
+
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Actualización de datos - Empresas, representantes
 
   /**
    * Actualiza los datos de la empresa en la base de datos
@@ -185,11 +198,16 @@ export class ModalEmpresaComponent implements OnInit {
    */
   updateEmpresa(empresa: Empresa) {
     this.crudEmpresasService.updateEmpresa(empresa).subscribe({
-      next: (response: any) => {
+      next: async (response: any) => {
         this.empresa = empresa;
-        console.log(response.message);
-        this.updateRepresentante(empresa.representante!);
-        this.getEmpresas();
+        await this.updateRepresentante(empresa.representante!);
+        this.empresa.representante = empresa.representante;
+        this.toastr.success(response.message, response.title);
+        this.modified = false;
+        this.closeModal();
+      },
+      error: (err: any) => {
+        this.toastr.error(err.error.message, err.error.title);
       },
     });
   }
@@ -199,14 +217,26 @@ export class ModalEmpresaComponent implements OnInit {
    * @param representante El representante legal de la empresa
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
-  updateRepresentante(representante: Trabajador) {
+  async updateRepresentante(representante: Trabajador) {
     this.crudEmpresasService.updateRepresentante(representante).subscribe({
       next: (response: any) => {
         this.empresa!.representante = representante;
-        console.log(response.message);
+        this.toastr.success(response.message, response.title);
+      },
+      error: (err: any) => {
+        this.toastr.error(err.error.message, err.error.title);
       },
     });
   }
+
+  //#endregion
+  /***********************************************************************/
+
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Funciones auxiliares y otros
 
   /**
    * Cierra el modal sólo si no hay cambios sin guardar
@@ -226,4 +256,7 @@ export class ModalEmpresaComponent implements OnInit {
       this.modalActive.close();
     }
   }
+
+  //#endregion
+  /***********************************************************************/
 }
