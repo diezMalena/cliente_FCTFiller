@@ -34,7 +34,7 @@ export class HeaderComponent implements OnInit {
 
   salir() {
     this.storageUser.removeUser();
-    window.location.href = 'auth/login';
+    window.location.href = '';
   }
 
   public generarNotificaciones(){
