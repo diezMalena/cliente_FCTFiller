@@ -22,37 +22,32 @@ export class UsuarioCuestionariosGuardService implements CanActivate {
 
   async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
 
-    // this.verificarCuestionarioRespondido();
     let respondido = await this.getData();
 
     if (this.usuario!.isAlumno() || this.usuario!.isTutorEmpresa()) {
       if(respondido){
         this.toastr.info('No hay cuestionarios pendientes de contestar', '¡Atención!');
         return false;
-
       }return true;
     }
     return false;
   }
 
 
-
   verificarCuestionarioRespondido() {
     this.cuestionarioRespondido.verificarCuestionarioRespondido(this.usuario?.dni).subscribe((res) => {
-      console.log(res);
       if(res.length>0){
         return true;
       } return false;
     })
   }
 
+
   async getData() {
     let data = await this.cuestionarioRespondido.getDataSynchronous(this.usuario?.dni)
-    console.log(data);
     if(data.length>0){
       return true;
     } return false;
  }
-
 
 }

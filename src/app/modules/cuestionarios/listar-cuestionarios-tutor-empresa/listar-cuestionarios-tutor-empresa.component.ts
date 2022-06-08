@@ -20,14 +20,11 @@ export class ListarCuestionariosTutorEmpresaComponent implements OnDestroy, OnIn
   @ViewChild(DataTableDirective, {static: false})
   dtElement: DataTableDirective | undefined;
   dtOptions: DataTables.Settings = {};
-  // dtOptions: any  = {};
   dtTrigger = new Subject<any>();
   data: any;
   usuario;
-
   cuestionarios!: Observable<Array<CuestionarioTutorEmpresaModel>>;
   cuestionariosArray: Array<CuestionarioTutorEmpresaModel> = [];
-
 
   constructor(
     private tutorEmpresaServiceService: TutorEmpresaService,
@@ -35,8 +32,8 @@ export class ListarCuestionariosTutorEmpresaComponent implements OnDestroy, OnIn
     private toastr: ToastrService,
     public dialogService: DialogService,
     private storageUser: LoginStorageUserService,
-  ) {
-    this.usuario = this.storageUser.getUser()
+  ){
+    this.usuario = this.storageUser.getUser();
   }
 
   ngAfterViewInit(): void {
@@ -44,10 +41,8 @@ export class ListarCuestionariosTutorEmpresaComponent implements OnDestroy, OnIn
   }
 
   ngOnInit(): void {
-
     delete this.dtOptions['language'];
     this.listarCuestionariosTutorEmpresa();
-
   }
 
   ngOnDestroy(): void {
@@ -56,18 +51,19 @@ export class ListarCuestionariosTutorEmpresaComponent implements OnDestroy, OnIn
 
   rerender(): void {
     this.dtElement!.dtInstance.then((dtInstance: DataTables.Api) => {
-      // Destroy the table first
       dtInstance.destroy();
-      // Call the dtTrigger to rerender again
       this.dtTrigger.next(this.cuestionariosArray);
     });
   }
 
+  /**
+   * Se listan los cuestionarios asociados a un tutor empresa, uno o varios, según los alumnos asignados.
+   * @author Pablo G. Galan <pablosiege@gmail.com@gmail.com>
+   */
   public listarCuestionariosTutorEmpresa() {
     this.tutorEmpresaServiceService.getCuestionarios(this.usuario?.dni).subscribe((response) => {
       this.cuestionariosArray = response;
       response = (this.cuestionariosArray as any).data;
-      // Calling the DT trigger to manually render the table
       this.rerender();
       this.dtTrigger.next(this.cuestionariosArray);
       $.fn.dataTable.ext.errMode = 'throw';
@@ -77,11 +73,20 @@ export class ListarCuestionariosTutorEmpresaComponent implements OnDestroy, OnIn
     })
   }
 
+  /**
+   * --------------------
+   * @param id se envía el identificador del cuestionario a editar para su correcta redirección
+   * @author Pablo G. Galan <pablosiege@gmail.com@gmail.com>
+   */
   public editarCuestionario(id:number){
     this.router.navigate(['/cuestionarios/edicion-cuestionario/'+id]);
   }
 
-
+  /**
+   * Se redirige a contestar cuestionario del alumno seleccionado
+   * @param CuestionarioTutorEmpresaModel se envía como parámetro el modelo del que se obtienen los datos para la redirección.
+   * @author Pablo G. Galan <pablosiege@gmail.com@gmail.com>
+   */
   public contestarCuestionarioAlumno(registro:CuestionarioTutorEmpresaModel){
     this.router.navigate(['/cuestionarios/contestar-cuestionario/empresa'], { queryParams: { dni_alumno: registro.dni_alumno, curso_academico:registro.curso_academico, cod_grupo:registro.cod_grupo, cod_centro: registro.cod_centro} });
   }

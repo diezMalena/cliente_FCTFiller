@@ -26,7 +26,8 @@ export const environment = {
   desactivarCuestionarioURL: "desactivarCuestionario",
   obtenerMediasCuestionariosRespondidosURL: "obtenerMediasCuestionariosRespondidos",
   obtenerCursosAcademicosURL: "obtenerCursosAcademicos",
-  listarCuestionariosRespondidosURL: "listarCuestionariosRespondidos"
+  listarCuestionariosRespondidosURL: "listarCuestionariosRespondidos",
+  descargarCuestionarioURL: "descargarCuestionario",
 };
 
 

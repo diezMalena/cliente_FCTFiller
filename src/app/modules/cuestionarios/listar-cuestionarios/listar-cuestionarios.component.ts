@@ -18,14 +18,11 @@ export class ListarCuestionariosComponent implements OnDestroy, OnInit {
   @ViewChild(DataTableDirective, {static: false})
   dtElement: DataTableDirective | undefined;
   dtOptions: DataTables.Settings = {};
-  // dtOptions: any  = {};
   dtTrigger = new Subject<any>();
   data: any;
   usuario;
-
   cuestionarios!: Observable<Array<CuestionarioModel>>;
   cuestionariosArray: Array<CuestionarioModel> = [];
-
 
   constructor(
     private cuestionarioService: CuestionarioService,
@@ -33,7 +30,6 @@ export class ListarCuestionariosComponent implements OnDestroy, OnInit {
     private toastr: ToastrService,
     public dialogService: DialogService,
     private storageUser: LoginStorageUserService,
-
   ) {
     this.usuario = this.storageUser.getUser()
   }
@@ -43,10 +39,8 @@ export class ListarCuestionariosComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit(): void {
-
     delete this.dtOptions['language'];
     this.listarCuestionarios();
-
   }
 
   ngOnDestroy(): void {
@@ -55,9 +49,7 @@ export class ListarCuestionariosComponent implements OnDestroy, OnInit {
 
   rerender(): void {
     this.dtElement!.dtInstance.then((dtInstance: DataTables.Api) => {
-      // Destroy the table first
       dtInstance.destroy();
-      // Call the dtTrigger to rerender again
       this.dtTrigger.next(this.cuestionariosArray);
     });
   }
@@ -66,7 +58,6 @@ export class ListarCuestionariosComponent implements OnDestroy, OnInit {
     this.cuestionarioService.getCuestionarios(this.usuario?.cod_centro).subscribe((response) => {
       this.cuestionariosArray = response;
       response = (this.cuestionariosArray as any).data;
-      // Calling the DT trigger to manually render the table
       this.rerender();
       this.dtTrigger.next(this.cuestionariosArray);
       $.fn.dataTable.ext.errMode = 'throw';
@@ -80,22 +71,24 @@ export class ListarCuestionariosComponent implements OnDestroy, OnInit {
     this.router.navigate(['/cuestionarios/edicion-cuestionario/'+id]);
   }
 
-  public async eliminarCuestionario(id: number){
 
+  /**
+   * Se elimina el cuestionario referenciado por su id. Antes de hacerse el borrado se preguntará al usuario.
+   * @param CuestionarioModel se envía como parámetro es modelo Cuestionario del que interesará conocer su id, destinatario y código centro.
+   * @author Pablo G. Galan <pablosiege@gmail.com@gmail.com>
+   */
+  public async eliminarCuestionario(id: number){
     let hacerlo = await this.dialogService.confirmacion(
       'Eliminar',
       `¿Está seguro de que desea eliminar el cuestionario?`
     );
-
     if (hacerlo) {
-
       this.cuestionarioService.eliminarCuestionario(id).subscribe({
       next: (res) => {
         this.toastr.success('Cuestionario Eliminado', 'Eliminado');
         this.listarCuestionarios();
       },
       error: e => {
-        console.log(e);
         this.toastr.error('El cuestionario no ha podido eliminarse', 'Fallo');
       }
     })
@@ -104,11 +97,20 @@ export class ListarCuestionariosComponent implements OnDestroy, OnInit {
     }
   }
 
+  /**
+   * Activación y desactivación de cuestionarios.
+   * Sólo un cuestionario puede estar habilitado para empresa y sólo uno para alumno para cada centro.
+   * Si el cuestionario está activo y se marca, este se desactivará
+   * Si el cuestionario está desactivado y se marca, este se activará y hará que se desactive cualquier otro que ya
+   * fuese activo para ese tipo de destinatario.
+   * @param CuestionarioModel se envía como parámetro es modelo Cuestionario del que interesará conocer su id, destinatario y código centro.
+   * @author Pablo G. Galan <pablosiege@gmail.com@gmail.com>
+   */
   public switchActivador(registro:CuestionarioModel){
     if (registro.activo){
       const storageSub = this.cuestionarioService.desactivarCuestionario(registro.id )
       .pipe(first(),catchError((e) => {
-        this.toastr.error('El cuestionario no ha podido guardarse', 'Error');
+        this.toastr.error('Se ha producido un error', 'Error');
         return throwError(new Error(e));
       }))
       .subscribe((cuestionario: any) => {
@@ -122,7 +124,7 @@ export class ListarCuestionariosComponent implements OnDestroy, OnInit {
     else{
       const storageSub = this.cuestionarioService.activarCuestionario(registro.id, registro.destinatario, registro.codigo_centro )
       .pipe(first(),catchError((e) => {
-        this.toastr.error('El cuestionario no ha podido guardarse', 'Error');
+        this.toastr.error('Se ha producido un error', 'Error');
         return throwError(new Error(e));
       }))
       .subscribe((cuestionario: any) => {
@@ -132,9 +134,7 @@ export class ListarCuestionariosComponent implements OnDestroy, OnInit {
          this.listarCuestionarios();
         } else {}
       });
-
     }
   }
-
 
 }

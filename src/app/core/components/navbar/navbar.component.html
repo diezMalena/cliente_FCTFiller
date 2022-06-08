@@ -82,14 +82,6 @@
               <use xlink:href="#cuestionario"/>
             </svg> Cuestionarios
           </a>
-
-          <!-- <a routerLinkActive="active" routerLink="cuestionarios/listar-respuestas" class="nav-link link-white"
-            aria-current="page">
-            <svg width="20" height="20" class="bi me-2">
-              <use xlink:href="#cuestionario" />
-            </svg> Respuestas Cuestionarios
-          </a> -->
-
         </li>
 
         <li *ngIf="usuario.isAlumno() || usuario.isTutorEmpresa()">
@@ -112,6 +104,15 @@
 
         <li *ngIf="usuario.isJefatura()">
           <a routerLinkActive="active" routerLink="cuestionarios/listar-respuestas" class="nav-link link-white"
+            aria-current="page">
+            <svg width="20" height="20" class="bi me-2">
+              <use xlink:href="#cuestionario" />
+            </svg> Respuestas Cuestionarios
+          </a>
+        </li>
+
+        <li *ngIf="usuario.isTutor()">
+          <a routerLinkActive="active" routerLink="cuestionarios/listar-respuestas-tutor" class="nav-link link-white"
             aria-current="page">
             <svg width="20" height="20" class="bi me-2">
               <use xlink:href="#cuestionario" />

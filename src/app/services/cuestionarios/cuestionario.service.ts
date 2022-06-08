@@ -14,6 +14,7 @@ const obtenerCuestionariosURL = API_STORAGE_URL+environment.obtenerCuestionarios
 const eliminarCuestionarioURL = API_STORAGE_URL+environment.eliminarCuestionarioURL;
 const activarCuestionarioURL = API_STORAGE_URL+environment.activarCuestionarioURL;
 const desactivarCuestionarioURL = API_STORAGE_URL+environment.desactivarCuestionarioURL;
+const descargarCuestionarioURL = API_STORAGE_URL+environment.descargarCuestionarioURL;
 //falta la url del servidor en las variables de entorno
 
 @Injectable({
@@ -24,10 +25,8 @@ export class CuestionarioService {
   constructor(private http: HttpClient,) { }
 
   add(storage: CuestionarioModel): Observable<any> {
-    // console.log(storage);
     return this.http.post(`${crearCuestionarioURL}`, storage,{responseType: 'text'}).pipe(
       map((res) => {
-        console.log(res);
         return res || {};
       }),
       catchError(this.handleError)
@@ -99,7 +98,7 @@ export class CuestionarioService {
     )
   }
 
-  desactivarCuestionario(id_cuestionario: number ): Observable<any> {
+  desactivarCuestionario(id_cuestionario: number): Observable<any> {
     return this.http.post(`${desactivarCuestionarioURL}/${id_cuestionario}`,{responseType: 'text'}).pipe(
       map((res) => {
         return res || {};
@@ -107,5 +106,16 @@ export class CuestionarioService {
       catchError(this.handleError)
     )
   }
+
+  descargarCuestionario(id_cuestionario: number): any {
+    return this.http.get(`${descargarCuestionarioURL}/${id_cuestionario}`, {responseType: 'blob'});
+  }
+
+
+
+
+
+
+
 
 }

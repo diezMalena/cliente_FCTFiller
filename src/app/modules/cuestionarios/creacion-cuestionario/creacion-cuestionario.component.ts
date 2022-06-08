@@ -15,13 +15,11 @@ import { ManualCrearCuestionario } from '../../manuales/manual-crear-cuestionari
   styleUrls: ['./creacion-cuestionario.component.scss']
 })
 export class CreacionCuestionarioComponent implements OnInit {
-  // datos!: string;
 
   cuestionarioForm!: FormGroup;
   hasError: boolean = false;
   private unsubscribe: Subscription[] = [];
   usuario;
-
 
 
   constructor(
@@ -31,7 +29,7 @@ export class CreacionCuestionarioComponent implements OnInit {
     private toastr: ToastrService,
     private modal: NgbModal,
     private router: Router,
-    ) {
+  ){
 
     this.usuario = this.storageUser.getUser()
 
@@ -40,9 +38,10 @@ export class CreacionCuestionarioComponent implements OnInit {
       destinatario: '',
       codigo_centro: this.usuario?.cod_centro,
       preguntas: this.fb.array([]),
-    });
+    }
 
-  }
+  )}
+
 
   preguntas() : FormArray {
     return this.cuestionarioForm.get("preguntas") as FormArray
@@ -63,6 +62,10 @@ export class CreacionCuestionarioComponent implements OnInit {
     this.preguntas().removeAt(i);
   }
 
+  /**
+   * Guarda el cuestionario en la base de datos
+   * @author Pablo G. Galan <pablosiege@gmail.com@gmail.com>
+   */
   onSubmit() {
     const cuestionarioModel= new CuestionarioModel();
     cuestionarioModel.setCuestionario(this.cuestionarioForm.value);
@@ -82,8 +85,10 @@ export class CreacionCuestionarioComponent implements OnInit {
     })
     this.unsubscribe.push(storageSub);
   }
+
   ngOnInit(): void {
   }
+
 
   formularioCuestionario = new FormGroup({
     Tipo: new FormControl(''),
@@ -91,7 +96,10 @@ export class CreacionCuestionarioComponent implements OnInit {
   });
 
 
-
+  /**
+   * Despliega modal con ayuda para la creación de los cuestionarios
+   * @author Pablo G. Galan <pablosiege@gmail.com@gmail.com>
+   */
   public abrirAyuda(): void {
     this.modal.open(ManualCrearCuestionario, { size: 'lg' });
   }

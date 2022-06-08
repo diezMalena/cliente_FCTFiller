@@ -38,7 +38,6 @@ export class ContestarCuestionarioComponent implements OnInit {
 
   ) {
     this.usuario = storageUser.getUser();
-
   }
 
   ngOnInit(): void {
@@ -94,20 +93,35 @@ export class ContestarCuestionarioComponent implements OnInit {
   }
 
   getCuestionario(cod_centro:string|undefined|null) {
-  console.log(this.usuario);
   this.cuestionarioService.getCuestionario(this.usuarioCuestionario, cod_centro).subscribe((res) => {
     this.cuestionario = res;
+    if(!this.cuestionario.activo){
+      this.toastr.warning('Aún no se ha activado el cuestionario', 'Warning');
+      if (this.usuarioCuestionario=='empresa'){
+        this.router.navigate(['cuestionarios/listar-cuestionarios-tutor-empresa']);
+      }else{
+        this.router.navigate(['/']);
+      }
+    }
     this.respuestasForm.patchValue(res);
     this.cuestionario.preguntas.forEach((element:PreguntaModel) => {
       this.addRespuesta(element.tipo, element.pregunta);
     });
-  });
+  },
+  error => {
+    this.toastr.warning('Aún no se ha activado el cuestionario', 'Warning');
+      if (this.usuarioCuestionario=='empresa'){
+        this.router.navigate(['cuestionarios/listar-cuestionarios-tutor-empresa']);
+      }else{
+        this.router.navigate(['/']);
+      }
+  },
+  () => {});
   }
 
   onSubmit() {
     const respuestaCuestionarioModel= new RespuestaCuestionarioModel();
     respuestaCuestionarioModel.setCuestionario(this.respuestasForm.value);
-    console.log(respuestaCuestionarioModel);
 
     const storageSub = this.cuestionarioRespondidoService.add(respuestaCuestionarioModel)
     .pipe(first(),catchError((e) => {
@@ -118,7 +132,11 @@ export class ContestarCuestionarioComponent implements OnInit {
       if (cuestionario) {
         var o: any = cuestionario;
         this.toastr.success("Formulario añadido con éxito", 'Añadido');
-        this.router.navigate(['/']);
+        if (this.usuarioCuestionario=='empresa'){
+          this.router.navigate(['cuestionarios/listar-cuestionarios-tutor-empresa']);
+        }else{
+          this.router.navigate(['/']);
+        }
       } else {
         this.hasError = true;
       }

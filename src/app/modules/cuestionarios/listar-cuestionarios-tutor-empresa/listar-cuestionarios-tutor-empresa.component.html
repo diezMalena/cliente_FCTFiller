@@ -48,7 +48,7 @@
                                           </td>
 
                                           <td scope="col">
-                                              <button (click)="contestarCuestionarioAlumno(cuestionario)" class="btn btn-outline-primary px-2 py-1 me-2" type="button" aria-label="Cumplimentar">
+                                              <button [disabled] = "cuestionario.respondido" (click)="contestarCuestionarioAlumno(cuestionario)" class="btn btn-outline-primary px-2 py-1 me-2" type="button" aria-label="Cumplimentar">
                                                 <svg class="bi" width="16" height="16">
                                                     <use xlink:href="#cuestionario" />
                                                 </svg>

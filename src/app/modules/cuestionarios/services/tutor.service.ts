@@ -6,7 +6,7 @@ import { LoginStorageUserService } from 'src/app/services/login.storageUser.serv
 @Injectable({
   providedIn: 'root'
 })
-export class JefaturaCuestionariosGuardService implements CanActivate {
+export class TutorCuestionariosGuardService implements CanActivate {
 
   usuario;
 
@@ -18,7 +18,8 @@ export class JefaturaCuestionariosGuardService implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
 
-    if (this.usuario!.isJefatura()) {
+
+    if (this.usuario!.isTutor()) {
       return true;
     }
     return false;

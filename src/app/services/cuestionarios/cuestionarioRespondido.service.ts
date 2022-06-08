@@ -23,10 +23,8 @@ export class CuestionarioRespondidoService {
   constructor(private http: HttpClient,) { }
 
   public add(storage: CuestionarioRespondidoModel): Observable<any> {
-    // console.log(storage);
     return this.http.post(`${contestarCuestionarioURL}`, storage,{responseType: 'text'}).pipe(
       map((res) => {
-        console.log(res);
         return res || {};
       }),
       catchError(this.handleError)

@@ -31,66 +31,66 @@ export class EdicionCuestionarioComponent implements OnInit {
     private modal: NgbModal,
     private route: ActivatedRoute,
     private router: Router,
-    ) {
-      this.cuestionarioID = this.route.snapshot.paramMap.get('id');
-    }
+  ){
+    this.cuestionarioID = this.route.snapshot.paramMap.get('id');
+  }
 
-    ngOnInit(): void {
-      this.cuestionarioForm = this.fb.group({
-        id: 0,
-        titulo: '',
-        destinatario: '',
-        preguntas: this.fb.array([]),
+  ngOnInit(): void {
+    this.cuestionarioForm = this.fb.group({
+      id: 0,
+      titulo: '',
+      destinatario: '',
+      preguntas: this.fb.array([]),
+    });
+    this.getCuestionario();
+  }
+
+  preguntas() : FormArray {
+    return this.cuestionarioForm.get("preguntas") as FormArray
+  }
+
+  nuevaPregunta(): FormGroup {
+
+    return this.fb.group({
+      tipo: '',
+      pregunta: '',
+    //   tipo: ['',Validators.compose([
+    //     Validators.required
+    // ]),],
+    //   pregunta: ['',Validators.compose([
+    //     Validators.required
+    // ]),]
+    });
+  }
+
+  nuevaPreguntaExistente(tipo:string, pregunta:string): FormGroup {
+    return this.fb.group({
+      tipo: tipo,
+      pregunta: pregunta,
+    });
+  }
+
+  addPreguntaExistente(tipo:string, pregunta:string) {
+    this.preguntas().push(this.nuevaPreguntaExistente(tipo,pregunta));
+  }
+
+  getCuestionario() {
+    this.cuestionarioService.getCuestionarioEdicion(this.cuestionarioID).subscribe((res) => {
+      this.cuestionario = res;
+      this.cuestionarioForm.patchValue(res);
+      this.cuestionario.preguntas.forEach((element:PreguntaModel) => {
+        this.addPreguntaExistente(element.tipo, element.pregunta);
       });
-      this.getCuestionario();
-    }
+    });
+  }
 
-    preguntas() : FormArray {
-      return this.cuestionarioForm.get("preguntas") as FormArray
-    }
+  addPregunta() {
+    this.preguntas().push(this.nuevaPregunta());
+  }
 
-    nuevaPregunta(): FormGroup {
-
-      return this.fb.group({
-        tipo: '',
-        pregunta: '',
-      //   tipo: ['',Validators.compose([
-      //     Validators.required
-      // ]),],
-      //   pregunta: ['',Validators.compose([
-      //     Validators.required
-      // ]),]
-      });
-    }
-
-    nuevaPreguntaExistente(tipo:string, pregunta:string): FormGroup {
-      return this.fb.group({
-        tipo: tipo,
-        pregunta: pregunta,
-      });
-    }
-
-    addPreguntaExistente(tipo:string, pregunta:string) {
-      this.preguntas().push(this.nuevaPreguntaExistente(tipo,pregunta));
-    }
-
-    getCuestionario() {
-      this.cuestionarioService.getCuestionarioEdicion(this.cuestionarioID).subscribe((res) => {
-        this.cuestionario = res;
-        this.cuestionarioForm.patchValue(res);
-        this.cuestionario.preguntas.forEach((element:PreguntaModel) => {
-          this.addPreguntaExistente(element.tipo, element.pregunta);
-        });
-      });
-      }
-
-    addPregunta() {
-      this.preguntas().push(this.nuevaPregunta());
-    }
-
-    borrarPregunta(i:number) {
-      this.preguntas().removeAt(i);
-    }
+  borrarPregunta(i:number) {
+    this.preguntas().removeAt(i);
+  }
 
   onSubmit() {
     const cuestionarioModel= new CuestionarioModel();
@@ -111,13 +111,10 @@ export class EdicionCuestionarioComponent implements OnInit {
     })
     this.unsubscribe.push(storageSub);
   }
-
-
   formularioCuestionario = new FormGroup({
     Tipo: new FormControl(''),
     Pregunta: new FormControl(''),
   });
-
 
 
   public abrirAyuda(): void {

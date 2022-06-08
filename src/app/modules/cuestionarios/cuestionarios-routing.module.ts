@@ -10,6 +10,7 @@ import { JefaturaCuestionariosGuardService } from './services/jefatura.service';
 import { VisualizarCuestionarioComponent } from './visualizar-cuestionario/visualizar-cuestionario.component';
 import { VisualizarRespuestaComponent } from './visualizar-respuesta/visualizar-respuesta.component';
 import { ListarCuestionariosTutorEmpresaComponent } from './listar-cuestionarios-tutor-empresa/listar-cuestionarios-tutor-empresa.component';
+import { TutorCuestionariosGuardService } from './services/tutor.service';
 
 
 const routes: Routes = [
@@ -44,6 +45,11 @@ const routes: Routes = [
     component: ListarRespuestasComponent
   },
   {
+    path:'listar-respuestas-tutor',
+    canActivate: [TutorCuestionariosGuardService],
+    component: ListarRespuestasComponent
+  },
+  {
     path:'visualizar-cuestionario',
     component: VisualizarCuestionarioComponent
   },
@@ -52,6 +58,7 @@ const routes: Routes = [
     canActivate: [JefaturaCuestionariosGuardService],
     component: VisualizarRespuestaComponent
   },
+
 ];
 
 @NgModule({
