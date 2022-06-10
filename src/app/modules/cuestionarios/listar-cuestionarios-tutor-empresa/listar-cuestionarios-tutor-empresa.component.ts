@@ -40,14 +40,22 @@ export class ListarCuestionariosTutorEmpresaComponent implements OnDestroy, OnIn
     this.dtTrigger.next(this.cuestionariosArray);
   }
 
+
+  /**
+   * Elimina las opciones predefeinidas de lenguaje de la librería datatables.
+   * Hace una llamada a listarCuestionarios listarCuestionarios.
+   * @author Pablo G. Galan <pablosiege@gmail.com@gmail.com>
+   */
   ngOnInit(): void {
     delete this.dtOptions['language'];
     this.listarCuestionariosTutorEmpresa();
   }
 
+
   ngOnDestroy(): void {
     this.dtTrigger.unsubscribe();
   }
+
 
   rerender(): void {
     this.dtElement!.dtInstance.then((dtInstance: DataTables.Api) => {
@@ -56,8 +64,10 @@ export class ListarCuestionariosTutorEmpresaComponent implements OnDestroy, OnIn
     });
   }
 
+
   /**
-   * Se listan los cuestionarios asociados a un tutor empresa, uno o varios, según los alumnos asignados.
+   * Obtiene de la API y lista los cuestionarios asociados a un tutor empresa, uno o varios, según los alumnos asignados.
+   * Establece el lenguaje castellano para la librería datatables
    * @author Pablo G. Galan <pablosiege@gmail.com@gmail.com>
    */
   public listarCuestionariosTutorEmpresa() {
@@ -73,17 +83,9 @@ export class ListarCuestionariosTutorEmpresaComponent implements OnDestroy, OnIn
     })
   }
 
-  /**
-   * --------------------
-   * @param id se envía el identificador del cuestionario a editar para su correcta redirección
-   * @author Pablo G. Galan <pablosiege@gmail.com@gmail.com>
-   */
-  public editarCuestionario(id:number){
-    this.router.navigate(['/cuestionarios/edicion-cuestionario/'+id]);
-  }
 
   /**
-   * Se redirige a contestar cuestionario del alumno seleccionado
+   * Se redirecciona a contestar cuestionario del alumno seleccionado
    * @param CuestionarioTutorEmpresaModel se envía como parámetro el modelo del que se obtienen los datos para la redirección.
    * @author Pablo G. Galan <pablosiege@gmail.com@gmail.com>
    */

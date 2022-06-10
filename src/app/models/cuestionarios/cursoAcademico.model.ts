@@ -1,3 +1,7 @@
+/**
+ * Modelo para los cursos academicos.
+ * @author Pablo G. Galan <pablosiege@gmail.com>
+ */
 export class CursoAcademicoModel {
 
   curso_academico!: string;

@@ -1,3 +1,7 @@
+/**
+ * Modelo para las preguntas de cuestionario.
+ * @author Pablo G. Galan <pablosiege@gmail.com>
+ */
 export class PreguntaModel {
 
   id!: number;

@@ -42,6 +42,12 @@ export class ListarRespuestasComponent implements OnInit {
     this.dtTrigger.next(this.cuestionarios);
   }
 
+  /**
+   * Elimina las opciones predefeinidas de lenguaje de la librería datatables.
+   * Inicializa el formulario que filtra los resultados a mostrar por curso académico y destinatario.
+   * Llama a la función obtener cursosAcadémicos que inicializa los gráficos y tablas para el año más cercano al actual si este no existiese.
+   * @author Pablo G. Galan <pablosiege@gmail.com@gmail.com>
+   */
   ngOnInit(): void {
 
     delete this.dtOptions['language'];
@@ -50,7 +56,6 @@ export class ListarRespuestasComponent implements OnInit {
       curso_academico: [""],
       destinatario: [""],
     });
-
     this.obtenerCursosAcademicos();
   }
 
@@ -80,7 +85,8 @@ export class ListarRespuestasComponent implements OnInit {
   }
 
   /**
-   * Se cambian los resultados mostrados en gráfica y tabla al cambiar el curos académico.
+   * Se cambian los resultados mostrados en gráfica y tabla al cambiar el curso académico del formulario.
+   * @param event evento change del curso académico
    * @author Pablo G. Galan <pablosiege@gmail.com>
    */
   public changeCursoAcademico(event:any){
@@ -90,7 +96,8 @@ export class ListarRespuestasComponent implements OnInit {
   }
 
   /**
-   * Se cambian los resultados mostrados en gráfica y tabla al cambiar el destinatario.
+   * Se cambian los resultados mostrados en gráfica y tabla al cambiar el destinatario del formulario.
+   * @param event evento change del curso académico
    * @author Pablo G. Galan <pablosiege@gmail.com>
    */
   public changeDestinatario(event:any){
@@ -100,7 +107,8 @@ export class ListarRespuestasComponent implements OnInit {
   }
 
   /**
-   * Se cambian los resultados mostrados en gráfica y tabla al cambiar el curso académico.
+   * Se obtienen los cursos académicos y se establece por defecto el más reciente.
+   * Se inicializan formulario, gráficas y tabla.
    * @author Pablo G. Galan <pablosiege@gmail.com>
    */
   public obtenerCursosAcademicos() {
@@ -126,7 +134,8 @@ export class ListarRespuestasComponent implements OnInit {
   }
 
   /**
-   * Se pinta la tabla mostrando los datos de los usuarios que hayan sido filtrados.
+   * Se obtienen los cuestionarios respondidos y se muestran en la tabla con los datos de los usuarios que hayan sido filtrados.
+   * Se establece el lenguaje a castellano para la librería datatables.
    * @author Pablo G. Galan <pablosiege@gmail.com>
    */
   public listarCuestionariosRespondidos() {
@@ -142,7 +151,8 @@ export class ListarRespuestasComponent implements OnInit {
   }
 
   /**
-   *
+   * Descarga como pdf el cuestionario especificado.
+   * @param id del cuestionario.
    * @author Pablo G. Galan <pablosiege@gmail.com>
    */
   public descargarCuestionarioRespondido(id:number) {
@@ -155,12 +165,7 @@ export class ListarRespuestasComponent implements OnInit {
         a.click();
         URL.revokeObjectURL(objectUrl);
     }), (error: any) => console.log('Error downloading the file');
-
-
   }
-
-
-
 
 
 

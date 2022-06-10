@@ -42,11 +42,22 @@ export class CreacionCuestionarioComponent implements OnInit {
 
   )}
 
+  ngOnInit(): void {
+  }
 
+  /**
+   * Devuelve las preguntas como un Array
+   * @author Pablo G. Galan <pablosiege@gmail.com>
+   */
   preguntas() : FormArray {
     return this.cuestionarioForm.get("preguntas") as FormArray
   }
 
+
+  /**
+   * Genera un nuevo campo del formulario con tipo y pregunta vacíos para rellenarse
+   * @author Pablo G. Galan <pablosiege@gmail.com>
+   */
   nuevaPregunta(): FormGroup {
     return this.fb.group({
       tipo: '',
@@ -54,16 +65,27 @@ export class CreacionCuestionarioComponent implements OnInit {
     });
   }
 
+
+  /**
+   * Añade una nueva pregunta al array de preguntas.
+   * @author Pablo G. Galan <pablosiege@gmail.com>
+   */
   addPregunta() {
     this.preguntas().push(this.nuevaPregunta());
   }
 
+
+  /**
+   * Elimina una pregunta en función de su identificador.
+   * @author Pablo G. Galan <pablosiege@gmail.com>
+   * @param i determina el identificador de la pregunta por su posición
+   */
   borrarPregunta(i:number) {
     this.preguntas().removeAt(i);
   }
 
   /**
-   * Guarda el cuestionario en la base de datos
+   * Enviaría el cuestionario creado a la API.
    * @author Pablo G. Galan <pablosiege@gmail.com@gmail.com>
    */
   onSubmit() {
@@ -85,15 +107,6 @@ export class CreacionCuestionarioComponent implements OnInit {
     })
     this.unsubscribe.push(storageSub);
   }
-
-  ngOnInit(): void {
-  }
-
-
-  formularioCuestionario = new FormGroup({
-    Tipo: new FormControl(''),
-    Pregunta: new FormControl(''),
-  });
 
 
   /**

@@ -34,10 +34,16 @@ export class ListarCuestionariosComponent implements OnDestroy, OnInit {
     this.usuario = this.storageUser.getUser()
   }
 
+
   ngAfterViewInit(): void {
     this.dtTrigger.next(this.cuestionariosArray);
   }
 
+  /**
+   * Elimina las opciones predefeinidas de lenguaje de la librería datatables.
+   * Hace una llamada a listarCuestionarios listarCuestionarios.
+   * @author Pablo G. Galan <pablosiege@gmail.com@gmail.com>
+   */
   ngOnInit(): void {
     delete this.dtOptions['language'];
     this.listarCuestionarios();
@@ -54,6 +60,11 @@ export class ListarCuestionariosComponent implements OnDestroy, OnInit {
     });
   }
 
+  /**
+   * Obtiene y lista en la tabla los cuestionarios asociados al código centro del usuario.
+   * Establece el lenguaje castellano para la librería datatables
+   * @author Pablo G. Galan <pablosiege@gmail.com@gmail.com>
+   */
   public listarCuestionarios() {
     this.cuestionarioService.getCuestionarios(this.usuario?.cod_centro).subscribe((response) => {
       this.cuestionariosArray = response;
@@ -67,14 +78,20 @@ export class ListarCuestionariosComponent implements OnDestroy, OnInit {
     })
   }
 
+  /**
+   * Redirige a la edición del cuestionario indicado por su id.
+   * @param id del cuestionario
+   * @author Pablo G. Galan <pablosiege@gmail.com@gmail.com>
+   */
   public editarCuestionario(id:number){
     this.router.navigate(['/cuestionarios/edicion-cuestionario/'+id]);
   }
 
 
   /**
-   * Se elimina el cuestionario referenciado por su id. Antes de hacerse el borrado se preguntará al usuario.
-   * @param CuestionarioModel se envía como parámetro es modelo Cuestionario del que interesará conocer su id, destinatario y código centro.
+   * Se elimina el cuestionario referenciado por su id.
+   * Antes de hacerse el borrado se preguntará al usuario.
+   * @param CuestionarioModel se envía como parámetro el modelo Cuestionario del que interesará conocer su id, destinatario y código centro.
    * @author Pablo G. Galan <pablosiege@gmail.com@gmail.com>
    */
   public async eliminarCuestionario(id: number){
@@ -100,10 +117,10 @@ export class ListarCuestionariosComponent implements OnDestroy, OnInit {
   /**
    * Activación y desactivación de cuestionarios.
    * Sólo un cuestionario puede estar habilitado para empresa y sólo uno para alumno para cada centro.
-   * Si el cuestionario está activo y se marca, este se desactivará
+   * Si el cuestionario está activado y se marca, este se desactivará
    * Si el cuestionario está desactivado y se marca, este se activará y hará que se desactive cualquier otro que ya
-   * fuese activo para ese tipo de destinatario.
-   * @param CuestionarioModel se envía como parámetro es modelo Cuestionario del que interesará conocer su id, destinatario y código centro.
+   * fuese activo para ese tipo de destinatario y con ese código centro.
+   * @param CuestionarioModel se envía como parámetro el modelo Cuestionario del que interesará conocer su id, destinatario y código centro.
    * @author Pablo G. Galan <pablosiege@gmail.com@gmail.com>
    */
   public switchActivador(registro:CuestionarioModel){

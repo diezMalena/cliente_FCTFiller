@@ -6,6 +6,11 @@ import { LoginStorageUserService } from 'src/app/services/login.storageUser.serv
 @Injectable({
   providedIn: 'root'
 })
+
+/**
+ * GuardService destinado a validar que el usuario sea de tipo Tutor.
+ * @author Pablo G. Galan <pablosiege@gmail.com>
+ */
 export class TutorCuestionariosGuardService implements CanActivate {
 
   usuario;

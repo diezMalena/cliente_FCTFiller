@@ -8,6 +8,11 @@ import { ToastrService } from 'ngx-toastr';
 @Injectable({
   providedIn: 'root'
 })
+
+/**
+ * GuardService destinado a validar que el usuario sea de tipo alumno o tutor empresa.
+ * @author Pablo G. Galan <pablosiege@gmail.com>
+ */
 export class UsuarioCuestionariosGuardService implements CanActivate {
 
   usuario;
@@ -33,16 +38,11 @@ export class UsuarioCuestionariosGuardService implements CanActivate {
     return false;
   }
 
-
-  verificarCuestionarioRespondido() {
-    this.cuestionarioRespondido.verificarCuestionarioRespondido(this.usuario?.dni).subscribe((res) => {
-      if(res.length>0){
-        return true;
-      } return false;
-    })
-  }
-
-
+  /**
+   * Verifica si el cuestionario ha sido respondido por el usuario.
+   * @return true si el cuestionario ya ha sido contestado
+   * @author Pablo G. Galan <pablosiege@gmail.com>
+   */
   async getData() {
     let data = await this.cuestionarioRespondido.getDataSynchronous(this.usuario?.dni)
     if(data.length>0){

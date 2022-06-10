@@ -40,6 +40,10 @@ export class ContestarCuestionarioComponent implements OnInit {
     this.usuario = storageUser.getUser();
   }
 
+  /**
+   *  Se obtiene e inicializa el cuestionario en función del destinatario
+   * @author Pablo G. Galan <pablosiege@gmail.com>
+   */
   ngOnInit(): void {
     this.route.queryParamMap
     .subscribe((params) => {
@@ -71,10 +75,21 @@ export class ContestarCuestionarioComponent implements OnInit {
       });
   }
 
+  /**
+   * Obtiene todas las respuestas como un array
+   * @author Pablo G. Galan <pablosiege@gmail.com>
+   */
   respuestas() : FormArray {
     return this.respuestasForm.get("respuestas") as FormArray
   }
 
+
+  /**
+   * Genera un item del cuestionario con su tipo, pregunta y su respuesta vacía.
+   * @author Pablo G. Galan <pablosiege@gmail.com>
+   * @param tipo indica el tipo
+   * @param pregunta indica la pregunta
+   */
   nuevaRespuesta(tipo:string, pregunta:string): FormGroup {
     return this.fb.group({
       tipo: tipo,
@@ -83,15 +98,35 @@ export class ContestarCuestionarioComponent implements OnInit {
     });
   }
 
+
+  /**
+   *  Devuelve la respuesta en la posición indicada
+   * @author Pablo G. Galan <pablosiege@gmail.com>
+   * @param i determina la posición
+   */
   getPregunta(i:number){
     let respuestas= this.respuestas();
     return respuestas.at(i);
   }
 
+
+  /**
+   *  Genera un campo respuesta en función del tipo asociado a una pregunta.
+   * @author Pablo G. Galan <pablosiege@gmail.com>
+   * @param tipo tipo rango o texto
+   * @param pregunta será asociada con la respuesta recogida.
+   */
   addRespuesta(tipo:string, pregunta:string) {
     this.respuestas().push(this.nuevaRespuesta(tipo,pregunta));
   }
 
+
+  /**
+   *  Se obtiene cuestionario en función del código centro y del destinatario en caso de haber alguno activo.
+   *  Se genera un campo respuesta por cada pregunta en función de su tipo.
+   * @author Pablo G. Galan <pablosiege@gmail.com>
+   * @param cod_centro indica el código del centro al que pertenece el alumno, o cuyo alumno tiene asociado el tutor de empresa
+   */
   getCuestionario(cod_centro:string|undefined|null) {
   this.cuestionarioService.getCuestionario(this.usuarioCuestionario, cod_centro).subscribe((res) => {
     this.cuestionario = res;
@@ -119,6 +154,11 @@ export class ContestarCuestionarioComponent implements OnInit {
   () => {});
   }
 
+
+  /**
+   *  Envía el cuestionario a la API para ser guardado.
+   * @author Pablo G. Galan <pablosiege@gmail.com>
+   */
   onSubmit() {
     const respuestaCuestionarioModel= new RespuestaCuestionarioModel();
     respuestaCuestionarioModel.setCuestionario(this.respuestasForm.value);

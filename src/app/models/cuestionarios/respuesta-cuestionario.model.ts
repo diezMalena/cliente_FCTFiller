@@ -1,5 +1,9 @@
 import { RespuestaModel } from "./respuesta.model";
 
+/**
+ * Modelo para respuesta cuestionario.
+ * @author Pablo G. Galan <pablosiege@gmail.com>
+ */
 export class RespuestaCuestionarioModel {
   id!: number;
   id_usuario!: string;

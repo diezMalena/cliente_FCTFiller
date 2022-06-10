@@ -17,7 +17,12 @@ export class TutorEmpresaService {
 
   constructor(private http: HttpClient,) { }
 
-
+  /**
+   * Obtiene los cuestionarios disponibles para el tutor empresa en función del dni del usuario tutor empresa.
+   * @params dni.
+   * @return cuestionarios array de cuestionarios.
+   * @author Pablo G. Galan <pablosiege@gmail.com>
+   */
   getCuestionarios(dni:string | undefined): Observable<any> {
     return this.http.get<Array<CuestionarioTutorEmpresaModel>>(`${obtenerCuestionariosURL}/${dni}`).pipe(
       map((cuestionarios: Array<CuestionarioTutorEmpresaModel>) => {
@@ -29,7 +34,12 @@ export class TutorEmpresaService {
     )
   }
 
-
+  /**
+   * Captura el mensaje del error.
+   * @params error de la llamada.
+   * @return devuelve el mensaje de error.
+   * @author Pablo G. Galan <pablosiege@gmail.com>
+   */
   handleError(error: HttpErrorResponse) {
     let msg = '';
     if (error.error instanceof ErrorEvent) {

@@ -16,7 +16,6 @@ import { ManualCrearCuestionario } from '../../manuales/manual-crear-cuestionari
 })
 export class EdicionCuestionarioComponent implements OnInit {
 
-  // datos!: string;
   cuestionarioForm!: FormGroup;
   hasError: boolean = false;
   private unsubscribe: Subscription[] = [];
@@ -35,6 +34,11 @@ export class EdicionCuestionarioComponent implements OnInit {
     this.cuestionarioID = this.route.snapshot.paramMap.get('id');
   }
 
+
+  /**
+   * Inicializa el cuestionario y carga las preguntas
+   * @author Pablo G. Galan <pablosiege@gmail.com@gmail.com>
+   */
   ngOnInit(): void {
     this.cuestionarioForm = this.fb.group({
       id: 0,
@@ -45,24 +49,34 @@ export class EdicionCuestionarioComponent implements OnInit {
     this.getCuestionario();
   }
 
+
+   /**
+   * Devuelve las preguntas como un Array
+   * @author Pablo G. Galan <pablosiege@gmail.com>
+   */
   preguntas() : FormArray {
     return this.cuestionarioForm.get("preguntas") as FormArray
   }
 
-  nuevaPregunta(): FormGroup {
 
+  /**
+   * Genera un nuevo campo del formulario con tipo y pregunta vacíos para rellenarse
+   * @author Pablo G. Galan <pablosiege@gmail.com>
+   */
+  nuevaPregunta(): FormGroup {
     return this.fb.group({
       tipo: '',
-      pregunta: '',
-    //   tipo: ['',Validators.compose([
-    //     Validators.required
-    // ]),],
-    //   pregunta: ['',Validators.compose([
-    //     Validators.required
-    // ]),]
+      pregunta: ''
     });
   }
 
+
+  /**
+   * Carga un campo del formulario con tipo y pregunta vacíos para rellenarse
+   * @author Pablo G. Galan <pablosiege@gmail.com>
+   * @param tipo indica el tipo de pregunta
+   * @param pregunta contiene la pregunta
+   */
   nuevaPreguntaExistente(tipo:string, pregunta:string): FormGroup {
     return this.fb.group({
       tipo: tipo,
@@ -70,10 +84,22 @@ export class EdicionCuestionarioComponent implements OnInit {
     });
   }
 
+
+   /**
+   * Añade al array de preguntas una nueva pregunta creada.
+   * @author Pablo G. Galan <pablosiege@gmail.com>
+   * @param tipo indica el tipo de pregunta
+   * @param pregunta contiene la pregunta
+   */
   addPreguntaExistente(tipo:string, pregunta:string) {
     this.preguntas().push(this.nuevaPreguntaExistente(tipo,pregunta));
   }
 
+
+  /**
+   * Obtiene un cuestionario de la API por su id.
+   * @author Pablo G. Galan <pablosiege@gmail.com>
+   */
   getCuestionario() {
     this.cuestionarioService.getCuestionarioEdicion(this.cuestionarioID).subscribe((res) => {
       this.cuestionario = res;
@@ -84,14 +110,30 @@ export class EdicionCuestionarioComponent implements OnInit {
     });
   }
 
+
+  /**
+   * Añade una nueva pregunta al array de preguntas.
+   * @author Pablo G. Galan <pablosiege@gmail.com>
+   */
   addPregunta() {
     this.preguntas().push(this.nuevaPregunta());
   }
 
+
+  /**
+   * Elimina una pregunta en función de su identificador.
+   * @author Pablo G. Galan <pablosiege@gmail.com>
+   * @param i determina el identificador de la pregunta por su posición
+   */
   borrarPregunta(i:number) {
     this.preguntas().removeAt(i);
   }
 
+
+  /**
+   * Enviaría el cuestionario creado a la API.
+   * @author Pablo G. Galan <pablosiege@gmail.com@gmail.com>
+   */
   onSubmit() {
     const cuestionarioModel= new CuestionarioModel();
     cuestionarioModel.setCuestionario(this.cuestionarioForm.value);
@@ -111,12 +153,12 @@ export class EdicionCuestionarioComponent implements OnInit {
     })
     this.unsubscribe.push(storageSub);
   }
-  formularioCuestionario = new FormGroup({
-    Tipo: new FormControl(''),
-    Pregunta: new FormControl(''),
-  });
 
 
+ /**
+   * Despliega modal con ayuda para la creación de los cuestionarios
+   * @author Pablo G. Galan <pablosiege@gmail.com@gmail.com>
+   */
   public abrirAyuda(): void {
     this.modal.open(ManualCrearCuestionario, { size: 'lg' });
   }

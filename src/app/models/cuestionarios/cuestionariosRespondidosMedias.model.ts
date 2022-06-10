@@ -1,3 +1,7 @@
+/**
+ * Modelo para las medias de los cuestionarios.
+ * @author Pablo G. Galan <pablosiege@gmail.com>
+ */
 export class CuestionariosRespondidosMediasModel {
 
   name!: string;

@@ -1,5 +1,9 @@
 import { PreguntaModel } from "./pregunta.model";
 
+/**
+ * Modelo para cuestionario tutor empresa.
+ * @author Pablo G. Galan <pablosiege@gmail.com>
+ */
 export class CuestionarioTutorEmpresaModel {
 
   id!: number;

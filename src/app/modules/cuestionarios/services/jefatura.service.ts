@@ -6,6 +6,11 @@ import { LoginStorageUserService } from 'src/app/services/login.storageUser.serv
 @Injectable({
   providedIn: 'root'
 })
+
+/**
+ * GuardService destinado a validar que el usuario sea de tipo Jefatura.
+ * @author Pablo G. Galan <pablosiege@gmail.com>
+ */
 export class JefaturaCuestionariosGuardService implements CanActivate {
 
   usuario;
@@ -16,8 +21,8 @@ export class JefaturaCuestionariosGuardService implements CanActivate {
     this.usuario = this.storageUser.getUser();
   }
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
 
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     if (this.usuario!.isJefatura()) {
       return true;
     }

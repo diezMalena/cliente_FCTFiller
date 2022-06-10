@@ -1,3 +1,7 @@
+/**
+ * Modelo para Respuesta
+ * @author Pablo G. Galan <pablosiege@gmail.com>
+ */
 export class RespuestaModel {
 
   id_cuestionario!: number;
