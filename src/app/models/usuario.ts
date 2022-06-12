@@ -1,3 +1,4 @@
+import { CentroEstudios } from './centroEstudios';
 import { usuarioResponse } from './usuarioRespose';
 
 export class Usuario {
@@ -9,9 +10,10 @@ export class Usuario {
       obj['dni'],
       obj['tipo'],
       obj['roles'],
-      obj['token'],
       //DSB Cambio 10-03-2022: Añadido codigo de centro de estudios
-      obj['cod_centro']
+      obj['cod_centro'],
+      //DJC Cambio 28-05-2022: añadido objeto de centro de estudios
+      obj['centro']
     );
   }
 
@@ -19,12 +21,13 @@ export class Usuario {
     public email: string,
     public nombre: string,
     public apellidos: string,
-    public dni?: string,
-    public tipo?: string,
+    public dni: string,
+    public tipo: string,
     public roles?: Array<any>,
-    public token?: string,
     //DSB Cambio 10-03-2022: Añadido codigo de centro de estudios
-    public cod_centro?: string
+    public cod_centro?: string,
+    //DJC Cambio 28-05-2022: añadido objeto de centro de estudios
+    public centro?: CentroEstudios
   ) {}
 
   /***********************************************************************/
