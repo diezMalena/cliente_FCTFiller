@@ -17,7 +17,7 @@ export class Profesor {
     public email: string,
     public nombre: string,
     public apellidos: string,
-    public centro_estudios: string,
+    public centro_estudios?: string,
     public roles?: number[]
   ) {}
 }

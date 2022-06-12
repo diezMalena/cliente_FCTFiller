@@ -33,11 +33,26 @@
             </svg> FCT
           </a>
         </li>
-        <li *ngIf="usuario.isTutor() || usuario.isAlumno()">
+        <li
+          *ngIf="usuario.isResponsable() || usuario.isProfesor() || usuario.isTutorEmpresa() || usuario.isTrabajador()">
+          <a routerLink="data-management/seguimiento_tutores" routerLinkActive="active" class="nav-link link-white">
+            <svg width="20" height="20" class="bi me-2">
+              <use xlink:href="#A3" />
+            </svg> Seguimiento
+          </a>
+        </li>
+        <li *ngIf="usuario.isAlumno()">
           <a routerLink="data-management/seguimiento" routerLinkActive="active" class="nav-link link-white">
             <svg width="20" height="20" class="bi me-2">
               <use xlink:href="#A3" />
             </svg> Seguimiento
+          </a>
+        </li>
+        <li *ngIf="usuario.isAlumno()">
+          <a routerLink="data-management/anexos-alumnos" routerLinkActive="active" class="nav-link link-white">
+            <svg width="20" height="20" class="bi me-2">
+              <use xlink:href="#crud-anexos" />
+            </svg> Anexos
           </a>
         </li>
         <li *ngIf="usuario.isProfesor()">
@@ -60,6 +75,15 @@
             <svg width="20" height="20" class="bi me-2">
               <use xlink:href="#profesor" />
             </svg> Profesores
+          </a>
+        </li>
+
+        <li *ngIf="usuario.isTutor()">
+          <a routerLinkActive="active" routerLink="data-management/programa-formativo" class="nav-link link-white"
+            aria-current="page">
+            <svg width="20" height="20" class="bi me-2">
+              <use xlink:href="#profesor" />
+            </svg> AnexoII y IV
           </a>
         </li>
         <li *ngIf="usuario.isAlumno()">

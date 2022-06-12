@@ -1,9 +1,6 @@
 import {
   Component,
   OnInit,
-  AfterViewInit,
-  OnDestroy,
-  ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -18,23 +15,17 @@ import { LoginStorageUserService } from 'src/app/services/login.storageUser.serv
 import { ToastrService } from 'ngx-toastr';
 import { DialogService } from 'src/app/services/dialog.service';
 import { ModalCambiotutorComponent } from './modal-cambiotutor/modal-cambiotutor.component';
-import { DataTableDirective } from 'angular-datatables';
-import { Subject } from 'rxjs';
 import { ManualAnexo3Component } from '../../manuales/manual-anexo3/manual-anexo3.component';
+import { FileUploadModel } from 'src/app/models/file-upload.model';
+import { ModalSubirficheroComponent } from './modal-subirfichero/modal-subirfichero.component';
+import { isGeneratedFile } from '@angular/compiler/src/aot/util';
 
 @Component({
   selector: 'app-seguimiento',
   templateUrl: './seguimiento.component.html',
   styleUrls: ['./seguimiento.component.scss'],
 })
-export class SeguimientoComponent implements AfterViewInit, OnDestroy, OnInit {
-  @ViewChild(DataTableDirective, { static: false })
-  /***********************************************************************/
-  //#region Inicialización de variables
-
-  dtElement?: DataTableDirective;
-  dtOptions: DataTables.Settings = {};
-  dtTrigger = new Subject<any>();
+export class SeguimientoComponent implements OnInit {
 
   usuario;
   public arrayJornadas: any = [];
@@ -50,6 +41,13 @@ export class SeguimientoComponent implements AfterViewInit, OnDestroy, OnInit {
   public botonVer: boolean = false;
   public static readonly id_empresa: string = 'id_empresa';
   public tutor_empresa: string = '';
+  public arraySemanas: any = [];
+  public totalSemanas: number = 0;
+  public static readonly id_fct: string = 'id_fct';
+  public static readonly id_quinto_dia: string = 'id_quinto_dia';
+
+  // public fileToUpload: File
+
 
   constructor(
     private formBuilder: FormBuilder,
@@ -59,7 +57,8 @@ export class SeguimientoComponent implements AfterViewInit, OnDestroy, OnInit {
     private seguimientoService: SeguimientoServiceService,
     private storageUser: LoginStorageUserService,
     private toastr: ToastrService,
-    public dialogService: DialogService
+    public dialogService: DialogService,
+
   ) {
     this.usuario = storageUser.getUser();
     this.dni_alumno = this.usuario?.dni;
@@ -75,7 +74,6 @@ export class SeguimientoComponent implements AfterViewInit, OnDestroy, OnInit {
     this.gestionDepartamento();
     this.sumatorioHorasTotales();
     this.getArrayJornadas();
-    this.rerender();
   }
 
   //#endregion
@@ -84,22 +82,6 @@ export class SeguimientoComponent implements AfterViewInit, OnDestroy, OnInit {
   /***********************************************************************/
   //#region Gestión de datatables
 
-  ngAfterViewInit(): void {
-    this.dtTrigger.next(this.arrayJornadas);
-  }
-
-  ngOnDestroy(): void {
-    this.dtTrigger.unsubscribe();
-  }
-
-  rerender(): void {
-    this.dtElement!.dtInstance.then((dtInstance: DataTables.Api) => {
-      // Destroy the table first
-      dtInstance.destroy();
-      // Call the dtTrigger to rerender again
-      this.dtTrigger.next(this.arrayJornadas);
-    });
-  }
 
   //#endregion
   /***********************************************************************/
@@ -118,8 +100,7 @@ export class SeguimientoComponent implements AfterViewInit, OnDestroy, OnInit {
   public recogerTutorEmpresa() {
     this.seguimientoService.recogerTutorEmpresa(this.dni_alumno!).subscribe({
       next: (response: any) => {
-        this.tutor_empresa =
-          response[0]['dni_tutor'] + ' - ' + response[0]['nombre_tutor'];
+        this.tutor_empresa = response[0];
         /*La empresa a la que pertenece el alumno, me la llevo al modal de cambiar tutor para poder
           sacar los tutores/responsables de dicha empresa:*/
         let id_empresa = response[1];
@@ -237,10 +218,13 @@ export class SeguimientoComponent implements AfterViewInit, OnDestroy, OnInit {
    * @author Malena.
    */
   public getArrayJornadas() {
-    this.modalJornadaService.jornadasArray.subscribe((array) => {
-      this.arrayJornadas = array;
+    this.modalJornadaService.jornadasArray.subscribe((response) => {
+      this.arrayJornadas = response;
+      this.totalSemanas = this.arrayJornadas.length;
       var cuantasJornadasHay = this.arrayJornadas.length;
       this.sumatorioHorasTotales();
+      this.devolverSemanas();
+
 
       //Cuando se inserten 5 nuevas jornadas, se habilita el boton Descargar PDF:
       if (cuantasJornadasHay >= 5 && cuantasJornadasHay % 5 == 0) {
@@ -253,7 +237,6 @@ export class SeguimientoComponent implements AfterViewInit, OnDestroy, OnInit {
         this.botonVer = true;
         this.botonDescargar = false;
       }
-      this.rerender();
     });
   }
 
@@ -266,23 +249,8 @@ export class SeguimientoComponent implements AfterViewInit, OnDestroy, OnInit {
     this.seguimientoService.devolverJornadas(this.dni_alumno!).subscribe({
       next: (response: any) => {
         this.arrayJornadas = response;
-        var cuantasJornadasHay = this.arrayJornadas.length;
-
-        //Cuando se inserten 5 nuevas jornadas, se habilita el boton Descargar PDF:
-        if (cuantasJornadasHay >= 5 && cuantasJornadasHay % 5 == 0) {
-          this.botonDescargar = true;
-          this.botonVer = false;
-        }
-
-        //Cuando haya más de 5 jornadas añadidas, se mostrará el boton Ver PDF:
-        if (cuantasJornadasHay > 5 && cuantasJornadasHay % 5 != 0) {
-          this.botonVer = true;
-          this.botonDescargar = false;
-        }
-
-        this.rerender();
-        $.fn.dataTable.ext.errMode = 'throw';
-        this.dtTrigger.next(this.arrayJornadas);
+        this.totalSemanas = this.arrayJornadas.length;
+        this.devolverSemanas();
       },
       error: (e) => {
         this.toastr.error(
@@ -291,17 +259,24 @@ export class SeguimientoComponent implements AfterViewInit, OnDestroy, OnInit {
         );
       },
     });
-    $.extend(true, $.fn.dataTable.defaults, {
-      language: { url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json' },
-      columnDefs: [
-        {
-          targets: 'nosort',
-          orderable: false,
-        },
-      ],
-    });
-
     return this.arrayJornadas;
+  }
+
+  public devolverSemanas() {
+    this.seguimientoService.devolverSemanas(this.dni_alumno!).subscribe({
+      next: (response: any) => {
+        this.arraySemanas = response;
+        /*
+        si la ultima semana tiene menos de 5 dias, es decir, no esta completa, no tendremos la información de las firmas(tabla "semana"), asique
+        añadimos una semana vacía en el arraySemanas, para que la semana incompleta hace referencia a la semana[0] y la semana completa a la semana[1]
+        */
+        if (this.arrayJornadas[this.arrayJornadas.length - 1].length < 5) {
+          //La semana no está completa:
+          var semanaVacia = {};
+          this.arraySemanas.unshift(semanaVacia);
+        }
+      }
+    });
   }
 
   //#endregion
@@ -355,37 +330,131 @@ export class SeguimientoComponent implements AfterViewInit, OnDestroy, OnInit {
    * caso descargaría la hoja de seguimiento correspondiente.
    * @author Malena
    */
-  public async descargarPDF() {
-    if (this.departamentoEstablecido == false) {
+  public async generarDocumento(semana: any) {
+    if (Object.keys(semana).length == 0) {
       this.toastr.error(
-        'No puedes descargar el documento sin añadir el departamento.',
+        'No puedes descargar el documento sin añadir primero 5 jornadas.',
         'Error al descargar el documento'
       );
     } else {
-      let descargar = await this.dialogService.confirmacion(
-        'Descargar Anexo III',
-        'Se ha generado tu hoja de seguimiento, ¿Quiere descargarla?'
-      );
-      if (descargar) {
-        this.seguimientoService.descargarPDF(this.dni_alumno!).subscribe({
-          next: (res: any) => {
-            const blob = new Blob([res], { type: 'application/octet-stream' });
-            FileSaver.saveAs(blob, 'hoja_seguimiento.docx');
-            this.toastr.success(
-              'Se ha descargado la hoja de seguimiento correctamente.',
-              'Generación de Anexo III'
-            );
-          },
-          error: (e) => {
-            this.toastr.error(
-              'No se ha podido generar el documento correctamente.',
-              'Error en la generación del Anexo III'
-            );
-          },
-        });
+      if (this.departamentoEstablecido == false) {
+        this.toastr.error(
+          'No puedes descargar el documento sin añadir el departamento.',
+          'Error al descargar el documento'
+        );
+      } else {
+        let descargar = await this.dialogService.confirmacion(
+          'Generar Word Anexo III',
+          'Se ha generado tu hoja de seguimiento, ¿Quiere descargarla? (Se eliminarán las firmas registradas)'
+        );
+        if (descargar) {
+          this.seguimientoService.generarDocumento(semana.id_quinto_dia, this.dni_alumno!).subscribe({
+            next: (res: any) => {
+              const blob = new Blob([res], { type: 'application/octet-stream' });
+              var hoy = new Date(Date.now());
+              var nombre = 'Hoja_seguimiento_' + this.dni_alumno + '_' + hoy.toISOString() + '.docx';
+              FileSaver.saveAs(blob, nombre);
+              // location.reload();
+              this.toastr.success(
+                'Se ha descargado la hoja de seguimiento correctamente.',
+                'Generación de Anexo III'
+              );
+            },
+            error: (e) => {
+              this.toastr.error(
+                'No se ha podido generar el documento correctamente.',
+                'Error en la generación del Anexo III'
+              );
+            },
+          });
+        }
       }
     }
   }
+
+
+  public async descargarPDF(semana: any) {
+    this.seguimientoService.hayDocumento(semana.id_quinto_dia, semana.id_fct).subscribe({
+      next: (response: any) => {
+        let ruta_hoja = response.ruta_hoja;
+        if (ruta_hoja != "" && ruta_hoja != null) {
+          var ruta = ruta_hoja.split("\\").pop();
+          // console.log(ruta);
+          this.seguimientoService.descargarPDF(ruta_hoja).subscribe({
+            next: (res:any)=> {
+              const blob = new Blob([res], { type: 'application/octet-stream' });
+              FileSaver.saveAs(blob, ruta);
+              this.toastr.success(
+                'Se ha descargado la hoja de seguimiento en PDF correctamente.',
+                'Descarga PDF de Anexo III'
+              );
+            }
+          })
+        }else{
+          this.toastr.error(
+            'No se ha podido descargar el PDF debido a que no se generado y subido un archivo previamente.',
+            'Error en la descarga del PDF del Anexo III'
+            );
+        }
+      }
+    })
+  }
+
+
+
+  /**
+   * Método para que la semana de arriba se  muestre nada más entrar y no salga comprimida
+   */
+  public mostrarSemana(i: number) {
+    var clase = "accordion-collapse collapse";
+    if (i == 0) {
+      clase = "accordion-collapse collapse show";
+    }
+    return clase;
+  }
+
+
+  public abrirModalSubirArchivo(semana: any) {
+    let id_fct = semana.id_fct;
+    let id_quinto_dia = semana.id_quinto_dia;
+    sessionStorage.setItem(SeguimientoComponent.id_fct, id_fct);
+    sessionStorage.setItem(SeguimientoComponent.id_quinto_dia, id_quinto_dia);
+    if (Object.keys(semana).length == 0) {
+      this.toastr.error(
+        'No puedes subir el documento sin añadir primero 5 jornadas.',
+        'Error al subir el documento'
+      );
+    } else {
+      this.modal.open(ModalSubirficheroComponent, { size: 's', });
+    }
+  }
+
+
+  public mostrarCheckAlumno(semana: any) {
+    var mostrar = false;
+    if (semana != undefined && semana.firmado_alumno == 1) {
+      mostrar = true;
+    }
+    return mostrar;
+  }
+
+  public mostrarCheckTutorEstudios(semana: any) {
+    var mostrar = false;
+    if (semana != undefined && semana.firmado_tutor_estudios == 1) {
+      mostrar = true;
+    }
+    return mostrar;
+  }
+
+  public mostrarCheckTutorEmpresa(semana: any) {
+    var mostrar = false;
+    if (semana != undefined && semana.firmado_tutor_empresa == 1) {
+      mostrar = true;
+    }
+    return mostrar;
+  }
+
+
 
   //#endregion
   /***********************************************************************/

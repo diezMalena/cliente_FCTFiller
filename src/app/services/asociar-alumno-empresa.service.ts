@@ -47,6 +47,21 @@ export class AsociarAlumnoEmpresaService {
     return this.http.get<Empresa[]>(url, { headers });
   }
 
+    /**
+   * Solicita la lista de anexos de FCT
+   *
+   * @param dniTutor DNI del tutor loggeado
+   * @returns Un observable con un vector de anexos asociadas a las FCT
+   * @author Laura <lauramorenoramos97@gmail.com>
+   */
+     public solicitarAnexosFct(dniTutor: string) {
+      let url: string = this.ruta + 'solicitarAnexosFct/' + dniTutor;
+      const headers = this.headers;
+
+      return this.http.get(url, { headers });
+    }
+
+
   /**
    * Solicita a la API el nombre del ciclo al que tutoriza el tutor loggeado
    * @param dniTutor DNI del tutor loggeado
