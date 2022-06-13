@@ -42,7 +42,7 @@ export class ModalProfesoresComponent implements OnInit {
     this.dni = this.usuario?.dni;
 
     this.datosProfesor = this.formBuilder.group({
-      dni: ['', [Validators.required]],
+      dni: ['', [Validators.required, Validators.pattern]],
       email: ['', [Validators.required, Validators.email]],
       nombre: ['', [Validators.required]],
       apellido: ['', [Validators.required]],

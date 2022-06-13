@@ -131,13 +131,14 @@ export class AnexoService {
   }
 
   /**
-   * Este metodo hace una llamada a la api y descargar un anexo en concreto
+   * Este metodo hace una llamada a la api y descargar todos los anexos de un crud, si
+   * habilitado es 0, este descarga el historial de anexos y si es 1 , descarga el crud
    * @author Pablo
    * @param dni_tutor Es el dni del tutor
    * @returns Un observable con la respuesta de descarga del servidor
    */
-  public descargarTodo(dni_tutor: string) {
-    let dato = { dni_tutor: dni_tutor, habilitado: 1 };
+  public descargarTodo(dni_tutor: string, habilitado:number) {
+    let dato = { dni_tutor: dni_tutor, habilitado: habilitado };
     const url: string = this.ruta + 'descargarTodo';
     const HTTPOptions = this.headersService.getHeadersWithTokenArrayBuffer();
 
@@ -159,19 +160,6 @@ export class AnexoService {
     return this.http.post(url, dato, HTTPOptions);
   }
 
-  /**
-   * @param dni_tutor  es el dni del tutor
-   * @returns Un observable con la respuesta del descarga del servidor
-   * Este metodo hace una llamada a la api y descarga todos los anexos
-   * @author Laura <lauramorenoramos97@gmail.com>
-   */
-  public descargarTodoHistorial(dni_tutor: string) {
-    let dato = { dni_tutor: dni_tutor, habilitado: 0 };
-    const url: string = this.ruta + 'descargarTodo';
-    const HTTPOptions = this.headersService.getHeadersWithTokenArrayBuffer();
-
-    return this.http.post(url, dato, HTTPOptions);
-  }
 
   //#endregion
   /***********************************************************************/
