@@ -17,34 +17,56 @@
   </div>
 </div>
 
-
 <!-- Cabecera de la sección -->
 <div class="card p-3" [hidden]="this.gasto == undefined">
-
-
   <div [hidden]="this.gasto?.tipo_desplazamiento == 'No aplica'">
-    <div class="row">
-      <div class="col-12 d-flex align-items-center justify-content-between py-2">
-        <button (click)="editarDatosAlumno()" aria-label="Editar datos del alumno" class="btn btn-outline-primary"
-          placement="right" ngbTooltip="Editar datos">
-          <svg width="16" height="16" class="bi">
-            <use xlink:href="#lapiz" />
+    <div class="d-flex justify-content-between py-2">
+      <!-- Editar datos del alumno -->
+      <button (click)="editarDatosAlumno()" aria-label="Editar datos del alumno" class="btn btn-outline-primary"
+        placement="right" ngbTooltip="Editar datos">
+        <svg width="16" height="16" class="bi">
+          <use xlink:href="#lapiz" />
+        </svg>
+      </button>
+      <!-- Switch de gastos de desplazamiento y manutención -->
+      <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+        <input type="radio" class="btn-check" id="btnRadioDesplazamiento" autocomplete="off" checked [value]="1"
+          [(ngModel)]="isVisible" name="isVisible" [checked]="isSelected" />
+        <label class="btn btn-outline-dark" for="btnRadioDesplazamiento">Desplazamiento</label>
+
+        <input type="radio" class="btn-check" id="btnRadioManutencion" autocomplete="off" [value]="0"
+          [(ngModel)]="isVisible" name="isVisible" [checked]="!isSelected" />
+        <label class="btn btn-outline-dark" for="btnRadioManutencion">Manutención</label>
+      </div>
+      <!-- Generar y firmar (subir) Anexo V -->
+      <div class="btn-group" role="group" aria-label="Confirmación de cambios y subida de anexo firmado">
+        <button class="btn {{ gasto?.total_gastos == 0 ? 'text-muted' : 'btn-outline-success'}}"
+          ngbTooltip="Confirmar gastos y generar Anexo V" placement="top"
+          aria-label="Confirmar gastos y generar Anexo V" (click)="confirmarGastos()"
+          [disabled]="gasto?.total_gastos == 0 ? true : null">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg"
+            viewBox="0 0 16 16">
+            <path
+              d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z" />
           </svg>
         </button>
-        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-          <input type="radio" class="btn-check" id="btnRadioDesplazamiento" autocomplete="off" checked [value]="1"
-            [(ngModel)]="isVisible" name="isVisible" [checked]="isSelected" />
-          <label class="btn btn-outline-dark" for="btnRadioDesplazamiento">Desplazamiento</label>
-
-          <input type="radio" class="btn-check" id="btnRadioManutencion" autocomplete="off" [value]="0"
-            [(ngModel)]="isVisible" name="isVisible" [checked]="!isSelected" />
-          <label class="btn btn-outline-dark" for="btnRadioManutencion">Manutención</label>
-        </div>
-        <p>
-          Total gastos:
-          <strong>{{ this.gasto?.total_gastos?.toFixed(2) }} €</strong>
-        </p>
+        <label for="file" role="button" class="btn {{ gasto?.total_gastos == 0 ? 'text-muted' : 'btn-outline-primary'}}"
+          ngbTooltip="Subir Anexo V firmado" placement="top" aria-label="Subir Anexo V firmado">
+          <a>
+            <svg class="bi" width="16" height="16">
+              <use xlink:href="#firma" />
+            </svg>
+          </a>
+        </label>
+        <input hidden role="button" type="file" id="file" accept="application/pdf" (change)="subirAnexoV($event)"
+          [disabled]="gasto?.total_gastos == 0 ? true : null">
       </div>
+    </div>
+    <div class="d-flex justify-content-end pt-3">
+      <span>
+        Total gastos:
+        <strong>{{ this.gasto?.total_gastos?.toFixed(2) }} €</strong>
+      </span>
     </div>
     <hr>
     <div class="row">

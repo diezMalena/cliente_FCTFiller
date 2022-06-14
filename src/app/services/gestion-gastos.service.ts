@@ -11,7 +11,7 @@ import { Gasto } from '../models/gasto';
 import { GastoProfesor } from '../models/gastoProfesor';
 import { gastoResponse } from '../models/gastoResponse';
 import { map } from 'rxjs/operators';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { FacturaManutencion } from '../models/facturaManutencion';
 import { gastoProfesorResponse } from '../models/gastoProfesorResponse';
 
@@ -66,6 +66,23 @@ export class GestionGastosService {
 
     return this.http.post(url, factura, { headers });
   }
+
+  /**
+   * Envía al servidor los gastos para confirmarlos en la Base de Datos
+   * y generar el Anexo V
+   *
+   * @param gasto Objeto con los datos de los gastos del alumno
+   * @returns `Observable` de la respuesta del servidor
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public confirmarGastos(gasto: Gasto): Observable<any> {
+    let url = this.urlBase + 'confirmar_gastos'
+    let headers = this.headers;
+
+    return this.http.post(url, gasto, { headers })
+  }
+
+
 
   //#endregion
   /***********************************************************************/
