@@ -19,12 +19,22 @@
           <div class="row mb-2 bg-primary p-4 border border-primary rounded text-white">
             <p>
               <label for="titulo">Nombre del formulario:</label>
-              <input type="text" id="titulo" name="titulo" formControlName="titulo" class="form-control">
+              <input type="text" id="titulo" name="titulo" formControlName="titulo" class="form-control"
+              [ngClass]="{
+                'is-invalid': cuestionarioForm.controls['titulo'].invalid,
+                'is-valid': cuestionarioForm.controls['titulo'].valid
+              }"
+              >
             </p>
 
             <p>
               <label for="destinatario">Destinatario:</label>
-              <select formControlName="destinatario" class="form-control form-select">
+              <select formControlName="destinatario" class="form-control form-select"
+              [ngClass]="{
+                'is-invalid': cuestionarioForm.controls['titulo'].invalid,
+                'is-valid': cuestionarioForm.controls['titulo'].valid
+              }"
+              >
                 <option value="alumno" class="p-y-2">Alumno</option>
                 <option value="empresa" class="p-y-2">Empresa</option>
               </select>
@@ -46,14 +56,23 @@
 
                 <td class="mb-2 p-2">
                     Tipo:
-                    <select formControlName="tipo" class="form-control form-select">
+                    <select formControlName="tipo" class="form-control form-select"
+                    [ngClass]="{
+                      'is-invalid': pregunta.get('tipo')?.hasError('required'),
+                      'is-valid': !pregunta.get('tipo')?.hasError('required')
+                    }">
                       <option value="rango" class="p-y-2">Rango</option>
                       <option value="texto" class="p-y-2">Texto</option>
                     </select>
                 </td>
                 <td>
                     Pregunta:
-                    <input type="text" formControlName="pregunta" class="form-control">
+                    <input type="text" formControlName="pregunta" class="form-control"
+                    [ngClass]="{
+                      'is-invalid': pregunta.get('pregunta')?.hasError('required'),
+                      'is-valid': !pregunta.get('pregunta')?.hasError('required')
+                    }"
+                    >
                 </td>
                 <td>
                     <button (click)="borrarPregunta(i)" class="btn btn-warning btn-table-borrar-cuestionario">Borrar</button>
@@ -67,7 +86,7 @@
           <br>
           <hr>
 
-          <button type="submit" class="btn btn-primary m-l-2">Guardar</button>
+          <button type="submit" [disabled]="!cuestionarioForm.valid" class="btn btn-primary m-l-2">Guardar</button>
           <button routerLink="/cuestionarios/listar-cuestionarios" class="btn btn-outline-warning m-l-2" aria-label="listarCuestionario">Cancelar</button>
 
         </form>

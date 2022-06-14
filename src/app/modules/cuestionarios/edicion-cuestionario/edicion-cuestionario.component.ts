@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder, FormArray } from '@angular/forms';
+import { FormGroup, FormControl, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -42,8 +42,8 @@ export class EdicionCuestionarioComponent implements OnInit {
   ngOnInit(): void {
     this.cuestionarioForm = this.fb.group({
       id: 0,
-      titulo: '',
-      destinatario: '',
+      titulo: ['', Validators.required],
+      destinatario: ['', Validators.required],
       preguntas: this.fb.array([]),
     });
     this.getCuestionario();
@@ -65,8 +65,8 @@ export class EdicionCuestionarioComponent implements OnInit {
    */
   nuevaPregunta(): FormGroup {
     return this.fb.group({
-      tipo: '',
-      pregunta: ''
+      tipo: ['', Validators.required],
+      pregunta: ['', Validators.required],
     });
   }
 
@@ -79,8 +79,8 @@ export class EdicionCuestionarioComponent implements OnInit {
    */
   nuevaPreguntaExistente(tipo:string, pregunta:string): FormGroup {
     return this.fb.group({
-      tipo: tipo,
-      pregunta: pregunta,
+      tipo: [tipo, Validators.required],
+      pregunta: [pregunta, Validators.required],
     });
   }
 

@@ -30,7 +30,12 @@
 
                 <div *ngIf="respuesta.value.tipo=='texto'">
                   <div class="container-text respuesta py-2" style="padding-left: 15px;">
-                    <input type="text" formControlName="respuesta" class="form-control">
+                    <input type="text" formControlName="respuesta" class="form-control"
+                    [ngClass]="{
+                      'is-invalid': respuesta.get('respuesta')?.hasError('required'),
+                      'is-valid': !respuesta.get('respuesta')?.hasError('required')
+                    }"
+                    >
                   </div>
                 </div>
 
@@ -44,8 +49,11 @@
                         <div class="col-1 mb-2"><label><input type="radio" formControlName="respuesta" value="4"><span class=" ml-2"> 4 </span></label></div>
                         <div class="col-1 mb-2"><label><input type="radio" formControlName="respuesta" value="5"><span class=" ml-2"> 5 </span></label></div>
                       </div>
+                      <div *ngIf="respuesta.get('respuesta')?.hasError('required')" style="color:#af130d;">Requerido</div>
                     </div>
                 </div>
+
+                <hr>
 
 
 
@@ -55,8 +63,8 @@
           </div>
 
           <br>
-          <!-- <hr> -->
-          <button type="submit" class="btn btn-primary">Guardar</button>
+
+          <button type="submit" [disabled]="!respuestasForm.valid" class="btn btn-primary">Guardar</button>
         </form>
 
 

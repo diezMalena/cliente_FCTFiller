@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { BehaviorSubject, catchError, first, Observable, Subscription, throwError } from 'rxjs';
@@ -94,7 +94,7 @@ export class ContestarCuestionarioComponent implements OnInit {
     return this.fb.group({
       tipo: tipo,
       pregunta: pregunta,
-      respuesta: '',
+      respuesta: ['', Validators.required],
     });
   }
 
