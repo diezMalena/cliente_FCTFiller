@@ -26,6 +26,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from 'src/app/services/dialog.service';
 import { AnexoService } from 'src/app/services/crud-anexos.service';
 import * as FileSaver from 'file-saver';
+import { FileUploadService } from 'src/app/services/file-upload.service';
 
 @Component({
   selector: 'app-gestion-gastos-alumno',
@@ -59,7 +60,8 @@ export class GestionGastosAlumnoComponent
     private route: ActivatedRoute,
     private router: Router,
     private dialogService: DialogService,
-    private anexosService: AnexoService
+    private anexosService: AnexoService,
+    private fileUpload: FileUploadService,
   ) {}
 
   ngOnInit(): void {
@@ -220,10 +222,16 @@ export class GestionGastosAlumnoComponent
   /***********************************************************************/
   //#region Anexo V
 
+  /**
+   * Envía una señal al servidor para confirmar los gastos y generar el Anexo V,
+   * dando la opción al usuario de descargarlo
+   *
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
   public async confirmarGastos() {
     let confirmar = await this.dialogService.confirmacion(
       'Confirmar gastos',
-      '¿Está seguro de que desea confirmar los gastos? Podrá volver a confirmarlos si los edita'
+      '¿Está seguro de que desea confirmar los gastos? Si ha subido el Anexo V firmado, tendrá que volver a subirlo'
     );
     if (confirmar) {
       this.gestionGastosService.confirmarGastos(this.gasto!).subscribe({
@@ -260,7 +268,31 @@ export class GestionGastosAlumnoComponent
     }
   }
 
-  public subirAnexoV(): void {}
+  public subirAnexoV(event: any): void {
+    let files = event.target.files[0];
+    let datos = {
+      dni: this.gasto?.dni_alumno,
+      curso_academico: this.gasto?.curso_academico,
+      file: ''
+    }
+    let upload = this.fileUpload;
+    let toastr = this.toastr;
+    if (files) {
+      let fileReader = new FileReader();
+      fileReader.readAsDataURL(files);
+      fileReader.onload = function () {
+        datos.file = this.result as string;
+        upload.subirAnexoV(datos).subscribe({
+          next: res => {
+            toastr.success('Anexo V subido correctamente')
+          },
+          error: err => {
+            toastr.error('Vuelve a intentarlo', 'Error al subir el fichero')
+          }
+        });
+      };
+    }
+  }
 
   //#endregion
   /***********************************************************************/
