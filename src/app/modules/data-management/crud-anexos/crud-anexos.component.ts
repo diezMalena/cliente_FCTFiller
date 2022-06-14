@@ -48,8 +48,9 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
     public dialogService: DialogService
   ) {
     this.usuario = storageUser.getUser();
-    this.dni_tutor = this.usuario?.dni;
+    this.dni_tutor = this.usuario?.dni
   }
+
 
   ngOnInit(): void {
     delete this.dtOptions['language'];
