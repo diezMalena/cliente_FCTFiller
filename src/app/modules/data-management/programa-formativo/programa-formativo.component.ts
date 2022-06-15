@@ -10,7 +10,6 @@ import { DataTableDirective } from 'angular-datatables';
 import { AnexoService } from 'src/app/services/crud-anexos.service';
 import { DialogService } from 'src/app/services/dialog.service';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
-import { ManualCrudAnexosComponent } from '../../manuales/manual-crud-anexos/manual-crud-anexos.component';
 import { ModalUploadAnexoComponent } from '../modal-upload-anexo/modal-upload-anexo.component';
 
 import {
@@ -83,26 +82,17 @@ export class ProgramaFormativoComponent implements OnInit {
   /***********************************************************************/
 
   /**
-   * Esta funcion se encarga de coger el tipo de Anexo del desplegable
-   * @param event es el tipo de anexo
-   * @author Laura <lauramorenoramos97@gmail.com>
-   *
-   */
-  public cogerTipoAnexo(event: any) {
-    this.tipoAnexo = event.target.value;
-  }
-
-  /**
-   *
+   *Esta función se encarga de recoger el fichero que se ha seleccionado, guardarlo en un session Storage y
+   * pasar el fichero a base 64
    * @param event
+   * @author David
    */
   public upload(event: any) {
-    console.log(this.tipoAnexo);
     this.evento = event.target.files[0];
     let fileReader = new FileReader();
     fileReader.readAsDataURL(this.evento);
     fileReader.onload = function (e: any) {
-      sessionStorage.setItem('cosa', e.target.result);
+      sessionStorage.setItem('fichero', e.target.result);
     };
   }
 
@@ -112,20 +102,17 @@ export class ProgramaFormativoComponent implements OnInit {
   public enviarAnexo() {
     if (
       this.evento.name == 'Anexo2.docx' ||
-      this.evento.name == 'Anexo2.pdf' ||
-      this.evento.name == 'Anexo4.docx' ||
-      this.evento.name == 'Anexo4.pdf'
+      this.evento.name == 'Anexo4.docx'
     ) {
       if (
-        this.evento.name == 'Anexo2.docx' ||
-        this.evento.name == 'Anexo2.pdf'
+        this.evento.name == 'Anexo2.docx'
       ) {
         this.tipoAnexo = 'Anexo2';
       } else {
         this.tipoAnexo = 'Anexo4';
       }
       let datos = new AnexoUpload(
-        sessionStorage.getItem('cosa')!,
+        sessionStorage.getItem('fichero')!,
         this.tipoAnexo,
         this.evento.name,
         this.dni_usuario!
@@ -146,7 +133,7 @@ export class ProgramaFormativoComponent implements OnInit {
       });
     } else {
       this.toastr.error(
-        'El anexo debe llamarse Anexo2.docx o .pdf o Anexo4.docx o .pdf',
+        'El anexo debe llamarse Anexo2.docx o Anexo4.docx',
         'Fallo'
       );
     }
@@ -178,6 +165,7 @@ export class ProgramaFormativoComponent implements OnInit {
   }
 
   /**
+   * Esta función lista los anexos 2 y 4 de los alumnos de un tutor
    * @author Laura <lauramorenoramos97@gmail.com>
    */
   public listarAnexos() {
