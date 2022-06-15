@@ -77,6 +77,42 @@
         </div>
 
         <div class="col-md-6">
+          <label for="fecha_nacimiento"
+            class="form-label fw-bold">Fecha de nacimiento</label>
+          <input type="date"
+            class="{{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'form-control' : 'form-control-plaintext'}}"
+            id="fecha_nacimiento" formControlName="fecha_nacimiento"
+            [attr.readonly]="this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? null : true">
+        </div>
+
+        <div class="col-md-6">
+          <label for="domicilio"
+            class="form-label fw-bold">Domicilio</label>
+          <input type="text"
+            class="{{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'form-control' : 'form-control-plaintext'}}"
+            id="domicilio" formControlName="domicilio"
+            [attr.readonly]="this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? null : true">
+        </div>
+
+        <div class="col-md-6">
+          <label for="telefono"
+            class="form-label fw-bold">Teléfono</label>
+          <input type="text"
+            class="{{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'form-control' : 'form-control-plaintext'}}"
+            id="telefono" formControlName="telefono"
+            [attr.readonly]="this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? null : true">
+        </div>
+
+        <div class="col-md-6">
+          <label for="movil"
+            class="form-label fw-bold">Móvil</label>
+          <input type="text"
+            class="{{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'form-control' : 'form-control-plaintext'}}"
+            id="movil" formControlName="movil"
+            [attr.readonly]="this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? null : true">
+        </div>
+
+        <div class="col-md-6">
           <label for="email"
             class="form-label fw-bold {{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'required' : ''}}">Email</label>
           <input type="text"
@@ -160,6 +196,7 @@
             class="{{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'form-control' : 'form-control-plaintext'}}"
             [attr.readonly]="this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? null : true">
         </div>
+
         <div class="col-md-6">
           <label for="matricula_coche" class="form-label fw-bold">Matrícula coche</label>
           <input type="text" id="matricula_coche" formControlName="matricula_coche"

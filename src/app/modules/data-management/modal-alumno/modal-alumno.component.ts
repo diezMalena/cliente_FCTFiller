@@ -95,6 +95,10 @@ export class ModalAlumnoComponent implements OnInit {
       curriculum: [this.alumno?.curriculum],
       cuenta_bancaria: [this.alumno?.cuenta_bancaria],
       matricula_coche: [this.alumno?.matricula_coche],
+      fecha_nacimiento: [this.alumno?.fecha_nacimiento],
+      domicilio: [this.alumno?.domicilio],
+      telefono: [this.alumno?.telefono],
+      movil: [this.alumno?.movil],
     });
   }
 
@@ -131,7 +135,11 @@ export class ModalAlumnoComponent implements OnInit {
       datos.foto,
       datos.curriculum,
       datos.cuenta_bancaria,
-      datos.matricula_coche
+      datos.matricula_coche,
+      datos.fecha_nacimiento,
+      datos.domicilio,
+      datos.telefono,
+      datos.movil
     );
 
     if (this.datosAlumno.invalid) {

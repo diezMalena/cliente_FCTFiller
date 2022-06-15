@@ -14,7 +14,7 @@ export class CrudAlumnosService {
   @Output() alumnoTrigger: EventEmitter<any> = new EventEmitter();
   public alumnosArray = new BehaviorSubject<Alumno[]>([]);
 
-  private urlBase: string = environment.apiUrl + 'jefatura/';
+  private urlBase: string = environment.apiUrl;
   private urlListarAlumnos: string = 'listarAlumnos/';
   private urlAddAlumno: string = 'addAlumno';
   private urlModificarAlumno: string = 'modificarAlumno';
