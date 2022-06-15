@@ -6,21 +6,13 @@ import { LoginStorageUserService } from 'src/app/services/login.storageUser.serv
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.scss']
+  styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit {
   usuario;
-  constructor(
-    private storageUser: LoginStorageUserService,
-  ) {
-    // let aux = sessionStorage.getItem(LoginComponent.usuario);
-    // let usuario = JSON.parse(aux!)
-    // this.usuario = Usuario.usuarioJSON(usuario)
+  constructor(private storageUser: LoginStorageUserService) {
     this.usuario = storageUser.getUser();
   }
 
-  ngOnInit(): void {
-    console.log(this.usuario)
-  }
-
+  ngOnInit(): void {}
 }

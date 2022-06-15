@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DragDropModule } from  '@angular/cdk/drag-drop';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -16,8 +16,13 @@ import { ManualGestionEmpresasComponent } from './modules/manuales/manual-gestio
 import { ManualAnexo3Component } from './modules/manuales/manual-anexo3/manual-anexo3.component';
 import { ManualAsigAlumComponent } from './modules/manuales/manual-asig-alum/manual-asig-alum.component';
 import { ManualGestionAlumnosComponent } from './modules/manuales/manual-gestion-alumnos/manual-gestion-alumnos.component';
+import { ManualRegistroEmpresasComponent } from './modules/manuales/manual-registro-empresas/manual-registro-empresas.component';
+import { ManualCrudAnexosAlumnosComponent } from './modules/manuales/manual-crud-anexos-alumnos/manual-crud-anexos-alumnos.component';
+import { ManualAnexo2y4Component } from './modules/manuales/manual-anexo2y4/manual-anexo2y4.component';
+
 // import { ModalInfoComponent } from './src/app/modules/data-upload/modal-info/modal-info.component';
 // import { NgxDropzoneModule } from 'ngx-dropzone';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -28,6 +33,9 @@ import { ManualGestionAlumnosComponent } from './modules/manuales/manual-gestion
     ManualAnexo3Component,
     ManualAsigAlumComponent,
     ManualGestionAlumnosComponent,
+    ManualRegistroEmpresasComponent,
+    ManualCrudAnexosAlumnosComponent,
+    ManualAnexo2y4Component,
     // ModalInfoComponent,
   ],
   imports: [
@@ -40,15 +48,11 @@ import { ManualGestionAlumnosComponent } from './modules/manuales/manual-gestion
     DragDropModule,
     NgbModule,
     FormsModule,
-    ReactiveFormsModule,
-    // NgxDropzoneModule
+    ReactiveFormsModule
   ],
-  exports: [
-    NgbModule,
-    MatDialogModule,
-  ],
+  exports: [NgbModule, MatDialogModule],
 
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [DatePipe],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
