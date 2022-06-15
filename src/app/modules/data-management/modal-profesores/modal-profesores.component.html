@@ -86,10 +86,11 @@
 
       <div class="col-md-8 pb-2">
         <label for="dni" class="form-label"><b>DNI:</b></label>
-        <input type="text" class="form-control" id="dni" placeholder="00000000X" formControlName="dni">
+        <input type="text" class="form-control" id="dni" placeholder="00000000X" formControlName="dni" pattern="[0-9]{8}[A-Za-z]{1}">
         <div *ngIf="submitted && formulario['dni'].errors"
           class="text-danger bg-white rounded border border-2 border-danger p-2">
           <div *ngIf="formulario['dni'].errors['required']">El dni no puede estar vacio</div>
+          <div *ngIf="formulario['dni'].errors['pattern']">  Este campo es obligatorio (un DNI válido tiene 8 números y una letra)</div>
         </div>
       </div>
 
@@ -179,10 +180,11 @@
 
       <div class="col-md-8 pb-2">
         <label for="dni" class="form-label"><b>DNI:</b></label>
-        <input type="text" class="form-control" id="dni" placeholder="00000000X" formControlName="dni">
+        <input type="text" class="form-control" id="dni" placeholder="00000000X" formControlName="dni" pattern="[0-9]{8}[A-Za-z]{1}">
         <div *ngIf="submitted && formulario['dni'].errors"
           class="text-danger bg-white rounded border border-2 border-danger p-2">
           <div *ngIf="formulario['dni'].errors['required']">El dni no puede estar vacio</div>
+          <div *ngIf="formulario['dni'].errors['pattern']">  Este campo es obligatorio (un DNI válido tiene 8 números y una letra)</div>
         </div>
       </div>
 
