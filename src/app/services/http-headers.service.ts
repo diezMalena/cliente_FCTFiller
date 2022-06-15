@@ -20,6 +20,8 @@ export class HttpHeadersService {
   public getHeadersWithoutToken() {
     return new HttpHeaders({
       'Content-Type': 'application/json',
+      Accept: '*/*',
+      Connection: 'keep-alive',
     });
   }
 
@@ -39,6 +41,8 @@ export class HttpHeadersService {
     return new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: 'Bearer ' + this.storage.getTokenFromSession(),
+      Accept: '*/*',
+      Connection: 'keep-alive',
     });
   }
 
