@@ -25,15 +25,19 @@ import { FacturaTransporte } from 'src/app/models/facturaTransporte';
 import { FacturaManutencion } from 'src/app/models/facturaManutencion';
 import { ModalTicketManutencion } from '../modal-ticket-manutencion/modal-ticket-manutencion.component';
 import * as FileSaver from 'file-saver';
+import { DialogService } from 'src/app/services/dialog.service';
+import { AnexoService } from 'src/app/services/crud-anexos.service';
 
-GestionGastosService
+GestionGastosService;
 
 @Component({
   selector: 'app-gestion-gastos-profesor',
   templateUrl: './gestion-gastos-profesor.component.html',
-  styleUrls: ['./gestion-gastos-profesor.component.scss']
+  styleUrls: ['./gestion-gastos-profesor.component.scss'],
 })
-export class GestionGastosProfesorComponent implements AfterViewInit, OnDestroy, OnInit {
+export class GestionGastosProfesorComponent
+  implements AfterViewInit, OnDestroy, OnInit
+{
   @ViewChild(DataTableDirective, { static: false })
 
   /***********************************************************************/
@@ -53,8 +57,10 @@ export class GestionGastosProfesorComponent implements AfterViewInit, OnDestroy,
     private toastr: ToastrService,
     private modal: NgbModal,
     private dialog: MatDialog,
-    private router: Router
-  ) { }
+    private router: Router,
+    private dialogService: DialogService,
+    private anexosService: AnexoService
+  ) {}
 
   ngOnInit(): void {
     $.extend(true, $.fn.dataTable.defaults, {
@@ -97,23 +103,20 @@ export class GestionGastosProfesorComponent implements AfterViewInit, OnDestroy,
    * @author David Sánchez Barragán
    */
   cargarGastoProfesor() {
-    this.gestionGastosService
-      .obtenerGastosProfesor()
-      .subscribe({
-        next: (result) => {
-          this.gastoProfesor = result;
-          this.rerender();
-          this.dtTrigger.next(this.gastoProfesor.gastos);
-          $.fn.dataTable.ext.errMode = 'throw';
-          //UI
-          this.curso = this.gastoProfesor?.nombreGrupo;
-        },
-        error: (error) => {
-          this.toastr.error('No se han podido recuperar los datos', 'Error');
-        },
-      });
+    this.gestionGastosService.obtenerGastosProfesor().subscribe({
+      next: (result) => {
+        this.gastoProfesor = result;
+        this.rerender();
+        this.dtTrigger.next(this.gastoProfesor.gastos);
+        $.fn.dataTable.ext.errMode = 'throw';
+        //UI
+        this.curso = this.gastoProfesor?.nombreGrupo;
+      },
+      error: (error) => {
+        this.toastr.error('No se han podido recuperar los datos', 'Error');
+      },
+    });
   }
-
 
   /**
    * Invoca al servicio que realiza la petición al servidor para añadir un alumno
@@ -122,14 +125,14 @@ export class GestionGastosProfesorComponent implements AfterViewInit, OnDestroy,
    */
   registrarAlumno(alumno: Alumno) {
     this.gestionGastosService.nuevoAlumnoGestionGastos(alumno).subscribe({
-      next: (result)=>{
+      next: (result) => {
         this.toastr.success('Alumno insertado correctamente');
         this.cargarGastoProfesor();
       },
       error: (x) => {
         this.toastr.error('No se ha podido insertar el alumno');
-      }
-    })
+      },
+    });
   }
 
   //#endregion
@@ -155,19 +158,80 @@ export class GestionGastosProfesorComponent implements AfterViewInit, OnDestroy,
       .afterClosed()
       .subscribe((res) => {
         if (res.respuesta) {
-          this.gestionGastosService.eliminarAlumnoDeGastos(dni)
-            .subscribe({
-              next: (response: any) => {
-                this.cargarGastoProfesor();
-                this.toastr.success('Alumno borrado correctamente');
-              },
-              error: (error) => {
-                this.toastr.error('Ha ocurrido un error al eliminar al alumno');
-              },
-            });
+          this.gestionGastosService.eliminarAlumnoDeGastos(dni).subscribe({
+            next: (response: any) => {
+              this.cargarGastoProfesor();
+              this.toastr.success('Alumno borrado correctamente');
+            },
+            error: (error) => {
+              this.toastr.error('Ha ocurrido un error al eliminar al alumno');
+            },
+          });
         }
       });
   }
+
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Anexo VII
+
+  public async confirmarTrayectos() {
+    if (this.gastoProfesor?.gastos) {
+      let confirmar = await this.dialogService.confirmacion(
+        'Confirmar trayectos',
+        '¿Está seguro de que desea confirmar los trayectos? Si ha subido el Anexo VII firmado, tendrá que volver a subirlo'
+      );
+      if (confirmar) {
+        this.gestionGastosService
+          .confirmarTrayectos(this.gastoProfesor?.gastos!)
+          .subscribe({
+            next: async (res: any) => {
+              let descargar = await this.dialogService.confirmacion(
+                'Descargar Anexo VII',
+                'Se ha generado la relación de trayectos de su grupo (Anexo VII). ¿Desea descargarlo ahora? Podrá hacerlo más tarde en Anexos'
+              );
+              if (descargar) {
+                let ruta = res.ruta_anexo;
+                this.anexosService
+                  .descargarAnexoRuta(res.ruta_anexo)
+                  .subscribe({
+                    next: (res) => {
+                      let arr = ruta.split('\\', 3);
+                      let nombre = arr.pop();
+                      const blob = new Blob([res], {
+                        type: 'application/octet-stream',
+                      });
+                      FileSaver.saveAs(blob, nombre);
+                      this.toastr.success('Descargando Anexo VII');
+                    },
+                    error: (err) => {
+                      this.toastr.error(
+                        'Error al descargar el Anexo VII',
+                        'Error de descarga'
+                      );
+                    },
+                  });
+              }
+            },
+            error: (err) => {
+              this.toastr.error(
+                'Por favor, vuelva a intentarlo más tarde',
+                'Error al confirmar los trayectos'
+              )
+            },
+          });
+      }
+    } else {
+      this.toastr.error(
+        'Añada algún alumno para confirmar sus trayectos',
+        'Ningún alumno añadido'
+      );
+    }
+  }
+
+  public subirAnexoVII(event: any) {}
 
   //#endregion
   /***********************************************************************/
@@ -187,15 +251,17 @@ export class GestionGastosProfesorComponent implements AfterViewInit, OnDestroy,
     });
 
     this.gestionGastosService.facturaTransporteTrigger.emit([
-      facturaT, ModoEdicion.nuevo, dni_alumno
+      facturaT,
+      ModoEdicion.nuevo,
+      dni_alumno,
     ]);
 
     this.obtenerGastoDesdeModal();
   }
 
   /**
- * Abre el modal para agregar una nueva factura de transporte
- */
+   * Abre el modal para agregar una nueva factura de transporte
+   */
   nuevoTicketManutencion(dni_alumno: string) {
     let facturaM = new FacturaManutencion(0, '', '', new Date(), 0, '');
     this.modal.open(ModalTicketManutencion, {
@@ -205,7 +271,9 @@ export class GestionGastosProfesorComponent implements AfterViewInit, OnDestroy,
     });
 
     this.gestionGastosService.facturaManutencionTrigger.emit([
-      facturaM, ModoEdicion.nuevo, dni_alumno
+      facturaM,
+      ModoEdicion.nuevo,
+      dni_alumno,
     ]);
 
     this.obtenerGastoDesdeModal();
@@ -218,7 +286,9 @@ export class GestionGastosProfesorComponent implements AfterViewInit, OnDestroy,
   public obtenerGastoDesdeModal() {
     this.gestionGastosService.gastoBS.subscribe((gasto) => {
       if (gasto.dni_alumno !== undefined) {
-        let i = this.gastoProfesor?.gastos?.findIndex(x => x.dni_alumno == gasto.dni_alumno);
+        let i = this.gastoProfesor?.gastos?.findIndex(
+          (x) => x.dni_alumno == gasto.dni_alumno
+        );
         if (i! >= 0) {
           this.gastoProfesor?.gastos?.splice(i!, 1, gasto);
         }
@@ -227,15 +297,15 @@ export class GestionGastosProfesorComponent implements AfterViewInit, OnDestroy,
     });
   }
 
-
   /**
    * Abre un modal para ver o editar a un alumno
    * @param dni DNI del alumno del que se consultarán los gastos
    * @author David Sánchez Barragán
    */
   mostrarGastoAlumno(dni: string) {
-    this.router.navigate(['/data-management/gestion-gastos-alumno'],
-      { queryParams: { rol: 'Profesor', dni: dni } });
+    this.router.navigate(['/data-management/gestion-gastos-alumno'], {
+      queryParams: { rol: 'Profesor', dni: dni },
+    });
   }
 
   /**
@@ -250,7 +320,10 @@ export class GestionGastosProfesorComponent implements AfterViewInit, OnDestroy,
     this.gestionGastosService.descargarAnexoVI().subscribe({
       next: (res: any) => {
         const blob = new Blob([res], { type: 'application/octet-stream' });
-        FileSaver.saveAs(blob, `Anexo6.${res.type.toString().includes('openxml')?'xlsx':'zip'}`);
+        FileSaver.saveAs(
+          blob,
+          `Anexo6.${res.type.toString().includes('openxml') ? 'xlsx' : 'zip'}`
+        );
       },
       error: (e) => {
         this.toastr.error('El anexo no ha podido descargarse', 'Error');
@@ -260,5 +333,4 @@ export class GestionGastosProfesorComponent implements AfterViewInit, OnDestroy,
 
   //#endregion
   /***********************************************************************/
-
 }
