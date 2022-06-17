@@ -38,6 +38,7 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
   dni_tutor?: string;
   dniAux?: string;
   codigo: string = '';
+  habilitado: number;
 
   constructor(
     private anexoService: AnexoService,
@@ -49,7 +50,9 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
   ) {
     this.usuario = storageUser.getUser();
     this.dni_tutor = this.usuario?.dni;
+    this.habilitado= 1;
   }
+
 
   ngOnInit(): void {
     delete this.dtOptions['language'];
@@ -195,7 +198,6 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
 
       this.anexoService.descargarAnexo(dni, codigo).subscribe({
         next: (res) => {
-          const current = new Date();
           const blob = new Blob([res], { type: 'application/octet-stream' });
           FileSaver.saveAs(blob, codigo);
           this.toastr.success('Anexo Descargado', 'Descarga');
@@ -229,7 +231,7 @@ export class CrudAnexosComponent implements OnDestroy, OnInit {
         dni = this.dniAux!;
       }
 
-      this.anexoService.descargarTodo(dni).subscribe({
+      this.anexoService.descargarTodo(dni, this.habilitado).subscribe({
         next: (res) => {
           const current = new Date();
           const blob = new Blob([res], { type: 'application/octet-stream' });
