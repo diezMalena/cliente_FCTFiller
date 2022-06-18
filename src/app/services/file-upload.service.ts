@@ -62,4 +62,23 @@ export class FileUploadService {
     }
     return throwError(msg);
   }
+
+  public subirAnexo(datos: any) {
+    const headers = this.headers;
+    const url: string = API_STORAGE_URL + 'subirAnexoEspecifico';
+    return this.http.post(url, JSON.stringify(datos), { headers });
+  }
+
+  /**
+   * Envía una petición al servidor para subir el archivo al servidor
+   *
+   * @param datos Objeto con el DNI del alumno, el curso académico y el archivo en base 64
+   * @returns Observable con la respuesta del servidor
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public subirAnexoV(datos: object) {
+    const headers = this.headers;
+    const url: string = API_STORAGE_URL + 'firmar_anexo_v';
+    return this.http.post(url, JSON.stringify(datos), { headers });
+  }
 }

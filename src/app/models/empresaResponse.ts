@@ -1,4 +1,5 @@
 import { Alumno } from './alumno';
+import { Convenio } from './convenio';
 import { Trabajador } from './trabajador';
 
 export interface EmpresaResponse {
@@ -15,4 +16,6 @@ export interface EmpresaResponse {
   nombre_responsable: string;
   dni_responsable: string;
   alumnos: Alumno[];
+  convenio: Convenio | null;
+  es_privada: boolean;
 }

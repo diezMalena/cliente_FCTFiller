@@ -20,9 +20,10 @@ export class CrudAlumnosService {
   private urlModificarAlumno: string = 'modificarAlumno';
   private urlEliminarAlumno: string = 'eliminarAlumno/';
   private urlListarGrupos: string = 'listarGrupos';
+  private urlDescargarCurriculum: string = 'descargarCurriculum/';
   public headers: HttpHeaders;
 
-  constructor(private http: HttpClient, headersService: HttpHeadersService) {
+  constructor(private http: HttpClient, private headersService: HttpHeadersService) {
     this.headers = headersService.getHeadersWithToken();
   }
 
@@ -44,12 +45,6 @@ export class CrudAlumnosService {
     const headers = this.headers;
 
     return this.http.post(url, JSON.stringify(alumno), { headers });
-  }
-
-  public subirFoto(formData: FormData){
-    let url =  environment.apiUrl + '/api/subirFoto';
-
-    return this.http.post(url, formData)
   }
 
   //#endregion
@@ -155,6 +150,17 @@ export class CrudAlumnosService {
    */
   public setAlumnosArray(alumnosArray: Alumno[]) {
     this.alumnosArray.next(alumnosArray);
+  }
+
+  /**
+   * Solicita el curriculum del alumno indicado.
+   * @param {string} dni DNI del alumno.
+   */
+  descargarCurriculum(dni: string){
+    let url = `${this.urlBase}${this.urlDescargarCurriculum}${dni}`;
+    const HTTPOptions = this.headersService.getHeadersWithTokenArrayBuffer();
+
+    return this.http.get(url, HTTPOptions);
   }
 
   //#endregion

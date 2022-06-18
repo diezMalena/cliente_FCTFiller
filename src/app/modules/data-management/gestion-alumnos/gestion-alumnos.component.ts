@@ -24,8 +24,7 @@ import { ManualGestionAlumnosComponent } from '../../manuales/manual-gestion-alu
   styleUrls: ['./gestion-alumnos.component.scss'],
 })
 export class GestionAlumnosComponent
-  implements AfterViewInit, OnDestroy, OnInit
-{
+  implements AfterViewInit, OnDestroy, OnInit {
   @ViewChild(DataTableDirective, { static: false })
 
   /***********************************************************************/
@@ -43,7 +42,7 @@ export class GestionAlumnosComponent
     private toastr: ToastrService,
     private modal: NgbModal,
     private dialog: MatDialog
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     $.extend(true, $.fn.dataTable.defaults, {
