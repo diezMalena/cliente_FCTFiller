@@ -264,6 +264,13 @@ export class GestionGastosService {
     return this.http.post(url, alumno, { headers });
   }
 
+  /**
+   * Realiza una petición al servidor para generar el Anexo VII con los trayectos de los alumnos
+   *
+   * @param gastos `Gasto[]` datos de los gastos de los alumnos
+   * @returns `Observable` de la `HttpResponse`
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
   public confirmarTrayectos(gastos: Gasto[]) {
     let url = this.urlBase + 'confirmar_trayectos';
     let headers = this.headers;

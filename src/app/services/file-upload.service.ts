@@ -70,7 +70,7 @@ export class FileUploadService {
   }
 
   /**
-   * Envía una petición al servidor para subir el archivo al servidor
+   * Envía una petición al servidor para subir y firmar el Anexo V
    *
    * @param datos Objeto con el DNI del alumno, el curso académico y el archivo en base 64
    * @returns Observable con la respuesta del servidor
@@ -79,6 +79,19 @@ export class FileUploadService {
   public subirAnexoV(datos: object) {
     const headers = this.headers;
     const url: string = API_STORAGE_URL + 'firmar_anexo_v';
+    return this.http.post(url, JSON.stringify(datos), { headers });
+  }
+
+  /**
+   * Envía una petición al servidor para subir y firmar el Anexo VII
+   *
+   * @param datos Objeto con el archivo en base64 y el curso académico
+   * @returns `Observable` de la `HttpResponse`
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public subirAnexoVII(datos: object) {
+    let url: string = API_STORAGE_URL + 'firmar_anexo_vii';
+    let headers = this.headers;
     return this.http.post(url, JSON.stringify(datos), { headers });
   }
 }

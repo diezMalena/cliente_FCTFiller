@@ -27,6 +27,7 @@ import { ModalTicketManutencion } from '../modal-ticket-manutencion/modal-ticket
 import * as FileSaver from 'file-saver';
 import { DialogService } from 'src/app/services/dialog.service';
 import { AnexoService } from 'src/app/services/crud-anexos.service';
+import { FileUploadService } from 'src/app/services/file-upload.service';
 
 GestionGastosService;
 
@@ -59,7 +60,8 @@ export class GestionGastosProfesorComponent
     private dialog: MatDialog,
     private router: Router,
     private dialogService: DialogService,
-    private anexosService: AnexoService
+    private anexosService: AnexoService,
+    private fileUpload: FileUploadService
   ) {}
 
   ngOnInit(): void {
@@ -177,6 +179,12 @@ export class GestionGastosProfesorComponent
   /***********************************************************************/
   //#region Anexo VII
 
+  /**
+   * Envía una petición al servidor para generar el Anexo VII con los trayectos del grupo,
+   * dando la opción al usuario de descargar el documento generado
+   *
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
   public async confirmarTrayectos() {
     if (this.gastoProfesor?.gastos) {
       let confirmar = await this.dialogService.confirmacion(
@@ -184,8 +192,10 @@ export class GestionGastosProfesorComponent
         '¿Está seguro de que desea confirmar los trayectos? Si ha subido el Anexo VII firmado, tendrá que volver a subirlo'
       );
       if (confirmar) {
+        // Obtengo sólo los alumnos que han viajado algún día en transporte privado
+        let gastos: Gasto[] = this.gastoProfesor.gastos.filter(gasto => gasto.dias_transporte_privado != 0);
         this.gestionGastosService
-          .confirmarTrayectos(this.gastoProfesor?.gastos!)
+          .confirmarTrayectos(gastos)
           .subscribe({
             next: async (res: any) => {
               let descargar = await this.dialogService.confirmacion(
@@ -219,7 +229,7 @@ export class GestionGastosProfesorComponent
               this.toastr.error(
                 'Por favor, vuelva a intentarlo más tarde',
                 'Error al confirmar los trayectos'
-              )
+              );
             },
           });
       }
@@ -231,7 +241,45 @@ export class GestionGastosProfesorComponent
     }
   }
 
-  public subirAnexoVII(event: any) {}
+  /**
+   * Sube el Anexo VII al servidor
+   *
+   * @param event
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public subirAnexoVII(event: any): void {
+    if (this.gastoProfesor?.gastos) {
+      let curso = this.gastoProfesor.gastos[0].curso_academico;
+      let files = event.target.files[0];
+      let datos = {
+        file: '',
+        curso_academico: curso,
+      };
+      let upload = this.fileUpload;
+      let toastr = this.toastr;
+      if (files) {
+        let fileReader = new FileReader();
+        fileReader.readAsDataURL(files);
+        fileReader.onload = function () {
+          datos.file = this.result as string;
+          upload.subirAnexoVII(datos).subscribe({
+            next: (res) => {
+              toastr.success('Anexo VII subido correctamente');
+            },
+            error: (err) => {
+              toastr.error('Por favor, vuelva a intentarlo', 'Error al subir el fichero');
+            },
+          });
+        };
+      }
+    } else {
+      this.toastr.error(
+        'Confirme primero los trayectos de sus alumnos',
+        'Ningún alumno añadido'
+      );
+    }
+  }
+
 
   //#endregion
   /***********************************************************************/
