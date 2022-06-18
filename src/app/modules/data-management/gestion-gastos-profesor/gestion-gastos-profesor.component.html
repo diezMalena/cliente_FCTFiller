@@ -9,8 +9,8 @@
 
 <!-- Contenido de las secciones -->
 <div class="card p-3">
-  <div class="row">
-    <div class="col-md-6">
+  <div class="d-flex align-items-center justify-content-between">
+    <div>
       <button class="btn btn-outline-primary dropdown-toggle me-2" type="button" id="dropdownMenuButton1"
         data-bs-toggle="dropdown" aria-expanded="false">
         <svg width="16" height="16" class="bi me-1">
@@ -26,9 +26,31 @@
 
       <button (click)="this.descargarAnexo()" class="btn btn-outline-primary">Generar Anexo VI</button>
     </div>
-    <div class="col-md-6 d-flex align-items-center py-2 justify-content-end">
-      <span>Total gastos grupo: <strong>{{this.gastoProfesor?.gastoTotalGrupo?.toFixed(2)}}</strong> €</span>
+    <div class="btn-group" role="group" aria-label="Confirmación de trayectos y subida de anexo firmado">
+      <button class="btn {{ gastoProfesor?.gastoTotalGrupo == 0 ? 'text-muted' : 'btn-outline-success'}}"
+        ngbTooltip="Confirmar trayectos y generar Anexo VII" placement="left" aria-label="Confirmar trayectos y generar Anexo VII"
+        (click)="confirmarTrayectos()" [disabled]="gastoProfesor?.gastoTotalGrupo == 0 ? true : null">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg"
+          viewBox="0 0 16 16">
+          <path
+            d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z" />
+        </svg>
+      </button>
+      <label for="file" role="button" class="btn {{ gastoProfesor?.gastoTotalGrupo == 0 ? 'text-muted' : 'btn-outline-primary'}}"
+        ngbTooltip="Subir Anexo VII firmado" placement="left" aria-label="Subir Anexo VII firmado">
+        <a>
+          <svg class="bi" width="16" height="16">
+            <use xlink:href="#firma" />
+          </svg>
+        </a>
+      </label>
+      <input hidden role="button" type="file" id="file" accept="application/pdf" (change)="subirAnexoVII($event)"
+        [disabled]="gastoProfesor?.gastoTotalGrupo == 0 ? true : null">
+
     </div>
+  </div>
+  <div class="d-flex pt-3 justify-content-end">
+    <span>Total gastos grupo: <strong>{{this.gastoProfesor?.gastoTotalGrupo?.toFixed(2)}}</strong> €</span>
   </div>
   <!-- Tabla -->
   <div class="row">
