@@ -426,7 +426,19 @@ export class ModalAlumnoComponent implements OnInit {
     } else {
       this.toastr.warning('No existe curriculum para este usuario');
     }
+  }
 
+  public descargarAnexoFEM05(dni: string) {
+    this.crudAlumnosService.descargarAnexoFEM05(dni)
+    .subscribe({
+      next: (res: any) => {
+        const blob = new Blob([res], { type: 'application/octet-stream' });
+        FileSaver.saveAs(blob, `AnexoFEM05_${this.alumno?.nombreCompleto}.docx`);
+      },
+      error: (e) => {
+        this.toastr.error('El anexo no ha podido descargarse', 'Error');
+      },
+    });
   }
 
   //#endregion

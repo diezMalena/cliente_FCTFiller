@@ -4,6 +4,9 @@
       alumno.nombreCompleto }}</h1>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModal()"></button>
   </div>
+  <div class="modal-header">
+    <button type="button" class="btn btn-outline-primary" (click)="descargarAnexoFEM05(this.formulario['dni'].value)">Anexo FEM05</button>
+  </div>
   <!-- Cuerpo del modal -->
   <div class="modal-body">
     <form class="needs-validation" novalidate="" [formGroup]="datosAlumno!" (ngSubmit)="onSubmit()">
@@ -13,14 +16,17 @@
           <h2 class="fs-5">Datos del alumno</h2>
         </div>
         <div class="col-md-12 d-flex justify-content-center align-items-center">
-          <img id="foto" (click)="this.abrirFoto(this.formulario['foto'].value != undefined ? this.formulario['foto'].value : this.fotoPorDefecto)" class="rounded-circle"
+          <img id="foto"
+            (click)="this.abrirFoto(this.formulario['foto'].value != undefined ? this.formulario['foto'].value : this.fotoPorDefecto)"
+            class="rounded-circle"
             [src]="this.formulario['foto'].value != undefined ? this.formulario['foto'].value : this.fotoPorDefecto"
             role="button" alt="" height="100" width="100">
           <label [hidden]="!(this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo)" for="file"
             role="button">
             <a class="btn btn-outline-primary ms-3">Elegir nueva imagen de perfil</a>
           </label>
-          <input (change)="this.cambiarFoto($event, this.formulario)" hidden role="button" type="file" id="file" accept="image/*">
+          <input (change)="this.cambiarFoto($event, this.formulario)" hidden role="button" type="file" id="file"
+            accept="image/*">
         </div>
 
         <div class="col-md-6">
@@ -77,8 +83,7 @@
         </div>
 
         <div class="col-md-6">
-          <label for="fecha_nacimiento"
-            class="form-label fw-bold">Fecha de nacimiento</label>
+          <label for="fecha_nacimiento" class="form-label fw-bold">Fecha de nacimiento</label>
           <input type="date"
             class="{{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'form-control' : 'form-control-plaintext'}}"
             id="fecha_nacimiento" formControlName="fecha_nacimiento"
@@ -86,8 +91,7 @@
         </div>
 
         <div class="col-md-6">
-          <label for="domicilio"
-            class="form-label fw-bold">Domicilio</label>
+          <label for="domicilio" class="form-label fw-bold">Domicilio</label>
           <input type="text"
             class="{{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'form-control' : 'form-control-plaintext'}}"
             id="domicilio" formControlName="domicilio"
@@ -95,8 +99,7 @@
         </div>
 
         <div class="col-md-6">
-          <label for="telefono"
-            class="form-label fw-bold">Teléfono</label>
+          <label for="telefono" class="form-label fw-bold">Teléfono</label>
           <input type="text"
             class="{{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'form-control' : 'form-control-plaintext'}}"
             id="telefono" formControlName="telefono"
@@ -104,8 +107,7 @@
         </div>
 
         <div class="col-md-6">
-          <label for="movil"
-            class="form-label fw-bold">Móvil</label>
+          <label for="movil" class="form-label fw-bold">Móvil</label>
           <input type="text"
             class="{{this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo ? 'form-control' : 'form-control-plaintext'}}"
             id="movil" formControlName="movil"
@@ -176,13 +178,13 @@
           <label for="curriculum" class="form-label fw-bold">Curriculum</label>
           <input
             *ngIf="this.modo == this.modosEdicion.editar || this.modo == this.modosEdicion.nuevo;else templateCurriculum"
-            class="form-control" (change)="this.cambiarCurriculum($event, this.formulario)" accept="application/pdf" type="file" id="curriculum">
+            class="form-control" (change)="this.cambiarCurriculum($event, this.formulario)" accept="application/pdf"
+            type="file" id="curriculum">
 
           <ng-template #templateCurriculum>
             <!--Esto es un label porque un button cierra el formulario :c-->
-            <label
-            (click)="this.descargarCV(this.formulario['dni'].value)"
-            class="form-control btn btn-outline-primary">
+            <label (click)="this.descargarCV(this.formulario['dni'].value)"
+              class="form-control btn btn-outline-primary">
               <svg class="bi me-2" width="16" height="16">
                 <use xlink:href="#descarga" />
               </svg>Descargar</label>
