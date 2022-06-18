@@ -154,7 +154,7 @@ export class GestionAlumnosComponent
    */
   mostrarAlumno(alumno: Alumno, modoEdicion: ModoEdicion) {
     this.modal.open(ModalAlumnoComponent, {
-      size: 'md',
+      size: 'lg',
       backdrop: 'static',
       keyboard: false,
     });

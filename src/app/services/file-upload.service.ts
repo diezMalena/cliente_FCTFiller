@@ -32,7 +32,7 @@ export class FileUploadService {
    * @author Pablo
    */
   add(storage: FileUploadModel[]): Observable<any> {
-    const API_CSVUPLOAD_URL = API_STORAGE_URL + 'jefatura/recibirCSV';
+    const API_CSVUPLOAD_URL = API_STORAGE_URL + 'recibirCSV';
     const headers = this.headers;
     let data: any = {
       ficheros: storage,
