@@ -129,14 +129,19 @@ export class AsociarEmpAluComponent implements OnInit {
   getEmpresas(): void {
     this.alumnosEmpresas
       .solicitarEmpresas(this.dniTutor!)
-      .subscribe((resultado) => {
-        this.empresas = resultado;
-
+      .subscribe({
+        next:(resultado) => {
+          this.empresas=resultado;
         this.empresas.forEach((element) => {
           if (element.alumnos?.length! > 0) {
             this.hayAlumnosEnEmpresas = true;
           }
         });
+      },
+      error: (e) => {
+        console.log(e);
+        this.toastr.error('error', 'La información no se ha podido recuperar');
+      }
       });
   }
 
@@ -200,12 +205,22 @@ export class AsociarEmpAluComponent implements OnInit {
           alumnos_solos: this.alumnos,
           dni_tutor: this.dniTutor,
         };
-        this.alumnosEmpresas.asignarAlumnos(datos).subscribe();
-        this.toastr.success('Cambios realizados con exito.', 'Guardado');
-        this.getNombreCiclo();
-        this.getAlumnos();
-        this.getEmpresas();
-        this.getAnexos();
+        this.alumnosEmpresas.asignarAlumnos(datos).subscribe({
+          next:(response) =>{
+            this.toastr.success('Cambios realizados con exito.', 'Guardado');
+            this.getNombreCiclo();
+            this.getAlumnos();
+            this.getEmpresas();
+            this.getAnexos();
+          },
+          error:(e) =>{
+            this.toastr.error(e.error.message,'Fallo!');
+            this.getNombreCiclo();
+            this.getAlumnos();
+            this.getEmpresas();
+            this.getAnexos();
+          }
+        });
       } else if (!bandera) {
         this.toastr.error(
           'No pueden haber campos vacíos, o las fechas son incorrectas',
