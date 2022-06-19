@@ -268,6 +268,12 @@ export class GestionGastosAlumnoComponent
     }
   }
 
+  /**
+   * Sube el Anexo V al servidor
+   *
+   * @param event
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
   public subirAnexoV(event: any): void {
     let files = event.target.files[0];
     let datos = {

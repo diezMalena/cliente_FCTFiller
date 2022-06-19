@@ -14,13 +14,14 @@ export class CrudAlumnosService {
   @Output() alumnoTrigger: EventEmitter<any> = new EventEmitter();
   public alumnosArray = new BehaviorSubject<Alumno[]>([]);
 
-  private urlBase: string = environment.apiUrl + 'jefatura/';
+  private urlBase: string = environment.apiUrl;
   private urlListarAlumnos: string = 'listarAlumnos/';
   private urlAddAlumno: string = 'addAlumno';
   private urlModificarAlumno: string = 'modificarAlumno';
   private urlEliminarAlumno: string = 'eliminarAlumno/';
   private urlListarGrupos: string = 'listarGrupos';
   private urlDescargarCurriculum: string = 'descargarCurriculum/';
+  private urlDescargarAnexoFEM05: string = 'generarAnexoFEM05/';
   public headers: HttpHeaders;
 
   constructor(private http: HttpClient, private headersService: HttpHeadersService) {
@@ -160,6 +161,12 @@ export class CrudAlumnosService {
     let url = `${this.urlBase}${this.urlDescargarCurriculum}${dni}`;
     const HTTPOptions = this.headersService.getHeadersWithTokenArrayBuffer();
 
+    return this.http.get(url, HTTPOptions);
+  }
+
+  descargarAnexoFEM05(dni: string){
+    let url = `${this.urlBase}${this.urlDescargarAnexoFEM05}${dni}`;
+    const HTTPOptions = this.headersService.getHeadersWithTokenArrayBuffer();
     return this.http.get(url, HTTPOptions);
   }
 

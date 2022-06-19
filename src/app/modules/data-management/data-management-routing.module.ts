@@ -55,7 +55,7 @@ const routes: Routes = [
     component: GestionAlumnosComponent,
     canActivate: [ProfesoresGuard],
     data: {
-      roles: [1, 2],
+      roles: [1, 2, 3],
     },
   },
   {
