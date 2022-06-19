@@ -60,25 +60,11 @@ export class SeguimientoServiceService {
 
     return this.http.put(url, datos, { headers });
   }
-
-
-  public getAlumnosAsociados(dni: string){
-    let url: string = this.ruta + 'getAlumnosAsociados';
-    const headers = this.headers;
-
-    let datos = {
-      dni_tutor: dni,
-    };
-
-    return this.http.post(url, datos, { headers });
-  }
-
   //#endregion
   /***********************************************************************/
 
   /***********************************************************************/
   //#region Gestión del tutor/responsable de empresa
-
   /**
    * Solicita al servidor los datos del tutor de empresa de las FCT
    * @param dni DNI del alumno
@@ -110,7 +96,11 @@ export class SeguimientoServiceService {
       })
     );
   }
+  //#endregion
+  /***********************************************************************/
 
+  /***********************************************************************/
+  //#region Gestión del tutor/responsable del centro estudios
   /**
    * Establece un trabajador de la empresa como tutor seleccionado
    * @param mail_tutor_nuevo DNI del tutor a establecer
@@ -130,8 +120,23 @@ export class SeguimientoServiceService {
     return this.http.put(url, dato, { headers });
   }
 
+  /**
+   * Función que recoge los alumnos de los que un profesor es tutor.
+   * @author Malena
+   * @returns petición al servidor
+   */
+  public getAlumnosAsociados(dni: string) {
+    let url: string = this.ruta + 'getAlumnosAsociados';
+    const headers = this.headers;
+    let datos = { dni_tutor: dni, };
+    return this.http.post(url, datos, { headers });
+  }
+
   //#endregion
   /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Gestión del alumno
 
   /**
    * Solicita al servidor el nombre y apellidos del alumno y el nombre de la empresa
@@ -185,9 +190,10 @@ export class SeguimientoServiceService {
   }
 
   /**
-   *
+   * Función que solicita al servidor las jornadas ordenadas en semanas
    * @param dni
-   * @returns
+   * @returns petición al servidor
+   * @author Malena
    */
   public devolverSemanas(dni: string) {
     let url: string = this.ruta + 'devolverSemanas';
@@ -222,8 +228,14 @@ export class SeguimientoServiceService {
 
   /***********************************************************************/
   //#region Descarga del Anexo III
-
-  public hayDocumento(id_quinto_dia: number, id_fct: number){
+  /**
+   * Función que comprueba en el servidor si existe un documento ya de una semana determinada
+   * @param id_quinto_dia
+   * @param id_fct
+   * @returns petición al servidor
+   * @author Malena
+   */
+  public hayDocumento(id_quinto_dia: number, id_fct: number) {
     let dato = { id_quinto_dia: id_quinto_dia, id_fct: id_fct };
     const url: string = this.ruta + 'hayDocumento';
     const headers = this.headers;
@@ -238,7 +250,7 @@ export class SeguimientoServiceService {
    * @author Malena
    */
   public descargarPDF(ruta_hoja: string) {
-    let dato = { ruta_hoja: ruta_hoja};
+    let dato = { ruta_hoja: ruta_hoja };
     const url: string = this.ruta + 'descargarAnexo3';
     const HTTPOptions = this.headersService.getHeadersWithTokenArrayBuffer();
     return this.http.post(url, dato, HTTPOptions);
@@ -252,9 +264,11 @@ export class SeguimientoServiceService {
   //#region Subir el documento pdf del Anexo III
 
   /**
-   *
+   * Función que envía al servidor los datos necesarios para poder subir el documento
+   * en formato PDF
    * @param storage
-   * @returns
+   * @returns petición al servidor
+   * @author Malena
    */
   subirAnexo3(formData: FormData) {
     let dato = {

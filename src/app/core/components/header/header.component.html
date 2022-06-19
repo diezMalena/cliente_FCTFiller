@@ -38,13 +38,8 @@
               <h6 class="dropdown-header">Notificaciones:</h6>
             </li>
 
-            <li *ngFor="let notificacion of array3Notificaciones"><a class="dropdown-item" href="#">{{ notificacion.mensaje }}</a>
+            <li *ngFor="let notificacion of arrayNotificaciones"><a class="dropdown-item" href="#">{{ notificacion.mensaje }}</a>
               <hr class="dropdown-divider">
-            </li>
-
-            <li>
-              <a class="dropdown-item-text small text-center" routerLink="data-management/notificaciones"
-                routerLinkActive="active">Ver todas</a>
             </li>
           </ul>
         </div>
