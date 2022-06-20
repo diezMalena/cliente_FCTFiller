@@ -128,7 +128,7 @@ export class ListarRespuestasComponent implements OnInit {
    * @author Pablo G. Galan <pablosiege@gmail.com>
    */
   public obtenerDatosGraficos() {
-    this.cuestionarioRespondidoService.obtenerMediasCuestionariosRespondidos(this.cursoAcademicoSeleccionado , this.destinatarioSeleccionado, this.usuario?.cod_centro ).subscribe((response) => {
+    this.cuestionarioRespondidoService.obtenerMediasCuestionariosRespondidos(this.cursoAcademicoSeleccionado , this.destinatarioSeleccionado, this.usuario?.cod_centro_estudios ).subscribe((response) => {
       this.mediaCuestionarios = response;
     });
   }
@@ -139,7 +139,7 @@ export class ListarRespuestasComponent implements OnInit {
    * @author Pablo G. Galan <pablosiege@gmail.com>
    */
   public listarCuestionariosRespondidos() {
-    this.cuestionarioRespondidoService.obtenerCuestionariosRespondidos(this.cursoAcademicoSeleccionado , this.destinatarioSeleccionado, this.usuario?.cod_centro ).subscribe((response) => {
+    this.cuestionarioRespondidoService.obtenerCuestionariosRespondidos(this.cursoAcademicoSeleccionado , this.destinatarioSeleccionado, this.usuario?.cod_centro_estudios ).subscribe((response) => {
       this.cuestionarios = response;
       this.rerender();
       this.dtTrigger.next(this.cuestionarios);

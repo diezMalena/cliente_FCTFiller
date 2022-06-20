@@ -30,7 +30,11 @@ const routes: Routes = [
   },
   {
     path:'cuestionarios',
-    loadChildren:() => import('./modules/cuestionarios/cuestionarios.module').then((m) => m.CuestionariosModule),
+    loadChildren:() =>
+      import('./modules/cuestionarios/cuestionarios.module').then(
+        (m) => m.CuestionariosModule
+      ),
+    canActivateChild: [LoggedGuard],
   },
   {
     path: '**',
