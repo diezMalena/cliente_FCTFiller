@@ -24,8 +24,11 @@
               <svg width="20" height="20" class="bi me-1">
                 <use xlink:href="#campana" />
               </svg>
-              <span class="badge rounded-pill bg-danger">
+              <span class="badge rounded-pill bg-danger" *ngIf="numNotificaciones > 99">
                 99+
+              </span>
+              <span class="badge rounded-pill bg-danger" *ngIf="numNotificaciones <= 99">
+                {{ numNotificaciones }}
               </span>
             </div>
           </a>
@@ -34,20 +37,9 @@
             <li>
               <h6 class="dropdown-header">Notificaciones:</h6>
             </li>
-            <li><a class="dropdown-item" href="#">Notificación 1</a></li>
-            <li>
+
+            <li *ngFor="let notificacion of arrayNotificaciones"><a class="dropdown-item" href="#">{{ notificacion.mensaje }}</a>
               <hr class="dropdown-divider">
-            </li>
-            <li><a class="dropdown-item" href="#">Notificación 2</a></li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li><a class="dropdown-item" href="#">Notificación 3</a></li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li>
-              <a class="dropdown-item-text small text-center" href="">Ver todas</a>
             </li>
           </ul>
         </div>

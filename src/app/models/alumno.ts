@@ -35,8 +35,11 @@ export class Alumno {
       obj['foto'],
       obj['curriculum'],
       obj['cuenta_bancaria'],
-      obj['matricula_coche']
-
+      obj['matricula_coche'],
+      obj['fecha_nacimiento'],
+      obj['domicilio'],
+      obj['telefono'],
+      obj['movil']
     );
   }
 
@@ -66,7 +69,11 @@ export class Alumno {
     public foto?: string,
     public curriculum?: string,
     public cuenta_bancaria?: string,
-    public matricula_coche?: string
+    public matricula_coche?: string,
+    public fecha_nacimiento?: Date,
+    public domicilio?: string,
+    public telefono?: string,
+    public movil?: string
   ) {}
 
   /**
