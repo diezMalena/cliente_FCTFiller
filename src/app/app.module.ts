@@ -19,6 +19,7 @@ import { ManualGestionAlumnosComponent } from './modules/manuales/manual-gestion
 import { ManualRegistroEmpresasComponent } from './modules/manuales/manual-registro-empresas/manual-registro-empresas.component';
 import { ManualCrudAnexosAlumnosComponent } from './modules/manuales/manual-crud-anexos-alumnos/manual-crud-anexos-alumnos.component';
 import { ManualAnexo2y4Component } from './modules/manuales/manual-anexo2y4/manual-anexo2y4.component';
+
 // import { ModalInfoComponent } from './src/app/modules/data-upload/modal-info/modal-info.component';
 // import { NgxDropzoneModule } from 'ngx-dropzone';
 import { DatePipe } from '@angular/common';

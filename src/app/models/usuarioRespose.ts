@@ -11,4 +11,6 @@ export interface usuarioResponse {
   cod_centro?: string;
   //DJC Cambio 28-05-2022: añadido objeto de centro de estudios
   centro?: CentroEstudios
+  cod_grupo?: string;
+  curso_academico?: string;
 }

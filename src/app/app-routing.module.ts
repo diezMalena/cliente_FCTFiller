@@ -29,6 +29,10 @@ const routes: Routes = [
     canActivateChild: [LoggedGuard],
   },
   {
+    path:'cuestionarios',
+    loadChildren:() => import('./modules/cuestionarios/cuestionarios.module').then((m) => m.CuestionariosModule),
+  },
+  {
     path: '**',
     redirectTo: '',
   },

@@ -25,4 +25,8 @@ export interface alumnoResponse {
   curriculum?: string;
   cuenta_bancaria?: string;
   matricula_coche?: string;
+  fecha_nacimiento?: Date;
+  domicilio?: string;
+  telefono?: string;
+  movil?: string;
 }
