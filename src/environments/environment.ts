@@ -31,6 +31,9 @@ export const environment = {
   obtenerCursosAcademicosURL: "obtenerCursosAcademicos",
   listarCuestionariosRespondidosURL: "listarCuestionariosRespondidos",
   descargarCuestionarioURL: "descargarCuestionario",
+  descargarCuestionarioFCTURL: "descargarCuestionarioFCT",
+  obtenerMediasCuestionariosRespondidosFCTURL: "obtenerMediasCuestionariosRespondidosFCT",
+  listarCuestionariosRespondidosFCTURL: "listarCuestionariosRespondidosFCT"
 };
 
 

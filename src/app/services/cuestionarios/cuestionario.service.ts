@@ -17,6 +17,7 @@ const eliminarCuestionarioURL = API_STORAGE_URL+environment.eliminarCuestionario
 const activarCuestionarioURL = API_STORAGE_URL+environment.activarCuestionarioURL;
 const desactivarCuestionarioURL = API_STORAGE_URL+environment.desactivarCuestionarioURL;
 const descargarCuestionarioURL = API_STORAGE_URL+environment.descargarCuestionarioURL;
+const descargarCuestionarioFCTURL = environment.apiUrl+environment.descargarCuestionarioFCTURL;
 
 @Injectable({
   providedIn: 'root'
@@ -192,9 +193,15 @@ export class CuestionarioService {
    * @return devuelve la llamada a descargarCuestionariosURL.
    * @author Pablo G. Galan <pablosiege@gmail.com>
    */
-  descargarCuestionario(id_cuestionario: number): any {
-    const headers = this.headers;
-    return this.http.get(`${descargarCuestionarioURL}/${id_cuestionario}`,{ headers, responseType: 'blob'});
+  descargarCuestionario(id_cuestionario: number, tipo_usuario: string | undefined ): any {
+    if (tipo_usuario == "tutor"){
+      const headers = this.headers;
+    return this.http.get(`${descargarCuestionarioFCTURL}/${id_cuestionario}`,{ headers, responseType: 'blob'});
+    }else{
+      const headers = this.headers;
+      return this.http.get(`${descargarCuestionarioURL}/${id_cuestionario}`,{ headers, responseType: 'blob'});
+    }
+
   }
 
 
