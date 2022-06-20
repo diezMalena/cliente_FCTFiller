@@ -18,9 +18,7 @@
             </svg> Empresas
           </a>
         </li>
-
-
-        <li *ngIf="usuario.isDirector() || usuario.isJefatura()">
+        <li *ngIf="usuario.isDirector() || usuario.isJefatura() || usuario.isTutor()">
           <a class="nav-link link-white" routerLinkActive="active" routerLink="data-management/gestion-alumnos"
             aria-current="page">
             <svg width="20" height="20" class="bi me-2">

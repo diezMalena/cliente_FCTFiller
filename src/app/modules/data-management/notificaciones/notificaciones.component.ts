@@ -31,7 +31,7 @@ export class NotificacionesComponent implements OnInit {
 
 
   public getNotificaciones(){
-    this.notificacionesService.getNotificaciones(this.dni!, this.email!).subscribe({
+    this.notificacionesService.getNotificacionesHeader(this.dni!, this.email!).subscribe({
       next: (response:any) => {
         console.log(response);
         this.arrayNotificaciones = response;

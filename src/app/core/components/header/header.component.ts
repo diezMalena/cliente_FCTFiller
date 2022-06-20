@@ -13,7 +13,7 @@ export class HeaderComponent implements OnInit {
   public email?:string;
   public dni?:string;
   public numNotificaciones:number = 0;
-  public array3Notificaciones: any = [];
+  public arrayNotificaciones: any = [];
 
   constructor
     (
@@ -28,7 +28,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.generarNotificaciones();
-    this.get3Notificaciones();
+    this.getNotificaciones();
     this.countNotificaciones();
   }
 
@@ -44,14 +44,12 @@ export class HeaderComponent implements OnInit {
     })
   }
 
-  public get3Notificaciones(){
+  public getNotificaciones(){
     this.notificacionesService.getNotificacionesHeader(this.dni!, this.email!).subscribe({
       next:(response:any)=>{
-        this.array3Notificaciones = response;
+        this.arrayNotificaciones = response;
       },
-      error:(e)=>{
-
-      }
+      error:(e)=>{}
     })
   }
 
@@ -60,9 +58,7 @@ export class HeaderComponent implements OnInit {
       next:(response:any)=>{
         this.numNotificaciones = response;
       },
-      error:(e)=>{
-
-      }
+      error:(e)=>{}
     })
   }
 }
