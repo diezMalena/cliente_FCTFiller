@@ -157,6 +157,7 @@ export class ProgramaFormativoComponent implements OnInit {
           const blob = new Blob([res], { type: 'application/octet-stream' });
           FileSaver.saveAs(blob, 'backup_' + current.getTime() + '.zip');
           this.toastr.success(this.tipoAnexo + ' Descargado', 'Hecho!');
+          this.listarAnexos();
         },
         error: (e) => {
           console.log(e);
