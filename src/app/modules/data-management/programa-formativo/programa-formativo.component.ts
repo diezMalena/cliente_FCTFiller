@@ -69,6 +69,10 @@ export class ProgramaFormativoComponent implements OnInit {
     this.dtTrigger.unsubscribe();
   }
 
+  /**
+   * Recarga la tabla eliminando la instancia de la DataTable
+   * @author David Sánchez Barragán
+   */
   rerender(): void {
     this.dtElement!.dtInstance.then((dtInstance: DataTables.Api) => {
       // Destroy the table first
@@ -153,6 +157,7 @@ export class ProgramaFormativoComponent implements OnInit {
           const blob = new Blob([res], { type: 'application/octet-stream' });
           FileSaver.saveAs(blob, 'backup_' + current.getTime() + '.zip');
           this.toastr.success(this.tipoAnexo + ' Descargado', 'Hecho!');
+          this.listarAnexos();
         },
         error: (e) => {
           console.log(e);

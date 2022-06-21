@@ -71,6 +71,10 @@ export class AnexosAlumnosComponent implements OnDestroy, OnInit {
     this.dtTrigger.unsubscribe();
   }
 
+  /**
+   * Recarga la tabla eliminando la instancia de la DataTable
+   * @author David Sánchez Barragán
+   */
   rerender(): void {
     this.dtElement!.dtInstance.then((dtInstance: DataTables.Api) => {
       // Destroy the table first
