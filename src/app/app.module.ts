@@ -16,6 +16,8 @@ import { ManualGestionEmpresasComponent } from './modules/manuales/manual-gestio
 import { ManualAnexo3Component } from './modules/manuales/manual-anexo3/manual-anexo3.component';
 import { ManualAsigAlumComponent } from './modules/manuales/manual-asig-alum/manual-asig-alum.component';
 import { ManualGestionAlumnosComponent } from './modules/manuales/manual-gestion-alumnos/manual-gestion-alumnos.component';
+import { ManualGestionGastosProfesorComponent } from './modules/manuales/manual-gestion-gastos-profesor/manual-gestion-gastos-profesor.component';
+import { ManualGestionGastosAlumnoComponent } from './modules/manuales/manual-gestion-gastos-alumno/manual-gestion-gastos-alumno.component';
 import { ManualRegistroEmpresasComponent } from './modules/manuales/manual-registro-empresas/manual-registro-empresas.component';
 import { ManualCrudAnexosAlumnosComponent } from './modules/manuales/manual-crud-anexos-alumnos/manual-crud-anexos-alumnos.component';
 import { ManualAnexo2y4Component } from './modules/manuales/manual-anexo2y4/manual-anexo2y4.component';
@@ -33,6 +35,8 @@ import { DatePipe } from '@angular/common';
     ManualAnexo3Component,
     ManualAsigAlumComponent,
     ManualGestionAlumnosComponent,
+    ManualGestionGastosProfesorComponent,
+    ManualGestionGastosAlumnoComponent,
     ManualRegistroEmpresasComponent,
     ManualCrudAnexosAlumnosComponent,
     ManualAnexo2y4Component,
