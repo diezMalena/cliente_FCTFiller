@@ -68,7 +68,7 @@ export class SeguimientoTutoresComponent implements OnInit {
     this.arrayAlumnos = this.getAlumnosAsociados();
     //Cogemos el alumno que el tutor ha elegido y lo recarga:
     let alumno_elegido = sessionStorage.getItem(SeguimientoTutoresComponent.alumno_elegido);
-    if(alumno_elegido != null){
+    if (alumno_elegido != null) {
       this.dni_alumno = alumno_elegido;
       this.recargarDatos();
     }
@@ -77,12 +77,6 @@ export class SeguimientoTutoresComponent implements OnInit {
   //#endregion
   /***********************************************************************/
 
-  /***********************************************************************/
-  //#region Gestión de datatables
-
-
-  //#endregion
-  /***********************************************************************/
 
   /***********************************************************************/
   //#region Gestión de las cabeceras
@@ -121,7 +115,7 @@ export class SeguimientoTutoresComponent implements OnInit {
    * Relanza todas las funciones que implican al alumno que el tutor ha elegido
    * @author Malena
    */
-  public recargarDatos(){
+  public recargarDatos() {
     this.arrayJornadas = this.rellenarArray();
     this.recogerTutorEmpresa();
     this.gestionDepartamento();
@@ -273,7 +267,11 @@ export class SeguimientoTutoresComponent implements OnInit {
     return this.arrayJornadas;
   }
 
-
+  /**
+   * Función que agrupa las jornadas del alumnno por semanas en el servidor,
+   * y devuelve al array montado para mostrarlo en el cliente.
+   * @author Malena
+   */
   public devolverSemanas() {
     this.seguimientoService.devolverSemanas(this.dni_alumno!).subscribe({
       next: (response: any) => {
@@ -311,7 +309,11 @@ export class SeguimientoTutoresComponent implements OnInit {
   /***********************************************************************/
   //#region Descarga de Anexo(s) III
 
-
+  /**
+   * Función que desccarga el PDF de una semana en concreto.
+   * @param semana
+   * @author Malena
+   */
   public async descargarPDF(semana: any) {
     this.seguimientoService.hayDocumento(semana.id_quinto_dia, semana.id_fct).subscribe({
       next: (response: any) => {
@@ -340,9 +342,10 @@ export class SeguimientoTutoresComponent implements OnInit {
   }
 
 
-
   /**
-   * Método para que la semana de arriba se  muestre nada más entrar y no salga comprimida
+   * Método para que la semana de arriba se  muestre abierta nada más entrar y no salga comprimida
+   * @author Malena
+   * @returns clase
    */
   public mostrarSemana(i: number) {
     var clase = "accordion-collapse collapse";
@@ -352,7 +355,11 @@ export class SeguimientoTutoresComponent implements OnInit {
     return clase;
   }
 
-
+  /**
+   * Función que abre el modal determinado para subir el Anexo III de una determinada semana.
+   * @param semana
+   * @author Malena
+   */
   public abrirModalSubirArchivo(semana: any) {
     let id_fct = semana.id_fct;
     let id_quinto_dia = semana.id_quinto_dia;
@@ -364,12 +371,22 @@ export class SeguimientoTutoresComponent implements OnInit {
         'Error al subir el documento'
       );
     } else {
-      sessionStorage.setItem(SeguimientoTutoresComponent.alumno_elegido,this.dni_alumno!);
+      sessionStorage.setItem(SeguimientoTutoresComponent.alumno_elegido, this.dni_alumno!);
       this.modal.open(ModalSubirficheroComponent, { size: 's' });
     }
   }
+  //#endregion
+  /***********************************************************************/
 
+  /***********************************************************************/
+  //#region Gestión de firmas del Anexo(s) III
 
+  /**
+   * Función que determina cuándo tiene que mostrarse el tick de firmado_alumno
+   * @param semana
+   * @returns mostrar, boolean para definir si se muestra o no el tick de firmado_alumno
+   * @author Malena
+   */
   public mostrarCheckAlumno(semana: any) {
     var mostrar = false;
     if (semana != undefined && semana.firmado_alumno == 1) {
@@ -378,6 +395,12 @@ export class SeguimientoTutoresComponent implements OnInit {
     return mostrar;
   }
 
+  /**
+   * Función que determina cuándo tiene que mostrarse el tick de firmado_tutor_estudios
+   * @param semana
+   * @returns mostrar, boolean para definir si se muestra o no el tick de firmado_tutor_estudios
+   * @author Malena
+   */
   public mostrarCheckTutorEstudios(semana: any) {
     var mostrar = false;
     if (semana != undefined && semana.firmado_tutor_estudios == 1) {
@@ -386,6 +409,12 @@ export class SeguimientoTutoresComponent implements OnInit {
     return mostrar;
   }
 
+  /**
+   * Función que determina cuándo tiene que mostrarse el tick de firmado_tutor_empresa
+   * @param semana
+   * @returns mostrar, boolean para definir si se muestra o no el tick de firmado_tutor_empresa
+   * @author Malena
+   */
   public mostrarCheckTutorEmpresa(semana: any) {
     var mostrar = false;
     if (semana != undefined && semana.firmado_tutor_empresa == 1) {
@@ -393,8 +422,6 @@ export class SeguimientoTutoresComponent implements OnInit {
     }
     return mostrar;
   }
-
-
 
   //#endregion
   /***********************************************************************/

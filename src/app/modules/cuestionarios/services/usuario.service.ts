@@ -44,7 +44,7 @@ export class UsuarioCuestionariosGuardService implements CanActivate {
    * @author Pablo G. Galan <pablosiege@gmail.com>
    */
   async getData() {
-    let data = await this.cuestionarioRespondido.getDataSynchronous(this.usuario?.dni)
+    let data = await this.cuestionarioRespondido.getDataSynchronous(this.usuario?.dni, this.usuario?.tipo)
     if(data.length>0){
       return true;
     } return false;

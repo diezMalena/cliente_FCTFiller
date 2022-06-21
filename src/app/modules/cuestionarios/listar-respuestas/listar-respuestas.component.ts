@@ -128,9 +128,16 @@ export class ListarRespuestasComponent implements OnInit {
    * @author Pablo G. Galan <pablosiege@gmail.com>
    */
   public obtenerDatosGraficos() {
-    this.cuestionarioRespondidoService.obtenerMediasCuestionariosRespondidos(this.cursoAcademicoSeleccionado , this.destinatarioSeleccionado, this.usuario?.cod_centro ).subscribe((response) => {
-      this.mediaCuestionarios = response;
-    });
+    if(this.usuario?.isJefatura()){
+      this.cuestionarioRespondidoService.obtenerMediasCuestionariosRespondidos(this.cursoAcademicoSeleccionado , this.destinatarioSeleccionado, this.usuario?.cod_centro_estudios, "jefatura").subscribe((response) => {
+        this.mediaCuestionarios = response;
+      });
+    }else{
+      this.cuestionarioRespondidoService.obtenerMediasCuestionariosRespondidos(this.cursoAcademicoSeleccionado , this.destinatarioSeleccionado, this.usuario?.cod_centro_estudios, "tutor").subscribe((response) => {
+        this.mediaCuestionarios = response;
+      });
+    }
+
   }
 
   /**
@@ -139,15 +146,29 @@ export class ListarRespuestasComponent implements OnInit {
    * @author Pablo G. Galan <pablosiege@gmail.com>
    */
   public listarCuestionariosRespondidos() {
-    this.cuestionarioRespondidoService.obtenerCuestionariosRespondidos(this.cursoAcademicoSeleccionado , this.destinatarioSeleccionado, this.usuario?.cod_centro ).subscribe((response) => {
-      this.cuestionarios = response;
-      this.rerender();
-      this.dtTrigger.next(this.cuestionarios);
-      $.fn.dataTable.ext.errMode = 'throw';
-    });
-    $.extend(true, $.fn.dataTable.defaults, {
-      "language": { "url": '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json' }
-    })
+    console.log(this.usuario?.isJefatura())
+    if (this.usuario?.isJefatura()){
+      this.cuestionarioRespondidoService.obtenerCuestionariosRespondidos(this.cursoAcademicoSeleccionado , this.destinatarioSeleccionado, this.usuario?.cod_centro_estudios, "jefatura" ).subscribe((response) => {
+        this.cuestionarios = response;
+        this.rerender();
+        this.dtTrigger.next(this.cuestionarios);
+        $.fn.dataTable.ext.errMode = 'throw';
+      });
+      $.extend(true, $.fn.dataTable.defaults, {
+        "language": { "url": '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json' }
+      })
+    }else{
+      this.cuestionarioRespondidoService.obtenerCuestionariosRespondidos(this.cursoAcademicoSeleccionado , this.destinatarioSeleccionado, this.usuario?.cod_centro_estudios, "tutor" ).subscribe((response) => {
+        this.cuestionarios = response;
+        this.rerender();
+        this.dtTrigger.next(this.cuestionarios);
+        $.fn.dataTable.ext.errMode = 'throw';
+      });
+      $.extend(true, $.fn.dataTable.defaults, {
+        "language": { "url": '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json' }
+      })
+    }
+
   }
 
   /**
@@ -157,14 +178,26 @@ export class ListarRespuestasComponent implements OnInit {
    */
   public descargarCuestionarioRespondido(id:number) {
 
-    this.cuestionarioService.descargarCuestionario(id).subscribe((blob: any) => {
-      const a = document.createElement('a')
-        const objectUrl = URL.createObjectURL(blob)
-        a.href = objectUrl
-        a.download = id+'_cuestionario.pdf';
-        a.click();
-        URL.revokeObjectURL(objectUrl);
-    }), (error: any) => console.log('Error downloading the file');
+    if (this.usuario?.isJefatura()){
+      this.cuestionarioService.descargarCuestionario(id, "jefatura").subscribe((blob: any) => {
+        const a = document.createElement('a')
+          const objectUrl = URL.createObjectURL(blob)
+          a.href = objectUrl
+          a.download = id+'_cuestionario.pdf';
+          a.click();
+          URL.revokeObjectURL(objectUrl);
+      }), (error: any) => console.log('Error downloading the file');
+    }else{
+      this.cuestionarioService.descargarCuestionario(id, "tutor").subscribe((blob: any) => {
+        const a = document.createElement('a')
+          const objectUrl = URL.createObjectURL(blob)
+          a.href = objectUrl
+          a.download = id+'_cuestionario.pdf';
+          a.click();
+          URL.revokeObjectURL(objectUrl);
+      }), (error: any) => console.log('Error downloading the file');
+    }
+
   }
 
 

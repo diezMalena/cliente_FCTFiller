@@ -12,6 +12,7 @@ export class Usuario {
       obj['roles'],
       //DSB Cambio 10-03-2022: Añadido codigo de centro de estudios
       obj['cod_centro'],
+      obj['cod_centro_estudios'],
       //DJC Cambio 28-05-2022: añadido objeto de centro de estudios
       obj['centro'],
       obj['cod_grupo'],
@@ -28,6 +29,7 @@ export class Usuario {
     public roles?: Array<any>,
     //DSB Cambio 10-03-2022: Añadido codigo de centro de estudios
     public cod_centro?: string,
+    public cod_centro_estudios?: string,
     //DJC Cambio 28-05-2022: añadido objeto de centro de estudios
     public centro?: CentroEstudios,
     public cod_grupo?: string,
@@ -152,7 +154,8 @@ export class Usuario {
    */
   public isTutorEmpresa(): boolean {
     return (
-      this.tipo === 'tutor' &&
+      // this.tipo === 'tutor' &&
+      this.tipo === 'trabajador' &&
       this.roles?.find((rol) => rol.id_rol === 3) != undefined
     );
   }
