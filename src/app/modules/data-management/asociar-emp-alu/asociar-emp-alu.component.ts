@@ -172,8 +172,8 @@ export class AsociarEmpAluComponent implements OnInit {
    */
   async setCambiosEmpresas() {
     let hacerlo = await this.dialogService.confirmacion(
-      'Generar y Descargar',
-      `¿Está seguro de que desea generar y descargar el anexo?`
+      'Asignar',
+      `¿Está seguro de que desea asignar los alumnos?`
     );
     if (hacerlo) {
       var bandera = true;
@@ -232,8 +232,8 @@ export class AsociarEmpAluComponent implements OnInit {
       }
     } else {
       this.toastr.info(
-        'Has decidido no generar el Anexo',
-        'Generacion'
+        'Has decidido no asignar los alumnos',
+        'No Asignados'
       );
     }
   }
@@ -248,14 +248,14 @@ export class AsociarEmpAluComponent implements OnInit {
         const current = new Date();
         const blob = new Blob([res], { type: 'application/octet-stream' });
         FileSaver.saveAs(blob, 'backup_' + current.getTime() + '.zip');
-        this.toastr.success('Anexo Generado', 'Título');
+        this.toastr.success('Anexo generado correctamente', 'Generado!');
         this.getNombreCiclo();
         this.getAlumnos();
         this.getEmpresas();
         this.getAnexos();
       },
       error: (e) => {
-        this.toastr.error('El anexo no ha podido generarse', 'Generado');
+        this.toastr.error('El anexo no ha podido generarse', 'Fallo!');
       },
     });
     this.router.navigate(['/data-management/asig-alum-empresa']);
