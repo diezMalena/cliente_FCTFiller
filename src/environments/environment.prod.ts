@@ -11,12 +11,15 @@ export const environment = {
   apiUrlCuestionario: "http://fct.filler.vdg:8000/api/jefatura/",
   crearCuestionario: "crearCuestionario",
   contestarCuestionario: "crearCuestionarioRespondido",
+  contestarCuestionarioFCT: "crearCuestionarioRespondidoFCT",
   obtenerCuestionarioURL: "obtenerCuestionario",
+  obtenerCuestionarioFCTURL: "obtenerCuestionarioFCT",
   obtenerCuestionariosURL: "listarCuestionarios",
   eliminarCuestionarioURL: "eliminarCuestionario",
   obtenerCuestionarioEdicionURL: "obtenerCuestionarioEdicion",
   editarCuestionarioURL: "editarCuestionario",
   verificarCuestionarioRespondidoURL: "verificarCuestionarioRespondido",
+  verificarCuestionarioRespondidoFCTURL: "verificarCuestionarioRespondidoFCT",
   obtenerCuestionariosFCTURL: "obtenerCuestionariosFCT",
   activarCuestionarioURL: "activarCuestionario",
   desactivarCuestionarioURL: "desactivarCuestionario",
@@ -24,4 +27,7 @@ export const environment = {
   obtenerCursosAcademicosURL: "obtenerCursosAcademicos",
   listarCuestionariosRespondidosURL: "listarCuestionariosRespondidos",
   descargarCuestionarioURL: "descargarCuestionario",
+  descargarCuestionarioFCTURL: "descargarCuestionarioFCT",
+  obtenerMediasCuestionariosRespondidosFCTURL: "obtenerMediasCuestionariosRespondidosFCT",
+  listarCuestionariosRespondidosFCTURL: "listarCuestionariosRespondidosFCT"
 };
