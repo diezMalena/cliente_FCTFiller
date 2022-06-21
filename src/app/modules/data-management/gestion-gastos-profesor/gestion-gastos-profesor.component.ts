@@ -85,6 +85,10 @@ export class GestionGastosProfesorComponent
     this.dtTrigger.unsubscribe();
   }
 
+  /**
+   * Recarga la tabla eliminando la instancia de la DataTable
+   * @author David Sánchez Barragán
+   */
   rerender(): void {
     this.dtElement!.dtInstance.then((dtInstance: DataTables.Api) => {
       dtInstance.destroy();

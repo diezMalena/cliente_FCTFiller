@@ -60,6 +60,12 @@ export class GestionGastosService {
   /***********************************************************************/
   //#region CRUD - Create
 
+  /**
+   * Realiza la petición para crear una nueva factura de transporte
+   * @param factura Factura de transporte a enviar
+   * @returns `Observable` de la respuesta del servidor
+   * @author David Sánchez Barragán
+   */
   public nuevaFacturaTransporte(factura: FacturaTransporte) {
     let url = this.urlBase + this.urlNuevaFacturaTransporte;
     const headers = this.headers;
@@ -67,6 +73,12 @@ export class GestionGastosService {
     return this.http.post(url, factura, { headers });
   }
 
+  /**
+   * Realiza la petición para crear una nueva factura de manutención
+   * @param factura Factura de manutención a enviar
+   * @returns `Observable` de la respuesta del servidor
+   * @author David Sánchez Barragán
+   */
   public nuevaFacturaManutencion(factura: FacturaManutencion) {
     let url = this.urlBase + this.urlNuevaFacturaManutencion;
     const headers = this.headers;
@@ -118,6 +130,11 @@ export class GestionGastosService {
   /***********************************************************************/
   //#region CRUD - Update
 
+  /**
+   * Realiza la petición para actualizar la información de la tabla Gasto
+   * @param gasto Objeto Gasto del alumno a actualizar
+   * @returns `Observable` de la `HttpResponse`.
+   */
   public actualizarDatosGastoAlumno(gasto: Gasto) {
     let url = this.urlBase + this.urlActualizarDatosGastoAlumno;
     const headers = this.headers;
@@ -125,6 +142,12 @@ export class GestionGastosService {
     return this.http.put(url, JSON.stringify(gasto), { headers });
   }
 
+   /**
+   * Realiza la petición para actualizar una factura de transporte
+   * @param factura Factura de transporte a enviar
+   * @returns `Observable` de la respuesta del servidor
+   * @author David Sánchez Barragán
+   */
   public actualizarFacturaTransporte(factura: FacturaTransporte) {
     let url = this.urlBase + this.urlActualizarFacturaTransporte;
     const headers = this.headers;
@@ -132,6 +155,12 @@ export class GestionGastosService {
     return this.http.put(url, JSON.stringify(factura), { headers });
   }
 
+  /**
+   * Realiza la petición para actualizar una factura de manutención
+   * @param factura Factura de manutención a enviar
+   * @returns `Observable` de la respuesta del servidor
+   * @author David Sánchez Barragán
+   */
   public actualizarFacturaManutencion(factura: FacturaManutencion) {
     let url = this.urlBase + this.urlActualizarFacturaManutencion;
     const headers = this.headers;
@@ -139,6 +168,11 @@ export class GestionGastosService {
     return this.http.put(url, JSON.stringify(factura), { headers });
   }
 
+  /**
+   * Realiza la petición para actualizar los días en los que el alumno ha viajado en vehículo privado
+   * @param gasto Objeto Gasto del que actualizar los días de viaje en vehículo privado
+   * @returns `Observavle` de la `HttpResponse`
+   */
   public actualizarDiasVehiculoPrivado(gasto: Gasto) {
     let datos = {
       dni_alumno: gasto.dni_alumno,
@@ -157,6 +191,12 @@ export class GestionGastosService {
   /***********************************************************************/
   //#region CRUD - Delete
 
+  /**
+   * Realiza la petición para eliminar una factura de manutención
+   * @param factura Factura de manutención a enviar
+   * @returns `Observable` de la respuesta del servidor
+   * @author David Sánchez Barragán
+   */
   public eliminarFacturaManutencion(id: number) {
     let url = this.urlBase + this.urlEliminarFacturaManutencion + id;
     const headers = this.headers;
@@ -168,6 +208,12 @@ export class GestionGastosService {
     );
   }
 
+  /**
+   * Realiza la petición para eliminar una factura de transporte
+   * @param factura Factura de transporte a enviar
+   * @returns `Observable` de la respuesta del servidor
+   * @author David Sánchez Barragán
+   */
   public eliminarFacturaTransporte(id: number) {
     let url = this.urlBase + this.urlEliminarFacturaTransporte + id;
     const headers = this.headers;
@@ -197,6 +243,11 @@ export class GestionGastosService {
     this.gastoBS.next(gasto);
   }
 
+  /**
+   * Realiza la petición para obtener el Anexo VI del grupo del tutor que ha iniciado sesión en la aplicación
+   * @returns `Observable` de la petición HTTP
+   * @author David Sánchez Barragán
+   */
   public descargarAnexoVI() {
     let url = this.urlBase + this.urlDescargarAnexoVI;
     const headers = this.headers;
