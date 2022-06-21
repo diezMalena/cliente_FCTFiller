@@ -8,9 +8,7 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { Alumno } from 'src/app/models/alumno';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
-import { ModalAlumnoComponent } from '../modal-alumno/modal-alumno.component';
 import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-dialog.component';
 import { ModoEdicion } from 'src/app/models/modoEdicion';
 import { DataTableDirective } from 'angular-datatables';
@@ -27,6 +25,7 @@ import { DialogService } from 'src/app/services/dialog.service';
 import { AnexoService } from 'src/app/services/crud-anexos.service';
 import * as FileSaver from 'file-saver';
 import { FileUploadService } from 'src/app/services/file-upload.service';
+import { ManualGestionGastosAlumnoComponent } from '../../manuales/manual-gestion-gastos-alumno/manual-gestion-gastos-alumno.component';
 
 @Component({
   selector: 'app-gestion-gastos-alumno',
@@ -340,8 +339,6 @@ export class GestionGastosAlumnoComponent
       keyboard: false,
     });
 
-    //Cambiar en un futuro la obtención del DNI, porque se compartirá
-    //esta vista con la del profesor
     this.gestionGastosService.facturaTransporteTrigger.emit([
       facturaT,
       ModoEdicion.nuevo,
@@ -434,7 +431,7 @@ export class GestionGastosAlumnoComponent
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
   public abrirAyuda(): void {
-    // this.modal.open(ManualGestionAlumnosComponent, { size: 'lg' });
+    this.modal.open(ManualGestionGastosAlumnoComponent, { size: 'lg' });
   }
 
   public volver() {

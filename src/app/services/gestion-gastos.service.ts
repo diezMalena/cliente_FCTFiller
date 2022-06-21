@@ -134,6 +134,7 @@ export class GestionGastosService {
    * Realiza la petición para actualizar la información de la tabla Gasto
    * @param gasto Objeto Gasto del alumno a actualizar
    * @returns `Observable` de la `HttpResponse`.
+   * @author David Sánchez Barragán
    */
   public actualizarDatosGastoAlumno(gasto: Gasto) {
     let url = this.urlBase + this.urlActualizarDatosGastoAlumno;
@@ -172,6 +173,7 @@ export class GestionGastosService {
    * Realiza la petición para actualizar los días en los que el alumno ha viajado en vehículo privado
    * @param gasto Objeto Gasto del que actualizar los días de viaje en vehículo privado
    * @returns `Observavle` de la `HttpResponse`
+   * @author David Sánchez Barragán
    */
   public actualizarDiasVehiculoPrivado(gasto: Gasto) {
     let datos = {
