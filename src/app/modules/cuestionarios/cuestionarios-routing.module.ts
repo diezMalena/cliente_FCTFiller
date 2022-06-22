@@ -20,7 +20,7 @@ const routes: Routes = [
   },
   {
     path:'listar-cuestionarios-tutor-empresa',
-    canActivate: [UsuarioCuestionariosGuardService],
+    // canActivate: [UsuarioCuestionariosGuardService],
     component: ListarCuestionariosTutorEmpresaComponent
   },
   {

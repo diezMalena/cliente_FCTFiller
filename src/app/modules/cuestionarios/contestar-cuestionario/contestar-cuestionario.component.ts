@@ -38,6 +38,7 @@ export class ContestarCuestionarioComponent implements OnInit {
 
   ) {
     this.usuario = storageUser.getUser();
+    console.log(this.usuario);
   }
 
   /**
@@ -70,7 +71,7 @@ export class ContestarCuestionarioComponent implements OnInit {
           respuestas: this.fb.array([]),
           dni_tutor_empresa: this.usuario?.dni,
         });
-        this.getCuestionario(params.get('cod_centro'));
+        this.getCuestionarioFCT(params.get('cod_centro'));
       }
       });
   }
@@ -127,8 +128,42 @@ export class ContestarCuestionarioComponent implements OnInit {
    * @author Pablo G. Galan <pablosiege@gmail.com>
    * @param cod_centro indica el código del centro al que pertenece el alumno, o cuyo alumno tiene asociado el tutor de empresa
    */
-  getCuestionario(cod_centro:string|undefined|null) {
-  this.cuestionarioService.getCuestionario(this.usuarioCuestionario, cod_centro).subscribe((res) => {
+  getCuestionario(cod_centro_estudios:string|undefined|null) {
+  this.cuestionarioService.getCuestionario(this.usuarioCuestionario, cod_centro_estudios).subscribe((res) => {
+    this.cuestionario = res;
+    if(!this.cuestionario.activo){
+      this.toastr.warning('Aún no se ha activado el cuestionario', 'Warning');
+      if (this.usuarioCuestionario=='empresa'){
+        this.router.navigate(['cuestionarios/listar-cuestionarios-tutor-empresa']);
+      }else{
+        this.router.navigate(['/']);
+      }
+    }
+    this.respuestasForm.patchValue(res);
+    this.cuestionario.preguntas.forEach((element:PreguntaModel) => {
+      this.addRespuesta(element.tipo, element.pregunta);
+    });
+  },
+  error => {
+    this.toastr.warning('Aún no se ha activado el cuestionario', 'Warning');
+      if (this.usuarioCuestionario=='empresa'){
+        this.router.navigate(['cuestionarios/listar-cuestionarios-tutor-empresa']);
+      }else{
+        this.router.navigate(['/']);
+      }
+  },
+  () => {});
+  }
+
+
+  /**
+   *  Se obtiene cuestionario en función del código centro y del destinatario en caso de haber alguno activo.
+   *  Se genera un campo respuesta por cada pregunta en función de su tipo.
+   * @author Pablo G. Galan <pablosiege@gmail.com>
+   * @param cod_centro indica el código del centro al que pertenece el alumno, o cuyo alumno tiene asociado el tutor de empresa
+   */
+  getCuestionarioFCT(cod_centro_estudios:string|undefined|null) {
+  this.cuestionarioService.getCuestionarioFCT(this.usuarioCuestionario, cod_centro_estudios).subscribe((res) => {
     this.cuestionario = res;
     if(!this.cuestionario.activo){
       this.toastr.warning('Aún no se ha activado el cuestionario', 'Warning');
@@ -163,7 +198,7 @@ export class ContestarCuestionarioComponent implements OnInit {
     const respuestaCuestionarioModel= new RespuestaCuestionarioModel();
     respuestaCuestionarioModel.setCuestionario(this.respuestasForm.value);
 
-    const storageSub = this.cuestionarioRespondidoService.add(respuestaCuestionarioModel)
+    const storageSub = this.cuestionarioRespondidoService.add(respuestaCuestionarioModel, this.usuario?.tipo)
     .pipe(first(),catchError((e) => {
       this.toastr.error('El cuestionario no ha podido guardarse', 'Error');
       return throwError(new Error(e));

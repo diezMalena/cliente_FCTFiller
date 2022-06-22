@@ -157,14 +157,20 @@ export class CrudAlumnosService {
    * Solicita el curriculum del alumno indicado.
    * @param {string} dni DNI del alumno.
    */
-  descargarCurriculum(dni: string){
+  descargarCurriculum(dni: string) {
     let url = `${this.urlBase}${this.urlDescargarCurriculum}${dni}`;
     const HTTPOptions = this.headersService.getHeadersWithTokenArrayBuffer();
 
     return this.http.get(url, HTTPOptions);
   }
 
-  descargarAnexoFEM05(dni: string){
+  /**
+   * Realiza la petición para obtener el Anexo FEM05 de un alumno.
+   * @param dni DNI del alumno.
+   * @returns `Observable` de la petición HTTP
+   * @author David Sánchez Barragán
+   */
+  descargarAnexoFEM05(dni: string) {
     let url = `${this.urlBase}${this.urlDescargarAnexoFEM05}${dni}`;
     const HTTPOptions = this.headersService.getHeadersWithTokenArrayBuffer();
     return this.http.get(url, HTTPOptions);

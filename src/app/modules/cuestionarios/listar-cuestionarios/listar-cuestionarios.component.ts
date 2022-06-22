@@ -53,6 +53,10 @@ export class ListarCuestionariosComponent implements OnDestroy, OnInit {
     this.dtTrigger.unsubscribe();
   }
 
+  /**
+   * Recarga la tabla eliminando la instancia de la DataTable
+   * @author David Sánchez Barragán
+   */
   rerender(): void {
     this.dtElement!.dtInstance.then((dtInstance: DataTables.Api) => {
       dtInstance.destroy();
@@ -66,7 +70,7 @@ export class ListarCuestionariosComponent implements OnDestroy, OnInit {
    * @author Pablo G. Galan <pablosiege@gmail.com@gmail.com>
    */
   public listarCuestionarios() {
-    this.cuestionarioService.getCuestionarios(this.usuario?.cod_centro).subscribe((response) => {
+    this.cuestionarioService.getCuestionarios(this.usuario?.cod_centro_estudios).subscribe((response) => {
       this.cuestionariosArray = response;
       response = (this.cuestionariosArray as any).data;
       this.rerender();

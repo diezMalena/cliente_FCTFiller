@@ -4,6 +4,7 @@ import { AnexoUpload } from 'src/app/models/anexo-upload';
 import { FileUploadService } from 'src/app/services/file-upload.service';
 import { AnexoService } from 'src/app/services/crud-anexos.service';
 import { LoginStorageUserService } from 'src/app/services/login.storageUser.service';
+import { AsociarAlumnoEmpresaService } from '../../../services/asociar-alumno-empresa.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -16,16 +17,16 @@ export class ModalUploadAnexoComponent implements OnInit {
   usuario;
   dni_usuario;
   public evento: any = null;
-  public anexosArray: any = [];
   tipoAnexo: any;
 
   constructor(
-    private anexoService: AnexoService,
+    private modal: NgbModal,
     private toastr: ToastrService,
+    private anexoService: AnexoService,
     private modalActive: NgbActiveModal,
     private uploadService: FileUploadService,
     private storageUser: LoginStorageUserService,
-    private modal: NgbModal
+    private alumnosEmpresas: AsociarAlumnoEmpresaService,
   ) {
     this.usuario = storageUser.getUser();
     this.dni_usuario = this.usuario?.dni;
@@ -87,6 +88,8 @@ export class ModalUploadAnexoComponent implements OnInit {
           this.usuario?.isDirector()
         ) {
           this.recogerAnexosFCT();
+          this.recogerAnexosProgramaFormativo();
+          this.recogerAnexos1();
         }
 
         if (this.usuario?.isAlumno()) {
@@ -116,13 +119,24 @@ export class ModalUploadAnexoComponent implements OnInit {
    * @author Laura <lauramorenoramos@gmail.com>
    */
   public recogerAnexosFCT() {
-    this.anexoService.getAnexos(this.dni_usuario!, 1).subscribe({
-      next: (response: any) => {
-        this.anexosArray = response;
-        this.anexosArray.getAnexosInArray(this.anexosArray);
+    this.anexoService
+    .getAnexos(this.dni_usuario!, 1)
+    .subscribe({
+      next: (response : any) => {
+        this.anexoService.getAnexosInArray(response);
       },
-      error: (e) => {
-        this.toastr.error('Los anexos no han podido mostrarse', 'Fallo');
+    });
+  }
+
+  /**
+   * Esta funcion recoge  el nuevo array actualizado de anexos 2 y 4 para darselo
+   * a la ventana principal y que se muestre actualizada
+   * @author Laura <lauramorenoramos@gmail.com>
+   */
+  public recogerAnexosProgramaFormativo() {
+    this.anexoService.getAnexosProgramaFormativo(this.dni_usuario!).subscribe({
+      next: (response: any) => {
+        this.anexoService.getAnexosInArrayPrograma(response);
       },
     });
   }
@@ -135,12 +149,21 @@ export class ModalUploadAnexoComponent implements OnInit {
   public recogerAnexosAlumnos() {
     this.anexoService.getAnexosAlumno(this.dni_usuario!).subscribe({
       next: (response: any) => {
-        this.anexosArray = response;
-        this.anexoService.getAnexosInArray(this.anexosArray);
-      },
-      error: (e) => {
-        this.toastr.error('Los anexos no han podido mostrarse', 'Fallo');
+        this.anexoService.getAnexosInArray(response);
       },
     });
   }
+
+    /**
+   * Esta funcion recoge  el nuevo array actualizado de anexos de los alumnos para darselo
+   * a la ventana principal y que se muestre actualizada
+   * @author Laura <lauramorenoramos@gmail.com>
+   */
+     public recogerAnexos1() {
+      this.alumnosEmpresas.solicitarAnexosFct(this.dni_usuario!).subscribe({
+        next: (response: any) => {
+          this.alumnosEmpresas.getAnexosInArray(response);
+        },
+      });
+    }
 }

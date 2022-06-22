@@ -56,6 +56,7 @@ export class ProgramaFormativoComponent implements OnInit {
   ngOnInit(): void {
     delete this.dtOptions['language'];
     this.listarAnexos();
+    this.getArrayAnexos();
   }
 
   /***********************************************************************/
@@ -69,6 +70,10 @@ export class ProgramaFormativoComponent implements OnInit {
     this.dtTrigger.unsubscribe();
   }
 
+  /**
+   * Recarga la tabla eliminando la instancia de la DataTable
+   * @author David Sánchez Barragán
+   */
   rerender(): void {
     this.dtElement!.dtInstance.then((dtInstance: DataTables.Api) => {
       // Destroy the table first
@@ -153,6 +158,7 @@ export class ProgramaFormativoComponent implements OnInit {
           const blob = new Blob([res], { type: 'application/octet-stream' });
           FileSaver.saveAs(blob, 'backup_' + current.getTime() + '.zip');
           this.toastr.success(this.tipoAnexo + ' Descargado', 'Hecho!');
+          this.listarAnexos();
         },
         error: (e) => {
           console.log(e);
@@ -241,5 +247,17 @@ export class ProgramaFormativoComponent implements OnInit {
    */
   public abrirAyuda() {
     this.modal.open(ManualAnexo2y4Component, { size: 'lg' });
+  }
+
+  /**
+* @author Laura <lauramorenoramos97@gmail.com>
+* Esta funcion es una suscripcion a una variable BehaviorSubject que recoge el nuevo
+* array de anexos
+*/
+  public getArrayAnexos() {
+    this.anexoService.anexosArrayProgramaFormativo.subscribe((array) => {
+      this.anexosArray = array;
+      this.rerender();
+    });
   }
 }

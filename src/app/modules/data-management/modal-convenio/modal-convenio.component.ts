@@ -53,12 +53,34 @@ export class ModalConvenioComponent implements OnInit {
 
     this.crudEmpresasService.empresaTrigger.subscribe({
       next: (data: Array<any>) => {
+        // Obtengo las variables del emit
         this.empresa = data[0];
         this.centro = data[1];
         this.modo = data[2];
+        // Establezco algunas variables auxiliares
         this.tipo = this.empresa?.es_privada ? 'convenio' : 'acuerdo';
         this.claseInput =
           this.modo === 1 ? 'form-control-plaintext' : 'form-control';
+        switch (this.modo) {
+          case 0:
+            this.title = 'Hacer ';
+            break;
+          case 1:
+            this.title = 'Ver ';
+            break;
+          case 2:
+            this.title = 'Editar ';
+            break;
+          case 3:
+            this.title = 'Renovar ';
+            break;
+        }
+        if (this.empresa?.es_privada) {
+          this.title += 'convenio';
+        } else {
+          this.title += 'acuerdo';
+        }
+        this.title += ' con ' + this.empresa?.nombre;
         // Saco el convenio y su número
         if (this.empresa?.convenio) {
           this.convenio = this.empresa.convenio;
@@ -72,26 +94,6 @@ export class ModalConvenioComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    switch (this.modo) {
-      case 0:
-        this.title = 'Hacer ';
-        break;
-      case 1:
-        this.title = 'Ver ';
-        break;
-      case 2:
-        this.title = 'Editar ';
-        break;
-      case 3:
-        this.title = 'Renovar ';
-        break;
-    }
-    if (this.empresa?.es_privada) {
-      this.title += 'convenio';
-    } else {
-      this.title += 'acuerdo';
-    }
-    this.title += ' con ' + this.empresa?.nombre;
     this.onChanges();
   }
 
@@ -144,6 +146,8 @@ export class ModalConvenioComponent implements OnInit {
       //#endregion
       //#region Anexo (archivo)
       anexo: [''],
+      firmado_director: [false],
+      firmado_empresa: [false],
       //#endregion
       //#region Director y centro de estudios
       director: this.formBuilder.group({
@@ -338,6 +342,7 @@ export class ModalConvenioComponent implements OnInit {
     this.crudEmpresasService.addConvenio(this.datos.value).subscribe({
       next: async (response: any) => {
         this.empresa!.convenio = this.datos.value.convenio;
+        this.empresa!.convenio!.ruta_anexo = response.ruta_anexo;
         this.toastr.success(
           `El ${this.tipo} con ${this.empresa?.nombre} se ha registrado correctamente`,
           `Registro del ${this.tipo}`
@@ -383,6 +388,7 @@ export class ModalConvenioComponent implements OnInit {
     this.crudEmpresasService.editConvenio(this.datos.value).subscribe({
       next: async (response) => {
         this.empresa!.convenio = this.datos.value.convenio;
+        this.empresa!.convenio!.ruta_anexo = response.ruta_anexo;
         this.toastr.success(
           `El ${this.tipo} con ${this.empresa?.nombre} se ha modificado correctamente`,
           `Modificación del ${this.tipo}`
@@ -540,8 +546,19 @@ export class ModalConvenioComponent implements OnInit {
       fileReader.readAsDataURL(file);
       fileReader.onload = () => {
         this.anexo = fileReader.result;
+        this.modified = true;
       };
     }
+  }
+
+  /**
+   * Cambia el valor del checkbox si indica si el anexo ha sido firmado por la empresa o el director
+   *
+   * @param event
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public changeFirmado(event: any) {
+    this.formulario[event.target.id].setValue(event.target.checked);
   }
 
   //#endregion

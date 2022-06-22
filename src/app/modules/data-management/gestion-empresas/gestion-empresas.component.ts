@@ -36,6 +36,7 @@ export class GestionEmpresasComponent
   empresas: Empresa[] = [];
   usuario;
   dniTutor?: string;
+  public filtro: number = 2;
 
   constructor(
     private crudEmpresasService: CrudEmpresasService,
@@ -68,6 +69,10 @@ export class GestionEmpresasComponent
     this.dtTrigger.unsubscribe();
   }
 
+  /**
+   * Recarga la tabla eliminando la instancia de la DataTable
+   * @author David Sánchez Barragán
+   */
   rerender(): void {
     this.dtElement?.dtInstance.then((dtInstance: DataTables.Api) => {
       // Destroy the table first
@@ -132,7 +137,7 @@ export class GestionEmpresasComponent
     if (eliminar) {
       this.crudEmpresasService.deleteEmpresa(empresa.id).subscribe({
         next: (response: any) => {
-          const index = this.empresas.findIndex(emp => emp.id === empresa.id);
+          const index = this.empresas.findIndex((emp) => emp.id === empresa.id);
           this.empresas.splice(index, 1);
           this.toastr.success(response.message, response.title);
         },
@@ -185,7 +190,7 @@ export class GestionEmpresasComponent
   /***********************************************************************/
 
   /***********************************************************************/
-  //#region Invocación de modales
+  //#region Invocación de modales y auxiliares
 
   /**
    * Abre un modal con los detalles de la empresa, editable o no según la variable booleana
@@ -247,6 +252,35 @@ export class GestionEmpresasComponent
    */
   public abrirAyuda(): void {
     this.modal.open(ManualGestionEmpresasComponent, { size: 'lg' });
+  }
+
+  /**
+   * Filtra las empresas según si tienen convenio o no
+   *
+   * @param filtro 0 -> Sin convenio, 1 -> Con convenio, undefined | 2 -> Todos
+   * @returns `Empresa[]` empresas filtradas
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  filtrarEmpresas(filtro?: number) {
+    console.log(filtro);
+    switch (filtro) {
+      case 0:
+        return this.empresas.filter((empresa) => empresa.convenio == undefined);
+      case 1:
+        return this.empresas.filter(empresa => empresa.convenio != undefined);
+      default:
+        return this.empresas;
+    }
+  }
+
+  /**
+   * Establece un filtro para las empresas
+   *
+   * @param event
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  setFiltro(event: any) {
+    this.filtro = event.target.value;
   }
 
   //#endregion

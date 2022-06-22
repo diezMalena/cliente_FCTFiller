@@ -31,12 +31,13 @@ export class CreacionCuestionarioComponent implements OnInit {
     private router: Router,
   ){
 
-    this.usuario = this.storageUser.getUser()
+    this.usuario = this.storageUser.getUser();
+    console.log(this.usuario);
 
     this.cuestionarioForm = this.fb.group({
       titulo: ['', Validators.required],
       destinatario: ['', Validators.required],
-      codigo_centro: this.usuario?.cod_centro,
+      codigo_centro: this.usuario?.cod_centro_estudios,
       preguntas: this.fb.array([]),
     }
 
