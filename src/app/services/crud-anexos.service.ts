@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Anexo } from '../models/anexo';
 import { anexoResponse } from '../models/anexoResponse';
 import { anexoAlumnoResponse } from '../models/anexoAlumnoResponse';
 import { tutoriaResponse } from '../models/tutoriaResponse';
@@ -12,7 +11,9 @@ import { BehaviorSubject } from 'rxjs';
 export class AnexoService {
   public ruta = environment.apiUrl;
   public headers: HttpHeaders;
-  public anexosArray = new BehaviorSubject<string>('');
+  public anexosArray = new BehaviorSubject<string[]>([]);
+  public anexosArrayProgramaFormativo = new BehaviorSubject<string[]>([]);
+
   constructor(
     private http: HttpClient,
     private headersService: HttpHeadersService
@@ -45,8 +46,18 @@ export class AnexoService {
    * @param arrayAnexos
    * @author Laura <lauramorenoramos@gmail.com>
    */
-  public getAnexosInArray(arrayAnexos: string) {
+  public getAnexosInArray(arrayAnexos: string[]) {
     this.anexosArray.next(arrayAnexos);
+  }
+
+
+  /**
+   * Esta funcion recoge el nuevo array de anexos 2 y 4 en una variable
+   * @param arrayAnexos
+   * @author Laura <lauramorenoramos@gmail.com>
+   */
+   public getAnexosInArrayPrograma(arrayAnexos: string[]) {
+    this.anexosArrayProgramaFormativo.next(arrayAnexos);
   }
 
   /**

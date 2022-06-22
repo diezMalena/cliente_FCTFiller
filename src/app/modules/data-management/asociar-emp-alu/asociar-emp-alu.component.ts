@@ -54,6 +54,7 @@ export class AsociarEmpAluComponent implements OnInit {
     this.getAlumnos();
     this.getEmpresas();
     this.getAnexos();
+    this.getArrayAnexosDesdeModal();
   }
 
   //#endregion
@@ -130,18 +131,18 @@ export class AsociarEmpAluComponent implements OnInit {
     this.alumnosEmpresas
       .solicitarEmpresas(this.dniTutor!)
       .subscribe({
-        next:(resultado) => {
-          this.empresas=resultado;
-        this.empresas.forEach((element) => {
-          if (element.alumnos?.length! > 0) {
-            this.hayAlumnosEnEmpresas = true;
-          }
-        });
-      },
-      error: (e) => {
-        console.log(e);
-        this.toastr.error('error', 'La información no se ha podido recuperar');
-      }
+        next: (resultado) => {
+          this.empresas = resultado;
+          this.empresas.forEach((element) => {
+            if (element.alumnos?.length! > 0) {
+              this.hayAlumnosEnEmpresas = true;
+            }
+          });
+        },
+        error: (e) => {
+          console.log(e);
+          this.toastr.error('error', 'La información no se ha podido recuperar');
+        }
       });
   }
 
@@ -206,15 +207,15 @@ export class AsociarEmpAluComponent implements OnInit {
           dni_tutor: this.dniTutor,
         };
         this.alumnosEmpresas.asignarAlumnos(datos).subscribe({
-          next:(response) =>{
+          next: (response) => {
             this.toastr.success('Cambios realizados con exito.', 'Guardado');
             this.getNombreCiclo();
             this.getAlumnos();
             this.getEmpresas();
             this.getAnexos();
           },
-          error:(e) =>{
-            this.toastr.error(e.error.message,'Fallo!');
+          error: (e) => {
+            this.toastr.error(e.error.message, 'Fallo!');
             this.getNombreCiclo();
             this.getAlumnos();
             this.getEmpresas();
@@ -261,6 +262,17 @@ export class AsociarEmpAluComponent implements OnInit {
     this.router.navigate(['/data-management/asig-alum-empresa']);
   }
 
+  /**
+* @author Laura <lauramorenoramos97@gmail.com>
+* Esta funcion es una suscripcion a una variable BehaviorSubject que recoge el nuevo
+* array de anexos
+*/
+  public getArrayAnexosDesdeModal() {
+    this.alumnosEmpresas.anexosArray.subscribe((array) => {
+      this.anexos = array;
+    });
+  }
+
   //#endregion
   /***********************************************************************/
 
@@ -290,7 +302,7 @@ export class AsociarEmpAluComponent implements OnInit {
    */
   public abrirModalUpload(codigo: string) {
     sessionStorage.setItem('tipoAnexo', 'Anexo1');
-    sessionStorage.setItem('codigoAnexo',codigo);
+    sessionStorage.setItem('codigoAnexo', codigo);
     this.modal.open(ModalUploadAnexoComponent, { size: 'md' });
   }
 
