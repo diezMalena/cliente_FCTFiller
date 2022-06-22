@@ -45,7 +45,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let empresa of this.filtrarEmpresas(filtro)">
+        <tr *ngFor="let empresa of empresas">
           <!-- #region Datos -->
           <td scope="col" class="align-middle cursor-pointer" attr.aria-label="Ver en detalle {{empresa.nombre}}"
             (click)="mostrarEmpresa(empresa, false)">{{empresa.cif}}</td>
