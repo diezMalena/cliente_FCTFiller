@@ -144,6 +144,8 @@ export class ModalConvenioComponent implements OnInit {
       //#endregion
       //#region Anexo (archivo)
       anexo: [''],
+      firmado_director: [false],
+      firmado_empresa: [false],
       //#endregion
       //#region Director y centro de estudios
       director: this.formBuilder.group({
@@ -504,8 +506,19 @@ export class ModalConvenioComponent implements OnInit {
       fileReader.readAsDataURL(file);
       fileReader.onload = () => {
         this.anexo = fileReader.result;
+        this.modified = true;
       };
     }
+  }
+
+  /**
+   * Cambia el valor del checkbox si indica si el anexo ha sido firmado por la empresa o el director
+   *
+   * @param event
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public changeFirmado(event: any) {
+    this.formulario[event.target.id].setValue(event.target.checked)
   }
 
   //#endregion
