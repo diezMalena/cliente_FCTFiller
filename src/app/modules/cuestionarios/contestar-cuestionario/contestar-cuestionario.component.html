@@ -19,17 +19,17 @@
 
           <br>
 
-          <div class="row mb-2 p-4 border border-primary rounded" style="background-color: #fff;">
+          <div class="row mb-2 p-4 border border-primary rounded">
             <table class="table-insertar-respuestas" formArrayName="respuestas">
 
-              <div *ngFor="let respuesta of respuestas().controls; let i=index" [formGroupName]="i">
+              <div *ngFor="let respuesta of respuestas().controls; let i=index" [formGroupName]="i"  style="background-color: #fff;">
 
-                <div class="pregunta py-4" style="padding-left: 15px;">
-                  <p class="pregunta-p" style="font-weight: bold; color:primary; font-size: 14px;">{{respuesta.value.pregunta}}</p>
+                <div class="pregunta py-2" style="padding-left: 15px;">
+                  <p class="pregunta-p">{{respuesta.value.pregunta}}</p>
                 </div>
 
                 <div *ngIf="respuesta.value.tipo=='texto'">
-                  <div class="container-text respuesta py-2" style="padding-left: 15px;">
+                  <div class="container-text respuesta py-0">
                     <input type="text" formControlName="respuesta" class="form-control"
                     [ngClass]="{
                       'is-invalid': respuesta.get('respuesta')?.hasError('required'),
@@ -41,7 +41,7 @@
 
                 <div *ngIf="respuesta.value.tipo=='rango'">
 
-                    <div class="container-radio respuesta py-2" style="padding-left: 15px;">
+                    <div class="container-radio respuesta py-0" style="padding-left: 15px;">
                       <div class="row">
                         <div class="col-1 mb-2"><label><input type="radio" formControlName="respuesta" value="1"><span class=" ml-2"> 1 </span></label></div>
                         <div class="col-1 mb-2"><label><input type="radio" formControlName="respuesta" value="2"><span class=" ml-2"> 2 </span></label></div>

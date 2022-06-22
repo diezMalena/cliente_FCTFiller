@@ -18,13 +18,16 @@
       </a>
       <!-- Aún sin implementar -->
       <div class="btn-group float-end" role="group" aria-label="Filtros de búsqueda según convenio">
-        <input type="radio" class="btn-check" name="filtro" id="todas" autocomplete="off" checked>
+        <input type="radio" class="btn-check" name="filtro" id="todas" autocomplete="off" checked
+        (change)="setFiltro($event)" value="2">
         <label class="btn btn-outline-dark" for="todas">Mostrar todas</label>
 
-        <input type="radio" class="btn-check" name="filtro" id="con_convenio" autocomplete="off">
+        <input type="radio" class="btn-check" name="filtro" id="con_convenio" autocomplete="off"
+        (change)="setFiltro($event)" value="1">
         <label class="btn btn-outline-dark" for="con_convenio">Con convenio</label>
 
-        <input type="radio" class="btn-check" name="filtro" id="sin_convenio" autocomplete="off">
+        <input type="radio" class="btn-check" name="filtro" id="sin_convenio" autocomplete="off"
+        (change)="setFiltro($event)" value="0">
         <label class="btn btn-outline-dark" for="sin_convenio">Sin convenio</label>
       </div>
     </div>
