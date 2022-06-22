@@ -340,6 +340,7 @@ export class ModalConvenioComponent implements OnInit {
     this.crudEmpresasService.addConvenio(this.datos.value).subscribe({
       next: async (response: any) => {
         this.empresa!.convenio = this.datos.value.convenio;
+        this.empresa!.convenio!.ruta_anexo = response.ruta_anexo;
         this.toastr.success(
           `El ${this.tipo} con ${this.empresa?.nombre} se ha registrado correctamente`,
           `Registro del ${this.tipo}`
@@ -385,6 +386,7 @@ export class ModalConvenioComponent implements OnInit {
     this.crudEmpresasService.editConvenio(this.datos.value).subscribe({
       next: async (response) => {
         this.empresa!.convenio = this.datos.value.convenio;
+        this.empresa!.convenio!.ruta_anexo = response.ruta_anexo;
         this.toastr.success(
           `El ${this.tipo} con ${this.empresa?.nombre} se ha modificado correctamente`,
           `Modificación del ${this.tipo}`
