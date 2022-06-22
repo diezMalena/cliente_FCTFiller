@@ -15,7 +15,7 @@ import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-di
 import { ModoEdicion } from 'src/app/models/modoEdicion';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
-import { ManualGestionAlumnosComponent } from '../../manuales/manual-gestion-alumnos/manual-gestion-alumnos.component';
+import { ManualGestionGastosProfesorComponent } from '../../manuales/manual-gestion-gastos-profesor/manual-gestion-gastos-profesor.component';
 import { GastoProfesor } from 'src/app/models/gastoProfesor';
 import { GestionGastosService } from 'src/app/services/gestion-gastos.service';
 import { Gasto } from 'src/app/models/gasto';
@@ -85,6 +85,10 @@ export class GestionGastosProfesorComponent
     this.dtTrigger.unsubscribe();
   }
 
+  /**
+   * Recarga la tabla eliminando la instancia de la DataTable
+   * @author David Sánchez Barragán
+   */
   rerender(): void {
     this.dtElement!.dtInstance.then((dtInstance: DataTables.Api) => {
       dtInstance.destroy();
@@ -361,7 +365,7 @@ export class GestionGastosProfesorComponent
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
   public abrirAyuda(): void {
-    this.modal.open(ManualGestionAlumnosComponent, { size: 'lg' });
+    this.modal.open(ManualGestionGastosProfesorComponent, { size: 'lg' });
   }
 
   public descargarAnexo() {
