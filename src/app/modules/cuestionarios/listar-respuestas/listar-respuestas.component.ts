@@ -137,7 +137,6 @@ export class ListarRespuestasComponent implements OnInit {
         this.mediaCuestionarios = response;
       });
     }
-
   }
 
   /**
@@ -146,7 +145,6 @@ export class ListarRespuestasComponent implements OnInit {
    * @author Pablo G. Galan <pablosiege@gmail.com>
    */
   public listarCuestionariosRespondidos() {
-    console.log(this.usuario?.isJefatura())
     if (this.usuario?.isJefatura()){
       this.cuestionarioRespondidoService.obtenerCuestionariosRespondidos(this.cursoAcademicoSeleccionado , this.destinatarioSeleccionado, this.usuario?.cod_centro_estudios, "jefatura" ).subscribe((response) => {
         this.cuestionarios = response;
