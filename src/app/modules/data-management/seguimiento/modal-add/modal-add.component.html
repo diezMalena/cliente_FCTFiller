@@ -1,6 +1,5 @@
 <div class="modal-header">
   <h2 class="text-center modal-title">Añadir jornada</h2>
-
   <a (click)="closeModel()">
     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-x-square"
       viewBox="0 0 16 16">
@@ -11,6 +10,7 @@
     </svg>
   </a>
 </div>
+<!-- Cuerpo del modal -->
 <div class="modal-body">
   <form [formGroup]="jornada" (ngSubmit)="guardarJornada()" class="col-12 border border-dark">
     <div class="row py-4 px-2">
@@ -35,10 +35,11 @@
 
         <div class="row d-flex align-items-center py-3">
           <div class="col-4 fw-bold d-flex justify-content-end">
-            <label for="actividades_realizadas" class="form-label fw-bold m-0">Actividades realizadas:</label>
+            <label for="actividades_realizadas" class="form-label fw-bold m-0 text-end">Actividades realizadas:</label>
           </div>
           <div class="col-8">
-            <textarea formControlName="actividad" id="actividades_realizadas" class="col-12 form-control" placeholder="Actividades realizadas en la fecha indicada..."></textarea>
+            <textarea formControlName="actividad" id="actividades_realizadas" class="col-12 form-control"
+              placeholder="Actividades realizadas en la fecha indicada..."></textarea>
             <div class="col-12 col-xl-12 text-danger bg-white rounded border border-2 border-danger p-2"
               *ngIf="submitted && formulario['actividad'].errors">
               <div *ngIf="formulario['actividad'].errors['required']">Las actividades no pueden estar vacías. </div>
@@ -51,7 +52,8 @@
             <label for="observaciones" class="form-label fw-bold m-0">Observaciones:</label>
           </div>
           <div class="col-8">
-            <textarea formControlName="observaciones" id="observaciones" class="col-12 form-control" placeholder="Observaciones..."></textarea>
+            <textarea formControlName="observaciones" id="observaciones" class="col-12 form-control"
+              placeholder="Observaciones..."></textarea>
           </div>
         </div>
 
@@ -61,7 +63,8 @@
             <label for="tiempo_empleado" class="form-label fw-bold m-0">Tiempo empleado:</label>
           </div>
           <div class="col-8">
-            <input type="number" formControlName="horas" name="" id="tiempo_empleado" class="col-8 form-control" placeholder="Horas empleadas (Máx. 10)">
+            <input type="number" formControlName="horas" name="" id="tiempo_empleado" class="col-8 form-control"
+              placeholder="Horas empleadas (Máx. 10)">
             <div class="col-12 col-xl-12 text-danger bg-white rounded border border-2 border-danger p-2"
               *ngIf="submitted && formulario['horas'].errors && formulario['horas'].errors['required']">
               Las horas no pueden estar vacías.
@@ -72,7 +75,7 @@
             </div>
           </div>
         </div>
-
+        <!-- Botones -->
         <div class="row d-flex justify-content-center pt-2">
           <div class="col-xl-5 col-5">
             <div class="row">

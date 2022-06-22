@@ -1,14 +1,14 @@
-import { JornadaResponse } from "./jornada-response";
+import { JornadaResponse } from './jornada-response';
 
 export class Jornada {
-  static JornadaJSON(obj: JornadaResponse){
+  static JornadaJSON(obj: JornadaResponse) {
     return new Jornada(
       obj['id_jornada'],
       obj['orden_jornada'],
       obj['fecha_jornada'],
       obj['actividades'],
       obj['observaciones'],
-      obj['tiempo_empleado'],
+      obj['tiempo_empleado']
     );
   }
 
@@ -19,5 +19,5 @@ export class Jornada {
     public actividades: string,
     public observaciones: string,
     public tiempo_empleado: number
-    ){}
+  ) {}
 }

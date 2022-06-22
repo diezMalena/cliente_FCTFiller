@@ -19,6 +19,9 @@ import { LoginStorageUserService } from 'src/app/services/login.storageUser.serv
   styleUrls: ['./modal-empresa.component.scss'],
 })
 export class ModalEmpresaComponent implements OnInit {
+  /***********************************************************************/
+  //#region Inicialización de variables y formulario
+
   public empresa: Empresa | undefined;
   public editar: boolean | undefined;
   public datosEmpresa: FormGroup;
@@ -36,8 +39,6 @@ export class ModalEmpresaComponent implements OnInit {
     public toastr: ToastrService
   ) {
     this.usuario = storageUser.getUser();
-    //Atención a la ñapa
-    //He tenido que crear un formGroup vacío para que se rellenase con la información asíncrona dentro del subscribe
     this.datosEmpresa = this.formBuilder.group({});
 
     this.crudEmpresasService.empresaTrigger.subscribe({
@@ -46,6 +47,7 @@ export class ModalEmpresaComponent implements OnInit {
         this.editar = data[1];
 
         this.construirFormulario();
+        console.log(this.datosEmpresa.value.es_privada);
       },
     });
   }
@@ -54,6 +56,12 @@ export class ModalEmpresaComponent implements OnInit {
     this.getEmpresas();
     this.onChanges();
   }
+
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Gestión del formulario
 
   get formulario() {
     return this.datosEmpresa.controls;
@@ -75,6 +83,7 @@ export class ModalEmpresaComponent implements OnInit {
         this.empresa?.email,
         [Validators.required, Validators.email],
       ],
+      es_privada: [this.empresa?.es_privada],
       provincia: [this.empresa?.provincia, [Validators.required]],
       localidad: [this.empresa?.localidad, [Validators.required]],
       cp: [
@@ -102,35 +111,6 @@ export class ModalEmpresaComponent implements OnInit {
   }
 
   /**
-   * Inicializa las empresas del componente mediante el servicio correspondiente
-   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
-   */
-  public getEmpresas(): void {
-    this.crudEmpresasService.getEmpresas(this.usuario?.dni!).subscribe({
-      next: async (empresas) => {
-        this.empresas = empresas;
-        await this.meterRepresentantesEmpresas(empresas);
-        this.crudEmpresasService.getEmpresasArray(this.empresas);
-      },
-    });
-  }
-
-  /**
-   * Mete los representantes en las empresas correspondientes
-   * @param empresas el vector de empresas
-   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
-   */
-  public async meterRepresentantesEmpresas(empresas: Empresa[]) {
-    empresas.forEach((empresa) => {
-      this.crudEmpresasService.getRepresentante(empresa.id).subscribe({
-        next: (representante) => {
-          empresa.representante = representante;
-        },
-      });
-    });
-  }
-
-  /**
    * Detecta los cambios en el formulario y, si hay, pone una variable bandera a true
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
@@ -140,6 +120,10 @@ export class ModalEmpresaComponent implements OnInit {
         this.modified = true;
       }
     });
+  }
+
+  public changeEsPrivada(event: any): void {
+    this.formulario['es_privada'].setValue(event.target.value);
   }
 
   /**
@@ -169,6 +153,7 @@ export class ModalEmpresaComponent implements OnInit {
       datos.cp,
       representanteEditado
     );
+    empresaEditada.es_privada = datos.es_privada;
 
     if (this.datosEmpresa.invalid) {
       return;
@@ -177,6 +162,34 @@ export class ModalEmpresaComponent implements OnInit {
       this.updateEmpresa(empresaEditada);
     }
   }
+
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Servicios - Peticiones al servidor
+
+  /***********************************************************************/
+  //#region Obtención de datos - Empresas, representantes
+
+  /**
+   * Inicializa las empresas del componente mediante el servicio correspondiente
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public getEmpresas(): void {
+    this.crudEmpresasService.getEmpresas(this.usuario?.dni!).subscribe({
+      next: async (empresas) => {
+        this.empresas = empresas;
+        this.crudEmpresasService.getEmpresasArray(this.empresas);
+      },
+    });
+  }
+
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Actualización de datos - Empresas, representantes
 
   /**
    * Actualiza los datos de la empresa en la base de datos
@@ -188,12 +201,14 @@ export class ModalEmpresaComponent implements OnInit {
       next: async (response: any) => {
         this.empresa = empresa;
         await this.updateRepresentante(empresa.representante!);
-        this.getEmpresas();
-        this.toastr.success(response.message, response.title)
+        this.empresa.representante = empresa.representante;
+        this.toastr.success(response.message, response.title);
+        this.modified = false;
+        this.closeModal();
       },
       error: (err: any) => {
         this.toastr.error(err.error.message, err.error.title);
-      }
+      },
     });
   }
 
@@ -206,13 +221,22 @@ export class ModalEmpresaComponent implements OnInit {
     this.crudEmpresasService.updateRepresentante(representante).subscribe({
       next: (response: any) => {
         this.empresa!.representante = representante;
-        this.toastr.success(response.message, response.title)
+        this.toastr.success(response.message, response.title);
       },
       error: (err: any) => {
         this.toastr.error(err.error.message, err.error.title);
-      }
+      },
     });
   }
+
+  //#endregion
+  /***********************************************************************/
+
+  //#endregion
+  /***********************************************************************/
+
+  /***********************************************************************/
+  //#region Funciones auxiliares y otros
 
   /**
    * Cierra el modal sólo si no hay cambios sin guardar
@@ -232,4 +256,7 @@ export class ModalEmpresaComponent implements OnInit {
       this.modalActive.close();
     }
   }
+
+  //#endregion
+  /***********************************************************************/
 }
