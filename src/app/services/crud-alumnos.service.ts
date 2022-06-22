@@ -14,15 +14,17 @@ export class CrudAlumnosService {
   @Output() alumnoTrigger: EventEmitter<any> = new EventEmitter();
   public alumnosArray = new BehaviorSubject<Alumno[]>([]);
 
-  private urlBase: string = environment.apiUrl + 'jefatura/';
+  private urlBase: string = environment.apiUrl;
   private urlListarAlumnos: string = 'listarAlumnos/';
   private urlAddAlumno: string = 'addAlumno';
   private urlModificarAlumno: string = 'modificarAlumno';
   private urlEliminarAlumno: string = 'eliminarAlumno/';
   private urlListarGrupos: string = 'listarGrupos';
+  private urlDescargarCurriculum: string = 'descargarCurriculum/';
+  private urlDescargarAnexoFEM05: string = 'generarAnexoFEM05/';
   public headers: HttpHeaders;
 
-  constructor(private http: HttpClient, headersService: HttpHeadersService) {
+  constructor(private http: HttpClient, private headersService: HttpHeadersService) {
     this.headers = headersService.getHeadersWithToken();
   }
 
@@ -44,12 +46,6 @@ export class CrudAlumnosService {
     const headers = this.headers;
 
     return this.http.post(url, JSON.stringify(alumno), { headers });
-  }
-
-  public subirFoto(formData: FormData){
-    let url =  environment.apiUrl + '/api/subirFoto';
-
-    return this.http.post(url, formData)
   }
 
   //#endregion
@@ -155,6 +151,29 @@ export class CrudAlumnosService {
    */
   public setAlumnosArray(alumnosArray: Alumno[]) {
     this.alumnosArray.next(alumnosArray);
+  }
+
+  /**
+   * Solicita el curriculum del alumno indicado.
+   * @param {string} dni DNI del alumno.
+   */
+  descargarCurriculum(dni: string) {
+    let url = `${this.urlBase}${this.urlDescargarCurriculum}${dni}`;
+    const HTTPOptions = this.headersService.getHeadersWithTokenArrayBuffer();
+
+    return this.http.get(url, HTTPOptions);
+  }
+
+  /**
+   * Realiza la petición para obtener el Anexo FEM05 de un alumno.
+   * @param dni DNI del alumno.
+   * @returns `Observable` de la petición HTTP
+   * @author David Sánchez Barragán
+   */
+  descargarAnexoFEM05(dni: string) {
+    let url = `${this.urlBase}${this.urlDescargarAnexoFEM05}${dni}`;
+    const HTTPOptions = this.headersService.getHeadersWithTokenArrayBuffer();
+    return this.http.get(url, HTTPOptions);
   }
 
   //#endregion

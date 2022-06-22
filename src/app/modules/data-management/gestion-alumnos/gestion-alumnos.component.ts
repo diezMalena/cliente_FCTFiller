@@ -24,8 +24,7 @@ import { ManualGestionAlumnosComponent } from '../../manuales/manual-gestion-alu
   styleUrls: ['./gestion-alumnos.component.scss'],
 })
 export class GestionAlumnosComponent
-  implements AfterViewInit, OnDestroy, OnInit
-{
+  implements AfterViewInit, OnDestroy, OnInit {
   @ViewChild(DataTableDirective, { static: false })
 
   /***********************************************************************/
@@ -43,7 +42,7 @@ export class GestionAlumnosComponent
     private toastr: ToastrService,
     private modal: NgbModal,
     private dialog: MatDialog
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     $.extend(true, $.fn.dataTable.defaults, {
@@ -67,6 +66,10 @@ export class GestionAlumnosComponent
     this.dtTrigger.unsubscribe();
   }
 
+  /**
+   * Recarga la tabla eliminando la instancia de la DataTable
+   * @author David Sánchez Barragán
+   */
   rerender(): void {
     this.dtElement!.dtInstance.then((dtInstance: DataTables.Api) => {
       dtInstance.destroy();
@@ -155,7 +158,7 @@ export class GestionAlumnosComponent
    */
   mostrarAlumno(alumno: Alumno, modoEdicion: ModoEdicion) {
     this.modal.open(ModalAlumnoComponent, {
-      size: 'md',
+      size: 'lg',
       backdrop: 'static',
       keyboard: false,
     });

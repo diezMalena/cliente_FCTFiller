@@ -9,9 +9,11 @@ import { LoginStorageUserService } from 'src/app/services/login.storageUser.serv
   styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit {
-  usuario;
+  usuario:any;
   constructor(private storageUser: LoginStorageUserService) {
     this.usuario = storageUser.getUser();
+    console.log(this.usuario);
+    console.log(this.usuario?.isTutorEmpresa());
   }
 
   ngOnInit(): void {}

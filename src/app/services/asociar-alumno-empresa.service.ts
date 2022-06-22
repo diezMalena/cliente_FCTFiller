@@ -4,6 +4,7 @@ import { Alumno } from '../models/alumno';
 import { Empresa } from '../models/empresa';
 import { environment } from 'src/environments/environment';
 import { HttpHeadersService } from './http-headers.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +12,7 @@ import { HttpHeadersService } from './http-headers.service';
 export class AsociarAlumnoEmpresaService {
   public ruta: string = `${environment.apiUrl}`;
   private headers: HttpHeaders;
+  public anexosArray = new BehaviorSubject<string[]>([]);
 
   constructor(private http: HttpClient, private headersService: HttpHeadersService) {
     this.headers = headersService.getHeadersWithToken();
@@ -48,6 +50,21 @@ export class AsociarAlumnoEmpresaService {
   }
 
   /**
+ * Solicita la lista de anexos de FCT
+ *
+ * @param dniTutor DNI del tutor loggeado
+ * @returns Un observable con un vector de anexos asociadas a las FCT
+ * @author Laura <lauramorenoramos97@gmail.com>
+ */
+  public solicitarAnexosFct(dniTutor: string) {
+    let url: string = this.ruta + 'solicitarAnexosFct/' + dniTutor;
+    const headers = this.headers;
+
+    return this.http.get(url, { headers });
+  }
+
+
+  /**
    * Solicita a la API el nombre del ciclo al que tutoriza el tutor loggeado
    * @param dniTutor DNI del tutor loggeado
    * @returns Un observable con el nombre del ciclo
@@ -76,6 +93,8 @@ export class AsociarAlumnoEmpresaService {
   //#endregion
   /***********************************************************************/
 
+  /***********************************************************************/
+  //#region Anexo1
   /**
    * Solicita a la API que genere los Anexos I que sean necesarios
    * correspondientes a la asignación de alumnos a empresas,
@@ -92,4 +111,14 @@ export class AsociarAlumnoEmpresaService {
 
     return this.http.post(url, dato, HTTPOptions);
   }
+  /**
+ * Esta funcion recoge el nuevo array de anexos en una variable
+ * @param arrayAnexos
+ * @author Laura <lauramorenoramos@gmail.com>
+ */
+  public getAnexosInArray(arrayAnexos: string[]) {
+    this.anexosArray.next(arrayAnexos);
+  }
+  //#endregion
+  /***********************************************************************/
 }

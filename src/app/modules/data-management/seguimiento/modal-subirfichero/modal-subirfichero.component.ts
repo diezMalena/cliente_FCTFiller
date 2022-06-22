@@ -28,9 +28,11 @@ export class ModalSubirficheroComponent implements OnInit {
   ) {
     this.usuario = storageUser.getUser();
     this.dni_usuario = this.usuario?.dni;
+
   }
 
   ngOnInit(): void {
+    console.log(this.usuario);
   }
 
 
@@ -51,7 +53,14 @@ export class ModalSubirficheroComponent implements OnInit {
     formData.append('file', sessionStorage.getItem(ModalSubirficheroComponent.anexoBase64)!);
     formData.append('id_fct', sessionStorage.getItem(SeguimientoComponent.id_fct)!);
     formData.append('id_quinto_dia', sessionStorage.getItem(SeguimientoComponent.id_quinto_dia)!);
-
+    //Comprobamos que el checkbox esté marcado o no en cuanto al tutor de la empresa:
+    var element = <HTMLInputElement> document.getElementById("checked");
+    var isChecked = element.checked;
+    if(isChecked){
+      formData.append('firmado_tutor_empresa', '1');
+    }else{
+      formData.append('firmado_tutor_empresa', '0');
+    }
     this.seguimientoService
       .subirAnexo3(formData).subscribe({
         next: (res: any) => {
@@ -59,7 +68,6 @@ export class ModalSubirficheroComponent implements OnInit {
             'Se ha subido el documento correctamente.',
             'Subida de documento'
           );
-          // this.closeModel();
           location.reload();
         },
         error: (e) => {

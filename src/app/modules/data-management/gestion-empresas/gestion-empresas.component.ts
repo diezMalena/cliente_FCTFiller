@@ -15,6 +15,7 @@ import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { ManualGestionEmpresasComponent } from '../../manuales/manual-gestion-empresas/manual-gestion-empresas.component';
+import { ModalConvenioComponent } from '../modal-convenio/modal-convenio.component';
 
 @Component({
   selector: 'app-gestion-empresas',
@@ -28,7 +29,6 @@ export class GestionEmpresasComponent
 
   /***********************************************************************/
   //#region Inicialización de variables
-
   dtElement?: DataTableDirective;
   dtOptions: DataTables.Settings = {};
   dtTrigger = new Subject<any>();
@@ -36,6 +36,7 @@ export class GestionEmpresasComponent
   empresas: Empresa[] = [];
   usuario;
   dniTutor?: string;
+  public filtro: number = 2;
 
   constructor(
     private crudEmpresasService: CrudEmpresasService,
@@ -68,8 +69,12 @@ export class GestionEmpresasComponent
     this.dtTrigger.unsubscribe();
   }
 
+  /**
+   * Recarga la tabla eliminando la instancia de la DataTable
+   * @author David Sánchez Barragán
+   */
   rerender(): void {
-    this.dtElement!.dtInstance.then((dtInstance: DataTables.Api) => {
+    this.dtElement?.dtInstance.then((dtInstance: DataTables.Api) => {
       // Destroy the table first
       dtInstance.destroy();
       // Call the dtTrigger to rerender again
@@ -94,7 +99,6 @@ export class GestionEmpresasComponent
     this.crudEmpresasService.getEmpresas(this.dniTutor!).subscribe({
       next: async (empresas) => {
         this.empresas = empresas;
-        await this.meterRepresentantesEmpresas(this.empresas);
         //#region Datatables
         this.rerender();
         $.fn.dataTable.ext.errMode = 'throw';
@@ -113,21 +117,6 @@ export class GestionEmpresasComponent
     });
   }
 
-  /**
-   * Mete los representantes en las empresas correspondientes
-   * @param empresas el vector de empresas
-   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
-   */
-  public async meterRepresentantesEmpresas(empresas: Empresa[]) {
-    empresas.forEach((empresa) => {
-      this.crudEmpresasService.getRepresentante(empresa.id).subscribe({
-        next: (representante) => {
-          empresa.representante = representante;
-        },
-      });
-    });
-  }
-
   //#endregion
   /***********************************************************************/
 
@@ -136,10 +125,11 @@ export class GestionEmpresasComponent
 
   /**
    * Elimina una empresa de la base de datos, previa confirmación
+   *
    * @param empresa la empresa a eliminar
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
-   public async deleteEmpresa(empresa: Empresa) {
+  public async deleteEmpresa(empresa: Empresa) {
     let eliminar = await this.dialogService.confirmacion(
       'Eliminar registro',
       `¿Está seguro de que quiere eliminar el registro de la empresa ${empresa.nombre}?`
@@ -147,13 +137,49 @@ export class GestionEmpresasComponent
     if (eliminar) {
       this.crudEmpresasService.deleteEmpresa(empresa.id).subscribe({
         next: (response: any) => {
-          this.getEmpresas();
+          const index = this.empresas.findIndex((emp) => emp.id === empresa.id);
+          this.empresas.splice(index, 1);
           this.toastr.success(response.message, response.title);
         },
         error: (err: any) => {
           this.toastr.error(err.error.message, err.error.title);
         },
       });
+    }
+  }
+
+  /**
+   * Envía una petición al servidor para anular un convenio, previa confirmación del usuario
+   *
+   * @param empresa Empresa cuyo convenio se queire anular
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public async anularConvenio(empresa: Empresa) {
+    if (empresa.convenio?.cod_convenio) {
+      let eliminar = await this.dialogService.confirmacion(
+        `Anular ${empresa.acuerdoOConvenio}`,
+        `¿Está seguro de que desea anular el ${empresa.acuerdoOConvenio} con ${empresa.nombre}?`
+      );
+      if (eliminar) {
+        this.crudEmpresasService
+          .eliminarConvenio(empresa.convenio?.cod_convenio)
+          .subscribe({
+            next: (response) => {
+              this.toastr.success(
+                `Anulado ${empresa.acuerdoOConvenio} con ${empresa.nombre}`,
+                `Anulación del ${empresa.acuerdoOConvenio}`
+              );
+              this.empresas.find((emp) => emp.id === empresa.id)!.convenio =
+                undefined;
+            },
+            error: (err) => {
+              this.toastr.error(
+                `Error al anular el ${empresa.acuerdoOConvenio} con ${empresa.nombre}`,
+                'Error de anulación'
+              );
+            },
+          });
+      }
     }
   }
 
@@ -164,7 +190,7 @@ export class GestionEmpresasComponent
   /***********************************************************************/
 
   /***********************************************************************/
-  //#region Invocación de modales
+  //#region Invocación de modales y auxiliares
 
   /**
    * Abre un modal con los detalles de la empresa, editable o no según la variable booleana
@@ -174,7 +200,7 @@ export class GestionEmpresasComponent
    */
   public mostrarEmpresa(empresa: Empresa, editar: boolean) {
     this.modal.open(ModalEmpresaComponent, {
-      size: 'md',
+      size: 'lg',
       backdrop: 'static',
       keyboard: false,
     });
@@ -193,11 +219,68 @@ export class GestionEmpresasComponent
   }
 
   /**
+   * Abre un modal con los datos del convenio, hecho o a hacer. Según el número que se le pase
+   * como segundo argumento, el modal permitirá crearlo, verlo, editarlo o renovarlo
+   *
+   * @param empresa Empresa con la que se ha hecho o quiere hacer el convenio
+   * @param modo Funcionalidad que adoptará el modal: 0 -> crear, 1 -> ver, 2 -> editar, 3 -> renovar
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  public mostrarConvenio(empresa: Empresa, modo: number) {
+    this.modal.open(ModalConvenioComponent, {
+      size: 'lg',
+      backdrop: 'static',
+      keyboard: false,
+    });
+    this.crudEmpresasService.empresaTrigger.emit([
+      empresa,
+      this.storageUser.getUser()?.centro,
+      modo,
+    ]);
+    this.crudEmpresasService.empresaBS.subscribe((empresa) => {
+      if (empresa) {
+        let index = this.empresas.findIndex((emp) => empresa.id === emp.id);
+        this.empresas.splice(index, 1, empresa);
+      }
+      this.dtTrigger.next(this.empresas);
+    });
+  }
+
+  /**
    * Abre un modal de ayuda
    * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
    */
   public abrirAyuda(): void {
     this.modal.open(ManualGestionEmpresasComponent, { size: 'lg' });
+  }
+
+  /**
+   * Filtra las empresas según si tienen convenio o no
+   *
+   * @param filtro 0 -> Sin convenio, 1 -> Con convenio, undefined | 2 -> Todos
+   * @returns `Empresa[]` empresas filtradas
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  filtrarEmpresas(filtro?: number) {
+    console.log(filtro);
+    switch (filtro) {
+      case 0:
+        return this.empresas.filter((empresa) => empresa.convenio == undefined);
+      case 1:
+        return this.empresas.filter(empresa => empresa.convenio != undefined);
+      default:
+        return this.empresas;
+    }
+  }
+
+  /**
+   * Establece un filtro para las empresas
+   *
+   * @param event
+   * @author Dani J. Coello <daniel.jimenezcoello@gmail.com>
+   */
+  setFiltro(event: any) {
+    this.filtro = event.target.value;
   }
 
   //#endregion

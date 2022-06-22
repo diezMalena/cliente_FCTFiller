@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import * as FileSaver from 'file-saver';
 import { ToastrService } from 'ngx-toastr';
 import { Alumno } from 'src/app/models/alumno';
 import { Grupo } from 'src/app/models/grupo';
@@ -47,7 +48,6 @@ export class ModalAlumnoComponent implements OnInit {
       next: (data: Array<any>) => {
         this.alumno = data[0];
         this.modo = data[1];
-
         this.construirFormulario();
         this.obtenerListaGrupos();
         this.obtenerListaProvincias();
@@ -95,6 +95,10 @@ export class ModalAlumnoComponent implements OnInit {
       curriculum: [this.alumno?.curriculum],
       cuenta_bancaria: [this.alumno?.cuenta_bancaria],
       matricula_coche: [this.alumno?.matricula_coche],
+      fecha_nacimiento: [this.alumno?.fecha_nacimiento],
+      domicilio: [this.alumno?.domicilio],
+      telefono: [this.alumno?.telefono],
+      movil: [this.alumno?.movil],
     });
   }
 
@@ -131,7 +135,11 @@ export class ModalAlumnoComponent implements OnInit {
       datos.foto,
       datos.curriculum,
       datos.cuenta_bancaria,
-      datos.matricula_coche
+      datos.matricula_coche,
+      datos.fecha_nacimiento,
+      datos.domicilio,
+      datos.telefono,
+      datos.movil
     );
 
     if (this.datosAlumno.invalid) {
@@ -285,28 +293,6 @@ export class ModalAlumnoComponent implements OnInit {
     });
   }
 
-  // /**
-  //    * Método sube al servidor la foto seleccionada y la recupera
-  //    * para mostrarla en el elemento img
-  //    */
-  // public subirFoto(event: any) {
-  //   if (event.target.files.length > 0) {
-
-  //     let formData = new FormData();
-  //     formData.append('file', event.target.files[0])
-
-  //     this.crudAlumnosService.subirFoto(formData).subscribe({
-  //       next: (resp: any) => {
-  //         this.formulario['foto'].setValue(resp.mensaje);
-  //         //this.usuario.foto = resp.mensaje;
-  //       },
-  //       error: (error) => {
-  //         this.toastr.error('No se pueden subir imágenes de perfil en estos momentos');
-  //       }
-  //     })
-  //   }
-  // }
-
   //#endregion
   /***********************************************************************/
 
@@ -363,7 +349,7 @@ export class ModalAlumnoComponent implements OnInit {
     if (files) {
       let fileReader = new FileReader();
       fileReader.readAsDataURL(files);
-      fileReader.onload = function() {
+      fileReader.onload = function () {
         let element: any = document.getElementById('foto');
         element.src = this.result;
         formulario['foto'].setValue(this.result)
@@ -426,8 +412,33 @@ export class ModalAlumnoComponent implements OnInit {
    * Descarga el currículum del alumno
    * @param url URL del servidor del CV del alumno
    */
-  public descargarCV(url: string) {
-    window.open(url);
+  public descargarCV(dni: string) {
+    if (this.formulario['curriculum'].value.length > 0) {
+      this.crudAlumnosService.descargarCurriculum(dni).subscribe({
+        next: (res: any) => {
+          const blob = new Blob([res], { type: 'application/octet-stream' });
+          FileSaver.saveAs(blob, `CV${this.formulario['dni'].value}.pdf`);
+        },
+        error: (e) => {
+          this.toastr.error('El curriculum no ha podido descargarse', 'Error');
+        },
+      });
+    } else {
+      this.toastr.warning('No existe curriculum para este usuario');
+    }
+  }
+
+  public descargarAnexoFEM05(dni: string) {
+    this.crudAlumnosService.descargarAnexoFEM05(dni)
+    .subscribe({
+      next: (res: any) => {
+        const blob = new Blob([res], { type: 'application/octet-stream' });
+        FileSaver.saveAs(blob, `AnexoFEM05_${this.alumno?.nombreCompleto}.docx`);
+      },
+      error: (e) => {
+        this.toastr.error('El anexo no ha podido descargarse', 'Error');
+      },
+    });
   }
 
   //#endregion
