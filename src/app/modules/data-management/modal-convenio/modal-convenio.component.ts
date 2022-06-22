@@ -323,7 +323,7 @@ export class ModalConvenioComponent implements OnInit {
         this.onSubmitEdit();
         break;
       case 3:
-        this.onSubmitRenovar;
+        this.onSubmitRenovar();
         break;
     }
   }
@@ -415,7 +415,43 @@ export class ModalConvenioComponent implements OnInit {
     });
   }
 
-  private onSubmitRenovar(): void {}
+  private onSubmitRenovar(): void {
+    if (this.convenio?.cod_convenio != this.datos.value.convenio.cod_convenio) {
+      this.datos.value.convenio.cod_convenio_anterior =
+        this.convenio?.cod_convenio;
+    }
+    this.crudEmpresasService.renovarConvenio(this.datos.value).subscribe({
+      next: async (response) => {
+        this.empresa!.convenio = this.datos.value.convenio;
+        this.toastr.success(
+          `El ${this.tipo} con ${this.empresa?.nombre} se ha renovado correctamente`,
+          `Renovación del ${this.tipo}`
+        );
+        this.modified = false;
+        //#region Descarga opcional del anexo
+        if (!this.subir) {
+          let descargar = await this.dialogService.confirmacion(
+            'Anexo generado',
+            `¿Quiere descargar el Anexo XVI de ${this.tipo} con ${this.empresa?.nombre}?`
+          );
+          if (descargar) {
+            this.downloadAnexo(response.ruta_anexo);
+          }
+        }
+        //#endregion
+        this.closeModal();
+      },
+      error: (e) => {
+        let title = `Error de modificación del ${this.tipo}`;
+        let msg = `Error al modificar el ${this.tipo} con ${this.empresa?.nombre}`;
+        if (e.status == 409) {
+          title = `Código de ${this.tipo} duplicado'`;
+          msg = `Utilice otro número de ${this.tipo}`;
+        }
+        this.toastr.error(msg, title);
+      },
+    });
+  }
 
   //#endregion
   /***********************************************************************/
