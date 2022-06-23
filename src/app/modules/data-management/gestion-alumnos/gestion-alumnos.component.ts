@@ -171,7 +171,7 @@ export class GestionAlumnosComponent
    */
   registrarAlumno() {
     this.modal.open(ModalAlumnoComponent, {
-      size: 'md',
+      size: 'lg',
       backdrop: 'static',
       keyboard: false,
     });
