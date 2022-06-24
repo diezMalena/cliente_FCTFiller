@@ -329,12 +329,12 @@ export class SeguimientoComponent implements OnInit {
    * @author Malena
    */
   public async generarDocumento(semana: any) {
-    if (Object.keys(semana).length == 0) {
+    /*if (Object.keys(semana).length == 0) {
       this.toastr.error(
         'No puedes descargar el documento sin añadir primero 5 jornadas.',
         'Error al descargar el documento'
       );
-    } else {
+    } else {*/
       if (this.departamentoEstablecido == false) {
         this.toastr.error(
           'No puedes descargar el documento sin añadir el departamento.',
@@ -367,7 +367,7 @@ export class SeguimientoComponent implements OnInit {
           });
         }
       }
-    }
+    //}
   }
 
   /**
@@ -427,14 +427,14 @@ export class SeguimientoComponent implements OnInit {
     let id_quinto_dia = semana.id_quinto_dia;
     sessionStorage.setItem(SeguimientoComponent.id_fct, id_fct);
     sessionStorage.setItem(SeguimientoComponent.id_quinto_dia, id_quinto_dia);
-    if (Object.keys(semana).length == 0) {
+    /*if (Object.keys(semana).length == 0) {
       this.toastr.error(
         'No puedes subir el documento sin añadir primero 5 jornadas.',
         'Error al subir el documento'
       );
-    } else {
+    } else {*/
       this.modal.open(ModalSubirficheroComponent, { size: 's', });
-    }
+    //}
   }
 
 
